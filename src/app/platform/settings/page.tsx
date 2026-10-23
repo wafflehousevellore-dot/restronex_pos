@@ -1,0 +1,2 @@
+import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle, Card, CardContent } from "@/components/ui/card";
+export default function PlatformSettings(){ return <div className="space-y-4 text-white"><h1 className="text-xl font-black text-white">Platform Settings</h1><DarkCard><DarkCardContent className="pt-6 text-sm text-white/60">System health, integration registry, backup docs. Secrets via env. No hard-coded credentials.</DarkCardContent></DarkCard></div>; }

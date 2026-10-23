@@ -1,0 +1,22 @@
+<svg width="200" height="44" viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g>
+<!-- Icon background -->
+<rect x="0" y="4" width="36" height="36" rx="10" fill="#061412"/>
+<!-- R shape - vertical stem -->
+<rect x="5" y="8" width="9" height="26" rx="3" fill="white"/>
+<!-- R bowl -->
+<path d="M14 8C14 8 14 7 17.5 7H24C30.5 7 33.5 11 33.5 15.5C33.5 20 30 23.5 24 23.5H16L14 8Z" fill="white"/>
+<!-- Fork cutout -->
+<g transform="translate(10.5, 11.5)">
+<path d="M5.5 0C5.2 0 4.8 0.3 4.8 1L4.8 8.2C4.8 8.2 4.8 8.8 4.2 8.8C3.6 8.8 3.6 8.2 3.6 8.2L3.6 1.2C3.6 0.6 3.2 0 2.6 0C2 0 1.6 0.6 1.6 1.2L1.6 8.2C1.6 8.2 1.6 8.8 1 8.8C0.4 8.8 0.4 8.2 0.4 8.2L0.4 1C0.4 0.3 0 0 -0.4 0C-0.8 0 -1 0.3 -1 1L-1 9C-1 10.5 -0.1 12.2 1 12.2H4.5C5.6 12.2 6.5 10.5 6.5 9L6.5 1C6.5 0.3 6 0 5.5 0Z" fill="#061412"/>
+</g>
+<!-- Green diagonal -->
+<path d="M16 25.5L23.5 32.5H32L24 25.5H16Z" fill="#2E7B4A"/>
+<path d="M16.5 26.5L23 33H31L23.5 26.5H16.5Z" fill="#3D954F"/>
+</g>
+<!-- Text Restro white Nex green -->
+<text x="46" y="26" font-family="Inter, sans-serif" font-size="26" font-weight="800" letter-spacing="-0.5">
+<tspan fill="white">Restro</tspan><tspan fill="#3D954F">Nex</tspan>
+</text>
+<text x="46" y="38" font-family="Inter, sans-serif" font-size="8" font-weight="700" letter-spacing="1.8" fill="white" opacity="0.5">RESTAURANT OS</text>
+</svg>

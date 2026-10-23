@@ -1,0 +1,579 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  clerkId       String?  @unique
+  email         String   @unique
+  name          String
+  avatarUrl     String?
+  role          String   @default("OWNER")
+  isPlatformAdmin Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  memberships   Membership[]
+  auditLogs     AuditLog[]
+}
+
+model Tenant {
+  id            String   @id @default(cuid())
+  clerkOrgId    String?  @unique
+  name          String
+  slug          String   @unique
+  businessType  String
+  email         String
+  phone         String
+  country       String   @default("IN")
+  timeZone      String   @default("Asia/Kolkata")
+  currency      String   @default("INR")
+  status        String   @default("ACTIVE")
+  logoUrl       String?
+  onboardingStep Int     @default(0)
+  onboardingComplete Boolean @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  memberships   Membership[]
+  outlets       Outlet[]
+  settings      RestaurantSetting?
+  taxConfigs    TaxConfig[]
+  categories    MenuCategory[]
+  menuItems     MenuItem[]
+  tables        Table[]
+  orders        Order[]
+  customers     Customer[]
+  suppliers     Supplier[]
+  inventoryItems InventoryItem[]
+  stockMovements StockMovement[]
+  purchaseOrders PurchaseOrder[]
+  subscriptions Subscription[]
+  integrationConfigs IntegrationConfig[]
+  auditLogs     AuditLog[]
+  tokens Token[]
+  reservations Reservation[]
+  feedbacks Feedback[]
+  expenses Expense[]
+  supplierPrices SupplierPrice[]
+  dayEnds DayEndSummary[]
+}
+
+model Membership {
+  id        String @id @default(cuid())
+  userId    String
+  tenantId  String
+  role      String @default("OUTLET_MANAGER")
+  outletId  String?
+  createdAt DateTime @default(now())
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet    Outlet? @relation(fields: [outletId], references: [id])
+  @@unique([userId, tenantId])
+  @@index([tenantId])
+}
+
+model Outlet {
+  id          String @id @default(cuid())
+  tenantId    String
+  name        String
+  slug        String
+  address     String
+  city        String
+  phone       String
+  status      String @default("ACTIVE")
+  serviceModes String @default("DINE_IN,TAKEAWAY,DELIVERY")
+  openingHours String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberships Membership[]
+  tables      Table[]
+  orders      Order[]
+  stockMovements StockMovement[]
+  shifts      CashierShift[]
+  tokens Token[]
+  reservations Reservation[]
+  expenses Expense[]
+  dayEnds DayEndSummary[]
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+}
+
+model RestaurantSetting {
+  id                String @id @default(cuid())
+  tenantId          String @unique
+  receiptHeader     String?
+  receiptFooter     String?
+  gstNumber         String?
+  fssaiNumber       String?
+  serviceChargePct  Int    @default(0)
+  enableKOT         Boolean @default(true)
+  enableTableMgmt   Boolean @default(true)
+  tenant            Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model TaxConfig {
+  id        String @id @default(cuid())
+  tenantId  String
+  name      String
+  rateBps   Int
+  isActive  Boolean @default(true)
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
+}
+
+model MenuCategory {
+  id        String @id @default(cuid())
+  tenantId  String
+  name      String
+  slug      String
+  parentId  String?
+  sortOrder Int @default(0)
+  isActive  Boolean @default(true)
+  imageUrl  String?
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parent    MenuCategory? @relation("CatParent", fields: [parentId], references: [id])
+  children  MenuCategory[] @relation("CatParent")
+  items     MenuItem[]
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+}
+
+model MenuItem {
+  id          String @id @default(cuid())
+  tenantId    String
+  categoryId  String
+  name        String
+  description String?
+  imageUrl    String?
+  pricePaise  Int
+  isVeg       Boolean @default(true)
+  isActive    Boolean @default(true)
+  isSoldOut   Boolean @default(false)
+  taxConfigId String?
+  sku         String?
+  prepTimeMin Int @default(10)
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category    MenuCategory @relation(fields: [categoryId], references: [id])
+  variants    MenuVariant[]
+  modifiers   MenuModifier[]
+  orderItems  OrderItem[]
+  recipe      Recipe?
+  @@index([tenantId])
+  @@index([categoryId])
+}
+
+model MenuVariant {
+  id        String @id @default(cuid())
+  itemId    String
+  name      String
+  pricePaise Int
+  isActive  Boolean @default(true)
+  item      MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model MenuModifier {
+  id        String @id @default(cuid())
+  itemId    String
+  name      String
+  pricePaise Int @default(0)
+  isActive  Boolean @default(true)
+  item      MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model Table {
+  id        String @id @default(cuid())
+  tenantId  String
+  outletId  String
+  number    String
+  area      String @default("Main Hall")
+  capacity  Int    @default(4)
+  status    String @default("AVAILABLE")
+  currentOrderId String?
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet    Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@unique([outletId, number])
+  @@index([tenantId])
+}
+
+model Order {
+  id          String @id @default(cuid())
+  tenantId    String
+  outletId    String
+  orderNumber String
+  type        String
+  status      String @default("OPEN")
+  tableId     String?
+  customerId  String?
+  customerName String?
+  customerPhone String?
+  subtotalPaise Int @default(0)
+  taxPaise    Int @default(0)
+  discountPaise Int @default(0)
+  serviceChargePaise Int @default(0)
+  totalPaise  Int @default(0)
+  notes       String?
+  kotStatus   String @default("PENDING")
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet      Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  items       OrderItem[]
+  payments    Payment[]
+  kotTickets  KitchenTicket[]
+  @@unique([tenantId, orderNumber])
+  @@index([tenantId, outletId])
+  @@index([status])
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  menuItemId  String
+  name        String
+  quantity    Int
+  unitPricePaise Int
+  modifiersJson String?
+  variantName String?
+  notes       String?
+  kotStatus   String @default("PENDING")
+  totalPaise  Int
+  order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
+  @@index([orderId])
+}
+
+model KitchenTicket {
+  id        String @id @default(cuid())
+  orderId   String
+  tenantId  String
+  outletId  String
+  station   String @default("MAIN")
+  status    String @default("RECEIVED")
+  priority  Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@index([outletId, status])
+}
+
+model Payment {
+  id          String @id @default(cuid())
+  orderId     String
+  method      String
+  amountPaise Int
+  status      String @default("COMPLETED")
+  reference   String?
+  createdAt   DateTime @default(now())
+  order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model CashierShift {
+  id          String @id @default(cuid())
+  tenantId    String
+  outletId    String
+  openedById  String
+  openingPaise Int @default(0)
+  closingPaise Int?
+  status      String @default("OPEN")
+  openedAt    DateTime @default(now())
+  closedAt    DateTime?
+  outlet      Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@index([outletId, status])
+}
+
+model InventoryItem {
+  id          String @id @default(cuid())
+  tenantId    String
+  name        String
+  unit        String
+  currentStock Float @default(0)
+  lowStockThreshold Float @default(5)
+  costPerUnitPaise Int @default(0)
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipeIngredients RecipeIngredient[]
+  supplierPrices SupplierPrice[]
+  @@index([tenantId])
+}
+
+model Recipe {
+  id          String @id @default(cuid())
+  menuItemId  String @unique
+  yieldQty    Int @default(1)
+  menuItem    MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  ingredients RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  id              String @id @default(cuid())
+  recipeId        String
+  inventoryItemId String
+  quantity        Float
+  recipe          Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  @@unique([recipeId, inventoryItemId])
+}
+
+model Supplier {
+  id        String @id @default(cuid())
+  tenantId  String
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  purchaseOrders PurchaseOrder[]
+  supplierPrices SupplierPrice[]
+  @@index([tenantId])
+}
+
+model PurchaseOrder {
+  id          String @id @default(cuid())
+  tenantId    String
+  supplierId  String
+  poNumber    String
+  status      String @default("DRAFT")
+  totalPaise  Int @default(0)
+  createdAt   DateTime @default(now())
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  @@unique([tenantId, poNumber])
+}
+
+model StockMovement {
+  id              String @id @default(cuid())
+  tenantId        String
+  outletId        String?
+  inventoryItemId String
+  type            String
+  quantity        Float
+  reference       String?
+  createdAt       DateTime @default(now())
+  tenant          Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet          Outlet? @relation(fields: [outletId], references: [id])
+  @@index([tenantId])
+}
+
+model Customer {
+  id          String @id @default(cuid())
+  tenantId    String
+  name        String
+  phone       String
+  email       String?
+  loyaltyPoints Int @default(0)
+  totalSpentPaise Int @default(0)
+  visitCount  Int @default(0)
+  createdAt   DateTime @default(now())
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  loyaltyTxns LoyaltyTxn[]
+  @@unique([tenantId, phone])
+  @@index([tenantId])
+}
+
+model LoyaltyTxn {
+  id          String @id @default(cuid())
+  customerId  String
+  points      Int
+  type        String
+  reference   String?
+  createdAt   DateTime @default(now())
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+}
+
+model SubscriptionPlan {
+  id            String @id @default(cuid())
+  name          String @unique
+  slug          String @unique
+  priceMonthlyPaise Int
+  priceAnnualPaise Int
+  maxOutlets    Int
+  maxUsers      Int
+  featuresJson  String
+  isActive      Boolean @default(true)
+  sortOrder     Int @default(0)
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id          String @id @default(cuid())
+  tenantId    String
+  planId      String
+  status      String @default("TRIALING")
+  billingCycle String @default("MONTHLY")
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd   DateTime
+  trialEndsAt DateTime?
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan        SubscriptionPlan @relation(fields: [planId], references: [id])
+  payments    SubscriptionPayment[]
+  @@index([tenantId, status])
+}
+
+model SubscriptionPayment {
+  id              String @id @default(cuid())
+  subscriptionId  String
+  amountPaise     Int
+  status          String @default("PENDING")
+  provider        String @default("RAZORPAY")
+  providerPaymentId String?
+  createdAt       DateTime @default(now())
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+}
+
+model WebhookEvent {
+  id          String @id @default(cuid())
+  provider    String
+  eventId     String @unique
+  payloadJson String
+  processed   Boolean @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model IntegrationConfig {
+  id          String @id @default(cuid())
+  tenantId    String
+  provider    String
+  status      String @default("NOT_CONNECTED")
+  configJson  String?
+  lastSyncAt  DateTime?
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@unique([tenantId, provider])
+}
+
+
+model Token {
+  id        String   @id @default(cuid())
+  tenantId  String
+  outletId  String
+  tokenNo   Int
+  queuePos  Int
+  status    String   @default("WAITING") // WAITING | COMPLETED | CANCELLED
+  createdAt DateTime @default(now())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet    Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@index([outletId, status])
+  @@index([tenantId])
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  tenantId  String
+  outletId  String
+  name      String
+  phone     String
+  partySize Int
+  date      DateTime
+  status    String   @default("BOOKED") // BOOKED | SEATED | CANCELLED | COMPLETED
+  createdAt DateTime @default(now())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet    Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@index([outletId, date])
+  @@index([tenantId])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  tenantId  String
+  outletId  String?
+  orderId   String?
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  tenantId    String
+  outletId    String
+  category    String
+  amountPaise Int
+  note        String?
+  createdAt   DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet      Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
+  @@index([outletId])
+}
+
+model SupplierPrice {
+  id             String @id @default(cuid())
+  tenantId       String
+  inventoryItemId String
+  supplierId     String
+  pricePaise     Int
+  updatedAt      DateTime @updatedAt
+  tenant         Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  inventoryItem  InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  supplier       Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  @@unique([inventoryItemId, supplierId])
+  @@index([tenantId])
+}
+
+model DayEndSummary {
+  id          String   @id @default(cuid())
+  tenantId    String
+  outletId    String
+  date        String   // YYYY-MM-DD
+  salesPaise  Int      @default(0)
+  expensePaise Int     @default(0)
+  orders      Int      @default(0)
+  closedAt    DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet      Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  @@unique([outletId, date])
+  @@index([tenantId])
+}
+
+model AuditLog {
+  id        String @id @default(cuid())
+  tenantId  String?
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadataJson String?
+  createdAt DateTime @default(now())
+  tenant    Tenant? @relation(fields: [tenantId], references: [id])
+  user      User? @relation(fields: [userId], references: [id])
+  @@index([tenantId])
+  @@index([createdAt])
+}
+
+model DemoRequest {
+  id        String @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  restaurantName String
+  city      String
+  message   String?
+  status    String @default("NEW")
+  createdAt DateTime @default(now())
+}
+
+model PendingRegistration {
+  id             String   @id @default(cuid())
+  businessName   String
+  ownerName      String
+  email          String
+  phone          String
+  restaurantType String   @default("Restaurant")
+  planSlug       String   @default("starter")
+  billingCycle   String   @default("MONTHLY")
+  status         String   @default("PENDING") // PENDING, PAID, ACTIVATED, EXPIRED
+  paymentId      String?
+  clerkUserId    String?
+  tenantId       String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+}

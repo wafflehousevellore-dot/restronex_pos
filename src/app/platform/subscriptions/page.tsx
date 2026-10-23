@@ -1,0 +1,2 @@
+import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle, Card, CardContent } from "@/components/ui/card";
+export default function SubsAdmin(){ return <div className="space-y-4 text-white"><h1 className="text-xl font-black text-white">Subscriptions</h1><DarkCard><DarkCardContent className="pt-6 text-sm text-white/60">View tenants → subscriptions relation. Renewal, trial, past-due states managed via Subscription.status. Razorpay webhooks idempotent via WebhookEvent.eventId unique.</DarkCardContent></DarkCard></div>; }

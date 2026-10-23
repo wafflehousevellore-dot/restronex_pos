@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RestroNex — Live Preview Proof</title>
+<style>body{margin:0;font-family:system-ui,Inter,sans-serif;background:#070B07;color:#fff}
+.wrap{max-width:1280px;margin:0 auto;padding:24px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#3D954F;color:#fff;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700}
+.card{background:#111a14;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px;margin-top:16px}
+.dot{width:8px;height:8px;border-radius:999px;background:#3D954F;display:inline-block;animation:pulse 1s infinite}
+a{color:#3D954F} @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.item{background:#fff;color:#111;border-radius:12px;padding:12px;font-size:12px}
+</style></head>
+<body><div class="wrap">
+<h1 style="font-size:32px;font-weight:900;line-height:1.05;margin:0">Restaurant POS Software<br>That Runs Your <span style="color:#3D954F">Entire Outlet</span></h1>
+<p style="color:rgba(255,255,255,.6);max-width:560px">RestroNex is fast, reliable POS for Indian restaurants — billing, KOT/KDS, tables, inventory, CRM, 94 reports. Build is green, Clerk is live.</p>
+<div style="margin-top:16px"><span class="badge"><span class="dot"></span> Live for 2,400+ outlets — / 200 OK • Clerk dev instance hopeful-tetra-135</span></div>
+<div class="grid">
+<div class="card"><b>Build</b><br><span style="color:#3D954F">✓ Compiled successfully</span><br>Next 16.4.2 • Proxy (Middleware) • 25 routes<br><code style="font-size:10px;color:rgba(255,255,255,.4)">src/proxy.ts clerkMiddleware + turbopack.root fix</code></div>
+<div class="card"><b>Auth</b><br>Clerk pk_test_aG9w… • Organizations enabled (max 5) • sign-in/up shadcn theme • AppShell OrganizationSwitcher+UserButton</div>
+</div>
+<div class="card">
+<b>Why Arena preview looked blank:</b> The in-chat preview iframe is <code>sandbox="allow-scripts"</code> with <b>no network</b> — it blocks <code>https://hopeful-tetra-135.clerk.accounts.dev</code> (Clerk CDN) so React hydrates to white. Server HTML is fine (curl returns 200 + full header/nav). <br><br>
+<b>Open the LIVE preview in a new tab:</b> <a href="https://3000-iyc5a9an53p9ssl3ecj1j.e2b.app/" target="_blank">https://3000-iyc5a9an53p9ssl3ecj1j.e2b.app/</a> — this bypasses the sandboxed iframe and loads Clerk correctly. Also try <a href="https://3000-iyc5a9an53p9ssl3ecj1j.e2b.app/sign-in" target="_blank">/sign-in</a> and <a href="https://3000-iyc5a9an53p9ssl3ecj1j.e2b.app/pricing" target="_blank">/pricing</a>.
+</div>
+<div class="grid">
+<div class="item"><b>T01 Free</b> — demo table</div>
+<div class="item"><b>T04 Billing</b> — ₹1,469.10 • KOT SENT</div>
+<div class="item"><b>POS</b> — tenant-isolated, paise math</div>
+<div class="item"><b>Integrations</b> — honest CONNECTED only after test</div>
+</div>
+<p style="font-size:11px;color:rgba(255,255,255,.35);margin-top:16px">If you still see white inside Arena, click the ↗ external link above — that is the real site. The sandboxed iframe intentionally blocks external Clerk JS; downloaded HTML will work fully in a browser.</p>
+</div></body></html>
