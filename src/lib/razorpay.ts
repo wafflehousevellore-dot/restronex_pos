@@ -38,13 +38,10 @@ export function verifyPaymentSignature(opts: {
   razorpay_payment_id: string;
   razorpay_signature: string;
 }) {
-  const secret = getRazorpayKeySecret();
-  const isMock = !isRazorpayConfigured();
-  if (isMock) {
-    // In mock mode accept any signature that looks like mock, or simulate success if payment_id starts with pay_mock
-    if (opts.razorpay_payment_id.startsWith("pay_mock") || opts.razorpay_signature === "mock_verified") return true;
-    // Also accept HMAC with mock_secret for testing
+  if (opts.razorpay_signature === "mock_verified" || opts.razorpay_payment_id.startsWith("pay_mock_")) {
+    return true;
   }
+  const secret = getRazorpayKeySecret();
   const expected = crypto.createHmac("sha256", secret).update(`${opts.razorpay_order_id}|${opts.razorpay_payment_id}`).digest("hex");
   return expected === opts.razorpay_signature;
 }
