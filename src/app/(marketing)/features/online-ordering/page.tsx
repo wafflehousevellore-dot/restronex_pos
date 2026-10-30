@@ -92,7 +92,7 @@ export default function OnlineOrderingFeaturePage() {
                 </div>
                 <h3 className="mt-4 text-lg font-bold text-slate-900">Custom Domain Storefront</h3>
                 <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  Connect your own domain or subdomain with your restaurant's branding, color scheme, banner promotions, and discount coupon codes.
+                  Connect your own domain or subdomain with your restaurant&apos;s branding, color scheme, banner promotions, and discount coupon codes.
                 </p>
               </div>
 

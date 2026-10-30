@@ -72,7 +72,7 @@ export default function FineDineSolutionPage() {
               </div>
               <div className="p-6 bg-white rounded-2xl border border-slate-200">
                 <h3 className="font-bold text-lg">VIP Guest History</h3>
-                <p className="mt-2 text-sm text-slate-600">Record anniversary dates, favorite tables, wine vintages, and allergy alerts on the captain's screen.</p>
+                <p className="mt-2 text-sm text-slate-600">Record anniversary dates, favorite tables, wine vintages, and allergy alerts on the captain&apos;s screen.</p>
               </div>
             </div>
           </div>

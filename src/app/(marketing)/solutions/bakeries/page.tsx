@@ -40,7 +40,7 @@ export default function BakeriesSolutionPage() {
                     <span className="text-amber-400">Advance Paid: ₹500</span>
                   </div>
                   <div className="text-white/60">Flavor: Belgian Chocolate Mousse (1.5 kg)</div>
-                  <div className="text-white/60">Message: "Happy 10th Birthday Aarav!"</div>
+                  <div className="text-white/60">Message: &quot;Happy 10th Birthday Aarav!&quot;</div>
                   <div className="flex justify-between pt-2 border-t border-white/10 text-emerald-400 font-bold">
                     <span>Delivery: 24 Oct, 4:00 PM</span>
                     <span>Balance Due: ₹1,150</span>

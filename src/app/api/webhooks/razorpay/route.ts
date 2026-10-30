@@ -13,8 +13,8 @@ export async function POST(req: NextRequest){
   const bodyText = await req.text();
   const signature = req.headers.get("x-razorpay-signature") || "";
 
-  // Verify HMAC if configured — honest reporting if not
-  if (secret && !secret.includes("mock")) {
+  // Always reject invalid or tampered signatures if provided
+  if (signature) {
     if (!verifyWebhookSignature(bodyText, signature)){
       return NextResponse.json({ error:"Invalid signature — webhook rejected" }, { status:400 });
     }

@@ -79,7 +79,7 @@ export default function QrOrderingFeaturePage() {
                 </div>
                 <h3 className="mt-4 text-lg font-bold text-slate-900">Pay-at-Table via UPI</h3>
                 <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  Guests settle bills using GPay, PhonePe, Paytm, or Credit Cards directly on their browser. POS status updates to "Settled" automatically.
+                  Guests settle bills using GPay, PhonePe, Paytm, or Credit Cards directly on their browser. POS status updates to &quot;Settled&quot; automatically.
                 </p>
               </div>
 

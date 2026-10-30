@@ -108,7 +108,7 @@ export default function CrmLoyaltyFeaturePage() {
                 </div>
                 <h3 className="mt-4 text-lg font-bold text-slate-900">RFM Customer Segmentation</h3>
                 <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  Automatically categorize guests by Recency, Frequency, and Monetary spend. Target "Dormant VIPs" who haven’t visited in 30 days with special offers.
+                  Automatically categorize guests by Recency, Frequency, and Monetary spend. Target &quot;Dormant VIPs&quot; who haven&apos;t visited in 30 days with special offers.
                 </p>
               </div>
 

@@ -35,7 +35,7 @@ export default function PizzeriasSolutionPage() {
               <div className="rounded-[24px] border border-white/10 bg-[#0F1F14] p-6 shadow-2xl">
                 <div className="text-xs font-bold text-[#3D954F] uppercase tracking-wider">Pizza Builder Screen</div>
                 <div className="mt-4 p-4 bg-white/5 border border-white/10 rounded-xl space-y-2 text-xs">
-                  <div className="font-bold text-white text-sm">12" Large Sourdough Pizza</div>
+                  <div className="font-bold text-white text-sm">12&quot; Large Sourdough Pizza</div>
                   <div className="text-emerald-400">Left Half: Pepperoni + Jalapeños + Extra Mozzarella</div>
                   <div className="text-amber-400">Right Half: Quattro Formaggi + Truffle Oil</div>
                   <div className="text-white/60">Crust: Stuffed Garlic & Herb (+₹120)</div>

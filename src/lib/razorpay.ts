@@ -50,8 +50,8 @@ export function verifyPaymentSignature(opts: {
 }
 
 export function verifyWebhookSignature(rawBody: string, signature: string) {
+  if (!signature) return false;
   const secret = getWebhookSecret();
-  if (!secret) return true; // if not configured, accept (demo) — honest banner will say webhook not configured
   const expected = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
   return expected === signature;
 }

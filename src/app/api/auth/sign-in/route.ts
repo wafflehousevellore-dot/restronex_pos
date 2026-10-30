@@ -20,9 +20,15 @@ export async function GET(req: NextRequest){
     let valid=false; if(hash){ valid=await bcrypt.compare(parsed.data.password, hash); } else { valid=false; }
     if(!valid) return NextResponse.redirect(new URL(`/sign-in?error=${encodeURIComponent("Invalid credentials")}`, req.url));
     const isHttps = isHttpsFromRequest(req);
-    await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: user.isPlatformAdmin }, { secure: isHttps });
+    const token = await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: user.isPlatformAdmin }, { secure: isHttps });
+    const mem = await prisma.membership.findFirst({ where: { userId: user.id } });
+
     const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${redirect}"><script>window.location.href="${redirect}"</script></head><body>Login OK — redirecting to <a href="${redirect}">${redirect}</a>...</body></html>`;
     const res = new NextResponse(html, { status:200, headers:{"Content-Type":"text/html"}});
+    res.cookies.set("restronex_session", token, { httpOnly: true, secure: isHttps, sameSite: isHttps ? "none" : "lax", path: "/", maxAge: 60*60*24*7 });
+    if (mem?.tenantId) {
+      res.cookies.set("restronex_org", mem.tenantId, { path: "/", maxAge: 60*60*24*30, sameSite: "lax" });
+    }
     // Preserve plan if present
     const plan = req.nextUrl.searchParams.get("plan");
     const cycle = req.nextUrl.searchParams.get("cycle");
@@ -73,19 +79,35 @@ export async function POST(req: NextRequest){
       return NextResponse.json({error:"Invalid credentials"},{status:401});
     }
     const isHttps = isHttpsFromRequest(req);
-    await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: user.isPlatformAdmin }, { secure: isHttps });
-    const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/organization";
+    const token = await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: user.isPlatformAdmin }, { secure: isHttps });
+    const mem = await prisma.membership.findFirst({ where: { userId: user.id } });
+
+    const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/app/dashboard";
     const plan = (data.plan as string) || req.nextUrl.searchParams.get("plan");
     const cycle = (data.cycle as string) || req.nextUrl.searchParams.get("cycle");
     const accept = req.headers.get("accept") || "";
     if (ct.includes("form-urlencoded") || accept.includes("text/html")) {
       const html = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=${nextUrl}"><script>window.location.href="${nextUrl}"</script></head><body>Redirecting to dashboard... <a href="${nextUrl}">click here</a></body></html>`;
       const res = new NextResponse(html, { status: 200, headers: { "Content-Type": "text/html" } });
+      res.cookies.set("restronex_session", token, { httpOnly: true, secure: isHttps, sameSite: isHttps ? "none" : "lax", path: "/", maxAge: 60*60*24*7 });
+      if (mem?.tenantId) {
+        res.cookies.set("restronex_org", mem.tenantId, { path: "/", maxAge: 60*60*24*30, sameSite: "lax" });
+      }
       if (plan) res.cookies.set("restronex_plan", plan, { path:"/", maxAge:60*60*24*30 });
       if (cycle) res.cookies.set("restronex_cycle", cycle, { path:"/", maxAge:60*60*24*30 });
       return res;
     }
-    const jsonRes = NextResponse.json({ok:true, next: nextUrl});
+    const jsonRes = NextResponse.json({
+      ok: true,
+      user: { id: user.id, email: user.email, name: user.name, isPlatformAdmin: user.isPlatformAdmin },
+      token,
+      tenantId: mem?.tenantId || null,
+      next: nextUrl,
+    });
+    jsonRes.cookies.set("restronex_session", token, { httpOnly: true, secure: isHttps, sameSite: isHttps ? "none" : "lax", path: "/", maxAge: 60*60*24*7 });
+    if (mem?.tenantId) {
+      jsonRes.cookies.set("restronex_org", mem.tenantId, { path: "/", maxAge: 60*60*24*30, sameSite: "lax" });
+    }
     if (plan) jsonRes.cookies.set("restronex_plan", plan, { path:"/", maxAge:60*60*24*30 });
     if (cycle) jsonRes.cookies.set("restronex_cycle", cycle, { path:"/", maxAge:60*60*24*30 });
     return jsonRes;

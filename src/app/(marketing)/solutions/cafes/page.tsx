@@ -65,7 +65,7 @@ export default function CafesSolutionPage() {
               </div>
               <div className="p-6 bg-white rounded-2xl border border-slate-200">
                 <h3 className="font-bold text-lg">Coffee Card Loyalty</h3>
-                <p className="mt-2 text-sm text-slate-600">Digital "Buy 9 Get 10th Free" coffee stamp card stored directly on customer phone numbers.</p>
+                <p className="mt-2 text-sm text-slate-600">Digital &quot;Buy 9 Get 10th Free&quot; coffee stamp card stored directly on customer phone numbers.</p>
               </div>
               <div className="p-6 bg-white rounded-2xl border border-slate-200">
                 <h3 className="font-bold text-lg">Quick-Touch Takeaway Counter</h3>

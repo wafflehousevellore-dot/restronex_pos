@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { getSession, getActiveOrgId } from "@/lib/auth";
 import { Card, DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 export default async function AuditLogs(){
   const { userId } = await getSession();
   if (!userId) {
@@ -9,7 +10,7 @@ export default async function AuditLogs(){
       <div className="max-w-3xl mx-auto">
         <div className="rounded-2xl border border-[#3D954F]/30 bg-[#3D954F]/10 border border-[#3D954F]/20 p-6 text-center">
           <div className="text-lg font-semibold text-white">Please sign in to view audit logs</div>
-          <a href="/sign-in" className="mt-4 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Sign In</a>
+          <Link href="/sign-in" className="mt-4 inline-block rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Sign In</Link>
         </div>
       </div>
     );

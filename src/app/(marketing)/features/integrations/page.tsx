@@ -27,7 +27,7 @@ export default function IntegrationsFeaturePage() {
               <span className="text-[#3D954F]">With The Food Tech Ecosystem</span>
             </h1>
             <p className="mt-4 text-base leading-7 text-white/70 max-w-2xl mx-auto">
-              Connect your POS to India's leading delivery channels, payment gateways, accounting systems, and rider fleets without manual reconciliation.
+              Connect your POS to India&apos;s leading delivery channels, payment gateways, accounting systems, and rider fleets without manual reconciliation.
             </p>
           </div>
         </section>

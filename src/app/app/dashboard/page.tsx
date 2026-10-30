@@ -16,8 +16,8 @@ export default async function Dashboard(){
           <div className="text-lg font-bold text-white">Please sign in</div>
           <div className="text-sm text-white/60 mt-1">Your preview session expired. Sign in to view your dashboard.</div>
           <div className="mt-4 flex gap-2 justify-center">
-            <a href="/sign-in" className="rounded-full bg-[#3D954F] px-6 py-2.5 text-sm font-bold text-white">Sign In</a>
-            <a href="/sign-up" className="rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white">Create Account</a>
+            <Link href="/sign-in" className="rounded-full bg-[#3D954F] px-6 py-2.5 text-sm font-bold text-white">Sign In</Link>
+            <Link href="/sign-up" className="rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white">Create Account</Link>
           </div>
         </div>
       </div>

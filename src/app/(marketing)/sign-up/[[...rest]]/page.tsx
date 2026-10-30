@@ -45,8 +45,8 @@ export default function SignUpPage() {
           Clerk free test mode restricts SMS for Indian (+91) numbers. To continue:
         </p>
         <ul className="list-disc list-inside space-y-1 text-white/80">
-          <li>Use Clerk's test phone: <b className="text-emerald-400 font-mono">+1 555-555-0100</b> (OTP: <span className="font-mono text-emerald-400">424242</span>)</li>
-          <li>Or disable "Phone Number" requirement in <a href="https://dashboard.clerk.com" target="_blank" rel="noreferrer" className="text-blue-400 underline">Clerk Dashboard</a></li>
+          <li>Use Clerk&apos;s test phone: <b className="text-emerald-400 font-mono">+1 555-555-0100</b> (OTP: <span className="font-mono text-emerald-400">424242</span>)</li>
+          <li>Or disable &quot;Phone Number&quot; requirement in <a href="https://dashboard.clerk.com" target="_blank" rel="noreferrer" className="text-blue-400 underline">Clerk Dashboard</a></li>
         </ul>
         <div className="pt-2 border-t border-white/10 flex justify-between items-center">
           <span className="text-white/50">Need instant POS access?</span>
