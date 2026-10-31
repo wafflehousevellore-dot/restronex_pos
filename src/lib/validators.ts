@@ -55,6 +55,7 @@ export const orderCreateSchema = z.object({
     notes: z.string().optional(),
   })).min(1),
   discountPaise: z.number().int().min(0).default(0),
+  paymentMethod: z.enum(["CASH", "UPI", "CARD"]).optional().default("CASH"),
 });
 
 export const menuItemSchema = z.object({

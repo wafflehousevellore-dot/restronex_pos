@@ -55,7 +55,7 @@ export async function POST(req: NextRequest){
     }
     await tx.kitchenTicket.create({ data:{ orderId:o.id, tenantId, outletId:d.outletId, station:"MAIN", status:"RECEIVED" }});
     // payments: if body.paymentMethod provided else cash
-    const payMethod = body.paymentMethod || "CASH";
+    const payMethod = d.paymentMethod || body.paymentMethod || "CASH";
     await tx.payment.create({ data:{ orderId:o.id, method: payMethod, amountPaise: totals.total, status:"COMPLETED" }});
     // stock deduction: for each item with recipe, deduct
     for(const it of d.items){

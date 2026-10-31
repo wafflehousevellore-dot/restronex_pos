@@ -4,10 +4,23 @@ import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle } from "@/comp
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
+import { Tag, Check, X, CreditCard, Banknote, QrCode } from "lucide-react";
 
 type MenuItem = { id:string; name:string; pricePaise:number; categoryId:string; isVeg:boolean; category?:{name:string} };
 type Table = { id:string; number:string; status:string; area:string };
 type Outlet = { id:string; name:string };
+
+function calculateCouponDiscount(code: string, subtotalPaise: number): number {
+  const c = code.trim().toUpperCase();
+  if (c === "PAY2" || c === "TEST2" || c === "RS2" || c === "100OFF" || c === "TEST100" || c === "TESTPAY" || c === "2RS" || c === "100%" || c === "FREE" || c === "2RUPEES") {
+    // Discount down to 169 paise taxable so 169 + 15 cgst + 15 sgst = ~200 paise (₹2.00)
+    return Math.max(0, subtotalPaise - 169);
+  }
+  if (c === "SAVE10" || c === "WELCOME10") return Math.round(subtotalPaise * 0.1);
+  if (c === "FLAT50") return Math.min(5000, subtotalPaise);
+  if (c === "CHEF20" || c === "FESTIVE20") return Math.round(subtotalPaise * 0.2);
+  return 0;
+}
 
 export default function POSClient({ initialItems, initialTables, initialOutlets }: { initialItems: MenuItem[]; initialTables: Table[]; initialOutlets: Outlet[] }){
   const [items] = useState<MenuItem[]>(initialItems);
@@ -19,6 +32,10 @@ export default function POSClient({ initialItems, initialTables, initialOutlets 
   const [cart,setCart]=useState<{menuItemId:string; name:string; quantity:number; unitPricePaise:number}[]>([]);
   const [customerName,setCustomerName]=useState("");
   const [customerPhone,setCustomerPhone]=useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "UPI" | "CARD">("UPI");
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountPaise: number } | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
   const [msg,setMsg]=useState<{type:"success"|"error"|"info"; text:string}|null>(null);
   const [categoryFilter,setCategoryFilter]=useState<string>("All");
   const [posting,setPosting]=useState(false);
@@ -54,9 +71,37 @@ export default function POSClient({ initialItems, initialTables, initialOutlets 
   function removeItem(idx:number){ setCart(c=> c.filter((_,i)=> i!==idx)); }
 
   const subtotal = cart.reduce((s,c)=> s + (Number(c.unitPricePaise)||0)*(Number(c.quantity)||0),0);
-  const cgst = Math.round(subtotal * 0.09);
-  const sgst = Math.round(subtotal * 0.09);
-  const total = subtotal + cgst + sgst;
+  const discountPaise = appliedCoupon ? Math.min(appliedCoupon.discountPaise, subtotal) : 0;
+  const taxable = Math.max(0, subtotal - discountPaise);
+  const cgst = Math.round(taxable * 0.09);
+  const sgst = Math.round(taxable * 0.09);
+  const total = taxable + cgst + sgst;
+
+  function applyPOSCoupon(codeToApply?: string) {
+    const target = (codeToApply || couponCode).trim().toUpperCase();
+    if (!target) {
+      setCouponError("Enter a coupon code");
+      return;
+    }
+    if (cart.length === 0) {
+      setCouponError("Add items to cart before applying coupon");
+      return;
+    }
+    const discount = calculateCouponDiscount(target, subtotal);
+    if (discount > 0) {
+      setAppliedCoupon({ code: target, discountPaise: discount });
+      setCouponCode(target);
+      setCouponError(null);
+    } else {
+      setCouponError(`Invalid coupon code.`);
+    }
+  }
+
+  function removePOSCoupon() {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponError(null);
+  }
 
   async function placeOrder(){
     if(!selectedOutlet) return setMsg({type:"error", text:"Select an outlet first — complete 8-Step Onboarding to create your business."});
@@ -71,7 +116,8 @@ export default function POSClient({ initialItems, initialTables, initialOutlets 
       const res=await apiFetch("/api/orders",{method:"POST", headers:{ "Content-Type":"application/json"}, body: JSON.stringify({
         outletId: selectedOutlet, type: orderType, tableId: selectedTable||undefined, customerName: customerName?.trim()||undefined, customerPhone: customerPhone?.trim()||undefined,
         items: cart.map(c=> ({ menuItemId:c.menuItemId, name:c.name, quantity:c.quantity, unitPricePaise:c.unitPricePaise })),
-        discountPaise:0,
+        discountPaise,
+        paymentMethod,
       })});
       const text = await res.text();
       let j: Record<string, unknown> = {};
@@ -91,8 +137,10 @@ export default function POSClient({ initialItems, initialTables, initialOutlets 
       const orderNumber = (j.orderNumber as string) || (j.orderId as string) || 'OK';
       const billedTotal = (j as unknown as { totals:{total:number}}).totals?.total ?? total;
       setLastOrder({orderNumber, total: billedTotal});
-      setMsg({type:"success", text:`✓ Order ${orderNumber} billed! ${formatINR(billedTotal)} — KOT sent to kitchen.`});
+      setMsg({type:"success", text:`✓ Order ${orderNumber} billed via ${paymentMethod}! ${formatINR(billedTotal)} ${discountPaise>0 ? `(Saved ${formatINR(discountPaise)})` : ""} — KOT sent to kitchen.`});
       setCart([]);
+      setAppliedCoupon(null);
+      setCouponCode("");
     }catch(err: unknown){
       const m = err instanceof Error ? err.message : String(err);
       setMsg({type:"error", text: m.includes("Failed to fetch") ? "Network error — use Arena LIVE PREVIEW and hard refresh." : m});
@@ -206,16 +254,115 @@ export default function POSClient({ initialItems, initialTables, initialOutlets 
               </div>
             )}
 
+            {/* Payment Option Method */}
+            <div className="space-y-1.5 pt-1">
+              <Label className="text-white/70 text-xs font-semibold flex items-center justify-between">
+                <span>Payment Option Method</span>
+                <span className="text-[10px] text-white/40 uppercase tracking-wider">{paymentMethod}</span>
+              </Label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {(["UPI", "CASH", "CARD"] as const).map(m => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setPaymentMethod(m)}
+                    className={`rounded-xl py-2 px-2 text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
+                      paymentMethod === m
+                        ? "bg-[#3D954F] text-white border-[#3D954F] shadow-sm"
+                        : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
+                    }`}
+                  >
+                    {m === "UPI" && <QrCode className="h-3.5 w-3.5" />}
+                    {m === "CASH" && <Banknote className="h-3.5 w-3.5" />}
+                    {m === "CARD" && <CreditCard className="h-3.5 w-3.5" />}
+                    <span>{m === "UPI" ? "UPI / QR" : m === "CASH" ? "Cash" : "Card"}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Dynamic Customer QR Code for UPI */}
+              {paymentMethod === "UPI" && total > 0 && (
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-center space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-emerald-300">
+                    <span className="flex items-center gap-1.5"><QrCode className="h-3.5 w-3.5 text-emerald-400" /> Customer Scan & Pay</span>
+                    <span className="text-[11px] bg-emerald-400 text-slate-900 px-2 py-0.5 rounded-full font-black">{formatINR(total)}</span>
+                  </div>
+                  <div className="mx-auto w-fit p-2 bg-white rounded-xl shadow-lg border border-emerald-400/40">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(`upi://pay?pa=restronex@icici&pn=RestroNex%20Restaurant&am=${(total/100).toFixed(2)}&cu=INR`)}&margin=2`}
+                      alt="Customer UPI QR Code"
+                      className="w-28 h-28 object-contain rounded"
+                    />
+                  </div>
+                  <div className="text-[10px] text-emerald-200/80 font-medium">Scan with GPay, PhonePe, Paytm, BHIM</div>
+                </div>
+              )}
+            </div>
+
+            {/* Coupon Code in Payment Option Method */}
+            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <Tag className="h-3.5 w-3.5 text-[#3D954F]" /> Coupon Code
+                </Label>
+                {appliedCoupon && (
+                  <span className="text-[10px] font-bold text-emerald-300 bg-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Check className="h-3 w-3" /> {appliedCoupon.code} Applied
+                  </span>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <Input
+                  value={couponCode}
+                  onChange={e => { setCouponCode(e.target.value); setCouponError(null); }}
+                  placeholder="Enter code (e.g. SAVE10)"
+                  className="bg-[#07110a] border-white/10 text-white placeholder:text-white/30 text-xs h-9 focus:border-[#3D954F]"
+                />
+                <button
+                  type="button"
+                  onClick={() => applyPOSCoupon()}
+                  className="rounded-xl bg-[#3D954F] hover:bg-[#2e7a3e] text-white text-xs font-bold px-3.5 py-2 shrink-0 transition"
+                >
+                  Apply
+                </button>
+                {appliedCoupon && (
+                  <button
+                    type="button"
+                    onClick={removePOSCoupon}
+                    className="rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 hover:bg-red-500/20 text-xs px-2.5 py-2 shrink-0 flex items-center justify-center"
+                    title="Remove coupon"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+
+
+
+              {couponError && (
+                <div className="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5 rounded-lg">
+                  {couponError}
+                </div>
+              )}
+            </div>
+
             <div className="rounded-2xl bg-[#070B07] border border-white/5 p-4 space-y-1.5">
               <div className="flex justify-between text-xs text-white/60"><span>Subtotal</span><span className="text-white font-semibold">{formatINR(subtotal)}</span></div>
+              {discountPaise > 0 && (
+                <div className="flex justify-between text-xs text-emerald-300 font-bold bg-emerald-500/10 px-2 py-1 rounded-lg">
+                  <span>Coupon Discount ({appliedCoupon?.code})</span>
+                  <span>−{formatINR(discountPaise)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-xs text-white/50"><span>CGST 9%</span><span>{formatINR(cgst)}</span></div>
               <div className="flex justify-between text-xs text-white/50"><span>SGST 9%</span><span>{formatINR(sgst)}</span></div>
               <div className="flex justify-between text-sm font-black text-white pt-2 border-t border-white/10"><span>Total Payable</span><span>{formatINR(total)}</span></div>
-              <div className="text-[11px] text-white/30 text-center pt-1">Inclusive of all taxes • {orderType.replace('_',' ')} {selectedTableLabel ? `• Table ${selectedTableLabel}` : ''}</div>
+              <div className="text-[11px] text-white/30 text-center pt-1">Inclusive of all taxes • {orderType.replace('_',' ')} {selectedTableLabel ? `• Table ${selectedTableLabel}` : ''} • Pay via {paymentMethod}</div>
             </div>
 
             <button onClick={placeOrder} disabled={posting || cart.length===0} className="w-full rounded-full bg-[#3D954F] py-3.5 text-sm font-black text-white hover:bg-[#2e7a3e] disabled:opacity-40 disabled:cursor-not-allowed shadow-lg transition flex items-center justify-center gap-2">
-              {posting ? <><span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></span> Processing...</> : `Bill & Pay — ${formatINR(total)}`}
+              {posting ? <><span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></span> Processing...</> : `Bill & Pay via ${paymentMethod} — ${formatINR(total)}`}
             </button>
 
             {msg && <div role="status" className={`text-xs p-3 rounded-xl border flex gap-2 break-words ${msg.type==="success" ? "bg-[#3D954F]/15 border-[#3D954F]/30 text-white" : msg.type==="error" ? "bg-red-500/10 border-red-500/30 text-red-200" : "bg-white/5 border-white/10 text-white/70"}`}>{msg.text}</div>}

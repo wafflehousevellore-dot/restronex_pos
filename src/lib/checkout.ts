@@ -16,6 +16,7 @@ export function calcCheckoutTotals(opts: {
   billingCycle: BillingCycle;
   outletCount?: number;
   couponDiscountPaise?: number;
+  fixedTotalPaise?: number;
 }) {
   const plan = getPlanBySlug(opts.planSlug);
   if (!plan) throw new Error(`Unknown plan ${opts.planSlug}`);
@@ -25,10 +26,24 @@ export function calcCheckoutTotals(opts: {
   // For simplicity: total = base * outlets (if scale/growth multi-outlet), else base
   const outletMultiplier = plan.maxOutlets > 1 ? outlets : 1;
   const subtotal = basePaise * outletMultiplier;
-  const discount = Math.min(opts.couponDiscountPaise || 0, subtotal);
-  const taxable = subtotal - discount;
-  const gst = Math.round((taxable * GST_BPS) / 10000);
-  const total = taxable + gst;
+
+  let total: number;
+  let taxable: number;
+  let gst: number;
+  let discount: number;
+
+  if (typeof opts.fixedTotalPaise === "number" && opts.fixedTotalPaise > 0) {
+    total = opts.fixedTotalPaise;
+    taxable = Math.round(total / (1 + GST_BPS / 10000));
+    gst = total - taxable;
+    discount = Math.max(0, subtotal - taxable);
+  } else {
+    discount = Math.min(opts.couponDiscountPaise || 0, subtotal);
+    taxable = subtotal - discount;
+    gst = Math.round((taxable * GST_BPS) / 10000);
+    total = taxable + gst;
+  }
+
   return {
     plan,
     billingCycle: opts.billingCycle,

@@ -14,10 +14,21 @@ export async function POST(req: NextRequest){
   const { planSlug, billingCycle, outletCount, coupon } = body as { planSlug:string; billingCycle:"MONTHLY"|"ANNUAL"; outletCount?:number; coupon?:string };
   if (!planSlug || !billingCycle) return NextResponse.json({error:"planSlug and billingCycle required"},{status:400});
   let totals;
-  try{
-    const discount = coupon?.toUpperCase()==="WELCOME10" ? undefined : 0;
-    // WELCOME10 handled client-side for demo; server also recomputes honestly
-    totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: coupon?.toUpperCase()==="WELCOME10" ? Math.round(calcCheckoutTotals({planSlug, billingCycle, outletCount}).subtotal*0.1) : 0 });
+  try {
+    const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+    const code = coupon?.trim().toUpperCase();
+    let discountPaise = 0;
+    let fixedTotalPaise: number | undefined;
+    if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
+      fixedTotalPaise = 200; // Pay exactly ₹2 for testing!
+    } else if (code === "WELCOME10" || code === "SAVE10") {
+      discountPaise = Math.round(baseTotals.subtotal * 0.1);
+    } else if (code === "FLAT50") {
+      discountPaise = 5000;
+    } else if (code === "CHEF20" || code === "FESTIVE20") {
+      discountPaise = Math.round(baseTotals.subtotal * 0.2);
+    }
+    totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: discountPaise, fixedTotalPaise });
   }catch(e:any){ return NextResponse.json({error:e.message},{status:400}); }
 
   // Do not multiply outletCount for DB plan's outlet limit? we already validated in totals
