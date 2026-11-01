@@ -26,3 +26,4 @@ EXIT_CODE=$?
 # Terminate Next.js server
 kill $SERVER_PID 2>/dev/null || true
 exit $EXIT_CODE
+

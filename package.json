@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "tsx scripts/test-all-pipelines.ts",
+    "test:security": "tsx scripts/test-tenant-isolation-rls.ts",
+    "supabase:migrate": "supabase db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate"
@@ -17,6 +19,7 @@
     "@clerk/themes": "^2.4.57",
     "@clerk/ui": "^1.41.1",
     "@prisma/adapter-better-sqlite3": "^7.10.1",
+    "@supabase/supabase-js": "^2.118.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.11.1",
     "class-variance-authority": "^0.7.1",

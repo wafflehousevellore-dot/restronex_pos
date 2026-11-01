@@ -1,0 +1,40 @@
+# RestroNex Supabase Architecture Configuration
+# Official Stack: Supabase PostgreSQL + Supavisor + Clerk Auth + Supabase Storage
+
+project_id = "restronex"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+# Connection Pooling via Supavisor
+[db.pooler]
+enabled = true
+port = 6543
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://restronex.app", "https://restronex.vercel.app"]
+jwt_expiry = 3600
+
+# Clerk Native Third-Party Auth Integration
+[auth.third_party.clerk]
+enabled = true
+# In production, paste your Clerk JWKS domain e.g. https://<your-clerk-frontend-api>/.well-known/jwks.json
+# or configure in Supabase Dashboard -> Project Settings -> Authentication -> Third Party Auth
