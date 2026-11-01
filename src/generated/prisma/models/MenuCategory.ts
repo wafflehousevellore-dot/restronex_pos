@@ -604,6 +604,7 @@ export type MenuCategoryCreateOrConnectWithoutTenantInput = {
 
 export type MenuCategoryCreateManyTenantInputEnvelope = {
   data: Prisma.MenuCategoryCreateManyTenantInput | Prisma.MenuCategoryCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type MenuCategoryUpsertWithWhereUniqueWithoutTenantInput = {
@@ -696,6 +697,7 @@ export type MenuCategoryCreateOrConnectWithoutParentInput = {
 
 export type MenuCategoryCreateManyParentInputEnvelope = {
   data: Prisma.MenuCategoryCreateManyParentInput | Prisma.MenuCategoryCreateManyParentInput[]
+  skipDuplicates?: boolean
 }
 
 export type MenuCategoryUpsertWithoutChildrenInput = {
@@ -1697,6 +1699,7 @@ export type MenuCategoryCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many MenuCategories.
    */
   data: Prisma.MenuCategoryCreateManyInput | Prisma.MenuCategoryCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1715,6 +1718,7 @@ export type MenuCategoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many MenuCategories.
    */
   data: Prisma.MenuCategoryCreateManyInput | Prisma.MenuCategoryCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

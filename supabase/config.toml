@@ -38,3 +38,4 @@ jwt_expiry = 3600
 enabled = true
 # In production, paste your Clerk JWKS domain e.g. https://<your-clerk-frontend-api>/.well-known/jwks.json
 # or configure in Supabase Dashboard -> Project Settings -> Authentication -> Third Party Auth
+

@@ -540,6 +540,7 @@ export type StockMovementCreateOrConnectWithoutTenantInput = {
 
 export type StockMovementCreateManyTenantInputEnvelope = {
   data: Prisma.StockMovementCreateManyTenantInput | Prisma.StockMovementCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type StockMovementUpsertWithWhereUniqueWithoutTenantInput = {
@@ -599,6 +600,7 @@ export type StockMovementCreateOrConnectWithoutOutletInput = {
 
 export type StockMovementCreateManyOutletInputEnvelope = {
   data: Prisma.StockMovementCreateManyOutletInput | Prisma.StockMovementCreateManyOutletInput[]
+  skipDuplicates?: boolean
 }
 
 export type StockMovementUpsertWithWhereUniqueWithoutOutletInput = {
@@ -1445,6 +1447,7 @@ export type StockMovementCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many StockMovements.
    */
   data: Prisma.StockMovementCreateManyInput | Prisma.StockMovementCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1463,6 +1466,7 @@ export type StockMovementCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many StockMovements.
    */
   data: Prisma.StockMovementCreateManyInput | Prisma.StockMovementCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

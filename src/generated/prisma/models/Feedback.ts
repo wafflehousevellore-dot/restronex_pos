@@ -472,6 +472,7 @@ export type FeedbackCreateOrConnectWithoutTenantInput = {
 
 export type FeedbackCreateManyTenantInputEnvelope = {
   data: Prisma.FeedbackCreateManyTenantInput | Prisma.FeedbackCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type FeedbackUpsertWithWhereUniqueWithoutTenantInput = {
@@ -1273,6 +1274,7 @@ export type FeedbackCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Feedbacks.
    */
   data: Prisma.FeedbackCreateManyInput | Prisma.FeedbackCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1291,6 +1293,7 @@ export type FeedbackCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Feedbacks.
    */
   data: Prisma.FeedbackCreateManyInput | Prisma.FeedbackCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

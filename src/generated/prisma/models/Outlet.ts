@@ -775,6 +775,7 @@ export type OutletCreateOrConnectWithoutTenantInput = {
 
 export type OutletCreateManyTenantInputEnvelope = {
   data: Prisma.OutletCreateManyTenantInput | Prisma.OutletCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type OutletUpsertWithWhereUniqueWithoutTenantInput = {
@@ -2760,6 +2761,7 @@ export type OutletCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Outlets.
    */
   data: Prisma.OutletCreateManyInput | Prisma.OutletCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2778,6 +2780,7 @@ export type OutletCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Outlets.
    */
   data: Prisma.OutletCreateManyInput | Prisma.OutletCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

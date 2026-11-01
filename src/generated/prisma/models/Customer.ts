@@ -566,6 +566,7 @@ export type CustomerCreateOrConnectWithoutTenantInput = {
 
 export type CustomerCreateManyTenantInputEnvelope = {
   data: Prisma.CustomerCreateManyTenantInput | Prisma.CustomerCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type CustomerUpsertWithWhereUniqueWithoutTenantInput = {
@@ -1490,6 +1491,7 @@ export type CustomerCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * The data used to create many Customers.
    */
   data: Prisma.CustomerCreateManyInput | Prisma.CustomerCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1508,6 +1510,7 @@ export type CustomerCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many Customers.
    */
   data: Prisma.CustomerCreateManyInput | Prisma.CustomerCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

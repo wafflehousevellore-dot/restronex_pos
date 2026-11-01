@@ -522,6 +522,7 @@ export type TokenCreateOrConnectWithoutTenantInput = {
 
 export type TokenCreateManyTenantInputEnvelope = {
   data: Prisma.TokenCreateManyTenantInput | Prisma.TokenCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type TokenUpsertWithWhereUniqueWithoutTenantInput = {
@@ -578,6 +579,7 @@ export type TokenCreateOrConnectWithoutOutletInput = {
 
 export type TokenCreateManyOutletInputEnvelope = {
   data: Prisma.TokenCreateManyOutletInput | Prisma.TokenCreateManyOutletInput[]
+  skipDuplicates?: boolean
 }
 
 export type TokenUpsertWithWhereUniqueWithoutOutletInput = {
@@ -1410,6 +1412,7 @@ export type TokenCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Tokens.
    */
   data: Prisma.TokenCreateManyInput | Prisma.TokenCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1428,6 +1431,7 @@ export type TokenCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Tokens.
    */
   data: Prisma.TokenCreateManyInput | Prisma.TokenCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

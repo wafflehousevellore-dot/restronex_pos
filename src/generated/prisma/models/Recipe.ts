@@ -1195,6 +1195,7 @@ export type RecipeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Recipes.
    */
   data: Prisma.RecipeCreateManyInput | Prisma.RecipeCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1213,6 +1214,7 @@ export type RecipeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Recipes.
    */
   data: Prisma.RecipeCreateManyInput | Prisma.RecipeCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -472,6 +472,7 @@ export type SubscriptionPaymentCreateOrConnectWithoutSubscriptionInput = {
 
 export type SubscriptionPaymentCreateManySubscriptionInputEnvelope = {
   data: Prisma.SubscriptionPaymentCreateManySubscriptionInput | Prisma.SubscriptionPaymentCreateManySubscriptionInput[]
+  skipDuplicates?: boolean
 }
 
 export type SubscriptionPaymentUpsertWithWhereUniqueWithoutSubscriptionInput = {
@@ -1273,6 +1274,7 @@ export type SubscriptionPaymentCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many SubscriptionPayments.
    */
   data: Prisma.SubscriptionPaymentCreateManyInput | Prisma.SubscriptionPaymentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1291,6 +1293,7 @@ export type SubscriptionPaymentCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many SubscriptionPayments.
    */
   data: Prisma.SubscriptionPaymentCreateManyInput | Prisma.SubscriptionPaymentCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

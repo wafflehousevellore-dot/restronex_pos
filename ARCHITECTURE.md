@@ -130,3 +130,4 @@ For serverless deployments (such as Vercel or cloud containers), connection pool
 - **Automated Backups:** Supabase automated daily WAL-level backups with Point-In-Time Recovery (PITR) for enterprise resiliency.
 - **Versioned Migrations:** All schema changes reside in `supabase/migrations/` and `prisma/migrations/`.
 - **Security Audits:** Regular execution of `npm run test:security` validates tenant boundaries, outlet access constraints, and webhook deduplication.
+

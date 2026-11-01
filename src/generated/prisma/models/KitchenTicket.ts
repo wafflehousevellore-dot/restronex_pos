@@ -520,6 +520,7 @@ export type KitchenTicketCreateOrConnectWithoutOrderInput = {
 
 export type KitchenTicketCreateManyOrderInputEnvelope = {
   data: Prisma.KitchenTicketCreateManyOrderInput | Prisma.KitchenTicketCreateManyOrderInput[]
+  skipDuplicates?: boolean
 }
 
 export type KitchenTicketUpsertWithWhereUniqueWithoutOrderInput = {
@@ -1343,6 +1344,7 @@ export type KitchenTicketCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many KitchenTickets.
    */
   data: Prisma.KitchenTicketCreateManyInput | Prisma.KitchenTicketCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1361,6 +1363,7 @@ export type KitchenTicketCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many KitchenTickets.
    */
   data: Prisma.KitchenTicketCreateManyInput | Prisma.KitchenTicketCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

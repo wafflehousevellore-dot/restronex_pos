@@ -546,6 +546,7 @@ export type TableCreateOrConnectWithoutTenantInput = {
 
 export type TableCreateManyTenantInputEnvelope = {
   data: Prisma.TableCreateManyTenantInput | Prisma.TableCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type TableUpsertWithWhereUniqueWithoutTenantInput = {
@@ -605,6 +606,7 @@ export type TableCreateOrConnectWithoutOutletInput = {
 
 export type TableCreateManyOutletInputEnvelope = {
   data: Prisma.TableCreateManyOutletInput | Prisma.TableCreateManyOutletInput[]
+  skipDuplicates?: boolean
 }
 
 export type TableUpsertWithWhereUniqueWithoutOutletInput = {
@@ -1451,6 +1453,7 @@ export type TableCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Tables.
    */
   data: Prisma.TableCreateManyInput | Prisma.TableCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1469,6 +1472,7 @@ export type TableCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many Tables.
    */
   data: Prisma.TableCreateManyInput | Prisma.TableCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

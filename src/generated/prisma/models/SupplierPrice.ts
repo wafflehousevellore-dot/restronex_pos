@@ -542,6 +542,7 @@ export type SupplierPriceCreateOrConnectWithoutTenantInput = {
 
 export type SupplierPriceCreateManyTenantInputEnvelope = {
   data: Prisma.SupplierPriceCreateManyTenantInput | Prisma.SupplierPriceCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type SupplierPriceUpsertWithWhereUniqueWithoutTenantInput = {
@@ -595,6 +596,7 @@ export type SupplierPriceCreateOrConnectWithoutInventoryItemInput = {
 
 export type SupplierPriceCreateManyInventoryItemInputEnvelope = {
   data: Prisma.SupplierPriceCreateManyInventoryItemInput | Prisma.SupplierPriceCreateManyInventoryItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type SupplierPriceUpsertWithWhereUniqueWithoutInventoryItemInput = {
@@ -636,6 +638,7 @@ export type SupplierPriceCreateOrConnectWithoutSupplierInput = {
 
 export type SupplierPriceCreateManySupplierInputEnvelope = {
   data: Prisma.SupplierPriceCreateManySupplierInput | Prisma.SupplierPriceCreateManySupplierInput[]
+  skipDuplicates?: boolean
 }
 
 export type SupplierPriceUpsertWithWhereUniqueWithoutSupplierInput = {
@@ -1494,6 +1497,7 @@ export type SupplierPriceCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many SupplierPrices.
    */
   data: Prisma.SupplierPriceCreateManyInput | Prisma.SupplierPriceCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1512,6 +1516,7 @@ export type SupplierPriceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many SupplierPrices.
    */
   data: Prisma.SupplierPriceCreateManyInput | Prisma.SupplierPriceCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

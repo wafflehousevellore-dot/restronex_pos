@@ -450,6 +450,7 @@ export type RecipeIngredientCreateOrConnectWithoutInventoryItemInput = {
 
 export type RecipeIngredientCreateManyInventoryItemInputEnvelope = {
   data: Prisma.RecipeIngredientCreateManyInventoryItemInput | Prisma.RecipeIngredientCreateManyInventoryItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type RecipeIngredientUpsertWithWhereUniqueWithoutInventoryItemInput = {
@@ -497,6 +498,7 @@ export type RecipeIngredientCreateOrConnectWithoutRecipeInput = {
 
 export type RecipeIngredientCreateManyRecipeInputEnvelope = {
   data: Prisma.RecipeIngredientCreateManyRecipeInput | Prisma.RecipeIngredientCreateManyRecipeInput[]
+  skipDuplicates?: boolean
 }
 
 export type RecipeIngredientUpsertWithWhereUniqueWithoutRecipeInput = {
@@ -1287,6 +1289,7 @@ export type RecipeIngredientCreateManyArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many RecipeIngredients.
    */
   data: Prisma.RecipeIngredientCreateManyInput | Prisma.RecipeIngredientCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1305,6 +1308,7 @@ export type RecipeIngredientCreateManyAndReturnArgs<ExtArgs extends runtime.Type
    * The data used to create many RecipeIngredients.
    */
   data: Prisma.RecipeIngredientCreateManyInput | Prisma.RecipeIngredientCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

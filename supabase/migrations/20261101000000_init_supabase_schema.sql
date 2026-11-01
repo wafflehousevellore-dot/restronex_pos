@@ -492,9 +492,12 @@ CREATE INDEX IF NOT EXISTS "PendingRegistration_status_idx" ON "PendingRegistrat
 -- 4. Clerk Third-Party Authentication & RLS Security Functions
 -- ============================================================================
 
--- Extracts Clerk user ID from the native JWT `sub` claim
-CREATE OR REPLACE FUNCTION auth.clerk_user_id() RETURNS TEXT AS $$
-  SELECT NULLIF(current_setting('request.jwt.claims', true)::jsonb->>'sub', '')::text;
+-- Extracts Clerk user ID from the native JWT `sub` claim or request claims
+CREATE OR REPLACE FUNCTION public.clerk_user_id() RETURNS TEXT AS $$
+  SELECT COALESCE(
+    NULLIF(current_setting('request.jwt.claims', true)::jsonb->>'sub', ''),
+    NULLIF(current_setting('request.jwt.claim.sub', true), '')
+  )::text;
 $$ LANGUAGE sql STABLE;
 
 -- Checks if the authenticated user has an active membership for the given tenant
@@ -503,7 +506,7 @@ CREATE OR REPLACE FUNCTION public.is_tenant_member(p_tenant_id TEXT) RETURNS BOO
     SELECT 1 FROM "Membership" m
     JOIN "User" u ON m."userId" = u."id"
     WHERE m."tenantId" = p_tenant_id
-      AND (u."clerkId" = auth.clerk_user_id() OR u."id" = auth.clerk_user_id())
+      AND (u."clerkId" = public.clerk_user_id() OR u."id" = public.clerk_user_id())
   );
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
@@ -513,7 +516,7 @@ CREATE OR REPLACE FUNCTION public.has_outlet_access(p_outlet_id TEXT) RETURNS BO
     SELECT 1 FROM "Membership" m
     JOIN "User" u ON m."userId" = u."id"
     WHERE (m."outletId" IS NULL OR m."outletId" = p_outlet_id)
-      AND (u."clerkId" = auth.clerk_user_id() OR u."id" = auth.clerk_user_id())
+      AND (u."clerkId" = public.clerk_user_id() OR u."id" = public.clerk_user_id())
   );
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
 
@@ -521,7 +524,7 @@ $$ LANGUAGE sql STABLE SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION public.is_platform_admin() RETURNS BOOLEAN AS $$
   SELECT EXISTS (
     SELECT 1 FROM "User" u
-    WHERE (u."clerkId" = auth.clerk_user_id() OR u."id" = auth.clerk_user_id())
+    WHERE (u."clerkId" = public.clerk_user_id() OR u."id" = public.clerk_user_id())
       AND u."isPlatformAdmin" = true
   );
 $$ LANGUAGE sql STABLE SECURITY DEFINER;
@@ -565,43 +568,54 @@ ALTER TABLE "DayEndSummary" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "AuditLog" ENABLE ROW LEVEL SECURITY;
 
 -- Tenant Isolation Policies
+DROP POLICY IF EXISTS tenant_isolation_tenant ON "Tenant";
 CREATE POLICY tenant_isolation_tenant ON "Tenant"
     FOR ALL USING (public.is_tenant_member("id") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_outlet ON "Outlet";
 CREATE POLICY tenant_isolation_outlet ON "Outlet"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_menu_category ON "MenuCategory";
 CREATE POLICY tenant_isolation_menu_category ON "MenuCategory"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_menu_item ON "MenuItem";
 CREATE POLICY tenant_isolation_menu_item ON "MenuItem"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
 -- Outlet-Scoped Authorization Policies (Orders & Floor Operations)
+DROP POLICY IF EXISTS tenant_outlet_isolation_order ON "Order";
 CREATE POLICY tenant_outlet_isolation_order ON "Order"
     FOR ALL USING (
         public.is_tenant_member("tenantId") AND (public.has_outlet_access("outletId") OR public.is_platform_admin())
     );
 
+DROP POLICY IF EXISTS tenant_outlet_isolation_table ON "Table";
 CREATE POLICY tenant_outlet_isolation_table ON "Table"
     FOR ALL USING (
         public.is_tenant_member("tenantId") AND (public.has_outlet_access("outletId") OR public.is_platform_admin())
     );
 
+DROP POLICY IF EXISTS tenant_outlet_isolation_kds ON "KitchenTicket";
 CREATE POLICY tenant_outlet_isolation_kds ON "KitchenTicket"
     FOR ALL USING (
         public.is_tenant_member("tenantId") AND (public.has_outlet_access("outletId") OR public.is_platform_admin())
     );
 
+DROP POLICY IF EXISTS tenant_isolation_inventory ON "InventoryItem";
 CREATE POLICY tenant_isolation_inventory ON "InventoryItem"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_customers ON "Customer";
 CREATE POLICY tenant_isolation_customers ON "Customer"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_subscription ON "Subscription";
 CREATE POLICY tenant_isolation_subscription ON "Subscription"
     FOR ALL USING (public.is_tenant_member("tenantId") OR public.is_platform_admin());
 
+DROP POLICY IF EXISTS tenant_isolation_audit_logs ON "AuditLog";
 CREATE POLICY tenant_isolation_audit_logs ON "AuditLog"
     FOR ALL USING (
         ("tenantId" IS NOT NULL AND public.is_tenant_member("tenantId")) OR public.is_platform_admin()
@@ -617,20 +631,21 @@ VALUES
     ('restaurant-documents', 'restaurant-documents', false)
 ON CONFLICT (id) DO NOTHING;
 
--- Public read for restaurant assets (menu photos, restaurant logos)
+DROP POLICY IF EXISTS "Public Read Access for Restaurant Assets" ON storage.objects;
 CREATE POLICY "Public Read Access for Restaurant Assets" ON storage.objects
     FOR SELECT USING (bucket_id = 'restaurant-assets');
 
--- Tenant-isolated upload policy: User can only upload into their own tenant directory `${tenant_id}/*`
+DROP POLICY IF EXISTS "Tenant Isolated Asset Uploads" ON storage.objects;
 CREATE POLICY "Tenant Isolated Asset Uploads" ON storage.objects
     FOR INSERT WITH CHECK (
         bucket_id = 'restaurant-assets'
         AND public.is_tenant_member((storage.foldername(name))[1])
     );
 
--- Tenant-isolated private documents policy: Only authenticated members can view/upload
+DROP POLICY IF EXISTS "Tenant Isolated Document Access" ON storage.objects;
 CREATE POLICY "Tenant Isolated Document Access" ON storage.objects
     FOR ALL USING (
         bucket_id = 'restaurant-documents'
         AND public.is_tenant_member((storage.foldername(name))[1])
     );
+

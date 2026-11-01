@@ -1240,6 +1240,7 @@ export type PendingRegistrationCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many PendingRegistrations.
    */
   data: Prisma.PendingRegistrationCreateManyInput | Prisma.PendingRegistrationCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1258,6 +1259,7 @@ export type PendingRegistrationCreateManyAndReturnArgs<ExtArgs extends runtime.T
    * The data used to create many PendingRegistrations.
    */
   data: Prisma.PendingRegistrationCreateManyInput | Prisma.PendingRegistrationCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

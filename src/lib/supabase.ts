@@ -66,3 +66,4 @@ export function getTenantSupabaseClient(tenantId: string, clerkToken?: string | 
     },
   });
 }
+

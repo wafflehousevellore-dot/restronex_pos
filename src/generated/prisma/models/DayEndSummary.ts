@@ -558,6 +558,7 @@ export type DayEndSummaryCreateOrConnectWithoutTenantInput = {
 
 export type DayEndSummaryCreateManyTenantInputEnvelope = {
   data: Prisma.DayEndSummaryCreateManyTenantInput | Prisma.DayEndSummaryCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type DayEndSummaryUpsertWithWhereUniqueWithoutTenantInput = {
@@ -617,6 +618,7 @@ export type DayEndSummaryCreateOrConnectWithoutOutletInput = {
 
 export type DayEndSummaryCreateManyOutletInputEnvelope = {
   data: Prisma.DayEndSummaryCreateManyOutletInput | Prisma.DayEndSummaryCreateManyOutletInput[]
+  skipDuplicates?: boolean
 }
 
 export type DayEndSummaryUpsertWithWhereUniqueWithoutOutletInput = {
@@ -1463,6 +1465,7 @@ export type DayEndSummaryCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many DayEndSummaries.
    */
   data: Prisma.DayEndSummaryCreateManyInput | Prisma.DayEndSummaryCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1481,6 +1484,7 @@ export type DayEndSummaryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many DayEndSummaries.
    */
   data: Prisma.DayEndSummaryCreateManyInput | Prisma.DayEndSummaryCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -410,6 +410,7 @@ export type IntegrationConfigCreateOrConnectWithoutTenantInput = {
 
 export type IntegrationConfigCreateManyTenantInputEnvelope = {
   data: Prisma.IntegrationConfigCreateManyTenantInput | Prisma.IntegrationConfigCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type IntegrationConfigUpsertWithWhereUniqueWithoutTenantInput = {
@@ -1200,6 +1201,7 @@ export type IntegrationConfigCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many IntegrationConfigs.
    */
   data: Prisma.IntegrationConfigCreateManyInput | Prisma.IntegrationConfigCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1218,6 +1220,7 @@ export type IntegrationConfigCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many IntegrationConfigs.
    */
   data: Prisma.IntegrationConfigCreateManyInput | Prisma.IntegrationConfigCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

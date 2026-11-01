@@ -448,6 +448,7 @@ export type LoyaltyTxnCreateOrConnectWithoutCustomerInput = {
 
 export type LoyaltyTxnCreateManyCustomerInputEnvelope = {
   data: Prisma.LoyaltyTxnCreateManyCustomerInput | Prisma.LoyaltyTxnCreateManyCustomerInput[]
+  skipDuplicates?: boolean
 }
 
 export type LoyaltyTxnUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -1238,6 +1239,7 @@ export type LoyaltyTxnCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many LoyaltyTxns.
    */
   data: Prisma.LoyaltyTxnCreateManyInput | Prisma.LoyaltyTxnCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1256,6 +1258,7 @@ export type LoyaltyTxnCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many LoyaltyTxns.
    */
   data: Prisma.LoyaltyTxnCreateManyInput | Prisma.LoyaltyTxnCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

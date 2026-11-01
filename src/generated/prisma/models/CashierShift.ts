@@ -538,6 +538,7 @@ export type CashierShiftCreateOrConnectWithoutOutletInput = {
 
 export type CashierShiftCreateManyOutletInputEnvelope = {
   data: Prisma.CashierShiftCreateManyOutletInput | Prisma.CashierShiftCreateManyOutletInput[]
+  skipDuplicates?: boolean
 }
 
 export type CashierShiftUpsertWithWhereUniqueWithoutOutletInput = {
@@ -1361,6 +1362,7 @@ export type CashierShiftCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many CashierShifts.
    */
   data: Prisma.CashierShiftCreateManyInput | Prisma.CashierShiftCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1379,6 +1381,7 @@ export type CashierShiftCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many CashierShifts.
    */
   data: Prisma.CashierShiftCreateManyInput | Prisma.CashierShiftCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

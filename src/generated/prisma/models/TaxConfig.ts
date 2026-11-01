@@ -424,6 +424,7 @@ export type TaxConfigCreateOrConnectWithoutTenantInput = {
 
 export type TaxConfigCreateManyTenantInputEnvelope = {
   data: Prisma.TaxConfigCreateManyTenantInput | Prisma.TaxConfigCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type TaxConfigUpsertWithWhereUniqueWithoutTenantInput = {
@@ -1203,6 +1204,7 @@ export type TaxConfigCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many TaxConfigs.
    */
   data: Prisma.TaxConfigCreateManyInput | Prisma.TaxConfigCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1221,6 +1223,7 @@ export type TaxConfigCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many TaxConfigs.
    */
   data: Prisma.TaxConfigCreateManyInput | Prisma.TaxConfigCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

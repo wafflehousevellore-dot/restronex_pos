@@ -1100,6 +1100,7 @@ export type DemoRequestCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many DemoRequests.
    */
   data: Prisma.DemoRequestCreateManyInput | Prisma.DemoRequestCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1118,6 +1119,7 @@ export type DemoRequestCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many DemoRequests.
    */
   data: Prisma.DemoRequestCreateManyInput | Prisma.DemoRequestCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**

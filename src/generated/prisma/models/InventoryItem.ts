@@ -543,6 +543,7 @@ export type InventoryItemCreateOrConnectWithoutTenantInput = {
 
 export type InventoryItemCreateManyTenantInputEnvelope = {
   data: Prisma.InventoryItemCreateManyTenantInput | Prisma.InventoryItemCreateManyTenantInput[]
+  skipDuplicates?: boolean
 }
 
 export type InventoryItemUpsertWithWhereUniqueWithoutTenantInput = {
@@ -1516,6 +1517,7 @@ export type InventoryItemCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many InventoryItems.
    */
   data: Prisma.InventoryItemCreateManyInput | Prisma.InventoryItemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1534,6 +1536,7 @@ export type InventoryItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many InventoryItems.
    */
   data: Prisma.InventoryItemCreateManyInput | Prisma.InventoryItemCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

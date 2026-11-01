@@ -424,6 +424,7 @@ export type MenuModifierCreateOrConnectWithoutItemInput = {
 
 export type MenuModifierCreateManyItemInputEnvelope = {
   data: Prisma.MenuModifierCreateManyItemInput | Prisma.MenuModifierCreateManyItemInput[]
+  skipDuplicates?: boolean
 }
 
 export type MenuModifierUpsertWithWhereUniqueWithoutItemInput = {
@@ -1203,6 +1204,7 @@ export type MenuModifierCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many MenuModifiers.
    */
   data: Prisma.MenuModifierCreateManyInput | Prisma.MenuModifierCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1221,6 +1223,7 @@ export type MenuModifierCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many MenuModifiers.
    */
   data: Prisma.MenuModifierCreateManyInput | Prisma.MenuModifierCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
