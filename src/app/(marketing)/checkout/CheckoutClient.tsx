@@ -347,8 +347,11 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
       modal: { ondismiss: ()=> setMsg({type:"error", text:"Checkout dismissed — your card was not charged. You can retry or start a free trial."})},
     };
     const rzp = new window.Razorpay(options);
+    rzp.on("payment.failed", (r: any)=> {
+      setStep("summary");
+      setMsg({type:"error", text: `Payment failed: ${r.error?.description || "Unknown"} — no subscription activated. Please retry or contact support@restronex.app`});
+    });
     rzp.open();
-    rzp.on("payment.failed", (r: any)=> setMsg({type:"error", text: `Payment failed: ${r.error?.description || "Unknown"} — no subscription activated. Please retry or contact support@restronex.app`}));
   }
 
   async function simulateMockPayment(orderId: string, amountPaise: number){

@@ -8,6 +8,10 @@ export default clerkMiddleware(async (auth, req) => {
   const tokenParam = req.nextUrl.searchParams.get("token") || req.headers.get("x-auth-token");
   const isJWTAuth = !!session || !!tokenParam;
   const pathname = req.nextUrl.pathname;
+  // Standard Razorpay checkout test page is public
+  if (pathname === "/checkout/standard" || pathname === "/standard-checkout") {
+    return;
+  }
   const isProtected = PROTECTED.some((p) => pathname === p || pathname.startsWith(p + "/"));
   if (isProtected) {
     const { userId } = await auth();
