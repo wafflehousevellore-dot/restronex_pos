@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatINR } from "@/lib/money";
 import { Edit2, Save, X, Check, ShieldCheck } from "lucide-react";
 
@@ -53,13 +53,13 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 text-[#172B25]">
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <div>
-          <h1 className="text-xl font-black text-white">Subscription Plans Management</h1>
-          <p className="text-xs text-white/50">Configure pricing, outlet allowances, and staff account limits across the platform.</p>
+          <h1 className="text-2xl font-black text-[#172B25]">Subscription Plans Management</h1>
+          <p className="text-sm text-[#718078]">Configure pricing, outlet allowances, and staff account limits across the platform.</p>
         </div>
-        {msg && <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">{msg}</span>}
+        {msg && <span className="text-xs font-bold text-[#16845B] bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1 rounded-full">{msg}</span>}
       </div>
 
       <div className="grid gap-4">
@@ -67,68 +67,68 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
           const isEditing = editingId === p.id;
 
           return (
-            <DarkCard key={p.id}>
-              <DarkCardContent className="pt-5">
+            <Card key={p.id} className="bg-white border-[#E5EBE7] shadow-xs">
+              <CardContent className="pt-5 pb-5">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-base font-bold text-white">{p.name}</span>
-                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-white/10 text-white/60">
+                      <span className="text-base font-bold text-[#172B25]">{p.name}</span>
+                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-[#F8FAF9] border border-[#E5EBE7] text-[#718078]">
                         {p.slug}
                       </span>
                     </div>
 
                     {!isEditing ? (
-                      <div className="text-xs text-white/60 mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                      <div className="text-xs text-[#718078] mt-1.5 flex flex-wrap gap-x-5 gap-y-1">
                         <span>
-                          Monthly: <b className="text-white">{formatINR(p.priceMonthlyPaise)}</b>
+                          Monthly: <b className="text-[#172B25]">{formatINR(p.priceMonthlyPaise)}</b>
                         </span>
                         <span>
-                          Annual: <b className="text-white">{formatINR(p.priceAnnualPaise)}</b>
+                          Annual: <b className="text-[#172B25]">{formatINR(p.priceAnnualPaise)}</b>
                         </span>
                         <span>
-                          Max Outlets: <b className="text-white">{p.maxOutlets}</b>
+                          Max Outlets: <b className="text-[#172B25]">{p.maxOutlets}</b>
                         </span>
                         <span>
-                          Max Staff: <b className="text-white">{p.maxUsers}</b>
+                          Max Staff: <b className="text-[#172B25]">{p.maxUsers}</b>
                         </span>
                       </div>
                     ) : (
                       <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                         <div>
-                          <label className="block text-white/50 text-[10px] mb-1">Monthly (₹)</label>
+                          <label className="block text-[#718078] text-[10px] font-semibold mb-1">Monthly (₹)</label>
                           <input
                             type="number"
                             value={editForm.priceMonthlyRupees}
                             onChange={(e) => setEditForm({ ...editForm, priceMonthlyRupees: Number(e.target.value) })}
-                            className="w-full bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs"
+                            className="w-full bg-white border border-[#E5EBE7] rounded-lg px-2.5 py-1.5 text-[#172B25] text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block text-white/50 text-[10px] mb-1">Annual (₹)</label>
+                          <label className="block text-[#718078] text-[10px] font-semibold mb-1">Annual (₹)</label>
                           <input
                             type="number"
                             value={editForm.priceAnnualRupees}
                             onChange={(e) => setEditForm({ ...editForm, priceAnnualRupees: Number(e.target.value) })}
-                            className="w-full bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs"
+                            className="w-full bg-white border border-[#E5EBE7] rounded-lg px-2.5 py-1.5 text-[#172B25] text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block text-white/50 text-[10px] mb-1">Max Outlets</label>
+                          <label className="block text-[#718078] text-[10px] font-semibold mb-1">Max Outlets</label>
                           <input
                             type="number"
                             value={editForm.maxOutlets}
                             onChange={(e) => setEditForm({ ...editForm, maxOutlets: Number(e.target.value) })}
-                            className="w-full bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs"
+                            className="w-full bg-white border border-[#E5EBE7] rounded-lg px-2.5 py-1.5 text-[#172B25] text-xs"
                           />
                         </div>
                         <div>
-                          <label className="block text-white/50 text-[10px] mb-1">Max Users</label>
+                          <label className="block text-[#718078] text-[10px] font-semibold mb-1">Max Users</label>
                           <input
                             type="number"
                             value={editForm.maxUsers}
                             onChange={(e) => setEditForm({ ...editForm, maxUsers: Number(e.target.value) })}
-                            className="w-full bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs"
+                            className="w-full bg-white border border-[#E5EBE7] rounded-lg px-2.5 py-1.5 text-[#172B25] text-xs"
                           />
                         </div>
                       </div>
@@ -140,9 +140,9 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
                       <button
                         type="button"
                         onClick={() => startEdit(p)}
-                        className="rounded-full bg-white/10 hover:bg-white/20 text-white px-3.5 py-1.5 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        className="rounded-full border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-[#172B25] px-3.5 py-1.5 text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors"
                       >
-                        <Edit2 className="h-3 w-3" />
+                        <Edit2 className="h-3 w-3 text-[#16845B]" />
                         <span>Edit Plan</span>
                       </button>
                     ) : (
@@ -151,7 +151,7 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
                           type="button"
                           disabled={saving}
                           onClick={() => handleSave(p.id)}
-                          className="rounded-full bg-[#3D954F] hover:bg-[#338a44] text-white px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-4 py-1.5 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs disabled:opacity-50"
                         >
                           <Save className="h-3 w-3" />
                           <span>{saving ? "Saving..." : "Save"}</span>
@@ -159,7 +159,7 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
                         <button
                           type="button"
                           onClick={() => setEditingId(null)}
-                          className="rounded-full bg-white/10 hover:bg-white/20 text-white/70 px-2.5 py-1.5 text-xs font-semibold transition-colors"
+                          className="rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:bg-[#F8FAF9] px-2.5 py-1.5 text-xs font-semibold transition-colors"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -167,8 +167,8 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
                     )}
                   </div>
                 </div>
-              </DarkCardContent>
-            </DarkCard>
+              </CardContent>
+            </Card>
           );
         })}
       </div>

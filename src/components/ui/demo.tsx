@@ -1,169 +1,124 @@
 "use client";
 
-import { AlertCircle, ArrowRight, Check } from "lucide-react";
+import { Check, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const pricingTiers = [
+interface PricingTier {
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  cta: string;
+  featured?: boolean;
+}
+
+const tiers: PricingTier[] = [
   {
-    cta: "GET STARTED FREE",
-    description: "Perfect for individuals getting started",
-    featured: false,
-    features: [
-      "Access to 50+ Templates",
-      "Basic AI Writer",
-      "Limited Word Count",
-      "Email Support",
-      "Brand Voice Customization",
-      "SEO Optimization Tools",
-    ],
     name: "FREE",
     price: "$0",
+    description: "Start exploring and organizing your projects with essential tools.",
+    features: [
+      "Access to essential workspace features",
+      "Upload files up to 50MB",
+      "Real-time notifications",
+      "Single-user setup",
+    ],
+    cta: "GET STARTED FOR FREE",
   },
   {
-    cta: "START 7-DAY FREE TRIAL",
-    description: "Best for solo creators and marketers",
-    featured: true,
-    features: [
-      "Everything in Free",
-      "Unlimited Words",
-      "Export to WordPress & Notion",
-      "Long-Form Assistant",
-      "Brand Voice Customization",
-      "SEO Optimization Tools",
-    ],
     name: "PRO",
     price: "$299",
+    description: "Unlock advanced collaboration tools and priority performance.",
+    features: [
+      "Unlimited customizable boards",
+      "Smart activity feeds and history",
+      "Upload files up to 1GB",
+      "Instant push notifications",
+      "Shared workspaces for small teams",
+    ],
+    cta: "UPGRADE TO PRO",
+    featured: true,
   },
   {
-    cta: "CONTACT SALES",
-    description: "For the growing teams and businesses",
-    featured: false,
-    features: [
-      "Everything in Pro",
-      "5 User Seats",
-      "Shared Workspaces",
-      "Team Performance Analytics",
-      "Priority Support",
-      "SEO Optimization Tools",
-    ],
     name: "ENTERPRISE",
-    price: "Contact us",
+    price: "CUSTOM",
+    description: "Custom plans tailored to large organizations with complex needs.",
+    features: [
+      "Unlimited workspace scaling",
+      "Smart automations and reporting",
+      "Unlimited file uploads",
+      "Enterprise security and controls",
+      "Dedicated account management",
+      "Custom SLA agreements",
+    ],
+    cta: "CONTACT US",
   },
 ];
 
 export default function PricingSection() {
   return (
-    <div className="min-h-screen bg-black px-4 text-white">
-      <div className="mx-auto max-w-5xl border-neutral-700 border-x py-20">
+    <div className="min-h-screen bg-[#F8FAF9] px-4 text-[#172B25]">
+      <div className="mx-auto max-w-6xl py-16 sm:py-20">
         <div className="mb-10 grid grid-cols-1 items-center gap-6 px-4 md:grid-cols-12 md:px-10">
           <div className="md:col-span-8">
-            <p className="mb-4 w-fit rounded-full border border-neutral-700 px-2 py-0.5 text-red-400 text-xs tracking-wide">
+            <p className="mb-4 w-fit rounded-full border border-[#16845B]/20 bg-[#E8F5EE] px-3.5 py-1 text-xs font-semibold tracking-wide text-[#16845B]">
               SIMPLE, SCALABLE PRICING
             </p>
-            <h1 className="font-normal text-3xl tracking-tight md:text-5xl">
-              Plans that fit your{" "}
-              <span className="text-gray-500">writing needs</span>
-            </h1>
+            <h2 className="text-3xl font-black tracking-tight text-[#172B25] md:text-5xl">
+              Plans that fit your <span className="text-[#718078]">growth</span>
+            </h2>
+            <p className="mt-3 text-sm text-[#718078] max-w-xl">
+              Transparent tiers tailored for modern SaaS and dining operations.
+            </p>
           </div>
           <div className="md:col-span-4 md:mt-auto">
-            <p className="text-gray-500">
-              <span className="text-white">Simple pricing</span> with powerful
-              tools to help you write faster
-            </p>
+            <div className="flex items-center gap-2 text-xs text-[#718078]">
+              <Sparkles className="h-3.5 w-3.5 text-[#16845B]" /> Trusted by industry leaders
+            </div>
           </div>
         </div>
 
-        <div className="mb-8 grid md:grid-cols-3">
-          {pricingTiers.map((tier) => (
+        <div className="grid md:grid-cols-3 gap-6">
+          {tiers.map((tier) => (
             <div
-              className={`relative flex h-full flex-col ${
-                tier.featured ? "" : ""
-              }`}
               key={tier.name}
+              className={`rounded-2xl border p-6 flex flex-col justify-between ${
+                tier.featured
+                  ? "border-2 border-[#16845B] bg-[#E8F5EE]/40 shadow-md"
+                  : "border-[#E5EBE7] bg-white shadow-xs"
+              }`}
             >
-              <div
-                className={`relative flex h-full flex-col ${
-                  tier.featured
-                    ? "border-2 border-red-500 bg-neutral-900"
-                    : "border border-neutral-700 bg-black md:border-x-0 md:border-y"
-                }`}
-              >
-                <div className="relative mb-6 border-neutral-700 border-b p-6">
-                  <h3
-                    className={`mb-2 font-medium text-xl ${
-                      tier.featured ? "text-red-500" : "text-white"
-                    }`}
-                  >
+              <div>
+                <div className="flex items-center justify-between">
+                  <h3 className={`text-xl font-black ${tier.featured ? "text-[#16845B]" : "text-[#172B25]"}`}>
                     {tier.name}
                   </h3>
-                  <p className="text-gray-400 text-sm">{tier.description}</p>
-                  {!tier.featured && (
-                    <div className="absolute inset-0 z-10 flex flex-col justify-between">
-                      <div className="absolute -top-0.5 -left-0.5">
-                        <div className="size-1.5 border-neutral-400 border-t-2 border-l-2" />
-                      </div>
-                      <div className="absolute -top-0.5 -right-0.5">
-                        <div className="size-1.5 border-neutral-400 border-t-2 border-r-2" />
-                      </div>
-                      <div className="absolute -right-0.5 -bottom-0.5">
-                        <div className="size-1.5 border-neutral-400 border-r-2 border-b-2" />
-                      </div>
-                      <div className="absolute -bottom-0.5 -left-0.5">
-                        <div className="size-1.5 border-neutral-400 border-b-2 border-l-2" />
-                      </div>
-                    </div>
+                  {tier.featured && (
+                    <span className="rounded-full bg-[#16845B] text-white text-[10px] font-bold px-2.5 py-0.5">
+                      POPULAR
+                    </span>
                   )}
                 </div>
-
-                <div className="mb-6 px-6">
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-medium text-4xl text-white">
-                      {tier.price}
-                    </span>
-                    {tier.price !== "Contact us" && (
-                      <span className="text-gray-400">/month</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mb-8 flex-1 px-6">
-                  <p className="mb-4 font-bold text-gray-300 text-xs tracking-wide">
-                    WHAT&apos;S INCLUDED:
-                  </p>
-                  <ul className="mb-6 space-y-3">
-                    {tier.features.map((feature, idx) => (
-                      <li className="flex items-start gap-3" key={idx}>
-                        {tier.featured ? (
-                          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
-                        ) : (
-                          <Check className="mt-0.5 h-5 w-5 shrink-0 text-gray-500" />
-                        )}
-                        <span className="text-gray-300 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button
-                    className={`w-full gap-2 rounded-sm py-2 ${
-                      tier.featured
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-white text-black hover:bg-gray-100"
-                    }`}
-                  >
-                    {tier.cta}
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </div>
-                {!tier.featured && (
-                  <div className="absolute inset-0 z-10 flex flex-col justify-between">
-                    <div className="absolute -right-0.5 -bottom-0.5">
-                      <div className="size-1.5 border-neutral-400 border-r-2 border-b-2" />
-                    </div>
-                    <div className="absolute -bottom-0.5 -left-0.5">
-                      <div className="size-1.5 border-neutral-400 border-b-2 border-l-2" />
-                    </div>
-                  </div>
-                )}
+                <p className="mt-2 text-xs text-[#718078]">{tier.description}</p>
+                <div className="mt-4 text-3xl font-black text-[#172B25]">{tier.price}</div>
+                <ul className="mt-6 space-y-2.5 text-xs text-[#718078]">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-[#16845B] shrink-0" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+              <Button
+                className={`mt-8 w-full rounded-full py-5 text-xs font-bold ${
+                  tier.featured
+                    ? "bg-[#16845B] hover:bg-[#116B49] text-white"
+                    : "bg-[#172B25] hover:bg-black text-white"
+                }`}
+              >
+                {tier.cta} <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              </Button>
             </div>
           ))}
         </div>

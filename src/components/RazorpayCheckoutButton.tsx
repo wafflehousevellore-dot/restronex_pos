@@ -110,7 +110,7 @@ export function RazorpayCheckoutButton({
         order_id: orderData.order_id,
         prefill,
         theme: {
-          color: "#16a34a", // Primary brand emerald
+          color: "#16845B",
         },
         handler: async function (response: {
           razorpay_order_id: string;
@@ -191,7 +191,7 @@ export function RazorpayCheckoutButton({
         disabled={loading || verifying}
         className={
           className ||
-          "px-5 py-2.5 rounded-lg font-medium text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition cursor-pointer flex items-center justify-center gap-2"
+          "px-5 py-2.5 rounded-xl font-semibold text-white bg-[#16845B] hover:bg-[#116B49] shadow-xs hover:shadow-sm disabled:opacity-50 transition cursor-pointer flex items-center justify-center gap-2"
         }
       >
         {loading
@@ -202,13 +202,13 @@ export function RazorpayCheckoutButton({
       </button>
 
       {errorMsg && (
-        <div className="p-3 text-xs rounded-md bg-red-500/10 border border-red-500/30 text-red-500">
+        <div className="p-3 text-xs rounded-xl bg-red-50 border border-red-200 text-red-700">
           ⚠️ {errorMsg}
         </div>
       )}
 
       {successMsg && (
-        <div className="p-3 text-xs rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-500">
+        <div className="p-3 text-xs rounded-xl bg-[#E8F5EE] border border-[#16845B]/30 text-[#16845B] font-medium">
           {successMsg}
         </div>
       )}

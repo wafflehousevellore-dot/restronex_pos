@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
-import { Card, DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { INTEGRATIONS, getIntegrationMeta } from "@/lib/integrations";
 import { Check, Plug, TestTube, Unplug, AlertCircle, Building2 } from "lucide-react";
 
@@ -39,6 +38,7 @@ export default function IntegrationsClient(){
     else { setMsg({type:"success", text:`✓ ${selected} saved as CONFIGURED. Run Test to verify and get CONNECTED.`}); load(); }
     setLoading(false);
   }
+
   async function test(){
     if (!selected) return;
     setLoading(true); setMsg({type:"info", text:"Testing connection — verifying API key + permissions..."});
@@ -48,6 +48,7 @@ export default function IntegrationsClient(){
     else setMsg({type: j.status==="CONNECTED" ? "success" : "error", text: j.testResult + (j.status==="CONNECTED" ? " • Status now CONNECTED." : " • Status ERROR.")});
     load(); setLoading(false);
   }
+
   async function disconnect(){
     if (!selected) return;
     if (!confirm(`Disconnect ${selected}?`)) return;
@@ -63,73 +64,149 @@ export default function IntegrationsClient(){
     const c = configs.find((x:any)=>x.provider===provider);
     return c?.status || "NOT_CONNECTED";
   }
+
   function statusBadge(s:string){
-    if (s==="CONNECTED") return <span className="rounded-full bg-[#3D954F] text-white px-2.5 py-1 text-xs font-bold">Connected ✓</span>;
-    if (s==="CONFIGURED") return <span className="rounded-full bg-amber-500/15 border border-amber-500/20 text-amber-300 px-2.5 py-1 text-xs font-bold">Configured — test to verify</span>;
-    if (s==="ERROR") return <span className="rounded-full bg-red-500/15 border border-red-500/20 text-red-300 px-2.5 py-1 text-xs font-bold">Error</span>;
-    return <span className="rounded-full bg-white/5 border border-white/10 text-white/40 px-2.5 py-1 text-xs font-bold">Not connected</span>;
+    if (s==="CONNECTED") return <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B] px-2.5 py-0.5 text-xs font-bold">Connected ✓</span>;
+    if (s==="CONFIGURED") return <span className="rounded-full bg-amber-50 border border-amber-200 text-amber-900 px-2.5 py-0.5 text-xs font-bold">Configured</span>;
+    if (s==="ERROR") return <span className="rounded-full bg-red-50 border border-red-200 text-red-700 px-2.5 py-0.5 text-xs font-bold">Error</span>;
+    return <span className="rounded-full bg-[#F8FAF9] border border-[#E5EBE7] text-[#718078] px-2.5 py-0.5 text-xs font-medium">Not connected</span>;
   }
 
   const meta = selected ? getIntegrationMeta(selected) : null;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div><h1 className="text-2xl font-black text-white">Integrations — Verified Connections</h1><p className="text-sm text-white/50">We never fake connected. <b className="text-white">Connected = verified via test.</b> Configured = credentials saved, not verified. Errors shown honestly.</p></div>
-        <span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-white/60">{configs.filter((c:any)=>c.status==="CONNECTED").length} connected • {configs.length} configured</span>
+    <div className="space-y-6 text-[#172B25]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-[#172B25]">Integrations & Marketplaces</h1>
+          <p className="text-sm text-[#718078]">Connected = verified via live test. Configured = credentials saved. Honest error reporting.</p>
+        </div>
+        <span className="rounded-full bg-white border border-[#E5EBE7] px-3.5 py-1 text-xs text-[#718078] font-medium shadow-xs">
+          {configs.filter((c:any)=>c.status==="CONNECTED").length} connected • {configs.length} configured
+        </span>
       </div>
 
-      {msg && <div className={`rounded-xl border p-3 text-sm ${msg.type==="success" ? "bg-[#3D954F]/15 border-[#3D954F]/30 text-white" : msg.type==="error" ? "bg-red-500/10 border-red-500/20 text-red-200" : "bg-white/5 border-white/10 text-white/70"}`}>{msg.text}</div>}
+      {msg && (
+        <div className={`rounded-xl border p-3 text-sm ${
+          msg.type==="success" ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]" : msg.type==="error" ? "bg-red-50 border-red-200 text-red-700" : "bg-blue-50 border-blue-200 text-blue-700"
+        }`}>
+          {msg.text}
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-[420px_1fr] gap-6">
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {INTEGRATIONS.map(item=>{
             const st = statusMap(item.provider);
             const isSel = selected===item.provider;
             return (
-              <button key={item.provider} onClick={()=>open(item.provider)} className={`w-full text-left rounded-2xl border p-4 transition ${isSel ? "bg-[#0F1F14] border-[#3D954F]/40 shadow-lg" : "bg-white/5 border-white/10 hover:bg-white/[0.07] hover:border-white/20"}`}>
+              <button
+                key={item.provider}
+                onClick={()=>open(item.provider)}
+                className={`w-full text-left rounded-2xl border p-4 transition ${
+                  isSel
+                    ? "bg-[#E8F5EE] border-[#16845B] shadow-xs"
+                    : "bg-white border-[#E5EBE7] hover:bg-[#F8FAF9]"
+                }`}
+              >
                 <div className="flex items-start justify-between gap-2">
-                  <div><div className="text-sm font-bold text-white">{item.name}</div><div className="text-xs text-white/50 mt-0.5">{item.description}</div><div className="mt-2 text-xs text-white/30">{item.category} • {item.requiredFields.length ? `${item.requiredFields.length} fields` : "No credentials needed"}</div></div>
+                  <div>
+                    <div className="text-sm font-bold text-[#172B25]">{item.name}</div>
+                    <div className="text-xs text-[#718078] mt-0.5">{item.description}</div>
+                    <div className="mt-2 text-xs text-[#718078]">{item.category} • {item.requiredFields.length ? `${item.requiredFields.length} fields` : "No credentials needed"}</div>
+                  </div>
                   <div className="shrink-0">{statusBadge(st)}</div>
                 </div>
               </button>
             );
           })}
-          <DarkCard><CardContent className="pt-4 text-xs text-white/40">Adapter interface: <code>connect()</code> <code>sync()</code> <code>getStatus()</code> — honest states. Skippable during onboarding, completable in dashboard. Swiggy/Zomato require partner approval + API keys — we show blocked state if missing.</CardContent></DarkCard>
+          <Card className="bg-white border-[#E5EBE7] shadow-xs">
+            <CardContent className="pt-4 pb-4 text-xs text-[#718078]">
+              Provider APIs block without partner approval — we never display “Connected” unless verified via test.
+            </CardContent>
+          </Card>
         </div>
 
         <div>
           {!selected ? (
-            <DarkCard className="p-8 text-center">
-              <Plug className="h-8 w-8 text-white/20 mx-auto" />
-              <div className="mt-3 text-sm font-bold text-white">Select an integration</div><div className="text-xs text-white/40">View, configure, connect, test, disconnect. You can skip during onboarding and finish later here.</div>
-              <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-left">
-                <div className="rounded-xl bg-white/5 border border-white/10 p-3"><b className="text-white">Swiggy</b> — requires Partner API key + store ID + partner permissions.</div>
-                <div className="rounded-xl bg-white/5 border border-white/10 p-3"><b className="text-white">Zomato</b> — requires Restaurant ID + API key + partner permissions.</div>
+            <Card className="p-8 text-center bg-white border-[#E5EBE7] shadow-xs">
+              <Plug className="h-8 w-8 text-[#718078]/40 mx-auto" />
+              <div className="mt-3 text-base font-bold text-[#172B25]">Select an integration to configure</div>
+              <div className="text-xs text-[#718078] mt-1">View, configure, test connection, or disconnect anytime.</div>
+              <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-left">
+                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3.5">
+                  <b className="text-[#172B25]">Swiggy</b> — requires Partner API key + store ID + partner permissions.
+                </div>
+                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3.5">
+                  <b className="text-[#172B25]">Zomato</b> — requires Restaurant ID + API key + partner permissions.
+                </div>
               </div>
-            </DarkCard>
+            </Card>
           ) : (
-            <Card className="bg-white border-slate-200 shadow-sm">
-              <CardHeader><CardTitle className="text-slate-900 flex items-center justify-between">{meta?.name} <span>{statusBadge(statusMap(selected))}</span></CardTitle><p className="text-xs text-slate-500">{meta?.description}</p>{meta?.docsUrl && <a href={meta.docsUrl} target="_blank" className="text-xs text-[#3D954F] underline">{meta.docsUrl}</a>}</CardHeader>
+            <Card className="bg-white border-[#E5EBE7] shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-[#172B25] flex items-center justify-between">
+                  <span>{meta?.name}</span>
+                  <span>{statusBadge(statusMap(selected))}</span>
+                </CardTitle>
+                <p className="text-xs text-[#718078]">{meta?.description}</p>
+                {meta?.docsUrl && (
+                  <a href={meta.docsUrl} target="_blank" className="text-xs text-[#16845B] underline font-medium">
+                    {meta.docsUrl}
+                  </a>
+                )}
+              </CardHeader>
               <CardContent className="space-y-4">
-                {meta && meta.requiredFields.length===0 && <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-800">No credentials required. This integration is ready — save to mark CONFIGURED, test to verify.</div>}
+                {meta && meta.requiredFields.length===0 && (
+                  <div className="rounded-xl bg-[#E8F5EE] border border-[#16845B]/30 p-3 text-sm text-[#16845B] font-medium">
+                    No credentials required. This integration is ready — save to mark CONFIGURED, test to verify.
+                  </div>
+                )}
                 {meta?.requiredFields.map(f=> (
-                  <div key={f.key}><Label className="text-slate-700 text-xs">{f.label} *</Label><Input value={form[f.key] || ""} onChange={e=>setForm({...form, [f.key]: e.target.value})} placeholder={f.placeholder} className="mt-1 bg-white border-slate-200" /></div>
+                  <div key={f.key}>
+                    <Label className="text-[#718078] text-xs font-semibold">{f.label} *</Label>
+                    <Input
+                      value={form[f.key] || ""}
+                      onChange={e=>setForm({...form, [f.key]: e.target.value})}
+                      placeholder={f.placeholder}
+                      className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"
+                    />
+                  </div>
                 ))}
-                <div className="flex flex-wrap gap-2">
-                  <Button onClick={save} disabled={loading} className="rounded-full bg-[#3D954F] hover:bg-[#2e7a3e] text-white"><Check className="h-4 w-4 mr-1" /> Save as Configured</Button>
-                  <Button onClick={test} disabled={loading} variant="outline" className="rounded-full border-slate-300 text-slate-700 hover:bg-slate-50"><TestTube className="h-4 w-4 mr-1" /> Test & verify</Button>
-                  <Button onClick={disconnect} disabled={loading} variant="outline" className="rounded-full border-red-200 text-red-600 hover:bg-red-50"><Unplug className="h-4 w-4 mr-1" /> Disconnect</Button>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <Button
+                    onClick={save}
+                    disabled={loading}
+                    className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white shadow-xs"
+                  >
+                    <Check className="h-4 w-4 mr-1" /> Save as Configured
+                  </Button>
+                  <Button
+                    onClick={test}
+                    disabled={loading}
+                    variant="outline"
+                    className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9]"
+                  >
+                    <TestTube className="h-4 w-4 mr-1" /> Test & verify
+                  </Button>
+                  <Button
+                    onClick={disconnect}
+                    disabled={loading}
+                    variant="outline"
+                    className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
+                  >
+                    <Unplug className="h-4 w-4 mr-1" /> Disconnect
+                  </Button>
                 </div>
-                <div className="rounded-xl bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600">
-                  <div className="font-bold text-slate-900">Honest statuses:</div>
-                  <ul className="mt-1 space-y-1"><li>• <b>NOT_CONNECTED</b> — no credentials, not attempted</li><li>• <b>CONFIGURED</b> — credentials saved, awaiting test (not yet verified)</li><li>• <b>CONNECTED</b> — test passed, sync enabled, lastSyncAt updated</li><li>• <b>ERROR</b> — test failed, check keys/permissions (details shown)</li></ul>
-                  <div className="mt-2 text-slate-500">Provider APIs block without partner approval — we never display “Connected” unless verified. See /api/integrations for server logs.</div>
+                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3 text-xs text-[#718078]">
+                  <div className="font-bold text-[#172B25]">Honest Connection Statuses:</div>
+                  <ul className="mt-1.5 space-y-1">
+                    <li>• <b>NOT_CONNECTED</b> — no credentials stored</li>
+                    <li>• <b>CONFIGURED</b> — credentials saved, awaiting test verification</li>
+                    <li>• <b>CONNECTED</b> — test passed, sync enabled</li>
+                    <li>• <b>ERROR</b> — test failed, check keys or partner permissions</li>
+                  </ul>
                 </div>
-                {(() => {
-                  const cfg = configs.find((c:any)=>c.provider===selected);
-                  return cfg ? <div className="text-xs text-slate-500">Last sync: {cfg.lastSyncAt ? new Date(cfg.lastSyncAt).toLocaleString() : "Never"} • Status: <b>{cfg.status}</b> • {cfg.configJson ? "Credentials stored (encrypted at rest in production)" : "No credentials"}</div> : null;
-                })()}
               </CardContent>
             </Card>
           )}

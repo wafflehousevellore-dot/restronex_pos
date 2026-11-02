@@ -31,16 +31,16 @@ export default function FeaturesIndex() {
             <Link
               key={f.href}
               href={f.href}
-              className="group rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 hover:border-[#3D954F]/40 transition-all backdrop-blur flex flex-col justify-between"
+              className="group rounded-2xl border border-[#E5EBE7] bg-white p-5 hover:border-[#16845B] hover:shadow-sm transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="h-10 w-10 rounded-xl bg-[#3D954F]/20 border border-[#3D954F]/30 grid place-items-center text-[#3D954F] group-hover:bg-[#3D954F] group-hover:text-white transition-colors">
+                <div className="h-10 w-10 rounded-xl bg-[#E8F5EE] border border-[#E5EBE7] grid place-items-center text-[#16845B] group-hover:bg-[#16845B] group-hover:text-white transition-colors">
                   <Icon className="h-5 w-5" />
                 </div>
-                <div className="mt-4 text-base font-bold text-white group-hover:text-emerald-300 transition-colors">{f.title}</div>
-                <p className="mt-1 text-xs leading-5 text-white/60">{f.desc}</p>
+                <div className="mt-4 text-base font-bold text-[#172B25] group-hover:text-[#16845B] transition-colors">{f.title}</div>
+                <p className="mt-1.5 text-xs leading-5 text-[#718078]">{f.desc}</p>
               </div>
-              <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#3D954F] group-hover:translate-x-1 transition-transform">
+              <div className="mt-5 flex items-center gap-1 text-xs font-bold text-[#16845B] group-hover:translate-x-1 transition-transform">
                 <span>Explore Suite</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </div>
@@ -48,7 +48,7 @@ export default function FeaturesIndex() {
           );
         })}
       </div>
-      <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/60">
+      <div className="mt-8 rounded-2xl border border-[#E5EBE7] bg-white p-5 text-sm text-[#718078] shadow-xs">
         All suites share one authoritative menu, inventory, and order data model — no disconnected duplicate systems. Multi-tenant, outlet-aware, and audit-logged from day one.
       </div>
     </PageShell>

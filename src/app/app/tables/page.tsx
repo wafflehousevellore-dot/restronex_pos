@@ -1,48 +1,123 @@
 "use client";
 import { apiFetch } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 
 export default function TablesPage(){
   const [tables,setTables]=useState<any[]>([]);
   const [form,setForm]=useState({ number:"", area:"Main Hall", capacity:"4" });
-  async function load(){ const j=await apiFetch("/api/tables").then(r=>r.json()).catch(()=>[]); if(Array.isArray(j)) setTables(j); }
-  useEffect(()=>{ load();},[]);
+
+  async function load(){
+    const j=await apiFetch("/api/tables").then(r=>r.json()).catch(()=>[]);
+    if(Array.isArray(j)) setTables(j);
+  }
+
+  useEffect(()=>{ load(); },[]);
+
   async function create(){
     await apiFetch("/api/tables",{method:"POST", headers:{ "Content-Type":"application/json"}, body: JSON.stringify({ number: form.number, area: form.area, capacity: parseInt(form.capacity||"4") })});
+    setForm({ number:"", area:"Main Hall", capacity:"4" });
     load();
   }
+
   async function toggleStatus(id:string, current:string){
     const next = current==="AVAILABLE" ? "OCCUPIED" : current==="OCCUPIED" ? "RESERVED" : "AVAILABLE";
     await apiFetch("/api/tables",{method:"PATCH", headers:{ "Content-Type":"application/json"}, body: JSON.stringify({ tableId:id, status:next })});
     load();
   }
+
   const byArea = tables.reduce((a:any,t:any)=>{ (a[t.area]=a[t.area]||[]).push(t); return a; }, {});
+
   return (
-    <div className="space-y-6 text-white">
-      <div className="flex items-center justify-between"><div><h1 className="text-2xl font-black tracking-tight">Tables — Floor Plan</h1><p className="text-sm text-white/50">{tables.length} tables • tap to cycle AVAILABLE → OCCUPIED → RESERVED</p></div><span className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-white/60">{Object.keys(byArea).length} areas</span></div>
-      <DarkCard>
-        <DarkCardHeader><DarkCardTitle>Add Table</DarkCardTitle></DarkCardHeader>
-        <DarkCardContent className="grid sm:grid-cols-4 gap-3">
-          <div><Label className="text-white/60">Number</Label><Input value={form.number} onChange={e=>setForm({...form, number:e.target.value})} placeholder="T13" className="mt-1 bg-white/5 border-white/10 text-white placeholder:text-white/30" /></div>
-          <div><Label className="text-white/60">Area</Label><Input value={form.area} onChange={e=>setForm({...form, area:e.target.value})} placeholder="Main Hall" className="mt-1 bg-white/5 border-white/10 text-white" /></div>
-          <div><Label className="text-white/60">Capacity</Label><Input value={form.capacity} onChange={e=>setForm({...form, capacity:e.target.value})} type="number" className="mt-1 bg-white/5 border-white/10 text-white" /></div>
-          <div className="flex items-end"><button onClick={create} className="w-full rounded-full bg-[#3D954F] py-2.5 text-sm font-bold text-white hover:bg-[#2e7a3e]">Add Table</button></div>
-        </DarkCardContent>
-      </DarkCard>
+    <div className="space-y-6 text-[#172B25]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black tracking-tight text-[#172B25]">Tables — Floor Plan</h1>
+          <p className="text-sm text-[#718078]">{tables.length} tables • tap to cycle AVAILABLE → OCCUPIED → RESERVED</p>
+        </div>
+        <span className="rounded-full bg-white border border-[#E5EBE7] px-3 py-1 text-xs text-[#718078] font-medium shadow-xs">
+          {Object.keys(byArea).length} areas
+        </span>
+      </div>
+
+      <Card className="bg-white border-[#E5EBE7] shadow-xs">
+        <CardHeader>
+          <CardTitle className="text-[#172B25]">Add Table</CardTitle>
+        </CardHeader>
+        <CardContent className="grid sm:grid-cols-4 gap-3">
+          <div>
+            <Label className="text-[#718078] text-xs font-semibold">Table Number</Label>
+            <Input
+              value={form.number}
+              onChange={e=>setForm({...form, number:e.target.value})}
+              placeholder="e.g. T13"
+              className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"
+            />
+          </div>
+          <div>
+            <Label className="text-[#718078] text-xs font-semibold">Area / Section</Label>
+            <Input
+              value={form.area}
+              onChange={e=>setForm({...form, area:e.target.value})}
+              placeholder="Main Hall"
+              className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"
+            />
+          </div>
+          <div>
+            <Label className="text-[#718078] text-xs font-semibold">Capacity (Seats)</Label>
+            <Input
+              value={form.capacity}
+              onChange={e=>setForm({...form, capacity:e.target.value})}
+              type="number"
+              className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={create}
+              className="w-full rounded-full bg-[#16845B] py-2.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs transition"
+            >
+              Add Table
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
       {Object.entries(byArea).map(([area, list]:any)=> (
-        <DarkCard key={area}><DarkCardHeader><DarkCardTitle>{area} — {(list as any[]).length} tables</DarkCardTitle></DarkCardHeader>
-          <DarkCardContent className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+        <Card key={area} className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader>
+            <CardTitle className="text-[#172B25]">{area} — {(list as any[]).length} tables</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
             {(list as any[]).map(t=> (
-              <button key={t.id} onClick={()=>toggleStatus(t.id, t.status)} className={`rounded-2xl border p-4 text-center transition hover:scale-[1.02] ${t.status==="AVAILABLE"?"bg-white/5 border-white/10 text-white hover:bg-white/10": t.status==="OCCUPIED"?"bg-[#3D954F] border-[#3D954F] text-white": t.status==="RESERVED"?"bg-amber-500/20 border-amber-500/30 text-amber-200":"bg-white/5"}`}>
-                <div className="text-lg font-black">{t.number}</div><div className="text-xs opacity-70">Cap {t.capacity}</div><div className="mt-1 text-[10px] font-bold tracking-widest">{t.status}</div>
+              <button
+                key={t.id}
+                onClick={()=>toggleStatus(t.id, t.status)}
+                className={`rounded-2xl border p-4 text-center transition hover:scale-[1.02] shadow-xs ${
+                  t.status==="AVAILABLE"
+                    ? "bg-[#F8FAF9] border-[#E5EBE7] text-[#172B25] hover:bg-white hover:border-[#16845B]" :
+                  t.status==="OCCUPIED"
+                    ? "bg-[#16845B] border-[#16845B] text-white" :
+                  t.status==="RESERVED"
+                    ? "bg-amber-50 border-amber-300 text-amber-900" :
+                  "bg-white border-[#E5EBE7]"
+                }`}
+              >
+                <div className="text-lg font-black">{t.number}</div>
+                <div className="text-xs opacity-80">Cap {t.capacity}</div>
+                <div className="mt-1 text-[10px] font-bold tracking-wider uppercase">{t.status}</div>
               </button>
             ))}
-          </DarkCardContent>
-        </DarkCard>
+          </CardContent>
+        </Card>
       ))}
-      {tables.length===0 && <div className="text-sm text-white/40 text-center py-8 border border-dashed border-white/10 rounded-2xl">No tables — onboarding seeds 12 tables (Main Hall/Terrace/AC)</div>}
+
+      {tables.length===0 && (
+        <div className="text-sm text-[#718078] text-center py-10 border border-dashed border-[#E5EBE7] rounded-2xl bg-white">
+          No tables found. Add your first table above or run Onboarding to seed default tables.
+        </div>
+      )}
     </div>
   );
 }

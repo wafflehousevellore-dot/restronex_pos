@@ -20,7 +20,6 @@ import {
   Grid3X3,
   Sparkles,
   ShieldCheck,
-  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -107,8 +106,8 @@ export default function Onboarding() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-12 text-center text-slate-400">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mb-4" />
+      <div className="max-w-4xl mx-auto p-12 text-center text-[#718078]">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-[#16845B] border-t-transparent mb-4" />
         <p className="text-sm font-medium">Synchronizing restaurant setup...</p>
       </div>
     );
@@ -118,27 +117,27 @@ export default function Onboarding() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Executive Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5EBE7] pb-5">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 text-[#16845B] text-xs font-semibold mb-2">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Interactive Restaurant Setup</span>
+            <span>Interactive Setup Wizard</span>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#172B25]">
             {steps[step].name} Setup
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-[#718078] mt-1">
             Step {step + 1} of 8 — {steps[step].desc}
           </p>
         </div>
 
         {tenantName && (
-          <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl">
-            <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="flex items-center gap-3 bg-white border border-[#E5EBE7] px-4 py-2.5 rounded-2xl shadow-2xs">
+            <div className="h-2.5 w-2.5 rounded-full bg-[#16845B] animate-pulse" />
             <div>
-              <div className="text-xs font-bold text-white uppercase tracking-wider">{tenantName}</div>
-              <div className="text-[11px] text-emerald-400 font-medium">
+              <div className="text-xs font-bold text-[#172B25] uppercase tracking-wider">{tenantName}</div>
+              <div className="text-[11px] text-[#16845B] font-semibold">
                 {hasSubscription ? "Growth Subscription Active" : "Setup Mode"}
               </div>
             </div>
@@ -148,19 +147,19 @@ export default function Onboarding() {
 
       {/* Progress Bar */}
       <div className="space-y-2">
-        <div className="flex justify-between items-center text-xs font-medium text-slate-400">
+        <div className="flex justify-between items-center text-xs font-semibold text-[#718078]">
           <span>Overall Onboarding Progress</span>
-          <span className="text-emerald-400 font-bold">{progressPct}% Complete</span>
+          <span className="text-[#16845B] font-bold">{progressPct}% Complete</span>
         </div>
-        <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+        <div className="h-2.5 w-full bg-[#E5EBE7] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-emerald-600 to-teal-400 transition-all duration-500 ease-out"
+            className="h-full bg-[#16845B] transition-all duration-500 ease-out"
             style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
 
-      {/* Step Stepper Navigation */}
+      {/* Stepper Navigation */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
         {steps.map((s, i) => {
           const isDone = i < step;
@@ -172,28 +171,34 @@ export default function Onboarding() {
               onClick={() => {
                 if (tenantId || i === 0) saveProgress(i);
               }}
-              className={`p-2.5 rounded-xl text-left transition flex flex-col justify-between border cursor-pointer ${
+              className={`p-3 rounded-2xl text-left transition flex flex-col justify-between border cursor-pointer ${
                 isCurrent
-                  ? "bg-emerald-950/40 border-emerald-500/80 shadow-md shadow-emerald-950/50"
+                  ? "bg-[#E8F5EE] border-2 border-[#16845B] text-[#16845B] shadow-2xs"
                   : isDone
-                  ? "bg-slate-900/60 border-emerald-500/30 hover:border-emerald-500/50 text-slate-300"
-                  : "bg-slate-900/30 border-slate-800/80 hover:bg-slate-900/60 text-slate-500"
+                  ? "bg-white border-[#16845B]/30 hover:border-[#16845B]/60 text-[#172B25] shadow-2xs"
+                  : "bg-white/60 border-[#E5EBE7] hover:bg-white text-[#718078]"
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
                 <Icon
                   className={`h-4 w-4 ${
                     isCurrent
-                      ? "text-emerald-400"
+                      ? "text-[#16845B]"
                       : isDone
-                      ? "text-emerald-500"
-                      : "text-slate-500"
+                      ? "text-[#16845B]"
+                      : "text-[#718078]"
                   }`}
                 />
-                {isDone && <Check className="h-3.5 w-3.5 text-emerald-400 font-bold" />}
+                {isDone && <Check className="h-3.5 w-3.5 text-[#16845B] font-bold" />}
               </div>
-              <div className="text-xs font-bold truncate text-white">{s.name}</div>
-              <div className="text-[10px] text-slate-400">Step {i + 1}</div>
+              <div
+                className={`text-xs font-bold truncate ${
+                  isCurrent ? "text-[#16845B]" : isDone ? "text-[#172B25]" : "text-[#718078]"
+                }`}
+              >
+                {s.name}
+              </div>
+              <div className="text-[10px] text-[#718078]">Step {i + 1}</div>
             </button>
           );
         })}
@@ -202,18 +207,18 @@ export default function Onboarding() {
       {/* Feedback Alert */}
       {msg && (
         <div
-          className={`p-4 rounded-xl border flex items-center gap-3 text-sm ${
+          className={`p-4 rounded-2xl border flex items-center gap-3 text-sm shadow-2xs ${
             msg.type === "success"
-              ? "bg-emerald-950/40 border-emerald-500/30 text-emerald-200"
-              : "bg-rose-950/40 border-rose-500/30 text-rose-200"
+              ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+              : "bg-red-50 border-red-200 text-red-700"
           }`}
         >
           {msg.type === "success" ? (
-            <Check className="h-5 w-5 text-emerald-400 shrink-0" />
+            <Check className="h-5 w-5 text-[#16845B] shrink-0" />
           ) : (
-            <span className="text-rose-400">⚠️</span>
+            <span className="text-red-600 font-bold">⚠️</span>
           )}
-          <span>{msg.text}</span>
+          <span className="font-medium">{msg.text}</span>
         </div>
       )}
 
@@ -228,14 +233,14 @@ export default function Onboarding() {
           </CardHeader>
           <CardContent className="space-y-5">
             {tenantId ? (
-              <div className="rounded-xl bg-slate-950/80 border border-emerald-500/30 p-5 space-y-4">
+              <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <div className="p-2.5 rounded-xl bg-[#E8F5EE] text-[#16845B]">
                     <ShieldCheck className="h-6 w-6" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold">{tenantName}</h4>
-                    <p className="text-xs text-slate-400">
+                    <h4 className="text-[#172B25] font-bold text-base">{tenantName}</h4>
+                    <p className="text-xs text-[#718078]">
                       Primary restaurant entity is registered and active.
                     </p>
                   </div>
@@ -299,14 +304,14 @@ export default function Onboarding() {
                   </div>
                 </div>
                 <div>
-                  <Label>GSTIN Number (for GST compliance)</Label>
+                  <Label>GSTIN Number (for GST tax invoices)</Label>
                   <Input
                     name="gstNumber"
                     placeholder="29ABCDE1234F1Z5"
                     defaultValue="29ABCDE1234F1Z5"
                   />
                 </div>
-                <Button type="submit" className="w-full py-3">
+                <Button type="submit" className="w-full py-3 text-base">
                   Create Business & Continue →
                 </Button>
               </form>
@@ -325,15 +330,15 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-4">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-4">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E8F5EE] text-[#16845B] text-xs font-semibold">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#16845B] animate-pulse" />
                     Operational Flagship
                   </div>
-                  <h3 className="text-lg font-bold text-white mt-1">Koramangala Main Branch</h3>
-                  <p className="text-sm text-slate-400">
+                  <h3 className="text-lg font-bold text-[#172B25] mt-1">Koramangala Main Branch</h3>
+                  <p className="text-sm text-[#718078]">
                     Primary dining outlet configured with 12 dining tables across 3 areas.
                   </p>
                 </div>
@@ -341,17 +346,17 @@ export default function Onboarding() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 text-center">
-                  <div className="text-xl font-bold text-emerald-400">12</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Dining Tables</div>
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-center shadow-2xs">
+                  <div className="text-2xl font-extrabold text-[#16845B]">12</div>
+                  <div className="text-xs font-medium text-[#718078] mt-0.5">Dining Tables</div>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 text-center">
-                  <div className="text-xl font-bold text-emerald-400">3</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Floor Areas</div>
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-center shadow-2xs">
+                  <div className="text-2xl font-extrabold text-[#16845B]">3</div>
+                  <div className="text-xs font-medium text-[#718078] mt-0.5">Floor Areas</div>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 text-center">
-                  <div className="text-xl font-bold text-emerald-400">Multi-KDS</div>
-                  <div className="text-xs text-slate-400 mt-0.5">Kitchen Station</div>
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-center shadow-2xs">
+                  <div className="text-2xl font-extrabold text-[#16845B]">Multi-KDS</div>
+                  <div className="text-xs font-medium text-[#718078] mt-0.5">Kitchen Stations</div>
                 </div>
               </div>
             </div>
@@ -383,25 +388,25 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-4">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <span className="text-xs font-semibold text-slate-400 uppercase">Zone 1</span>
-                  <div className="text-white font-bold">Main Hall</div>
-                  <div className="text-xs text-emerald-400">6 Tables (T1 – T6)</div>
+                <div className="p-4 rounded-xl bg-white border border-[#E5EBE7] space-y-1 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-[#718078] uppercase">Zone 1</span>
+                  <div className="text-[#172B25] font-bold">Main Dining Hall</div>
+                  <div className="text-xs font-semibold text-[#16845B]">6 Tables (T1 – T6)</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <span className="text-xs font-semibold text-slate-400 uppercase">Zone 2</span>
-                  <div className="text-white font-bold">Rooftop Terrace</div>
-                  <div className="text-xs text-emerald-400">3 Tables (T7 – T9)</div>
+                <div className="p-4 rounded-xl bg-white border border-[#E5EBE7] space-y-1 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-[#718078] uppercase">Zone 2</span>
+                  <div className="text-[#172B25] font-bold">Rooftop Terrace</div>
+                  <div className="text-xs font-semibold text-[#16845B]">3 Tables (T7 – T9)</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1">
-                  <span className="text-xs font-semibold text-slate-400 uppercase">Zone 3</span>
-                  <div className="text-white font-bold">AC Family Lounge</div>
-                  <div className="text-xs text-emerald-400">3 Tables (T10 – T12)</div>
+                <div className="p-4 rounded-xl bg-white border border-[#E5EBE7] space-y-1 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-[#718078] uppercase">Zone 3</span>
+                  <div className="text-[#172B25] font-bold">AC Family Lounge</div>
+                  <div className="text-xs font-semibold text-[#16845B]">3 Tables (T10 – T12)</div>
                 </div>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#718078]">
                 Each table features unique QR ordering codes, split billing, and order merging support.
               </p>
             </div>
@@ -431,27 +436,27 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-3">
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-3">
+              <h4 className="text-xs font-bold text-[#172B25] uppercase tracking-wider">
                 Pre-configured Catalog Sample
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 flex justify-between items-center">
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] flex justify-between items-center shadow-2xs">
                   <div>
-                    <span className="font-semibold text-white">Woodfired Margherita Pizza</span>
-                    <span className="block text-slate-400">Italian Mains • 10&quot; Hand-tossed</span>
+                    <span className="font-bold text-[#172B25]">Woodfired Margherita Pizza</span>
+                    <span className="block text-[#718078]">Italian Mains • 10&quot; Hand-tossed</span>
                   </div>
-                  <span className="text-emerald-400 font-bold">₹299.00</span>
+                  <span className="text-[#16845B] font-extrabold text-sm">₹299.00</span>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800/80 flex justify-between items-center">
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] flex justify-between items-center shadow-2xs">
                   <div>
-                    <span className="font-semibold text-white">Artisanal Cold Brew Coffee</span>
-                    <span className="block text-slate-400">Beverages • 250ml</span>
+                    <span className="font-bold text-[#172B25]">Artisanal Cold Brew Coffee</span>
+                    <span className="block text-[#718078]">Beverages • 250ml</span>
                   </div>
-                  <span className="text-emerald-400 font-bold">₹149.00</span>
+                  <span className="text-[#16845B] font-extrabold text-sm">₹149.00</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#718078]">
                 You can import CSV menus, define custom modifiers (extra cheese, spice levels), and set channel prices anytime.
               </p>
             </div>
@@ -481,20 +486,20 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-3">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
-                  <div className="text-xs text-slate-400">Central GST (CGST)</div>
-                  <div className="text-lg font-bold text-white mt-1">9.0%</div>
-                  <div className="text-[11px] text-slate-400">900 basis points</div>
+                <div className="p-4 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs">
+                  <div className="text-xs font-semibold text-[#718078] uppercase">Central GST (CGST)</div>
+                  <div className="text-2xl font-extrabold text-[#172B25] mt-1">9.0%</div>
+                  <div className="text-[11px] text-[#718078]">900 basis points</div>
                 </div>
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800">
-                  <div className="text-xs text-slate-400">State GST (SGST)</div>
-                  <div className="text-lg font-bold text-white mt-1">9.0%</div>
-                  <div className="text-[11px] text-slate-400">900 basis points</div>
+                <div className="p-4 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs">
+                  <div className="text-xs font-semibold text-[#718078] uppercase">State GST (SGST)</div>
+                  <div className="text-2xl font-extrabold text-[#172B25] mt-1">9.0%</div>
+                  <div className="text-[11px] text-[#718078]">900 basis points</div>
                 </div>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#718078]">
                 All bills automatically calculate statutory 18% GST with split line items for customer transparency.
               </p>
             </div>
@@ -521,20 +526,20 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-3">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-3">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                 {["Owner / Admin", "Branch Manager", "Cashier / POS", "Kitchen / Chef", "Server / Waiter", "Inventory Lead", "Accounts", "Auditor"].map(
                   (role) => (
                     <div
                       key={role}
-                      className="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80 text-slate-200 font-medium text-center"
+                      className="p-3 rounded-xl bg-white border border-[#E5EBE7] text-[#172B25] font-semibold text-center shadow-2xs"
                     >
                       {role}
                     </div>
                   )
                 )}
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#718078]">
                 Staff can be invited via email or assigned numeric PINs for rapid POS terminal switching.
               </p>
             </div>
@@ -564,13 +569,13 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-slate-950/80 border border-slate-800 p-5 space-y-4">
+            <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                  <span className="text-xs uppercase tracking-wider text-[#718078] font-bold">
                     Current Plan
                   </span>
-                  <h3 className="text-xl font-bold text-white mt-0.5">
+                  <h3 className="text-xl font-extrabold text-[#172B25] mt-0.5">
                     {hasSubscription ? "Growth Plan (₹300 / month)" : "Starter Plan"}
                   </h3>
                 </div>
@@ -580,13 +585,13 @@ export default function Onboarding() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-[#172B25] font-medium shadow-2xs">
                   ✓ Up to 5 Outlets
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-[#172B25] font-medium shadow-2xs">
                   ✓ 25 Staff Accounts
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
+                <div className="p-3.5 rounded-xl bg-white border border-[#E5EBE7] text-[#172B25] font-medium shadow-2xs">
                   ✓ Full KDS & Inventory
                 </div>
               </div>
@@ -614,30 +619,30 @@ export default function Onboarding() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-950 border border-emerald-500/30 p-6 space-y-3">
-              <div className="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <div className="rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 p-6 space-y-3">
+              <div className="h-10 w-10 rounded-xl bg-[#16845B] text-white flex items-center justify-center shadow-xs">
                 <Rocket className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold text-white">System Ready for Live Service</h3>
-              <p className="text-sm text-slate-300">
+              <h3 className="text-xl font-bold text-[#172B25]">System Ready for Live Service</h3>
+              <p className="text-sm text-[#718078] leading-relaxed">
                 Business profile, main outlet, tables, menu, GST settings, and Razorpay billing are active and synchronized.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <Link href="/app/pos" className="w-full">
-                <Button className="w-full py-4 text-sm font-bold bg-emerald-600 hover:bg-emerald-500">
+                <Button className="w-full py-4 text-sm font-bold bg-[#16845B] hover:bg-[#116B49] shadow-xs">
                   Open POS Billing
                 </Button>
               </Link>
               <Link href="/app/kitchen" className="w-full">
-                <Button variant="outline" className="w-full py-4 text-sm">
-                  Open Kitchen Display (KDS)
+                <Button variant="outline" className="w-full py-4 text-sm font-semibold">
+                  Kitchen Display (KDS)
                 </Button>
               </Link>
               <Link href="/app/dashboard" className="w-full">
-                <Button variant="outline" className="w-full py-4 text-sm">
-                  Go to Main Dashboard
+                <Button variant="outline" className="w-full py-4 text-sm font-semibold">
+                  Main Dashboard
                 </Button>
               </Link>
             </div>
@@ -646,7 +651,7 @@ export default function Onboarding() {
       )}
 
       {/* Footer Navigation Bar */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 flex items-center justify-between">
+      <div className="rounded-2xl border border-[#E5EBE7] bg-white p-4 flex items-center justify-between shadow-2xs">
         <Button
           variant="outline"
           size="sm"
@@ -658,7 +663,7 @@ export default function Onboarding() {
           Previous Step
         </Button>
 
-        <span className="text-xs text-slate-400 font-medium">
+        <span className="text-xs text-[#718078] font-semibold">
           Step {step + 1} of 8
         </span>
 

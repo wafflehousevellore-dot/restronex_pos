@@ -1,7 +1,7 @@
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";
-import { Plug, CheckCircle2, ArrowRight } from "lucide-react";
+import { Plug } from "lucide-react";
 
 export default function IntegrationsFeaturePage() {
   const integrations = [
@@ -16,47 +16,47 @@ export default function IntegrationsFeaturePage() {
   return (
     <>
       <Navbar />
-      <main className="bg-white text-slate-900">
-        <section className="bg-[#070B07] text-white py-16 lg:py-20 border-b border-white/10">
+      <main className="bg-[#F8FAF9] text-[#172B25]">
+        <section className="bg-gradient-to-b from-[#E8F5EE]/60 via-[#F8FAF9] to-white text-[#172B25] py-16 lg:py-20 border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#3D954F]/20 border border-[#3D954F]/30 px-3.5 py-1 text-xs font-bold text-[#3D954F]">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 px-3.5 py-1 text-xs font-bold text-[#16845B]">
               <Plug className="h-3.5 w-3.5" /> 70+ THIRD-PARTY CONNECTORS
             </div>
-            <h1 className="mt-4 text-[38px] sm:text-[48px] font-black tracking-tight leading-[1.05]">
+            <h1 className="mt-4 text-[38px] sm:text-[48px] font-black tracking-tight leading-[1.05] text-[#172B25]">
               Seamless Integrations <br />
-              <span className="text-[#3D954F]">With The Food Tech Ecosystem</span>
+              <span className="text-[#16845B]">With The Food Tech Ecosystem</span>
             </h1>
-            <p className="mt-4 text-base leading-7 text-white/70 max-w-2xl mx-auto">
+            <p className="mt-4 text-base leading-7 text-[#718078] max-w-2xl mx-auto">
               Connect your POS to India&apos;s leading delivery channels, payment gateways, accounting systems, and rider fleets without manual reconciliation.
             </p>
           </div>
         </section>
 
-        <section className="py-16 sm:py-20 bg-slate-50">
+        <section className="py-16 sm:py-20 bg-[#F8FAF9]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {integrations.map((item) => (
-                <div key={item.name} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div key={item.name} className="rounded-2xl border border-[#E5EBE7] bg-white p-6 shadow-xs hover:border-[#16845B]/30 transition-all">
                   <div className="flex items-center justify-between">
-                    <div className="text-lg font-black text-slate-900">{item.name}</div>
-                    <span className="rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5">
+                    <div className="text-lg font-black text-[#172B25]">{item.name}</div>
+                    <span className="rounded-full bg-[#E8F5EE] text-[#16845B] text-[11px] font-bold px-2.5 py-0.5 border border-[#16845B]/20">
                       {item.status}
                     </span>
                   </div>
-                  <div className="text-xs font-bold text-[#3D954F] mt-1">{item.category}</div>
-                  <p className="mt-3 text-sm text-slate-600 leading-relaxed">{item.desc}</p>
+                  <div className="text-xs font-bold text-[#16845B] mt-1">{item.category}</div>
+                  <p className="mt-3 text-sm text-[#718078] leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="bg-[#070B07] text-white py-14">
+        <section className="bg-[#E8F5EE]/40 border-t border-[#E5EBE7] text-[#172B25] py-16">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-black">Need a custom ERP or hardware integration?</h2>
-            <p className="mt-2 text-sm text-white/60">Our open developer APIs and webhook connectors let you integrate any internal system.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#172B25]">Need a custom ERP or hardware integration?</h2>
+            <p className="mt-2 text-sm text-[#718078]">Our open developer APIs and webhook connectors let you integrate any internal system.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link href="/book-demo" className="rounded-full bg-[#3D954F] px-7 py-3 text-sm font-bold text-white hover:bg-[#338a44]">
+              <Link href="/book-demo" className="rounded-full bg-[#16845B] px-7 py-3 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs">
                 Contact Integrations Team →
               </Link>
             </div>

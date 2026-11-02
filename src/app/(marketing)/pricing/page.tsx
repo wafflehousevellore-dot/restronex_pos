@@ -12,35 +12,35 @@ export default function Pricing() {
       subtitle="Complete restaurant operating system — Cloud POS, recipe inventory, KOT/KDS, multi-outlet central management, and live reporting. Three straightforward plans."
       badge="Honest SaaS Pricing • INR • GST Compliant"
     >
-      {/* Dynamic 3-Plan Selector (Starter ₹200, Growth ₹300, Business ₹500) */}
+      {/* Dynamic 3-Plan Selector */}
       <PricingSelector />
 
       {/* Feature Comparison Matrix */}
-      <div className="mt-12 rounded-2xl border border-white/10 bg-[#0A120A] overflow-hidden shadow-2xl">
-        <div className="bg-[#3D954F] px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="mt-12 rounded-2xl border border-[#E5EBE7] bg-white overflow-hidden shadow-sm">
+        <div className="bg-[#16845B] px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-black text-white">Full Feature & Entitlements Comparison</h2>
-            <p className="text-xs text-white/80">Compare Starter (₹200) vs Growth (₹300) vs Business (₹500)</p>
+            <p className="text-xs text-white/90">Compare Starter (₹200) vs Growth (₹300) vs Business (₹500)</p>
           </div>
           <Link
             href="/get-started"
-            className="inline-flex items-center gap-1.5 self-start rounded-full bg-white px-4 py-1.5 text-xs font-bold text-slate-900 hover:bg-slate-100 transition"
+            className="inline-flex items-center gap-1.5 self-start rounded-full bg-white px-4 py-1.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs transition"
           >
             <span>Get Started</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-3.5 w-3.5 text-[#16845B]" />
           </Link>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-white/5 border-b border-white/10">
+            <thead className="bg-[#F8FAF9] border-b border-[#E5EBE7]">
               <tr>
-                <th className="text-left px-6 py-3.5 text-white/70 font-semibold text-xs uppercase tracking-wider">Feature</th>
+                <th className="text-left px-6 py-3.5 text-[#718078] font-bold text-xs uppercase tracking-wider">Feature</th>
                 {pricingComparison.headers.slice(1).map((h) => (
-                  <th key={h} className="px-6 py-3.5 text-white font-black text-center text-sm">
+                  <th key={h} className="px-6 py-3.5 text-[#172B25] font-black text-center text-sm">
                     {h}
                     {h === "Growth" && (
-                      <span className="ml-2 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 text-[10px] font-semibold">
+                      <span className="ml-2 rounded-full bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7] px-2 py-0.5 text-[10px] font-bold">
                         Most Popular
                       </span>
                     )}
@@ -48,22 +48,22 @@ export default function Pricing() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[#E5EBE7]">
               {pricingComparison.rows.map((r) => (
-                <tr key={r.feature} className="hover:bg-white/[0.02] transition">
-                  <td className="px-6 py-3 text-white/90 font-medium text-xs sm:text-sm">{r.feature}</td>
+                <tr key={r.feature} className="hover:bg-[#F8FAF9] transition">
+                  <td className="px-6 py-3.5 text-[#172B25] font-medium text-xs sm:text-sm">{r.feature}</td>
                   {r.values.map((v, i) => (
-                    <td key={i} className="px-6 py-3 text-center">
+                    <td key={i} className="px-6 py-3.5 text-center">
                       {v === true ? (
-                        <span className="inline-flex h-5 w-5 rounded-full bg-[#3D954F] text-white place-items-center justify-center text-xs font-bold mx-auto">
+                        <span className="inline-flex h-5 w-5 rounded-full bg-[#E8F5EE] text-[#16845B] place-items-center justify-center text-xs font-bold mx-auto">
                           ✓
                         </span>
                       ) : v === false ? (
-                        <span className="inline-flex h-5 w-5 rounded-full bg-white/10 text-white/40 place-items-center justify-center text-xs font-bold mx-auto">
+                        <span className="inline-flex h-5 w-5 rounded-full bg-slate-100 text-[#718078] place-items-center justify-center text-xs font-bold mx-auto">
                           —
                         </span>
                       ) : (
-                        <span className="text-white/80 font-semibold text-xs">{v}</span>
+                        <span className="text-[#172B25] font-semibold text-xs">{v}</span>
                       )}
                     </td>
                   ))}
@@ -73,12 +73,12 @@ export default function Pricing() {
           </table>
         </div>
 
-        <div className="bg-white/[0.02] border-t border-white/10 px-6 py-4 flex flex-col sm:flex-row gap-3 justify-between items-center text-xs">
-          <div className="text-white/60 flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
+        <div className="bg-[#F8FAF9] border-t border-[#E5EBE7] px-6 py-4 flex flex-col sm:flex-row gap-3 justify-between items-center text-xs">
+          <div className="text-[#718078] flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-[#16845B]" />
             <span>Server-side entitlement enforcement • Instant plan upgrade/downgrade • No hidden fees</span>
           </div>
-          <Link href="/get-started" className="rounded-full bg-[#3D954F] px-5 py-2 font-bold text-white hover:bg-[#338a44] transition">
+          <Link href="/get-started" className="rounded-full bg-[#16845B] px-5 py-2 font-bold text-white hover:bg-[#116B49] transition shadow-xs">
             Choose Your Plan & Get Started →
           </Link>
         </div>
@@ -87,23 +87,23 @@ export default function Pricing() {
       {/* Module Overview */}
       <div className="mt-12">
         <div className="text-center mb-6">
-          <span className="text-xs font-bold tracking-widest text-[#3D954F] uppercase">Modular Architecture</span>
-          <h3 className="text-xl font-bold text-white mt-1">Included Platform Capabilities</h3>
+          <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">Modular Architecture</span>
+          <h3 className="text-xl font-bold text-[#172B25] mt-1">Included Platform Capabilities</h3>
         </div>
 
         <div className="grid md:grid-cols-4 gap-4">
           {Object.entries(marketplaceServices).map(([k, services]) => (
-            <div key={k} className="rounded-2xl border border-white/10 bg-white/5 p-5">
-              <div className="text-xs font-bold tracking-wider text-[#3D954F] uppercase">{k}</div>
-              <ul className="mt-3 space-y-1.5 text-xs text-white/70">
+            <div key={k} className="rounded-2xl border border-[#E5EBE7] bg-white p-5 shadow-xs">
+              <div className="text-xs font-bold tracking-wider text-[#16845B] uppercase">{k}</div>
+              <ul className="mt-3 space-y-2 text-xs text-[#718078]">
                 {services.map((s) => (
                   <li key={s} className="flex items-center gap-1.5">
-                    <span className="h-1 w-1 rounded-full bg-[#3D954F]" />
-                    <span>{s}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#16845B]" />
+                    <span className="text-[#172B25]">{s}</span>
                   </li>
                 ))}
               </ul>
-              <Link href="/features" className="mt-4 inline-block text-xs font-semibold text-[#3D954F] hover:text-white transition">
+              <Link href="/features" className="mt-4 inline-block text-xs font-semibold text-[#16845B] hover:underline transition">
                 Explore {k} →
               </Link>
             </div>
@@ -113,16 +113,16 @@ export default function Pricing() {
 
       {/* Bottom CTA Card */}
       <div className="mt-12 flex flex-col items-center">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center max-w-3xl w-full space-y-4">
-          <h3 className="text-2xl font-black text-white">Ready to streamline your restaurant operations?</h3>
-          <p className="text-sm text-white/60 max-w-xl mx-auto">
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-8 text-center max-w-3xl w-full space-y-4 shadow-sm">
+          <h3 className="text-2xl font-black text-[#172B25]">Ready to streamline your restaurant operations?</h3>
+          <p className="text-sm text-[#718078] max-w-xl mx-auto">
             Get started with our 14-day free trial on any plan. Complete billing, menu management, KDS, and inventory ready in 5 minutes.
           </p>
           <div className="pt-2 flex flex-wrap gap-3 justify-center items-center">
-            <Link href="/get-started" className="rounded-full bg-[#3D954F] px-8 py-3 text-sm font-bold text-white hover:bg-[#338a44] transition shadow-lg">
+            <Link href="/get-started" className="rounded-full bg-[#16845B] px-8 py-3 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs">
               Start 14-Day Free Trial →
             </Link>
-            <Link href="/sign-in" className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
+            <Link href="/sign-in" className="rounded-full border border-[#E5EBE7] bg-white px-6 py-3 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] transition">
               Sign In to Existing Account
             </Link>
           </div>

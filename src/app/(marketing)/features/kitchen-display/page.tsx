@@ -1,31 +1,60 @@
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 
-export default function Page(){
+export default function Page() {
   const bullets = [
-"KOT stations & printers", "Auto-fire on bill", "Bump & recall workflow", "Live sync polling fallback", "Station-wise queue", "KOT reprint & audit"
+    "Real-time ticket routing by kitchen station",
+    "Color-coded prep timer status (Received, Preparing, Ready)",
+    "Bump bar and touchscreen action support",
+    "Audio alerts for new rush orders",
+    "Order item-level notes & allergy highlighting",
+    "Average preparation time telemetry",
   ] as const;
   const flows = [
-"Fire KOT → station receives → bump → serve → close"
+    "Order fired at POS/QR → instant display on KDS → chef bumps to Preparing → bump to Ready → server pickup notification",
   ] as const;
+
   return (
-    <PageShell title="KOT & Kitchen Display" subtitle="Tickets that flow, never lost" badge="Feature • RestroNex">
+    <PageShell title="Kitchen Display System (KDS)" subtitle="Ditch paper paper tickets for zero-error kitchen execution" badge="Feature • RestroNex">
       <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-          <div className="text-sm font-bold text-white">What&apos;s included</div>
-          <ul className="mt-4 space-y-3 text-sm text-white/70">{bullets.map(b=> <li key={b} className="flex gap-3"><span className="text-[#3D954F]">✓</span>{b}</li>)}</ul>
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs">
+          <div className="text-base font-bold text-[#172B25]">What&apos;s included</div>
+          <ul className="mt-4 space-y-3 text-sm text-[#718078]">
+            {bullets.map((b) => (
+              <li key={b} className="flex items-center gap-3">
+                <span className="text-[#16845B] font-bold">✓</span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-          <div className="text-sm font-bold text-white">How it works</div>
-          <ol className="mt-4 list-decimal pl-5 space-y-2 text-sm text-white/70">{flows.map((s,i)=> <li key={i}>{s}</li>)}</ol>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/sign-up" className="rounded-full bg-[#3D954F] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#2e7a3e]">Get started</Link>
-            <Link href="/book-demo" className="rounded-full border border-white/15 bg-white/5 px-6 py-2.5 text-sm font-semibold text-white hover:bg-white/10">Book demo</Link>
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="text-base font-bold text-[#172B25]">How it works</div>
+            <ol className="mt-4 list-decimal pl-5 space-y-2 text-sm text-[#718078]">
+              {flows.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ol>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/sign-up"
+              className="rounded-full bg-[#16845B] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs"
+            >
+              Get started
+            </Link>
+            <Link
+              href="/book-demo"
+              className="rounded-full border border-[#E5EBE7] bg-white px-6 py-2.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] transition shadow-xs"
+            >
+              Book demo
+            </Link>
           </div>
         </div>
       </div>
-      <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/60 backdrop-blur">
-        Original content and visuals. KOT & Kitchen Display is built on normalized DB, tenant-isolated, audit-logged, and permission-checked.
+      <div className="mt-6 rounded-2xl border border-[#E5EBE7] bg-white p-5 text-sm text-[#718078] shadow-xs">
+        Connect multiple KDS screens for bar, grill, fryer, and dessert stations with synchronized status.
       </div>
     </PageShell>
   );

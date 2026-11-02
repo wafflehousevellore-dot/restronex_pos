@@ -27,16 +27,16 @@ export default function Solutions() {
             <Link
               key={s.slug}
               href={`/solutions/${s.slug}`}
-              className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur hover:bg-white/10 hover:border-[#3D954F]/40 transition-all flex flex-col justify-between group"
+              className="rounded-2xl border border-[#E5EBE7] bg-white p-5 hover:border-[#16845B] hover:shadow-xs transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="h-10 w-10 rounded-xl bg-[#3D954F]/15 border border-[#3D954F]/30 grid place-items-center text-[#3D954F] group-hover:scale-105 transition-transform">
+                <div className="h-10 w-10 rounded-xl bg-[#E8F5EE] border border-[#E5EBE7] grid place-items-center text-[#16845B] group-hover:scale-105 transition-transform">
                   <Icon className="h-5 w-5" />
                 </div>
-                <div className="mt-4 text-base font-bold text-white group-hover:text-emerald-300 transition-colors">{s.title}</div>
-                <div className="mt-1.5 text-xs leading-5 text-white/60">{s.desc}</div>
+                <div className="mt-4 text-base font-bold text-[#172B25] group-hover:text-[#16845B] transition-colors">{s.title}</div>
+                <div className="mt-1.5 text-xs leading-5 text-[#718078]">{s.desc}</div>
               </div>
-              <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#3D954F] group-hover:translate-x-1 transition-transform">
+              <div className="mt-4 flex items-center gap-1 text-xs font-bold text-[#16845B] group-hover:translate-x-1 transition-transform">
                 <span>Explore Workflow</span>
                 <ArrowRight className="h-3 w-3" />
               </div>
@@ -44,7 +44,7 @@ export default function Solutions() {
           );
         })}
       </div>
-      <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm text-white/60">
+      <div className="mt-8 rounded-2xl border border-[#E5EBE7] bg-white p-5 text-sm text-[#718078] shadow-xs">
         All solutions use the same authoritative menu & order model — no disconnected duplicate systems. Multi-outlet chains can mix different formats across outlets under one subscription.
       </div>
     </PageShell>

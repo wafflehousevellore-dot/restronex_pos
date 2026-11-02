@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
-import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatINR } from "@/lib/money";
 import { Building2, CreditCard, Store, Users, Activity, CheckCircle2, AlertCircle, Clock, ShieldCheck } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +8,6 @@ import fs from "fs";
 import path from "path";
 
 export default async function PlatformOverview() {
-  // Real persistent metrics as mandated by Section 10
   const [
     totalTenants,
     activeSubscriptions,
@@ -59,14 +58,12 @@ export default async function PlatformOverview() {
     prisma.subscriptionPayment.count({ where: { status: "FAILED" } }),
   ]);
 
-  // Calculate MRR from active subscriptions
   let mrrPaise = 0;
   plans.forEach((plan) => {
     const monthlyRate = plan.priceMonthlyPaise;
     mrrPaise += plan.subscriptions.length * monthlyRate;
   });
 
-  // Calculate local DB file size for operational capacity monitoring
   let dbSizeBytes = 0;
   try {
     const dbPath = path.join(process.cwd(), "prisma", "dev.db");
@@ -77,163 +74,163 @@ export default async function PlatformOverview() {
   } catch {}
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#172B25]">
       <div>
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
-          <ShieldCheck className="h-3 w-3" />
-          <span>Platform Super Admin • Live Metrics</span>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7] mb-2">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
+          <span>Platform Super Admin • Live Infrastructure Metrics</span>
         </div>
-        <h1 className="text-2xl font-black text-white">Platform Operations & Tenancy Overview</h1>
-        <p className="text-sm text-white/60">
-          Real-time metrics derived directly from persistent database records • Multi-tenant isolation verified
+        <h1 className="text-2xl font-black text-[#172B25]">Platform Operations & Tenancy Overview</h1>
+        <p className="text-sm text-[#718078]">
+          Real-time metrics derived directly from persistent database records • Strict tenant isolation
         </p>
       </div>
 
       {/* Primary KPI Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <DarkCard>
-          <DarkCardHeader className="pb-2">
-            <DarkCardTitle className="text-xs uppercase tracking-wider text-white/50 flex items-center justify-between">
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
               <span>Registered Businesses</span>
-              <Building2 className="h-4 w-4 text-emerald-400" />
-            </DarkCardTitle>
-          </DarkCardHeader>
-          <DarkCardContent>
-            <div className="text-3xl font-black text-white">{totalTenants}</div>
-            <p className="text-xs text-white/50 mt-1">{activeSubscriptions} active paying subscriptions</p>
-          </DarkCardContent>
-        </DarkCard>
+              <Building2 className="h-4 w-4 text-[#16845B]" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-[#172B25]">{totalTenants}</div>
+            <p className="text-xs text-[#718078] mt-1">{activeSubscriptions} active paying subscriptions</p>
+          </CardContent>
+        </Card>
 
-        <DarkCard>
-          <DarkCardHeader className="pb-2">
-            <DarkCardTitle className="text-xs uppercase tracking-wider text-white/50 flex items-center justify-between">
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
               <span>Monthly Recurring Rev (MRR)</span>
-              <CreditCard className="h-4 w-4 text-emerald-400" />
-            </DarkCardTitle>
-          </DarkCardHeader>
-          <DarkCardContent>
-            <div className="text-3xl font-black text-emerald-400">{formatINR(mrrPaise)}</div>
-            <p className="text-xs text-white/50 mt-1">Verified payments: {formatINR(completedPayments._sum.amountPaise || 0)}</p>
-          </DarkCardContent>
-        </DarkCard>
+              <CreditCard className="h-4 w-4 text-[#16845B]" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-[#16845B]">{formatINR(mrrPaise)}</div>
+            <p className="text-xs text-[#718078] mt-1">Verified: {formatINR(completedPayments._sum.amountPaise || 0)}</p>
+          </CardContent>
+        </Card>
 
-        <DarkCard>
-          <DarkCardHeader className="pb-2">
-            <DarkCardTitle className="text-xs uppercase tracking-wider text-white/50 flex items-center justify-between">
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
               <span>Active Outlets</span>
-              <Store className="h-4 w-4 text-emerald-400" />
-            </DarkCardTitle>
-          </DarkCardHeader>
-          <DarkCardContent>
-            <div className="text-3xl font-black text-white">{activeOutlets}</div>
-            <p className="text-xs text-white/50 mt-1">{totalOutlets} total configured across tenants</p>
-          </DarkCardContent>
-        </DarkCard>
+              <Store className="h-4 w-4 text-[#16845B]" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-[#172B25]">{activeOutlets}</div>
+            <p className="text-xs text-[#718078] mt-1">{totalOutlets} total across tenants</p>
+          </CardContent>
+        </Card>
 
-        <DarkCard>
-          <DarkCardHeader className="pb-2">
-            <DarkCardTitle className="text-xs uppercase tracking-wider text-white/50 flex items-center justify-between">
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
               <span>Pending Registrations</span>
-              <Clock className="h-4 w-4 text-amber-400" />
-            </DarkCardTitle>
-          </DarkCardHeader>
-          <DarkCardContent>
-            <div className="text-3xl font-black text-amber-400">{pendingRegistrationsCount}</div>
-            <p className="text-xs text-white/50 mt-1">Awaiting checkout / verification</p>
-          </DarkCardContent>
-        </DarkCard>
+              <Clock className="h-4 w-4 text-amber-600" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-amber-600">{pendingRegistrationsCount}</div>
+            <p className="text-xs text-[#718078] mt-1">Awaiting checkout / verification</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Plan-Wise Subscriber Breakdown */}
-      <DarkCard>
-        <DarkCardHeader className="flex flex-row items-center justify-between">
+      <Card className="bg-white border-[#E5EBE7] shadow-xs">
+        <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <DarkCardTitle className="text-base text-white">Plan-Wise Subscribers & Commercial Allocations</DarkCardTitle>
-            <p className="text-xs text-white/50 mt-0.5">Configured prices, outlet quotas, and active paying accounts</p>
+            <CardTitle className="text-base text-[#172B25]">Plan-Wise Subscribers & Quotas</CardTitle>
+            <p className="text-xs text-[#718078] mt-0.5">Configured prices, outlet quotas, and active paying accounts</p>
           </div>
-          <Link href="/platform/plans" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold underline">
+          <Link href="/platform/plans" className="text-xs text-[#16845B] hover:underline font-semibold">
             Edit Plans & Quotas →
           </Link>
-        </DarkCardHeader>
-        <DarkCardContent>
+        </CardHeader>
+        <CardContent>
           <div className="grid md:grid-cols-3 gap-4">
             {plans.map((p) => (
-              <div key={p.id} className="p-4 rounded-xl border border-white/10 bg-white/[0.02]">
+              <div key={p.id} className="p-4 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9]">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">{p.name}</span>
-                  <span className="text-xs font-mono text-emerald-400 font-semibold">{formatINR(p.priceMonthlyPaise)}/mo</span>
+                  <span className="font-bold text-[#172B25]">{p.name}</span>
+                  <span className="text-xs font-mono text-[#16845B] font-semibold">{formatINR(p.priceMonthlyPaise)}/mo</span>
                 </div>
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-white">{p.subscriptions.length}</span>
-                  <span className="text-xs text-white/50">active subscribers</span>
+                  <span className="text-2xl font-black text-[#172B25]">{p.subscriptions.length}</span>
+                  <span className="text-xs text-[#718078]">active subscribers</span>
                 </div>
-                <div className="mt-2 text-[11px] text-white/40 flex justify-between">
+                <div className="mt-2 text-[11px] text-[#718078] flex justify-between">
                   <span>Max Outlets: {p.maxOutlets}</span>
                   <span>Max Staff: {p.maxUsers}</span>
                 </div>
               </div>
             ))}
           </div>
-        </DarkCardContent>
-      </DarkCard>
+        </CardContent>
+      </Card>
 
       {/* Operational Health & Storage Status */}
       <div className="grid lg:grid-cols-2 gap-6">
-        <DarkCard>
-          <DarkCardHeader>
-            <DarkCardTitle className="text-base text-white flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-400" />
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader>
+            <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
+              <Activity className="h-4 w-4 text-[#16845B]" />
               <span>Operational Health & Storage Monitoring</span>
-            </DarkCardTitle>
-          </DarkCardHeader>
-          <DarkCardContent className="space-y-3 text-xs">
-            <div className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-white/60">Primary Database Engine</span>
-              <span className="font-mono text-emerald-400 font-semibold">PostgreSQL Ready (SQLite local dev)</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-xs">
+            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
+              <span className="text-[#718078]">Database Engine</span>
+              <span className="font-mono text-[#16845B] font-semibold">PostgreSQL (Supabase Ready)</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-white/60">Database Size</span>
-              <span className="font-mono text-white">{(dbSizeBytes / (1024 * 1024)).toFixed(2)} MB</span>
+            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
+              <span className="text-[#718078]">Database Size</span>
+              <span className="font-mono text-[#172B25]">{(dbSizeBytes / (1024 * 1024)).toFixed(2)} MB</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-white/60">Total POS Orders Logged</span>
-              <span className="font-mono text-white">{totalOrders} orders</span>
+            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
+              <span className="text-[#718078]">Total POS Orders Logged</span>
+              <span className="font-mono text-[#172B25]">{totalOrders} orders</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-white/60">Failed Payments Flagged</span>
-              <span className="font-mono text-amber-400">{failedPaymentsCount}</span>
+            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
+              <span className="text-[#718078]">Failed Payments Flagged</span>
+              <span className="font-mono text-amber-600 font-semibold">{failedPaymentsCount}</span>
             </div>
             <div className="flex justify-between py-2">
-              <span className="text-white/60">Health Check Status</span>
-              <span className="inline-flex items-center gap-1 text-emerald-400 font-medium">
+              <span className="text-[#718078]">Health Check Status</span>
+              <span className="inline-flex items-center gap-1 text-[#16845B] font-bold">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Healthy (/api/health)
               </span>
             </div>
-          </DarkCardContent>
-        </DarkCard>
+          </CardContent>
+        </Card>
 
         {/* Recent Pending Registrations */}
-        <DarkCard>
-          <DarkCardHeader className="flex flex-row items-center justify-between">
-            <DarkCardTitle className="text-base text-white">Recent Customer Onboarding Pipeline</DarkCardTitle>
-            <span className="text-xs text-white/50">{recentPending.length} in funnel</span>
-          </DarkCardHeader>
-          <DarkCardContent>
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-base text-[#172B25]">Recent Customer Onboarding Pipeline</CardTitle>
+            <span className="text-xs text-[#718078]">{recentPending.length} in funnel</span>
+          </CardHeader>
+          <CardContent>
             {recentPending.length === 0 ? (
-              <p className="text-xs text-white/40 py-4 text-center">No pending registrations at the moment.</p>
+              <p className="text-xs text-[#718078] py-6 text-center">No pending registrations at the moment.</p>
             ) : (
               <div className="space-y-2.5">
                 {recentPending.map((r) => (
-                  <div key={r.id} className="flex items-center justify-between p-2.5 rounded-lg border border-white/5 bg-white/[0.02] text-xs">
+                  <div key={r.id} className="flex items-center justify-between p-3 rounded-lg border border-[#E5EBE7] bg-[#F8FAF9] text-xs">
                     <div>
-                      <div className="font-semibold text-white">{r.businessName}</div>
-                      <div className="text-[11px] text-white/50">{r.ownerName} • {r.email}</div>
+                      <div className="font-bold text-[#172B25]">{r.businessName}</div>
+                      <div className="text-[11px] text-[#718078]">{r.ownerName} • {r.email}</div>
                     </div>
                     <div className="text-right">
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20 uppercase">
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 uppercase">
                         {r.planSlug} • {r.status}
                       </span>
-                      <div className="text-[10px] text-white/40 mt-0.5">
+                      <div className="text-[10px] text-[#718078] mt-0.5">
                         {new Date(r.createdAt).toLocaleDateString()}
                       </div>
                     </div>
@@ -241,40 +238,40 @@ export default async function PlatformOverview() {
                 ))}
               </div>
             )}
-          </DarkCardContent>
-        </DarkCard>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Registered Tenants List */}
-      <DarkCard>
-        <DarkCardHeader className="flex flex-row items-center justify-between">
+      <Card className="bg-white border-[#E5EBE7] shadow-xs">
+        <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <DarkCardTitle className="text-base text-white">Registered Restaurant Tenants</DarkCardTitle>
-            <p className="text-xs text-white/50 mt-0.5">Isolated tenant workspaces with configured outlets & active subscriptions</p>
+            <CardTitle className="text-base text-[#172B25]">Registered Restaurant Tenants</CardTitle>
+            <p className="text-xs text-[#718078] mt-0.5">Isolated tenant workspaces with configured outlets & active subscriptions</p>
           </div>
-          <Link href="/platform/tenants" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold underline">
+          <Link href="/platform/tenants" className="text-xs text-[#16845B] hover:underline font-semibold">
             View All Tenants →
           </Link>
-        </DarkCardHeader>
-        <DarkCardContent>
-          <div className="divide-y divide-white/5 text-xs">
+        </CardHeader>
+        <CardContent>
+          <div className="divide-y divide-[#E5EBE7] text-xs">
             {recentTenants.map((t) => {
               const activeSub = t.subscriptions.find((s) => s.status === "ACTIVE");
               return (
-                <div key={t.id} className="py-3 flex items-center justify-between first:pt-0 last:pb-0">
+                <div key={t.id} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
                   <div>
-                    <div className="font-bold text-white text-sm">{t.name}</div>
-                    <div className="text-white/50 text-[11px] mt-0.5">
-                      Slug: <span className="font-mono text-white/70">{t.slug}</span> • {t.businessType} • {t.outlets.length} outlet(s)
+                    <div className="font-bold text-[#172B25] text-sm">{t.name}</div>
+                    <div className="text-[#718078] text-[11px] mt-0.5">
+                      Slug: <span className="font-mono text-[#172B25]">{t.slug}</span> • {t.businessType} • {t.outlets.length} outlet(s)
                     </div>
                   </div>
                   <div className="text-right">
                     {activeSub ? (
-                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-bold bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7]">
                         {activeSub.plan.name} Plan (Active)
                       </span>
                     ) : (
-                      <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/5 text-white/50 border border-white/10">
+                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-[#F8FAF9] text-[#718078] border border-[#E5EBE7]">
                         No Active Plan
                       </span>
                     )}
@@ -283,9 +280,8 @@ export default async function PlatformOverview() {
               );
             })}
           </div>
-        </DarkCardContent>
-      </DarkCard>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-

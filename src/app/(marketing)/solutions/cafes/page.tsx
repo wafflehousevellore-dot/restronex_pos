@@ -1,53 +1,53 @@
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";
-import { Coffee, Zap, Award, Sparkles, CheckCircle2 } from "lucide-react";
+import { Coffee } from "lucide-react";
 
 export default function CafesSolutionPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-white text-slate-900">
-        <section className="bg-[#070B07] text-white py-16 lg:py-20 border-b border-white/10">
+      <main className="bg-[#F8FAF9] text-[#172B25]">
+        <section className="bg-gradient-to-b from-[#E8F5EE]/60 via-[#F8FAF9] to-white text-[#172B25] py-16 lg:py-20 border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#3D954F]/20 border border-[#3D954F]/30 px-3.5 py-1 text-xs font-bold text-[#3D954F]">
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 px-3.5 py-1 text-xs font-bold text-[#16845B]">
                   <Coffee className="h-3.5 w-3.5" /> CAFE & COFFEE SHOP POS
                 </div>
-                <h1 className="mt-4 text-[38px] sm:text-[48px] font-black tracking-tight leading-[1.05]">
+                <h1 className="mt-4 text-[38px] sm:text-[48px] font-black tracking-tight leading-[1.05] text-[#172B25]">
                   Designed for Fast-Paced <br />
-                  <span className="text-[#3D954F]">Cafes & Roasteries</span>
+                  <span className="text-[#16845B]">Cafes & Roasteries</span>
                 </h1>
-                <p className="mt-4 text-base leading-7 text-white/70 max-w-xl">
+                <p className="mt-4 text-base leading-7 text-[#718078] max-w-xl">
                   Speed through the morning coffee rush with 3-second billing, barista KDS screen routing, milk & syrup modifier tracking, and repeat customer loyalty rewards.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="/book-demo" className="rounded-full bg-[#3D954F] px-7 py-3.5 text-sm font-bold text-white hover:bg-[#338a44] shadow-lg">
+                  <Link href="/book-demo" className="rounded-full bg-[#16845B] px-7 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs">
                     Schedule Cafe Demo →
                   </Link>
-                  <Link href="/pricing" className="rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white hover:bg-white/10">
+                  <Link href="/pricing" className="rounded-full border border-[#E5EBE7] bg-white px-7 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] transition shadow-xs">
                     Pricing Plans
                   </Link>
                 </div>
               </div>
 
-              <div className="rounded-[24px] border border-white/10 bg-[#0F1F14] p-6 shadow-2xl">
-                <div className="text-xs font-bold text-[#3D954F] uppercase tracking-wider">Barista Station KOT</div>
-                <div className="mt-3 space-y-2 text-xs">
-                  <div className="p-3 bg-white/5 rounded-xl border border-white/10 flex justify-between items-center">
+              <div className="rounded-[24px] border border-[#E5EBE7] bg-white p-6 shadow-sm">
+                <div className="text-xs font-bold text-[#16845B] uppercase tracking-wider">Barista Station KOT</div>
+                <div className="mt-4 space-y-3 text-xs">
+                  <div className="p-4 bg-[#F8FAF9] rounded-xl border border-[#E5EBE7] flex justify-between items-center">
                     <div>
-                      <div className="font-bold text-white">Oat Milk Cortado (Large)</div>
-                      <div className="text-white/50 text-[11px]">+ Extra Shot • Sugar-Free Vanilla</div>
+                      <div className="font-bold text-[#172B25] text-sm">Oat Milk Cortado (Large)</div>
+                      <div className="text-[#718078] text-[11px] mt-0.5">+ Extra Shot • Sugar-Free Vanilla</div>
                     </div>
-                    <span className="text-emerald-400 font-bold">Brewing</span>
+                    <span className="bg-[#E8F5EE] text-[#16845B] font-bold px-2.5 py-1 rounded-full text-[11px]">Brewing</span>
                   </div>
-                  <div className="p-3 bg-white/5 rounded-xl border border-white/10 flex justify-between items-center">
+                  <div className="p-4 bg-[#F8FAF9] rounded-xl border border-[#E5EBE7] flex justify-between items-center">
                     <div>
-                      <div className="font-bold text-white">Avocado Sourdough Toast</div>
-                      <div className="text-white/50 text-[11px]">Poached Egg • Microgreens</div>
+                      <div className="font-bold text-[#172B25] text-sm">Avocado Sourdough Toast</div>
+                      <div className="text-[#718078] text-[11px] mt-0.5">Poached Egg • Microgreens</div>
                     </div>
-                    <span className="text-amber-400 font-bold">Kitchen (4m)</span>
+                    <span className="bg-amber-50 text-amber-800 border border-amber-200 font-bold px-2.5 py-1 rounded-full text-[11px]">Kitchen (4m)</span>
                   </div>
                 </div>
               </div>
@@ -55,21 +55,21 @@ export default function CafesSolutionPage() {
           </div>
         </section>
 
-        <section className="py-16 sm:py-20 bg-slate-50">
+        <section className="py-16 sm:py-20 bg-[#F8FAF9]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-black text-center text-slate-900">Why top roasteries and specialty cafes choose RestroNex</h2>
+            <h2 className="text-3xl font-black text-center text-[#172B25]">Why top roasteries and specialty cafes choose RestroNex</h2>
             <div className="mt-12 grid md:grid-cols-3 gap-6">
-              <div className="p-6 bg-white rounded-2xl border border-slate-200">
-                <h3 className="font-bold text-lg">Custom Modifiers Matrix</h3>
-                <p className="mt-2 text-sm text-slate-600">Almond milk, soy, oat, decaf, syrups, temperatures — seamless custom drink builder with ingredient auto-deduct.</p>
+              <div className="p-6 bg-white rounded-2xl border border-[#E5EBE7] shadow-xs">
+                <h3 className="font-bold text-lg text-[#172B25]">Custom Modifiers Matrix</h3>
+                <p className="mt-2 text-sm text-[#718078] leading-relaxed">Almond milk, soy, oat, decaf, syrups, temperatures — seamless custom drink builder with ingredient auto-deduct.</p>
               </div>
-              <div className="p-6 bg-white rounded-2xl border border-slate-200">
-                <h3 className="font-bold text-lg">Coffee Card Loyalty</h3>
-                <p className="mt-2 text-sm text-slate-600">Digital &quot;Buy 9 Get 10th Free&quot; coffee stamp card stored directly on customer phone numbers.</p>
+              <div className="p-6 bg-white rounded-2xl border border-[#E5EBE7] shadow-xs">
+                <h3 className="font-bold text-lg text-[#172B25]">Coffee Card Loyalty</h3>
+                <p className="mt-2 text-sm text-[#718078] leading-relaxed">Digital &quot;Buy 9 Get 10th Free&quot; coffee stamp card stored directly on customer phone numbers.</p>
               </div>
-              <div className="p-6 bg-white rounded-2xl border border-slate-200">
-                <h3 className="font-bold text-lg">Quick-Touch Takeaway Counter</h3>
-                <p className="mt-2 text-sm text-slate-600">Rapid touchscreen keypad designed for high-throughput takeaway cash & UPI queues.</p>
+              <div className="p-6 bg-white rounded-2xl border border-[#E5EBE7] shadow-xs">
+                <h3 className="font-bold text-lg text-[#172B25]">Quick-Touch Takeaway Counter</h3>
+                <p className="mt-2 text-sm text-[#718078] leading-relaxed">Rapid touchscreen keypad designed for high-throughput takeaway cash & UPI queues.</p>
               </div>
             </div>
           </div>

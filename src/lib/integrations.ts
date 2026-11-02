@@ -76,9 +76,9 @@ export function getIntegrationMeta(provider: string) {
 
 export function statusLabel(s: IntegrationStatus) {
   switch(s){
-    case "CONNECTED": return { text: "Connected", color: "bg-[#3D954F] text-white border-[#3D954F]" };
-    case "CONFIGURED": return { text: "Configured", color: "bg-amber-500/15 text-amber-300 border-amber-500/20" };
-    case "ERROR": return { text: "Error", color: "bg-red-500/15 text-red-300 border-red-500/20" };
-    default: return { text: "Not connected", color: "bg-white/5 text-white/40 border-white/10" };
+    case "CONNECTED": return { text: "Connected", color: "bg-[#E8F5EE] text-[#16845B] border-[#16845B]/30" };
+    case "CONFIGURED": return { text: "Configured", color: "bg-amber-50 text-amber-800 border-amber-200" };
+    case "ERROR": return { text: "Error", color: "bg-rose-50 text-rose-800 border-rose-200" };
+    default: return { text: "Not connected", color: "bg-[#F8FAF9] text-[#718078] border-[#E5EBE7]" };
   }
 }

@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { RazorpayCheckoutButton } from "@/components/RazorpayCheckoutButton";
+import Link from "next/link";
+import { ArrowLeft, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 export default function StandardCheckoutPage() {
   const [amountRupees, setAmountRupees] = useState("200");
@@ -17,69 +19,85 @@ export default function StandardCheckoutPage() {
   const amountPaise = Math.round((parseFloat(amountRupees) || 0) * 100);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12">
+    <div className="min-h-screen bg-[#F8FAF9] text-[#172B25] p-6 md:p-12">
       <div className="max-w-2xl mx-auto space-y-6">
-        <div className="border-b border-slate-800 pb-4">
-          <span className="text-xs uppercase tracking-wider font-semibold text-emerald-400">
-            Payment Gateway Integration
-          </span>
-          <h1 className="text-3xl font-bold mt-1 text-white">Razorpay Standard Web Checkout</h1>
-          <p className="text-slate-400 text-sm mt-1">
-            End-to-end integration with server-side order generation and cryptographic signature verification.
-          </p>
+        <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EE] text-[#16845B] text-xs font-semibold mb-2">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>Razorpay Standard Web Checkout</span>
+            </div>
+            <h1 className="text-3xl font-extrabold text-[#172B25] tracking-tight">Payment Gateway Integration</h1>
+            <p className="text-[#718078] text-sm mt-1">
+              Test end-to-end server order creation, modal checkout, and cryptographic HMAC-SHA256 signature verification.
+            </p>
+          </div>
+          <Link
+            href="/"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#718078] hover:text-[#16845B] bg-white border border-[#E5EBE7] px-3.5 py-2 rounded-xl transition shadow-2xs"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Home
+          </Link>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-white">Test Payment Parameters</h2>
+        <div className="bg-white border border-[#E5EBE7] rounded-2xl p-6 space-y-5 shadow-xs">
+          <h2 className="text-base font-bold text-[#172B25]">Payment Parameters</h2>
 
           <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1">
+            <label className="block text-xs font-semibold text-[#172B25] uppercase tracking-wider mb-1.5">
               Amount (INR) — Minimum ₹1.00 (100 paise)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-2.5 text-slate-400">₹</span>
+              <span className="absolute left-3.5 top-2.5 text-[#718078] font-bold">₹</span>
               <input
                 type="number"
                 min="1"
                 step="1"
                 value={amountRupees}
                 onChange={(e) => setAmountRupees(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg pl-8 pr-4 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl pl-8 pr-4 py-2.5 text-sm font-semibold text-[#172B25] focus:outline-none focus:border-[#16845B] focus:ring-2 focus:ring-[#16845B]/20 transition"
               />
             </div>
-            <span className="text-xs text-slate-500 mt-1 block">
-              Calculated paise: {amountPaise} paise
+            <span className="text-xs text-[#718078] mt-1.5 block">
+              Converted amount: <b>{amountPaise} paise</b>
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">Customer Name</label>
+              <label className="block text-xs font-semibold text-[#172B25] uppercase tracking-wider mb-1.5">
+                Customer Name
+              </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3.5 py-2 text-sm text-[#172B25] focus:outline-none focus:border-[#16845B] focus:ring-2 focus:ring-[#16845B]/20 transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-slate-400 mb-1">Customer Email</label>
+              <label className="block text-xs font-semibold text-[#172B25] uppercase tracking-wider mb-1.5">
+                Customer Email
+              </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3.5 py-2 text-sm text-[#172B25] focus:outline-none focus:border-[#16845B] focus:ring-2 focus:ring-[#16845B]/20 transition"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-400 mb-1">Customer Contact Number</label>
+            <label className="block text-xs font-semibold text-[#172B25] uppercase tracking-wider mb-1.5">
+              Contact Phone
+            </label>
             <input
               type="text"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
+              className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3.5 py-2 text-sm text-[#172B25] focus:outline-none focus:border-[#16845B] focus:ring-2 focus:ring-[#16845B]/20 transition"
             />
           </div>
 
@@ -87,7 +105,7 @@ export default function StandardCheckoutPage() {
             <RazorpayCheckoutButton
               amountPaise={amountPaise}
               name="RestroNEX Standard Checkout"
-              description={`Test payment of ₹${amountRupees}`}
+              description={`Payment of ₹${amountRupees}`}
               prefill={{ name, email, contact }}
               onSuccess={(data) => {
                 addLog(`SUCCESS: Order ${data.order_id} verified with payment ${data.payment_id}`);
@@ -103,33 +121,33 @@ export default function StandardCheckoutPage() {
         </div>
 
         {/* Live Logs / Audit Trail */}
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+        <div className="bg-white border border-[#E5EBE7] rounded-2xl p-5 shadow-xs">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-semibold text-slate-200">Execution & Event Log</h3>
+            <h3 className="text-sm font-bold text-[#172B25]">Event & Verification Log</h3>
             {logs.length > 0 && (
               <button
                 onClick={() => setLogs([])}
-                className="text-xs text-slate-500 hover:text-slate-300 underline cursor-pointer"
+                className="text-xs text-[#718078] hover:text-[#172B25] underline cursor-pointer"
               >
-                Clear
+                Clear Log
               </button>
             )}
           </div>
-          <div className="bg-slate-950 rounded-lg p-3 font-mono text-xs text-slate-300 min-h-[120px] max-h-[220px] overflow-y-auto space-y-1">
+          <div className="bg-[#F0F4F2] border border-[#E5EBE7] rounded-xl p-3.5 font-mono text-xs text-[#172B25] min-h-[120px] max-h-[220px] overflow-y-auto space-y-1.5">
             {logs.length === 0 ? (
-              <div className="text-slate-600 italic">No events yet. Click the checkout button to test.</div>
+              <div className="text-[#718078] italic">No events yet. Click the pay button to trigger checkout.</div>
             ) : (
               logs.map((log, i) => (
                 <div
                   key={i}
                   className={
                     log.includes("SUCCESS")
-                      ? "text-emerald-400 font-semibold"
+                      ? "text-[#16845B] font-bold"
                       : log.includes("ERROR")
-                      ? "text-rose-400"
+                      ? "text-red-600 font-semibold"
                       : log.includes("DISMISSED")
-                      ? "text-amber-400"
-                      : "text-slate-300"
+                      ? "text-amber-700"
+                      : "text-[#172B25]"
                   }
                 >
                   {log}
@@ -139,18 +157,21 @@ export default function StandardCheckoutPage() {
           </div>
         </div>
 
-        {/* API Verification Checklist */}
-        <div className="border border-slate-800 rounded-xl p-4 bg-slate-900/40 text-xs text-slate-400 space-y-2">
-          <div className="font-semibold text-slate-200">Integration Endpoints Available:</div>
-          <ul className="list-disc pl-4 space-y-1">
+        {/* Security & Endpoint Info */}
+        <div className="border border-[#E5EBE7] rounded-2xl p-4 bg-[#E8F5EE]/40 text-xs text-[#718078] space-y-2">
+          <div className="font-bold text-[#172B25] flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-[#16845B]" />
+            Active Integration Endpoints
+          </div>
+          <ul className="list-disc pl-5 space-y-1">
             <li>
-              <code>POST /api/create-order</code>: Generates Razorpay order via official SDK / API (minimum 100 paise)
+              <code>POST /api/create-order</code>: Generates order via Razorpay SDK (minimum 100 paise)
             </li>
             <li>
-              <code>POST /api/verify-payment</code>: Cryptographically validates <code>HMAC-SHA256(order_id + &quot;|&quot; + payment_id, KEY_SECRET)</code>
+              <code>POST /api/verify-payment</code>: Cryptographically validates <code>HMAC-SHA256</code>
             </li>
             <li>
-              <code>POST /api/checkout/create-order</code> &amp; <code>/api/checkout/verify</code>: Full multi-tenant SaaS subscription billing
+              <code>POST /api/checkout/create-order</code> &amp; <code>/api/checkout/verify</code>: SaaS subscription flows
             </li>
           </ul>
         </div>
@@ -158,4 +179,3 @@ export default function StandardCheckoutPage() {
     </div>
   );
 }
-

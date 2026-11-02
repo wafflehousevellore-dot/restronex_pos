@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export default function GetStartedPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#070B07] flex items-center justify-center text-emerald-400">Loading RestroNex setup...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#F8FAF9] flex items-center justify-center text-[#16845B] font-bold">Loading RestroNex setup...</div>}>
       <GetStartedContent />
     </Suspense>
   );
@@ -76,19 +76,19 @@ function GetStartedContent() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-[#F8FAF9] text-[#172B25]">
       <Navbar />
-      <main className="min-h-screen bg-[#070B07] text-white py-12 px-4 sm:px-6 lg:px-8">
+      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Progress Header */}
           <div className="text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#3D954F]/20 border border-[#3D954F]/30 px-3.5 py-1 text-xs font-bold text-[#3D954F]">
-              <Sparkles className="h-3.5 w-3.5" /> 14-DAY RISK-FREE TRIAL
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1 text-xs font-bold text-[#16845B]">
+              <Sparkles className="h-3.5 w-3.5 text-[#16845B]" /> 14-DAY RISK-FREE TRIAL
             </span>
-            <h1 className="mt-4 text-3xl sm:text-4xl font-black">
+            <h1 className="mt-4 text-3xl sm:text-4xl font-black text-[#172B25]">
               {step === 1 ? "Step 1: Choose Your Plan" : "Step 2: Enter Restaurant Details"}
             </h1>
-            <p className="mt-2 text-sm text-white/60">
+            <p className="mt-2 text-sm text-[#718078]">
               {step === 1
                 ? "Select the package that fits your outlet operations. Change or cancel anytime."
                 : `Configuring for ${activePlan.name} Plan (₹${activePlan.priceMonthly}/mo + GST)`}
@@ -100,12 +100,12 @@ function GetStartedContent() {
             <div className="mt-10">
               {/* Billing Cycle Switcher */}
               <div className="flex justify-center mb-8">
-                <div className="inline-flex rounded-full bg-white/5 border border-white/10 p-1">
+                <div className="inline-flex rounded-full bg-white border border-[#E5EBE7] p-1.5 shadow-xs">
                   <button
                     type="button"
                     onClick={() => setBillingCycle("MONTHLY")}
                     className={`rounded-full px-5 py-2 text-xs font-bold transition-all ${
-                      billingCycle === "MONTHLY" ? "bg-[#3D954F] text-white shadow" : "text-white/60 hover:text-white"
+                      billingCycle === "MONTHLY" ? "bg-[#16845B] text-white shadow-xs" : "text-[#718078] hover:text-[#172B25]"
                     }`}
                   >
                     Monthly Billing
@@ -114,7 +114,7 @@ function GetStartedContent() {
                     type="button"
                     onClick={() => setBillingCycle("ANNUAL")}
                     className={`rounded-full px-5 py-2 text-xs font-bold transition-all ${
-                      billingCycle === "ANNUAL" ? "bg-[#3D954F] text-white shadow" : "text-white/60 hover:text-white"
+                      billingCycle === "ANNUAL" ? "bg-[#16845B] text-white shadow-xs" : "text-[#718078] hover:text-[#172B25]"
                     }`}
                   >
                     Annual (Save 16%)
@@ -131,32 +131,32 @@ function GetStartedContent() {
                     <div
                       key={plan.id}
                       onClick={() => setSelectedPlan(plan.slug)}
-                      className={`cursor-pointer rounded-[24px] border p-6 flex flex-col justify-between transition-all ${
+                      className={`cursor-pointer rounded-2xl border p-6 flex flex-col justify-between transition-all bg-white ${
                         isSelected
-                          ? "border-[#3D954F] bg-[#0F1F14] shadow-2xl ring-2 ring-[#3D954F]/50 scale-[1.02]"
-                          : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/[0.08]"
+                          ? "border-2 border-[#16845B] shadow-md ring-4 ring-[#16845B]/10 scale-[1.02]"
+                          : "border-[#E5EBE7] shadow-xs hover:border-[#16845B]/50 hover:shadow-sm"
                       }`}
                     >
                       <div>
                         <div className="flex justify-between items-center">
-                          <span className="text-lg font-black text-white">{plan.name}</span>
+                          <span className="text-lg font-black text-[#172B25]">{plan.name}</span>
                           {isSelected && (
-                            <span className="rounded-full bg-[#3D954F] text-white text-[10px] font-bold px-2.5 py-0.5">
+                            <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B] text-[10px] font-bold px-2.5 py-0.5">
                               Selected ✓
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-white/50 mt-1">{plan.tagline}</div>
+                        <div className="text-xs text-[#718078] mt-1">{plan.tagline}</div>
 
                         <div className="mt-4 flex items-baseline gap-1">
-                          <span className="text-3xl font-black text-white">₹{price}</span>
-                          <span className="text-xs text-white/50">/ mo + GST</span>
+                          <span className="text-3xl font-black text-[#172B25]">₹{price}</span>
+                          <span className="text-xs text-[#718078]">/ mo + GST</span>
                         </div>
 
-                        <div className="mt-5 space-y-2 border-t border-white/10 pt-4">
+                        <div className="mt-5 space-y-2.5 border-t border-[#E5EBE7] pt-4">
                           {plan.features.map((f) => (
-                            <div key={f} className="flex items-start gap-2 text-xs text-white/80">
-                              <Check className="h-3.5 w-3.5 text-[#3D954F] shrink-0 mt-0.5" />
+                            <div key={f} className="flex items-start gap-2 text-xs text-[#172B25]">
+                              <Check className="h-3.5 w-3.5 text-[#16845B] shrink-0 mt-0.5" />
                               <span>{f}</span>
                             </div>
                           ))}
@@ -170,10 +170,10 @@ function GetStartedContent() {
                           setSelectedPlan(plan.slug);
                           setStep(2);
                         }}
-                        className={`mt-6 w-full rounded-full py-2.5 text-xs font-bold transition-all shadow-md ${
+                        className={`mt-6 w-full rounded-full py-2.5 text-xs font-bold transition-all shadow-xs ${
                           isSelected
-                            ? "bg-[#3D954F] text-white hover:bg-[#338a44]"
-                            : "bg-white/10 text-white hover:bg-white/20"
+                            ? "bg-[#16845B] text-white hover:bg-[#116B49]"
+                            : "border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-white"
                         }`}
                       >
                         Continue with {plan.name} →
@@ -187,7 +187,7 @@ function GetStartedContent() {
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="rounded-full bg-[#3D954F] px-8 py-3 text-sm font-bold text-white hover:bg-[#338a44] shadow-lg inline-flex items-center gap-2"
+                  className="rounded-full bg-[#16845B] px-8 py-3 text-sm font-bold text-white hover:bg-[#116B49] shadow-sm inline-flex items-center gap-2 transition"
                 >
                   <span>Proceed to Restaurant Details</span>
                   <ArrowRight className="h-4 w-4" />
@@ -199,35 +199,35 @@ function GetStartedContent() {
           {/* Step 2: Essential Business Details Form */}
           {step === 2 && (
             <div className="mt-10 max-w-xl mx-auto">
-              <div className="rounded-[24px] border border-white/10 bg-[#0F1F14] p-6 sm:p-8 shadow-2xl">
+              <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-sm">
                 {/* Plan Summary Badge */}
-                <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
+                <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-4 mb-6">
                   <div>
-                    <span className="text-xs text-white/50">Selected Package</span>
-                    <div className="text-base font-black text-white">{activePlan.name} Plan</div>
+                    <span className="text-xs text-[#718078]">Selected Package</span>
+                    <div className="text-base font-black text-[#172B25]">{activePlan.name} Plan</div>
                   </div>
                   <div className="text-right">
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="text-xs text-emerald-400 underline font-semibold"
+                      className="text-xs text-[#16845B] underline font-semibold"
                     >
                       Change Plan
                     </button>
-                    <div className="text-xs font-bold text-white">₹{activePlan.priceMonthly}/mo</div>
+                    <div className="text-xs font-bold text-[#172B25]">₹{activePlan.priceMonthly}/mo</div>
                   </div>
                 </div>
 
                 {error && (
-                  <div className="mb-6 rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-xs text-red-300">
+                  <div className="mb-6 rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-700">
                     {error}
                   </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-white/80 mb-1.5 flex items-center gap-1.5">
-                      <Store className="h-3.5 w-3.5 text-[#3D954F]" /> Restaurant / Business Name
+                    <label className="block text-xs font-bold text-[#172B25] mb-1.5 flex items-center gap-1.5">
+                      <Store className="h-3.5 w-3.5 text-[#16845B]" /> Restaurant / Business Name
                     </label>
                     <input
                       type="text"
@@ -235,13 +235,13 @@ function GetStartedContent() {
                       placeholder="e.g. Spice Route Bistro"
                       value={formData.businessName}
                       onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                      className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#3D954F] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E5EBE7] bg-white px-4 py-2.5 text-sm text-[#172B25] placeholder:text-[#718078] focus:border-[#16845B] focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-white/80 mb-1.5 flex items-center gap-1.5">
-                      <User className="h-3.5 w-3.5 text-[#3D954F]" /> Owner / Manager Full Name
+                    <label className="block text-xs font-bold text-[#172B25] mb-1.5 flex items-center gap-1.5">
+                      <User className="h-3.5 w-3.5 text-[#16845B]" /> Owner / Manager Full Name
                     </label>
                     <input
                       type="text"
@@ -249,14 +249,14 @@ function GetStartedContent() {
                       placeholder="e.g. Rahul Sharma"
                       value={formData.ownerName}
                       onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-                      className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#3D954F] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E5EBE7] bg-white px-4 py-2.5 text-sm text-[#172B25] placeholder:text-[#718078] focus:border-[#16845B] focus:outline-none"
                     />
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-white/80 mb-1.5 flex items-center gap-1.5">
-                        <Mail className="h-3.5 w-3.5 text-[#3D954F]" /> Business Email
+                      <label className="block text-xs font-bold text-[#172B25] mb-1.5 flex items-center gap-1.5">
+                        <Mail className="h-3.5 w-3.5 text-[#16845B]" /> Business Email
                       </label>
                       <input
                         type="email"
@@ -264,13 +264,13 @@ function GetStartedContent() {
                         placeholder="owner@restaurant.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#3D954F] focus:outline-none"
+                        className="w-full rounded-xl border border-[#E5EBE7] bg-white px-4 py-2.5 text-sm text-[#172B25] placeholder:text-[#718078] focus:border-[#16845B] focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-white/80 mb-1.5 flex items-center gap-1.5">
-                        <Phone className="h-3.5 w-3.5 text-[#3D954F]" /> Phone Number
+                      <label className="block text-xs font-bold text-[#172B25] mb-1.5 flex items-center gap-1.5">
+                        <Phone className="h-3.5 w-3.5 text-[#16845B]" /> Phone Number
                       </label>
                       <input
                         type="tel"
@@ -278,17 +278,17 @@ function GetStartedContent() {
                         placeholder="9876543210"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#3D954F] focus:outline-none"
+                        className="w-full rounded-xl border border-[#E5EBE7] bg-white px-4 py-2.5 text-sm text-[#172B25] placeholder:text-[#718078] focus:border-[#16845B] focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-white/80 mb-1.5">Restaurant Format</label>
+                    <label className="block text-xs font-bold text-[#172B25] mb-1.5">Restaurant Format</label>
                     <select
                       value={formData.restaurantType}
                       onChange={(e) => setFormData({ ...formData, restaurantType: e.target.value })}
-                      className="w-full rounded-xl border border-white/15 bg-[#0F1F14] px-4 py-3 text-sm text-white focus:border-[#3D954F] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E5EBE7] bg-white px-4 py-2.5 text-sm text-[#172B25] focus:border-[#16845B] focus:outline-none"
                     >
                       <option value="Fine Dining">Fine Dining / Casual Dine-in</option>
                       <option value="Cafe">Cafe & Roastery</option>
@@ -300,11 +300,11 @@ function GetStartedContent() {
                     </select>
                   </div>
 
-                  <div className="pt-4">
+                  <div className="pt-3">
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full rounded-full bg-[#3D954F] py-3.5 text-sm font-bold text-white hover:bg-[#338a44] transition-all shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="w-full rounded-full bg-[#16845B] py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {loading ? (
                         <span>Validating Details...</span>
@@ -318,8 +318,8 @@ function GetStartedContent() {
                   </div>
                 </form>
 
-                <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/40 text-center">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#718078] text-center">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
                   <span>Secure 256-bit encrypted pending registration</span>
                 </div>
               </div>
@@ -328,6 +328,6 @@ function GetStartedContent() {
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

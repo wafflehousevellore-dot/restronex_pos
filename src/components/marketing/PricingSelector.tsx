@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import Link from "next/link";
@@ -25,7 +24,6 @@ export default function PricingSelector() {
     // fetch live plans from DB for configurability
     fetch("/api/subscription-plans").then(r => r.json()).then(dbPlans => {
       if (Array.isArray(dbPlans) && dbPlans.length) {
-        // map DB to UI shape preserving brand copy but using DB pricing/limits
         const mapped = fallbackPlans.map(brand => {
           const db = dbPlans.find((p: any) => p.slug === brand.slug);
           if (!db) return brand;
@@ -53,64 +51,106 @@ export default function PricingSelector() {
       document.cookie = `restronex_checkout=${encodeURIComponent(payload)}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
       document.cookie = `restronex_cycle=${cycle}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
     } catch {}
-    // preserve through auth: go to get-started with plan params
     window.location.href = `/get-started?plan=${slug}&cycle=${cycle}`;
   }
 
   return (
-    <div className="bg-[#070B07] px-4 py-10 text-white border-y border-white/10 mt-6">
+    <div className="bg-[#F8FAF9] px-4 py-12 text-[#172B25] border-y border-[#E5EBE7] mt-6">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col items-center gap-4">
-          <div className="inline-flex rounded-full bg-white/5 border border-white/10 p-1">
-            <button onClick={()=>setCycle("MONTHLY")} className={`rounded-full px-5 py-2 text-xs font-bold ${cycle==="MONTHLY" ? "bg-[#3D954F] text-white shadow" : "text-white/60 hover:text-white"}`}>Monthly — billed monthly</button>
-            <button onClick={()=>setCycle("ANNUAL")} className={`rounded-full px-5 py-2 text-xs font-bold ${cycle==="ANNUAL" ? "bg-[#3D954F] text-white shadow" : "text-white/60 hover:text-white"}`}>Annually — save 16% ✨</button>
+          <div className="inline-flex rounded-full bg-white border border-[#E5EBE7] p-1.5 shadow-xs">
+            <button
+              onClick={()=>setCycle("MONTHLY")}
+              className={`rounded-full px-5 py-2 text-xs font-bold transition-all ${cycle==="MONTHLY" ? "bg-[#16845B] text-white shadow-xs" : "text-[#718078] hover:text-[#172B25]"}`}
+            >
+              Monthly — billed monthly
+            </button>
+            <button
+              onClick={()=>setCycle("ANNUAL")}
+              className={`rounded-full px-5 py-2 text-xs font-bold transition-all ${cycle==="ANNUAL" ? "bg-[#16845B] text-white shadow-xs" : "text-[#718078] hover:text-[#172B25]"}`}
+            >
+              Annually — save 16% ✨
+            </button>
           </div>
-          <div className="text-xs text-white/40">14-day free trial on Starter & Growth • No card for trial • Enterprise contact sales • +18% GST on checkout</div>
+          <div className="text-xs text-[#718078] font-medium text-center">
+            14-day free trial on Starter & Growth • No credit card required for trial • +18% GST on checkout
+          </div>
         </div>
 
-        <div className="mt-8 grid md:grid-cols-3 gap-0 border-t border-white/10">
+        <div className="mt-8 grid md:grid-cols-3 gap-6 items-stretch">
           {plans.map((plan) => {
             const isSelected = selected === plan.slug;
             const featured = plan.highlighted;
             const price = cycle === "ANNUAL" ? plan.priceAnnual : plan.priceMonthly;
             const per = cycle === "ANNUAL" ? "/year" : "/month";
-            const saveNote = cycle === "ANNUAL" ? `₹${(plan.priceMonthly*12 - plan.priceAnnual).toLocaleString("en-IN")} saved vs monthly` : `₹${plan.priceMonthly.toLocaleString("en-IN")}/mo • ${plan.maxOutlets} outlets • ${plan.maxUsers} staff`;
-            return (
-              <div key={plan.slug} className={`relative flex flex-col ${isSelected ? "ring-2 ring-[#3D954F] ring-offset-2 ring-offset-[#070B07]" : ""}`}>
-                <div className={`relative flex h-full flex-col ${featured ? "border-2 border-[#3D954F] bg-[#0F1F14] z-10 sm:-my-2 shadow-2xl" : "border border-white/10 bg-[#070B07] md:border-x-0"}`}>
-                  <div className="relative border-b border-white/10 p-6">
-                    <h3 className={`mb-1 text-xl font-black tracking-tight ${featured ? "text-[#3D954F]" : "text-white"}`}>{plan.name.toUpperCase()}</h3>
-                    <p className="text-sm text-white/50">{plan.tagline}</p>
-                    {featured && <div className="absolute top-4 right-4 rounded-full bg-[#3D954F] px-2.5 py-1 text-[10px] font-black text-white">POPULAR</div>}
-                    <div className="mt-4">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-black tracking-tight text-white">{formatINR(price*100)}</span>
-                        <span className="text-sm text-white/40">{per}</span>
-                      </div>
-                      <div className="mt-1 text-xs text-white/40">{saveNote} • {cycle==="ANNUAL" ? `${formatINR(price*100)}/yr` : `${formatINR(plan.priceMonthly*100)}/mo`} • +18% GST on checkout</div>
-                    </div>
-                    <div className="mt-3 flex gap-2 text-xs">
-                      <span className="rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-white/60">{plan.maxOutlets} outlet{plan.maxOutlets>1?'s':''}</span>
-                      <span className="rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-white/60">{plan.maxUsers} staff</span>
-                      <span className="rounded-full bg-white/5 border border-white/10 px-2.5 py-1 text-white/60">{plan.id}</span>
-                    </div>
-                  </div>
+            const saveNote = cycle === "ANNUAL"
+              ? `₹${(plan.priceMonthly*12 - plan.priceAnnual).toLocaleString("en-IN")} saved vs monthly`
+              : `₹${plan.priceMonthly.toLocaleString("en-IN")}/mo • ${plan.maxOutlets} outlets • ${plan.maxUsers} staff`;
 
-                  <div className="flex-1 p-6">
-                    <p className="mb-3 text-xs font-bold tracking-wide text-white/60">WHAT&apos;S INCLUDED:</p>
-                    <ul className="mb-6 space-y-2.5">
+            return (
+              <div
+                key={plan.slug}
+                className={`relative flex flex-col rounded-2xl bg-white border transition-all ${
+                  featured
+                    ? "border-2 border-[#16845B] shadow-lg ring-4 ring-[#16845B]/10 md:-my-2"
+                    : "border-[#E5EBE7] shadow-xs hover:shadow-md"
+                } ${isSelected ? "ring-2 ring-[#16845B]" : ""}`}
+              >
+                {featured && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#16845B] px-3.5 py-0.5 text-[11px] font-black tracking-wide text-white shadow-xs">
+                    MOST POPULAR
+                  </div>
+                )}
+                <div className="relative border-b border-[#E5EBE7] p-6">
+                  <h3 className={`text-xl font-black tracking-tight ${featured ? "text-[#16845B]" : "text-[#172B25]"}`}>
+                    {plan.name.toUpperCase()}
+                  </h3>
+                  <p className="mt-1 text-sm text-[#718078]">{plan.tagline}</p>
+                  <div className="mt-5">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-4xl font-black tracking-tight text-[#172B25]">{formatINR(price*100)}</span>
+                      <span className="text-sm font-medium text-[#718078]">{per}</span>
+                    </div>
+                    <div className="mt-1 text-xs text-[#718078]">{saveNote} • +18% GST on checkout</div>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-2.5 py-1 text-[#16845B] font-semibold">{plan.maxOutlets} outlet{plan.maxOutlets>1?'s':''}</span>
+                    <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-2.5 py-1 text-[#16845B] font-semibold">{plan.maxUsers} staff</span>
+                  </div>
+                </div>
+
+                <div className="flex-1 flex flex-col justify-between p-6">
+                  <div>
+                    <p className="mb-3 text-xs font-bold tracking-wider text-[#718078] uppercase">WHAT&apos;S INCLUDED:</p>
+                    <ul className="space-y-3 mb-6">
                       {plan.features.map((f: string) => (
-                        <li key={f} className="flex items-start gap-3">
-                          <Check className={`mt-0.5 h-4 w-4 shrink-0 ${featured ? "text-[#3D954F]" : "text-white/30"}`} />
-                          <span className="text-sm text-white/70">{f}</span>
+                        <li key={f} className="flex items-start gap-2.5">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#16845B]" />
+                          <span className="text-sm text-[#172B25]">{f}</span>
                         </li>
                       ))}
                     </ul>
-                    <button onClick={()=>selectPlan(plan.slug)} className={`w-full gap-2 rounded-full py-3.5 text-sm font-black flex items-center justify-center ${featured ? "bg-[#3D954F] text-white hover:bg-[#2e7a3e] shadow-lg" : "bg-white text-[#070B07] hover:bg-white/90"} ${isSelected ? "opacity-70" : ""}`}>
+                  </div>
+
+                  <div>
+                    <button
+                      onClick={()=>selectPlan(plan.slug)}
+                      className={`w-full gap-2 rounded-full py-3.5 text-sm font-black flex items-center justify-center transition-all ${
+                        featured
+                          ? "bg-[#16845B] text-white hover:bg-[#116B49] shadow-sm"
+                          : "border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-[#E8F5EE] hover:text-[#16845B]"
+                      } ${isSelected ? "opacity-75" : ""}`}
+                    >
                       {isSelected ? "Selected ✓" : plan.cta} <ArrowRight className="h-4 w-4" />
                     </button>
-                    <div className="mt-2 flex items-center justify-center gap-1.5 text-[11px] text-white/30"><ShieldCheck className="h-3 w-3" /> Server-enforced limits • Razorpay test mode</div>
-                    <div className="mt-2 text-center text-xs"><Link href={`/checkout?plan=${plan.slug}&cycle=${cycle}`} className="text-[#3D954F] hover:text-white underline">View checkout preview →</Link></div>
+                    <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[11px] text-[#718078]">
+                      <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" /> Server-enforced limits • Razorpay verified
+                    </div>
+                    <div className="mt-2 text-center text-xs">
+                      <Link href={`/checkout?plan=${plan.slug}&cycle=${cycle}`} className="text-[#16845B] hover:underline font-medium">
+                        View checkout preview →
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -118,11 +158,18 @@ export default function PricingSelector() {
           })}
         </div>
 
-        <div className="mt-6 flex flex-col items-center gap-2">
-          <div className="text-xs text-white/30 text-center">Preserved across signup → checkout → onboarding. Change anytime in <Link href="/checkout" className="text-[#3D954F] underline">Checkout</Link> • GST 18% calculated server-side • Entitlements enforced by subscription status</div>
-          <div className="flex gap-3 text-xs">
-            <Link href="/sign-up?plan=growth&cycle=MONTHLY" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-semibold text-white hover:bg-white/10">Get Started — Growth Trial →</Link>
-            <Link href="/contact" className="rounded-full bg-white text-[#070B07] px-5 py-2.5 font-bold hover:bg-white/90">Talk to Sales</Link>
+        <div className="mt-8 flex flex-col items-center gap-3">
+          <div className="text-xs text-[#718078] text-center">
+            Preserved across signup → checkout → onboarding. Change anytime in{" "}
+            <Link href="/checkout" className="text-[#16845B] underline font-medium">Checkout</Link> • GST 18% calculated server-side
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 text-xs">
+            <Link href="/sign-up?plan=growth&cycle=MONTHLY" className="rounded-full bg-[#16845B] text-white px-5 py-2.5 font-bold hover:bg-[#116B49] shadow-xs">
+              Get Started — Growth Trial →
+            </Link>
+            <Link href="/contact" className="rounded-full border border-[#E5EBE7] bg-white text-[#172B25] px-5 py-2.5 font-bold hover:bg-[#F8FAF9] shadow-xs">
+              Talk to Sales
+            </Link>
           </div>
         </div>
       </div>
