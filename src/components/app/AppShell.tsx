@@ -89,20 +89,25 @@ export default function AppShell({ children, user, tenant, outlet }: { children:
       </aside>
 
       <div className="flex-1 lg:pl-[264px] flex flex-col min-h-screen bg-[#070B07]">
-        <header className="sticky top-0 z-20 h-[64px] flex items-center justify-between gap-3 border-b border-white/10 bg-[#070B07]/80 backdrop-blur px-4">
+        <header className="sticky top-0 z-20 h-[64px] flex items-center justify-between gap-3 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur px-4">
           <div className="flex items-center gap-2">
-            <button className="lg:hidden p-2 rounded-xl border border-white/10 text-white" onClick={()=>setMobile(true)}><Menu className="h-5 w-5"/></button>
-            <span className="hidden sm:inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-semibold text-white/70"><span className="h-2 w-2 rounded-full bg-[#3D954F] animate-pulse"/> Tenant-isolated • Paise math • Audit-logged</span>
+            <button className="lg:hidden p-2 rounded-xl border border-slate-800 text-white" onClick={()=>setMobile(true)}><Menu className="h-5 w-5"/></button>
+            <span className="hidden sm:inline-flex items-center gap-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1 text-xs font-medium text-emerald-400">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"/> Cloud Sync Active • Enterprise Security
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/app/dashboard" appearance={{ elements: { organizationSwitcherTrigger: "bg-white/5 border border-white/15 text-white hover:bg-white/10 text-xs px-3 py-1.5" } }} />
-            <a href="/app/onboarding" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10">Onboarding</a>
-            <a href="/app/pos" className="rounded-full bg-[#3D954F] px-5 py-2 text-xs font-bold text-white hover:bg-[#2e7a3e]">Open POS</a>
+            <OrganizationSwitcher hidePersonal afterSelectOrganizationUrl="/app/dashboard" appearance={{ elements: { organizationSwitcherTrigger: "bg-slate-900 border border-slate-700 text-white hover:bg-slate-800 text-xs px-3 py-1.5" } }} />
+            <a href="/app/onboarding" className="rounded-xl border border-slate-700 bg-slate-900/90 px-4 py-2 text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800 transition">Onboarding</a>
+            <a href="/app/pos" className="rounded-xl bg-emerald-600 px-5 py-2 text-xs font-bold text-white hover:bg-emerald-500 shadow-md shadow-emerald-950/50 transition">Open POS</a>
             <UserButton />
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6 bg-[#070B07]">{children}</main>
-        <footer className="border-t border-white/10 bg-[#07110a] px-6 py-3 text-xs text-white/40">© 2025 RestroNex • GST-ready • Razorpay verified • Honest sync states • <a href="/" className="text-[#3D954F] hover:text-white">Public site →</a></footer> {/* eslint-disable-line @next/next/no-html-link-for-pages */}
+        <main className="flex-1 p-4 sm:p-6 bg-slate-950 text-slate-100">{children}</main>
+        <footer className="border-t border-slate-800/80 bg-slate-950 px-6 py-3.5 text-xs text-slate-400 flex flex-wrap gap-2 items-center justify-between">
+          <span>© 2026 RestroNex Restaurant OS • GST-Ready • Razorpay Verified</span>
+          <a href="/" className="text-emerald-400 hover:text-emerald-300 font-medium">Public Site →</a>
+        </footer>
       </div>
     </div>
   );
