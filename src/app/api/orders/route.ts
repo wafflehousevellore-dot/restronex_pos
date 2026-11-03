@@ -336,6 +336,9 @@ export async function POST(req: NextRequest) {
     });
 
     return o;
+  }, {
+    maxWait: 15000, // 15s connection queue acquisition timeout
+    timeout: 20000, // 20s transaction execution timeout
   });
 
   return NextResponse.json({
@@ -463,6 +466,9 @@ export async function PATCH(req: NextRequest) {
     });
 
     return o;
+  }, {
+    maxWait: 15000, // 15s connection queue acquisition timeout
+    timeout: 20000, // 20s transaction execution timeout
   });
 
   return NextResponse.json({ ok: true, order: updated });

@@ -26,7 +26,7 @@ export async function GET() {
         isHealthy,
       };
     },
-    2
+    10 // Cache health check for 10 seconds under high load
   );
 
   return NextResponse.json(

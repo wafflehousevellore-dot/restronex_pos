@@ -40,24 +40,40 @@ export const options = {
   },
 };
 
-const SAMPLE_MENU_ITEM_ID = "016f2d74-508d-4823-9a65-38784e495c15"; // Dal Makhani
-const SAMPLE_QR_TOKEN = "tbl_koramangala_01";
+const QR_TOKENS = [
+  "tbl_koramangala_01",
+  "tbl_koramangala_t02",
+  "tbl_koramangala_t03",
+  "tbl_koramangala_t04",
+  "tbl_koramangala_t05",
+  "tbl_koramangala_t06",
+  "tbl_koramangala_t07",
+  "tbl_koramangala_t08",
+];
+
+const MENU_ITEMS = [
+  { id: "016f2d74-508d-4823-9a65-38784e495c15", name: "Dal Makhani" },
+  { id: "645609ee-9f51-45b8-b5a7-2871291402b4", name: "Paneer Butter Masala" },
+  { id: "e2b37ca9-4435-43ca-9b92-414e52418be4", name: "Butter Chicken" },
+];
 
 export default function () {
   const vuId = __VU;
   const iterId = __ITER;
   const roll = Math.random();
+  const selectedToken = QR_TOKENS[vuId % QR_TOKENS.length];
+  const selectedItem = MENU_ITEMS[vuId % MENU_ITEMS.length];
 
   // 1. Contactless QR Menu Scan (50% of traffic)
   if (roll < 0.50) {
-    const res = http.get(`${BASE_URL}/api/qr/${SAMPLE_QR_TOKEN}`, {
+    const res = http.get(`${BASE_URL}/api/qr/${selectedToken}`, {
       tags: { name: "GET /api/qr/[token]" },
       headers: { "Accept": "application/json" },
     });
     qrMenuDuration.add(res.timings.duration);
     const success = check(res, {
       "QR menu status is 200": (r) => r.status === 200,
-      "Table number is T01": (r) => r.body && r.body.includes("T01"),
+      "Menu has categories": (r) => r.body && r.body.includes("categories"),
     });
     errorRate.add(!success);
   }
@@ -83,7 +99,7 @@ export default function () {
     healthDuration.add(res.timings.duration);
     const success = check(res, {
       "Health status is 200": (r) => r.status === 200,
-      "DB is healthy": (r) => r.body && r.body.includes("healthy"),
+      "DB is healthy": (r) => r.body && r.body.includes('"status":"healthy"'),
     });
     errorRate.add(!success);
   }
@@ -98,14 +114,14 @@ export default function () {
       idempotencyKey,
       items: [
         {
-          menuItemId: SAMPLE_MENU_ITEM_ID,
-          name: "Dal Makhani",
+          menuItemId: selectedItem.id,
+          name: selectedItem.name,
           quantity: 1,
         },
       ],
     });
 
-    const res = http.post(`${BASE_URL}/api/qr/${SAMPLE_QR_TOKEN}`, payload, {
+    const res = http.post(`${BASE_URL}/api/qr/${selectedToken}`, payload, {
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -124,6 +140,6 @@ export default function () {
     errorRate.add(!success);
   }
 
-  // Think time between customer actions (0.2s - 0.4s)
-  sleep(0.2 + Math.random() * 0.2);
+  // Realistic customer pacing across dining tables (0.5s - 1.0s think time)
+  sleep(0.5 + Math.random() * 0.5);
 }

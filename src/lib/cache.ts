@@ -68,8 +68,12 @@ const globalCache = globalThis as unknown as { appCache?: MemoryCache };
 export const appCache = globalCache.appCache || new MemoryCache(10000);
 globalCache.appCache = appCache;
 
+// Global in-flight promise tracker to guarantee single-flight database requests
+// Prevents Thundering Herd / Cache Stampedes under high concurrency (5,000 VUs)
+const inFlightRequests = new Map<string, Promise<any>>();
+
 /**
- * Cache helper for wrapped async database queries
+ * Cache helper for wrapped async database queries with Singleflight Promise Coalescing
  */
 export async function getOrSetCache<T>(
   key: string,
@@ -81,9 +85,24 @@ export async function getOrSetCache<T>(
     return cached;
   }
 
-  const fresh = await fetchFn();
-  if (fresh !== null && fresh !== undefined) {
-    appCache.set(key, fresh, ttlSeconds);
+  // If a database query is already in-flight for this key, coalesce onto it
+  const existingPromise = inFlightRequests.get(key);
+  if (existingPromise) {
+    return existingPromise as Promise<T>;
   }
-  return fresh;
+
+  const fetchPromise = (async () => {
+    try {
+      const fresh = await fetchFn();
+      if (fresh !== null && fresh !== undefined) {
+        appCache.set(key, fresh, ttlSeconds);
+      }
+      return fresh;
+    } finally {
+      inFlightRequests.delete(key);
+    }
+  })();
+
+  inFlightRequests.set(key, fetchPromise);
+  return fetchPromise;
 }

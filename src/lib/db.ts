@@ -41,16 +41,31 @@ function ensureDatabaseFile(): string {
 
 function getPrisma(): PrismaClient {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
-  const dbUrl = process.env.DATABASE_URL || "file:./dev.db";
+  const rawDbUrl = process.env.DATABASE_URL || "file:./dev.db";
+  const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
   let prisma: PrismaClient;
 
-  if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
+  if (rawDbUrl.startsWith("postgres://") || rawDbUrl.startsWith("postgresql://")) {
+    // Optimize connection routing: port 5432 provides session pooling without the 200 proxy connection cap
+    const dbUrl = rawDbUrl.includes(":6543/")
+      ? rawDbUrl.replace(":6543/", ":5432/").replace("?pgbouncer=true", "")
+      : rawDbUrl;
+
+    const poolMax = isServerless
+      ? Number(process.env.PG_POOL_MAX || 2)
+      : Number(process.env.PG_POOL_MAX || 10);
+
     const pool = new pg.Pool({
       connectionString: dbUrl,
-      max: Number(process.env.PG_POOL_MAX || 15),
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      max: poolMax,
+      idleTimeoutMillis: isServerless ? 2000 : 30000,
+      connectionTimeoutMillis: 15000,
     });
+
+    pool.on("error", (err) => {
+      console.error("Unexpected error on idle pg client:", err);
+    });
+
     const adapter = new PrismaPg(pool);
     prisma = new PrismaClient({ adapter });
   } else {

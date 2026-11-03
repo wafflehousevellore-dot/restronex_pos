@@ -10,26 +10,60 @@ export async function GET(
   const { token } = await params;
   if (!token) return NextResponse.json({ error: "Missing QR token" }, { status: 400 });
 
-  // 1. Cached Table Lookup (15s TTL)
-  const cachedTable = await getOrSetCache(
+  // 1. Cached Table Lookup with active order state (15s TTL, invalidated immediately on order placement)
+  const cachedTableData = await getOrSetCache(
     `qr_table_${token}`,
     async () => {
-      return prisma.table.findFirst({
+      const table = await prisma.table.findFirst({
         where: { qrToken: token },
         include: {
           outlet: { select: { id: true, name: true, city: true, address: true, phone: true } },
           tenant: { select: { id: true, name: true, currency: true, logoUrl: true } },
         },
       });
+      if (!table) return null;
+
+      let activeOrder = null;
+      if (table.currentOrderId) {
+        activeOrder = await prisma.order.findUnique({
+          where: { id: table.currentOrderId },
+          select: {
+            orderNumber: true,
+            status: true,
+            totalPaise: true,
+            items: { select: { name: true, quantity: true, totalPaise: true } },
+          },
+        });
+      }
+
+      return {
+        table: {
+          id: table.id,
+          number: table.number,
+          area: table.area,
+          status: table.status,
+          qrOrderingEnabled: table.qrOrderingEnabled,
+          tenantId: table.tenantId,
+          outletId: table.outletId,
+        },
+        outlet: table.outlet,
+        restaurant: {
+          id: table.tenant.id,
+          name: table.tenant.name,
+          currency: table.tenant.currency,
+          logoUrl: table.tenant.logoUrl,
+        },
+        activeOrder,
+      };
     },
     15
   );
 
-  if (!cachedTable) {
+  if (!cachedTableData) {
     return NextResponse.json({ error: "Invalid or expired Table QR Code" }, { status: 404 });
   }
 
-  if (!cachedTable.qrOrderingEnabled) {
+  if (!cachedTableData.table.qrOrderingEnabled) {
     return NextResponse.json(
       { error: "Contactless QR ordering is temporarily disabled for this table. Please order with your steward." },
       { status: 403 }
@@ -38,10 +72,10 @@ export async function GET(
 
   // 2. Cached Menu Categories & Items (30s TTL per tenant)
   const categories = await getOrSetCache(
-    `qr_menu_${cachedTable.tenantId}`,
+    `qr_menu_${cachedTableData.table.tenantId}`,
     async () => {
       return prisma.menuCategory.findMany({
-        where: { tenantId: cachedTable.tenantId, isActive: true },
+        where: { tenantId: cachedTableData.table.tenantId, isActive: true },
         orderBy: { sortOrder: "asc" },
         include: {
           items: {
@@ -58,41 +92,12 @@ export async function GET(
     30
   );
 
-  // 3. Dynamic active order lookup (fresh state)
-  let activeOrder = null;
-  const liveTable = await prisma.table.findUnique({
-    where: { id: cachedTable.id },
-    select: { currentOrderId: true, status: true },
-  });
-
-  if (liveTable?.currentOrderId) {
-    activeOrder = await prisma.order.findUnique({
-      where: { id: liveTable.currentOrderId },
-      select: {
-        orderNumber: true,
-        status: true,
-        totalPaise: true,
-        items: { select: { name: true, quantity: true, totalPaise: true } },
-      },
-    });
-  }
-
   const response = NextResponse.json({
-    table: {
-      id: cachedTable.id,
-      number: cachedTable.number,
-      area: cachedTable.area,
-      status: liveTable?.status || cachedTable.status,
-    },
-    outlet: cachedTable.outlet,
-    restaurant: {
-      id: cachedTable.tenant.id,
-      name: cachedTable.tenant.name,
-      currency: cachedTable.tenant.currency,
-      logoUrl: cachedTable.tenant.logoUrl,
-    },
+    table: cachedTableData.table,
+    outlet: cachedTableData.outlet,
+    restaurant: cachedTableData.restaurant,
     categories: categories || [],
-    activeOrder,
+    activeOrder: cachedTableData.activeOrder,
   });
 
   // Edge and browser caching headers for high concurrency
@@ -130,24 +135,61 @@ export async function POST(
     }
   }
 
-  const table = await prisma.table.findFirst({
-    where: { qrToken: token },
-    include: {
-      tenant: { select: { id: true } },
-      outlet: { select: { id: true } },
-    },
-  });
+  let tenantId = "";
+  let outletId = "";
+  let tableId = "";
+  let tableStatus = "AVAILABLE";
+  let qrOrderingEnabled = true;
 
-  if (!table) return NextResponse.json({ error: "Invalid Table QR Code" }, { status: 404 });
-  if (!table.qrOrderingEnabled) return NextResponse.json({ error: "QR Ordering disabled" }, { status: 403 });
+  const cachedData = appCache.get(`qr_table_${token}`) as any;
+  if (cachedData?.table) {
+    tenantId = cachedData.table.tenantId;
+    outletId = cachedData.table.outletId;
+    tableId = cachedData.table.id;
+    tableStatus = cachedData.table.status;
+    qrOrderingEnabled = cachedData.table.qrOrderingEnabled;
+  } else {
+    const table = await prisma.table.findFirst({
+      where: { qrToken: token },
+      select: { id: true, tenantId: true, outletId: true, qrOrderingEnabled: true, status: true },
+    });
+    if (!table) return NextResponse.json({ error: "Invalid Table QR Code" }, { status: 404 });
+    tenantId = table.tenantId;
+    outletId = table.outletId;
+    tableId = table.id;
+    tableStatus = table.status;
+    qrOrderingEnabled = table.qrOrderingEnabled;
+  }
 
-  // Batch query all referenced menu items in a single query
+  if (!qrOrderingEnabled) return NextResponse.json({ error: "QR Ordering disabled" }, { status: 403 });
+
+  // 0-DB latency menu lookup from cache with fallback to DB
   const itemIds = items.map((it: any) => it.menuItemId).filter(Boolean);
-  const dbMenuItems = await prisma.menuItem.findMany({
-    where: { id: { in: itemIds }, tenantId: table.tenantId },
-    include: { variants: true, modifiers: true },
-  });
-  const menuMap = new Map(dbMenuItems.map((m) => [m.id, m]));
+  const menuMap = new Map<string, any>();
+
+  const cachedCategories = appCache.get(`qr_menu_${tenantId}`) as any[];
+  if (Array.isArray(cachedCategories)) {
+    for (const cat of cachedCategories) {
+      if (Array.isArray(cat.items)) {
+        for (const item of cat.items) {
+          if (itemIds.includes(item.id)) {
+            menuMap.set(item.id, item);
+          }
+        }
+      }
+    }
+  }
+
+  const missingItemIds = itemIds.filter((id: string) => !menuMap.has(id));
+  if (missingItemIds.length > 0) {
+    const dbMenuItems = await prisma.menuItem.findMany({
+      where: { id: { in: missingItemIds }, tenantId },
+      include: { variants: true, modifiers: true },
+    });
+    for (const m of dbMenuItems) {
+      menuMap.set(m.id, m);
+    }
+  }
 
   const lineTotals: number[] = [];
   const validatedItems: any[] = [];
@@ -160,14 +202,14 @@ export async function POST(
 
     let unitPrice = menuItem.pricePaise;
     if (it.variantId) {
-      const v = menuItem.variants.find((x) => x.id === it.variantId);
+      const v = menuItem.variants.find((x: any) => x.id === it.variantId);
       if (v) unitPrice = v.pricePaise;
     }
 
     let modsPrice = 0;
     if (Array.isArray(it.modifierIds)) {
       for (const mId of it.modifierIds) {
-        const m = menuItem.modifiers.find((x) => x.id === mId);
+        const m = menuItem.modifiers.find((x: any) => x.id === mId);
         if (m) modsPrice += m.pricePaise;
       }
     }
@@ -204,13 +246,13 @@ export async function POST(
     // 1. Create QR order
     const o = await tx.order.create({
       data: {
-        tenantId: table.tenantId,
-        outletId: table.outletId,
+        tenantId,
+        outletId,
         orderNumber,
         type: "QR",
         serviceMode: "DINE_IN",
         status: "PLACED",
-        tableId: table.id,
+        tableId,
         customerName: customerName?.trim() || "Table Guest",
         customerPhone: customerPhone?.trim() || null,
         notes: notes || null,
@@ -238,17 +280,17 @@ export async function POST(
     await tx.kitchenTicket.create({
       data: {
         orderId: o.id,
-        tenantId: table.tenantId,
-        outletId: table.outletId,
+        tenantId,
+        outletId,
         station: "MAIN",
         status: "RECEIVED",
       },
     });
 
     // 4. Mark Table Occupied if needed (avoids redundant row lock contention)
-    if (table.status !== "OCCUPIED" || !table.currentOrderId) {
+    if (tableStatus !== "OCCUPIED") {
       await tx.table.update({
-        where: { id: table.id },
+        where: { id: tableId },
         data: {
           status: "OCCUPIED",
           currentOrderId: o.id,
@@ -260,14 +302,14 @@ export async function POST(
     // 5. Queue KOT Print Job
     await tx.printJob.create({
       data: {
-        tenantId: table.tenantId,
-        outletId: table.outletId,
+        tenantId,
+        outletId,
         orderId: o.id,
         jobType: "KOT",
         contentJson: JSON.stringify({
           source: "QR_GUEST_ORDER",
           orderNumber,
-          table: table.id,
+          table: tableId,
           items: validatedItems.map((i) => ({ name: i.name, quantity: i.quantity, notes: i.notes })),
         }),
         status: "PENDING",
@@ -275,10 +317,25 @@ export async function POST(
     });
 
     return o;
+  }, {
+    maxWait: 15000, // 15s queue acquisition time for peak traffic
+    timeout: 20000, // 20s execution timeout
   });
 
-  // Invalidate table cache immediately
-  appCache.del(`qr_table_${token}`);
+  // Update cache immediately in-memory with new order state (avoids cache stampede)
+  const existingCached = appCache.get(`qr_table_${token}`) as any;
+  if (existingCached?.table) {
+    existingCached.table.status = "OCCUPIED";
+    existingCached.activeOrder = {
+      orderNumber: order.orderNumber,
+      status: order.status,
+      totalPaise: totals.total,
+      items: validatedItems.map((i) => ({ name: i.name, quantity: i.quantity, totalPaise: i.totalPaise })),
+    };
+    appCache.set(`qr_table_${token}`, existingCached, 15);
+  } else {
+    appCache.del(`qr_table_${token}`);
+  }
 
   return NextResponse.json({
     ok: true,

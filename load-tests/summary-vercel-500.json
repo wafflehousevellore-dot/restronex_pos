@@ -1,0 +1,216 @@
+{
+    "metrics": {
+        "http_req_sending": {
+            "min": 0,
+            "med": 0.015,
+            "max": 16.416,
+            "p(90)": 0.03,
+            "p(95)": 0.037,
+            "avg": 0.02255478370697828
+        },
+        "marketing_page_duration_ms": {
+            "min": 0,
+            "med": 4742.2375,
+            "max": 12015.809,
+            "p(90)": 9326.678300000001,
+            "p(95)": 10212.576299999999,
+            "avg": 4911.310742966759
+        },
+        "data_received": {
+            "count": 250330370,
+            "rate": 7672371.730013828
+        },
+        "http_req_duration": {
+            "p(90)": 5410.0831,
+            "p(95)": 7577.98885,
+            "avg": 1554.9486144616324,
+            "min": 0,
+            "med": 404.22900000000004,
+            "max": 12015.809,
+            "thresholds": {
+                "p(95)<3000": true
+            }
+        },
+        "vus_max": {
+            "value": 500,
+            "min": 500,
+            "max": 500
+        },
+        "http_req_receiving": {
+            "min": 0,
+            "med": 0.041,
+            "max": 11735.13,
+            "p(90)": 5062.3820000000005,
+            "p(95)": 7294.610699999998,
+            "avg": 1155.2986583517543
+        },
+        "http_req_waiting": {
+            "p(90)": 783.0698,
+            "p(95)": 1213.39335,
+            "avg": 399.6274013261758,
+            "min": 0,
+            "med": 276.379,
+            "max": 4012.911
+        },
+        "qr_menu_duration_ms": {
+            "min": 0,
+            "med": 252.203,
+            "max": 4012.944,
+            "p(90)": 498.315,
+            "p(95)": 670.8889999999996,
+            "avg": 323.627684424945
+        },
+        "data_sent": {
+            "count": 2119671,
+            "rate": 64965.764470887574
+        },
+        "http_req_failed": {
+            "passes": 336,
+            "fails": 5998,
+            "thresholds": {
+                "rate<0.05": true
+            },
+            "value": 0.05304704767919166
+        },
+        "http_reqs": {
+            "rate": 194.13067035337176,
+            "count": 6334
+        },
+        "order_placement_duration_ms": {
+            "min": 0,
+            "med": 1197.225,
+            "max": 3614.351,
+            "p(90)": 1434.7458,
+            "p(95)": 1538.6466999999998,
+            "avg": 1108.192657762939
+        },
+        "http_req_connecting": {
+            "avg": 17.821478686454057,
+            "min": 0,
+            "med": 0,
+            "max": 579.345,
+            "p(90)": 25.418700000000005,
+            "p(95)": 154.22794999999994
+        },
+        "checks": {
+            "passes": 10478,
+            "fails": 626,
+            "value": 0.9436239193083573
+        },
+        "iteration_duration": {
+            "p(95)": 7876.244707699999,
+            "avg": 1902.6476511061214,
+            "min": 284.447958,
+            "med": 742.402708,
+            "max": 12443.935125,
+            "p(90)": 5710.4916582000005
+        },
+        "iterations": {
+            "count": 6323,
+            "rate": 193.79353151947737
+        },
+        "vus": {
+            "value": 61,
+            "min": 46,
+            "max": 500
+        },
+        "http_req_blocked": {
+            "avg": 39.40971597726469,
+            "min": 0,
+            "med": 0,
+            "max": 5183.135,
+            "p(90)": 0.001,
+            "p(95)": 301.3325999999984
+        },
+        "error_rate": {
+            "passes": 336,
+            "fails": 5998,
+            "value": 0.05304704767919166
+        },
+        "health_duration_ms": {
+            "avg": 480.8685499999993,
+            "min": 0,
+            "med": 440.134,
+            "max": 2331.18,
+            "p(90)": 661.7303,
+            "p(95)": 760.9322499999998
+        },
+        "orders_placed_total": {
+            "count": 495,
+            "rate": 15.171247525247715
+        },
+        "http_req_tls_handshaking": {
+            "avg": 27.53335222608146,
+            "min": 0,
+            "med": 0,
+            "max": 4788.404,
+            "p(90)": 0,
+            "p(95)": 164.73144999999903
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 1625.5750121707217,
+            "min": 62.195,
+            "med": 410.62199999999996,
+            "max": 12015.809,
+            "p(90)": 5559.4031,
+            "p(95)": 7664.8913999999995
+        }
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "Page status is 200": {
+                    "name": "Page status is 200",
+                    "path": "::Page status is 200",
+                    "id": "af40aacb75a2872e67e20a0458d06876",
+                    "passes": 1518,
+                    "fails": 46
+                },
+                "QR menu status is 200": {
+                    "name": "QR menu status is 200",
+                    "path": "::QR menu status is 200",
+                    "id": "5e4ab446cbb6b43f9f15b77bf64d4a05",
+                    "passes": 3080,
+                    "fails": 111
+                },
+                "Menu has categories": {
+                    "id": "57af0082b5d2ffc4c68aaea20129a8d2",
+                    "passes": 3080,
+                    "fails": 111,
+                    "name": "Menu has categories",
+                    "path": "::Menu has categories"
+                },
+                "Health status is 200": {
+                    "path": "::Health status is 200",
+                    "id": "d71326f7a02e1015be64bc63b1a3f2c4",
+                    "passes": 905,
+                    "fails": 75,
+                    "name": "Health status is 200"
+                },
+                "DB is healthy": {
+                    "id": "f5a511dc5961d03a4b1f27312b39a528",
+                    "passes": 905,
+                    "fails": 75,
+                    "name": "DB is healthy",
+                    "path": "::DB is healthy"
+                },
+                "Order created or replayed (200)": {
+                    "id": "6d29361ff68c2bb28f9ea665904003b5",
+                    "passes": 495,
+                    "fails": 104,
+                    "name": "Order created or replayed (200)",
+                    "path": "::Order created or replayed (200)"
+                },
+                "Response has orderNumber": {
+                    "name": "Response has orderNumber",
+                    "path": "::Response has orderNumber",
+                    "id": "0b269dec2cc37a81e134e07cba0b3f20",
+                    "passes": 495,
+                    "fails": 104
+                }
+            }
+    }
+}
