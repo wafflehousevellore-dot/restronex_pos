@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 import { INTEGRATIONS, getIntegrationMeta } from "@/lib/integrations";
-import { Check, Plug, TestTube, Unplug, AlertCircle, Building2 } from "lucide-react";
+import { Check, Plug, TestTube, Unplug } from "lucide-react";
 
 export default function IntegrationsClient(){
   const [configs, setConfigs] = useState<any[]>([]);

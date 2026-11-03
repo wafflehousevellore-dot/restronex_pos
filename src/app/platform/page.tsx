@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatINR } from "@/lib/money";
-import { Building2, CreditCard, Store, Users, Activity, CheckCircle2, AlertCircle, Clock, ShieldCheck } from "lucide-react";
+import { Building2, CreditCard, Store, Activity, CheckCircle2, Clock, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import fs from "fs";
 import path from "path";
@@ -12,7 +12,7 @@ export default async function PlatformOverview() {
     totalTenants,
     activeSubscriptions,
     pendingRegistrationsCount,
-    cancelledSubscriptions,
+    _cancelledSubscriptions,
     totalOutlets,
     activeOutlets,
     totalOrders,

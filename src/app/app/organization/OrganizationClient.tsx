@@ -1,17 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
-import { Building2, Check, ChevronRight, Users } from "lucide-react";
-import Link from "next/link";
+import { Building2, ChevronRight, Users } from "lucide-react";
 
 export default function OrganizationClient({ initialOrgs }: { initialOrgs: any[] }) {
+  const router = useRouter();
   const [orgs, setOrgs] = useState<any[]>(initialOrgs);
   const [creating, setCreating] = useState(false);
   const [msg, setMsg] = useState<string|null>(null);
-  const [selected, setSelected] = useState<string|null>(null);
 
   async function refresh(){
     const j = await apiFetch("/api/tenants").then(r=>r.json()).catch(()=>[]);
@@ -19,10 +19,9 @@ export default function OrganizationClient({ initialOrgs }: { initialOrgs: any[]
   }
 
   async function selectOrg(tenantId: string){
-    setSelected(tenantId);
     await fetch("/api/tenants/select", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ tenantId }), credentials:"same-origin" });
     document.cookie = `restronex_org=${tenantId}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
-    window.location.href = "/app/dashboard";
+    router.push("/app/dashboard");
   }
 
   async function createOrg(e: React.FormEvent<HTMLFormElement>){

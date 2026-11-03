@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { formatINR } from "@/lib/money";
-import { Edit2, Save, X, Check, ShieldCheck } from "lucide-react";
+import { Edit2, Save, X } from "lucide-react";
 
 export default function PlansAdminClient({ initialPlans }: { initialPlans: any[] }) {
   const [plans, setPlans] = useState(initialPlans);

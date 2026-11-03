@@ -31,7 +31,7 @@ export async function POST(req: NextRequest){
   }
 
   if (action === "disconnect") {
-    const del = await prisma.integrationConfig.deleteMany({ where:{ tenantId, provider }});
+    await prisma.integrationConfig.deleteMany({ where:{ tenantId, provider }});
     return NextResponse.json({ ok:true, disconnected:true });
   }
 

@@ -1,14 +1,12 @@
 export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
 export default async function PlatformLayout({ children }: { children: React.ReactNode }){
-  const { user, userId } = await getSession();
+  const { userId } = await getSession();
   if(!userId) redirect("/sign-in");
-  const dbUser = await prisma.user.findUnique({ where:{ id: userId }});
 
   return (
     <div className="min-h-screen bg-[#F8FAF9] text-[#172B25]">

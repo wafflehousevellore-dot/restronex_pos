@@ -1,9 +1,8 @@
 import { PageShell } from "@/components/marketing/PageShell";
 import PricingSelector from "@/components/marketing/PricingSelector";
-import { pricingPlans, pricingComparison, marketplaceServices } from "@/lib/brand";
+import { pricingComparison, marketplaceServices } from "@/lib/brand";
 import Link from "next/link";
-import { formatINR } from "@/lib/money";
-import { ShieldCheck, ArrowRight, Zap, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 
 export default function Pricing() {
   return (

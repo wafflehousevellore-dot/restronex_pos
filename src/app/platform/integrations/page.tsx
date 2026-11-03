@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plug, ShieldCheck, CheckCircle2, AlertCircle } from "lucide-react";
 
 export default async function PlatformIntegrationsPage() {
   const configs = await prisma.integrationConfig.findMany({

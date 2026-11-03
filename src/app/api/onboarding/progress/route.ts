@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-export async function GET(req: NextRequest){
+export async function GET(_req: NextRequest){
   const { userId } = await getSession();
   if (!userId) return NextResponse.json({error:"Unauthenticated"},{status:401});
   const tenantId = await resolveTenantId(userId);

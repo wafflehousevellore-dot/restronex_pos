@@ -6,7 +6,7 @@ import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 
 export default function Purchases(){
-  const [items,setItems]=useState<any[]>([]); const [prices,setPrices]=useState<any[]>([]);
+  const [prices,setPrices]=useState<any[]>([]);
   const [suppliers,setSuppliers]=useState<any[]>([]); const [invItems,setInvItems]=useState<any[]>([]);
   const [form,setForm]=useState({ inventoryItemId:"", supplierId:"", price:"" });
 

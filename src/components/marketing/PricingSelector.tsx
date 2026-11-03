@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Check, ArrowRight, ShieldCheck } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import Link from "next/link";
@@ -8,10 +9,10 @@ import { pricingPlans as fallbackPlans } from "@/lib/brand";
 type BillingCycle = "MONTHLY" | "ANNUAL";
 
 export default function PricingSelector() {
+  const router = useRouter();
   const [cycle, setCycle] = useState<BillingCycle>("MONTHLY");
   const [plans, setPlans] = useState<any[]>(fallbackPlans as any);
   const [selected, setSelected] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // load persisted selection
@@ -19,7 +20,7 @@ export default function PricingSelector() {
       const c = document.cookie.split("; ").find(s => s.startsWith("restronex_plan="));
       if (c) setSelected(decodeURIComponent(c.split("=")[1] || ""));
       const ls = localStorage.getItem("restronex_plan");
-      if (ls && !selected) setSelected(ls);
+      if (ls) setSelected(prev => prev || ls);
     } catch {}
     // fetch live plans from DB for configurability
     fetch("/api/subscription-plans").then(r => r.json()).then(dbPlans => {
@@ -41,7 +42,6 @@ export default function PricingSelector() {
   }, []);
 
   function selectPlan(slug: string) {
-    setLoading(true);
     setSelected(slug);
     const payload = JSON.stringify({ planSlug: slug, billingCycle: cycle });
     try {
@@ -51,7 +51,7 @@ export default function PricingSelector() {
       document.cookie = `restronex_checkout=${encodeURIComponent(payload)}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
       document.cookie = `restronex_cycle=${cycle}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
     } catch {}
-    window.location.href = `/get-started?plan=${slug}&cycle=${cycle}`;
+    router.push(`/get-started?plan=${slug}&cycle=${cycle}`);
   }
 
   return (

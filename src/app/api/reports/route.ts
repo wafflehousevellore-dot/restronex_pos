@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { getSession, getActiveOrgId, resolveTenantId } from "@/lib/auth";
+import { getSession, resolveTenantId } from "@/lib/auth";
 
 export async function GET(req: NextRequest){
   const {userId}=await getSession(); if(!userId) return NextResponse.json({error:"Unauth"},{status:401});

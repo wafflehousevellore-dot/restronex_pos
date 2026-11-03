@@ -111,7 +111,7 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
 
       return { user: { id: dbUser.id, email: dbUser.email, name: dbUser.name, avatarUrl: dbUser.avatarUrl, isPlatformAdmin: dbUser.isPlatformAdmin }, userId: dbUser.id, clerkUserId, orgId };
     }
-  } catch (e) {
+  } catch {
     // Clerk not configured or not authenticated - fall through to JWT
     // console.debug("[getSession] Clerk miss, falling to JWT", e)
   }

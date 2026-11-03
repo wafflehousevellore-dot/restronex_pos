@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function PlatformAuditLogs(){
   const logs = await prisma.auditLog.findMany({ orderBy:{ createdAt:"desc"}, take:50 });

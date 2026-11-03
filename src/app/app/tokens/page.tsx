@@ -1,7 +1,7 @@
 "use client";
 import { apiFetch } from "@/lib/api";
-import { useEffect, useState } from "react";
-import { DarkCard, DarkCardContent, DarkCardHeader, DarkCardTitle } from "@/components/ui/card";
+import { useCallback, useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Tokens() {
   const [tokens, setTokens] = useState<any[]>([]);
@@ -13,11 +13,11 @@ export default function Tokens() {
     if (Array.isArray(o)) setOutlets(o);
   }
 
-  async function load() {
+  const load = useCallback(async () => {
     if (!outletId) return;
     const j = await fetch(`/api/tokens?outletId=${outletId}`).then((r) => r.json()).catch(() => []);
     if (Array.isArray(j)) setTokens(j);
-  }
+  }, [outletId]);
 
   useEffect(() => {
     loadOutlets();
@@ -25,7 +25,7 @@ export default function Tokens() {
 
   useEffect(() => {
     load();
-  }, [outletId]);
+  }, [load]);
 
   async function issue() {
     await apiFetch("/api/tokens", {
@@ -52,11 +52,11 @@ export default function Tokens() {
         <p className="text-xs text-[#718078] mt-1">Live order token dispatch and overhead LED calling display integration.</p>
       </div>
 
-      <DarkCard>
-        <DarkCardHeader>
-          <DarkCardTitle className="text-base font-bold text-[#172B25]">Issue Token</DarkCardTitle>
-        </DarkCardHeader>
-        <DarkCardContent className="flex flex-wrap gap-3">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base font-bold text-[#172B25]">Issue Token</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
           <select
             value={outletId}
             onChange={(e) => setOutletId(e.target.value)}
@@ -81,14 +81,14 @@ export default function Tokens() {
           >
             Refresh
           </button>
-        </DarkCardContent>
-      </DarkCard>
+        </CardContent>
+      </Card>
 
-      <DarkCard>
-        <DarkCardHeader>
-          <DarkCardTitle className="text-base font-bold text-[#172B25]">Active Queue — {tokens.length}</DarkCardTitle>
-        </DarkCardHeader>
-        <DarkCardContent className="grid sm:grid-cols-3 gap-3">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base font-bold text-[#172B25]">Active Queue — {tokens.length}</CardTitle>
+        </CardHeader>
+        <CardContent className="grid sm:grid-cols-3 gap-3">
           {tokens.map((t) => (
             <div
               key={t.id}
@@ -118,14 +118,14 @@ export default function Tokens() {
               No active tokens in queue.
             </div>
           )}
-        </DarkCardContent>
-      </DarkCard>
+        </CardContent>
+      </Card>
 
-      <DarkCard>
-        <DarkCardContent className="pt-6 text-xs text-[#718078] leading-relaxed">
+      <Card>
+        <CardContent className="pt-6 text-xs text-[#718078] leading-relaxed">
           Overhead Digital Display mirror enabled at <code>/display/[outletSlug]</code>. Token sequence respects queue positioning with automatic audio chime when bumped.
-        </DarkCardContent>
-      </DarkCard>
+        </CardContent>
+      </Card>
     </div>
   );
 }

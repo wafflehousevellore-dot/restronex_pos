@@ -1,7 +1,7 @@
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";
-import { Check, Store, Utensils, Timer, BarChart3, Truck, Layers, ShieldCheck, Zap, CreditCard, Smartphone, ChefHat, ArrowUpRight, Mail, CheckCircle2, Users, FileText, ClipboardList, Headphones, BadgeDollarSign, Sparkles, HelpCircle, ChevronRight } from "lucide-react";
+import { Check, Store, BarChart3, Truck, HelpCircle } from "lucide-react";
 import { pricingPlans } from "@/lib/brand";
 
 export default function HomePage() {

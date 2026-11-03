@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 
@@ -9,7 +8,6 @@ import { verifyWebhookSignature } from "@/lib/razorpay";
  * Never trusts browser — only webhook activates subscription.
  */
 export async function POST(req: NextRequest){
-  const secret = process.env.RAZORPAY_WEBHOOK_SECRET || "";
   const bodyText = await req.text();
   const signature = req.headers.get("x-razorpay-signature") || "";
 

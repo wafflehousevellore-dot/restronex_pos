@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export function Logo({
-  variant = "light",
+  variant: _variant = "light",
   size = "default",
   showText = true,
 }: {

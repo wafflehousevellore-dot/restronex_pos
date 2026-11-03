@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { UserButton, OrganizationSwitcher } from "@clerk/nextjs";
 import {
@@ -21,7 +21,6 @@ import {
   Menu,
   X,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
@@ -62,11 +61,12 @@ export default function AppShell({
   outlet?: any;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobile, setMobile] = useState(false);
 
   async function signOut() {
     await fetch("/api/auth/sign-out", { method: "POST", credentials: "same-origin" });
-    window.location.href = "/sign-in";
+    router.push("/sign-in");
   }
 
   return (

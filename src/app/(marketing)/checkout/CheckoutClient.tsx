@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { calcCheckoutTotals } from "@/lib/checkout";
-import { Check, ShieldCheck, Loader2, CreditCard, Building2, AlertTriangle, Tag, Sparkles, X, QrCode, Copy, Smartphone, CheckCheck } from "lucide-react";
+import { Check, Loader2, CreditCard, Tag, X, QrCode, Copy, Smartphone, CheckCheck } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -33,7 +34,18 @@ function computeCouponDiscount(code: string, subtotal: number): { discountPaise:
   return { discountPaise: 0, label: "" };
 }
 
-export default function CheckoutClient({ initialPlan, initialCycle, initialOutletCount, totals: initialTotals, isAuthenticated, tenantId, hasTenant, razorConfigured, webhookConfigured }: Props) {
+export default function CheckoutClient({
+  initialPlan,
+  initialCycle,
+  initialOutletCount,
+  totals: initialTotals,
+  isAuthenticated,
+  tenantId,
+  hasTenant,
+  razorConfigured: _razorConfigured,
+  webhookConfigured: _webhookConfigured,
+}: Props) {
+  const router = useRouter();
   const [plan, setPlan] = useState(initialPlan);
   const [cycle, setCycle] = useState<"MONTHLY"|"ANNUAL">(initialCycle);
   const [outlets, setOutlets] = useState(initialOutletCount);
@@ -73,7 +85,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
     } catch(e:any){ setMsg({type:"error", text: e.message }); }
   }, [plan, cycle, outlets, coupon]);
 
-  async function ensureOrder(): Promise<string | null> {
+  const ensureOrder = useCallback(async (): Promise<string | null> => {
     if (activeOrderId) return activeOrderId;
     try {
       const res = await fetch("/api/checkout/create-order", {
@@ -89,7 +101,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
       }
     } catch {}
     return null;
-  }
+  }, [activeOrderId, plan, cycle, outlets, coupon]);
 
   useEffect(() => {
     if (!isAuthenticated || step === "success") return;
@@ -108,13 +120,13 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
           setPaymentId(cj.paymentId);
           setMsg({ type: "success", text: "✓ Payment detected & verified on Razorpay! Activating your subscription..." });
           setStep("success");
-          setTimeout(() => { window.location.href = cj.next || "/app/onboarding"; }, 1500);
+          setTimeout(() => { router.push(cj.next || "/app/onboarding"); }, 1500);
         }
       } catch {}
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isAuthenticated, plan, cycle, outlets, step]);
+  }, [isAuthenticated, plan, cycle, outlets, step, ensureOrder, router]);
 
   function applyCouponCode() {
     const raw = couponInput.trim();
@@ -142,7 +154,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
 
   async function simulatePaidTest() {
     if (!isAuthenticated) {
-      window.location.href = `/sign-up?plan=${plan}&cycle=${cycle}&next=${encodeURIComponent(`/checkout?plan=${plan}&cycle=${cycle}&outlets=${outlets}`)}`;
+      router.push(`/sign-up?plan=${plan}&cycle=${cycle}&next=${encodeURIComponent(`/checkout?plan=${plan}&cycle=${cycle}&outlets=${outlets}`)}`);
       return;
     }
     setQrVerifying(true);
@@ -185,7 +197,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
         text: `✓ QR Payment verified! Subscription ${vj.subscriptionId || "ACTIVE"} activated. Redirecting to onboarding...`,
       });
       setStep("success");
-      setTimeout(() => (window.location.href = vj.next || "/app/onboarding"), 1200);
+      setTimeout(() => router.push(vj.next || "/app/onboarding"), 1200);
     } catch (e: any) {
       setMsg({ type: "error", text: e.message });
       setStep("summary");
@@ -196,7 +208,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
 
   async function startCheckout(){
     if (!isAuthenticated) {
-      window.location.href = `/sign-up?plan=${plan}&cycle=${cycle}&next=${encodeURIComponent(`/checkout?plan=${plan}&cycle=${cycle}&outlets=${outlets}`)}`;
+      router.push(`/sign-up?plan=${plan}&cycle=${cycle}&next=${encodeURIComponent(`/checkout?plan=${plan}&cycle=${cycle}&outlets=${outlets}`)}`);
       return;
     }
     setLoading(true); setMsg({type:"info", text: "Creating secure order..."});
@@ -256,7 +268,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
         setPaymentId(vj.subscriptionPaymentId || response.razorpay_payment_id);
         setMsg({type:"success", text: `✓ Payment verified server-side. Subscription ${vj.subscriptionId} ACTIVE.`});
         setStep("success");
-        setTimeout(()=> window.location.href = vj.next || "/app/onboarding", 1200);
+        setTimeout(()=> router.push(vj.next || "/app/onboarding"), 1200);
       },
       prefill: { name: "RestroNex User", email: "", contact: "" },
       theme: { color: "#16845B" },
@@ -269,7 +281,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
     rzp.open();
   }
 
-  async function simulateMockPayment(orderId: string, amountPaise: number){
+  async function simulateMockPayment(orderId: string, _amountPaise: number){
     setStep("processing");
     setMsg({type:"info", text: "Processing simulated payment..."});
     try{
@@ -289,7 +301,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
       setPaymentId(vj.subscriptionPaymentId || mockPaymentId);
       setMsg({type:"success", text: `✓ Test payment verified. Subscription ${vj.subscriptionId} ACTIVE.`});
       setStep("success");
-      setTimeout(()=> window.location.href = vj.next || "/app/onboarding", 1200);
+      setTimeout(()=> router.push(vj.next || "/app/onboarding"), 1200);
     }catch(e:any){
       setMsg({type:"error", text: e.message});
       setStep("summary");
@@ -297,7 +309,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
   }
 
   async function startTrial(){
-    if (!isAuthenticated) { window.location.href = `/sign-up?plan=${plan}&cycle=${cycle}&next=/checkout`; return; }
+    if (!isAuthenticated) { router.push(`/sign-up?plan=${plan}&cycle=${cycle}&next=/checkout`); return; }
     setLoading(true); setMsg({type:"info", text: "Starting 14-day free trial (no card)..."});
     try{
       const res = await fetch("/api/checkout/start-trial", {
@@ -308,7 +320,7 @@ export default function CheckoutClient({ initialPlan, initialCycle, initialOutle
       const j = await res.json();
       if (!res.ok) throw new Error(j.error);
       setMsg({type:"success", text: `✓ Trial started • ${j.trialEndsAt ? new Date(j.trialEndsAt).toLocaleDateString() : "14 days"} • ${j.subscriptionId}`});
-      setTimeout(()=> window.location.href = "/app/onboarding", 800);
+      setTimeout(()=> router.push("/app/onboarding"), 800);
     }catch(e:any){ setMsg({type:"error", text: e.message }); } finally { setLoading(false); }
   }
 
