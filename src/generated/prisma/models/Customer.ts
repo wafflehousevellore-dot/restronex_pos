@@ -258,6 +258,7 @@ export type CustomerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   loyaltyTxns?: Prisma.LoyaltyTxnListRelationFilter
+  consents?: Prisma.CustomerConsentListRelationFilter
 }
 
 export type CustomerOrderByWithRelationInput = {
@@ -272,6 +273,7 @@ export type CustomerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   loyaltyTxns?: Prisma.LoyaltyTxnOrderByRelationAggregateInput
+  consents?: Prisma.CustomerConsentOrderByRelationAggregateInput
 }
 
 export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -290,6 +292,7 @@ export type CustomerWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Customer"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   loyaltyTxns?: Prisma.LoyaltyTxnListRelationFilter
+  consents?: Prisma.CustomerConsentListRelationFilter
 }, "id" | "tenantId_phone">
 
 export type CustomerOrderByWithAggregationInput = {
@@ -335,6 +338,7 @@ export type CustomerCreateInput = {
   createdAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
   loyaltyTxns?: Prisma.LoyaltyTxnCreateNestedManyWithoutCustomerInput
+  consents?: Prisma.CustomerConsentCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateInput = {
@@ -348,6 +352,7 @@ export type CustomerUncheckedCreateInput = {
   visitCount?: number
   createdAt?: Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnUncheckedCreateNestedManyWithoutCustomerInput
+  consents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUpdateInput = {
@@ -361,6 +366,7 @@ export type CustomerUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
   loyaltyTxns?: Prisma.LoyaltyTxnUpdateManyWithoutCustomerNestedInput
+  consents?: Prisma.CustomerConsentUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateInput = {
@@ -374,6 +380,7 @@ export type CustomerUncheckedUpdateInput = {
   visitCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnUncheckedUpdateManyWithoutCustomerNestedInput
+  consents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyInput = {
@@ -479,6 +486,11 @@ export type CustomerScalarRelationFilter = {
   isNot?: Prisma.CustomerWhereInput
 }
 
+export type CustomerNullableScalarRelationFilter = {
+  is?: Prisma.CustomerWhereInput | null
+  isNot?: Prisma.CustomerWhereInput | null
+}
+
 export type CustomerCreateNestedManyWithoutTenantInput = {
   create?: Prisma.XOR<Prisma.CustomerCreateWithoutTenantInput, Prisma.CustomerUncheckedCreateWithoutTenantInput> | Prisma.CustomerCreateWithoutTenantInput[] | Prisma.CustomerUncheckedCreateWithoutTenantInput[]
   connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutTenantInput | Prisma.CustomerCreateOrConnectWithoutTenantInput[]
@@ -535,6 +547,22 @@ export type CustomerUpdateOneRequiredWithoutLoyaltyTxnsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutLoyaltyTxnsInput, Prisma.CustomerUpdateWithoutLoyaltyTxnsInput>, Prisma.CustomerUncheckedUpdateWithoutLoyaltyTxnsInput>
 }
 
+export type CustomerCreateNestedOneWithoutConsentsInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutConsentsInput, Prisma.CustomerUncheckedCreateWithoutConsentsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutConsentsInput
+  connect?: Prisma.CustomerWhereUniqueInput
+}
+
+export type CustomerUpdateOneWithoutConsentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CustomerCreateWithoutConsentsInput, Prisma.CustomerUncheckedCreateWithoutConsentsInput>
+  connectOrCreate?: Prisma.CustomerCreateOrConnectWithoutConsentsInput
+  upsert?: Prisma.CustomerUpsertWithoutConsentsInput
+  disconnect?: Prisma.CustomerWhereInput | boolean
+  delete?: Prisma.CustomerWhereInput | boolean
+  connect?: Prisma.CustomerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CustomerUpdateToOneWithWhereWithoutConsentsInput, Prisma.CustomerUpdateWithoutConsentsInput>, Prisma.CustomerUncheckedUpdateWithoutConsentsInput>
+}
+
 export type CustomerCreateWithoutTenantInput = {
   id?: string
   name: string
@@ -545,6 +573,7 @@ export type CustomerCreateWithoutTenantInput = {
   visitCount?: number
   createdAt?: Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnCreateNestedManyWithoutCustomerInput
+  consents?: Prisma.CustomerConsentCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutTenantInput = {
@@ -557,6 +586,7 @@ export type CustomerUncheckedCreateWithoutTenantInput = {
   visitCount?: number
   createdAt?: Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnUncheckedCreateNestedManyWithoutCustomerInput
+  consents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutTenantInput = {
@@ -610,6 +640,7 @@ export type CustomerCreateWithoutLoyaltyTxnsInput = {
   visitCount?: number
   createdAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  consents?: Prisma.CustomerConsentCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerUncheckedCreateWithoutLoyaltyTxnsInput = {
@@ -622,6 +653,7 @@ export type CustomerUncheckedCreateWithoutLoyaltyTxnsInput = {
   totalSpentPaise?: number
   visitCount?: number
   createdAt?: Date | string
+  consents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutCustomerInput
 }
 
 export type CustomerCreateOrConnectWithoutLoyaltyTxnsInput = {
@@ -650,6 +682,7 @@ export type CustomerUpdateWithoutLoyaltyTxnsInput = {
   visitCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  consents?: Prisma.CustomerConsentUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutLoyaltyTxnsInput = {
@@ -662,6 +695,75 @@ export type CustomerUncheckedUpdateWithoutLoyaltyTxnsInput = {
   totalSpentPaise?: Prisma.IntFieldUpdateOperationsInput | number
   visitCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  consents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerCreateWithoutConsentsInput = {
+  id?: string
+  name: string
+  phone: string
+  email?: string | null
+  loyaltyPoints?: number
+  totalSpentPaise?: number
+  visitCount?: number
+  createdAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutCustomersInput
+  loyaltyTxns?: Prisma.LoyaltyTxnCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerUncheckedCreateWithoutConsentsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  phone: string
+  email?: string | null
+  loyaltyPoints?: number
+  totalSpentPaise?: number
+  visitCount?: number
+  createdAt?: Date | string
+  loyaltyTxns?: Prisma.LoyaltyTxnUncheckedCreateNestedManyWithoutCustomerInput
+}
+
+export type CustomerCreateOrConnectWithoutConsentsInput = {
+  where: Prisma.CustomerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutConsentsInput, Prisma.CustomerUncheckedCreateWithoutConsentsInput>
+}
+
+export type CustomerUpsertWithoutConsentsInput = {
+  update: Prisma.XOR<Prisma.CustomerUpdateWithoutConsentsInput, Prisma.CustomerUncheckedUpdateWithoutConsentsInput>
+  create: Prisma.XOR<Prisma.CustomerCreateWithoutConsentsInput, Prisma.CustomerUncheckedCreateWithoutConsentsInput>
+  where?: Prisma.CustomerWhereInput
+}
+
+export type CustomerUpdateToOneWithWhereWithoutConsentsInput = {
+  where?: Prisma.CustomerWhereInput
+  data: Prisma.XOR<Prisma.CustomerUpdateWithoutConsentsInput, Prisma.CustomerUncheckedUpdateWithoutConsentsInput>
+}
+
+export type CustomerUpdateWithoutConsentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalSpentPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  visitCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomersNestedInput
+  loyaltyTxns?: Prisma.LoyaltyTxnUpdateManyWithoutCustomerNestedInput
+}
+
+export type CustomerUncheckedUpdateWithoutConsentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loyaltyPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  totalSpentPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  visitCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loyaltyTxns?: Prisma.LoyaltyTxnUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerCreateManyTenantInput = {
@@ -685,6 +787,7 @@ export type CustomerUpdateWithoutTenantInput = {
   visitCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnUpdateManyWithoutCustomerNestedInput
+  consents?: Prisma.CustomerConsentUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateWithoutTenantInput = {
@@ -697,6 +800,7 @@ export type CustomerUncheckedUpdateWithoutTenantInput = {
   visitCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   loyaltyTxns?: Prisma.LoyaltyTxnUncheckedUpdateManyWithoutCustomerNestedInput
+  consents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutCustomerNestedInput
 }
 
 export type CustomerUncheckedUpdateManyWithoutTenantInput = {
@@ -717,10 +821,12 @@ export type CustomerUncheckedUpdateManyWithoutTenantInput = {
 
 export type CustomerCountOutputType = {
   loyaltyTxns: number
+  consents: number
 }
 
 export type CustomerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   loyaltyTxns?: boolean | CustomerCountOutputTypeCountLoyaltyTxnsArgs
+  consents?: boolean | CustomerCountOutputTypeCountConsentsArgs
 }
 
 /**
@@ -740,6 +846,13 @@ export type CustomerCountOutputTypeCountLoyaltyTxnsArgs<ExtArgs extends runtime.
   where?: Prisma.LoyaltyTxnWhereInput
 }
 
+/**
+ * CustomerCountOutputType without action
+ */
+export type CustomerCountOutputTypeCountConsentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomerConsentWhereInput
+}
+
 
 export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -753,6 +866,7 @@ export type CustomerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   loyaltyTxns?: boolean | Prisma.Customer$loyaltyTxnsArgs<ExtArgs>
+  consents?: boolean | Prisma.Customer$consentsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["customer"]>
 
@@ -798,6 +912,7 @@ export type CustomerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type CustomerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   loyaltyTxns?: boolean | Prisma.Customer$loyaltyTxnsArgs<ExtArgs>
+  consents?: boolean | Prisma.Customer$consentsArgs<ExtArgs>
   _count?: boolean | Prisma.CustomerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CustomerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -812,6 +927,7 @@ export type $CustomerPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     loyaltyTxns: Prisma.$LoyaltyTxnPayload<ExtArgs>[]
+    consents: Prisma.$CustomerConsentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1219,6 +1335,7 @@ export interface Prisma__CustomerClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   loyaltyTxns<T extends Prisma.Customer$loyaltyTxnsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$loyaltyTxnsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoyaltyTxnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  consents<T extends Prisma.Customer$consentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Customer$consentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1679,6 +1796,30 @@ export type Customer$loyaltyTxnsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.LoyaltyTxnScalarFieldEnum | Prisma.LoyaltyTxnScalarFieldEnum[]
+}
+
+/**
+ * Customer.consents
+ */
+export type Customer$consentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomerConsent
+   */
+  select?: Prisma.CustomerConsentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomerConsent
+   */
+  omit?: Prisma.CustomerConsentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerConsentInclude<ExtArgs> | null
+  where?: Prisma.CustomerConsentWhereInput
+  orderBy?: Prisma.CustomerConsentOrderByWithRelationInput | Prisma.CustomerConsentOrderByWithRelationInput[]
+  cursor?: Prisma.CustomerConsentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomerConsentScalarFieldEnum | Prisma.CustomerConsentScalarFieldEnum[]
 }
 
 /**

@@ -88,7 +88,15 @@ export const ModelName = {
   DayEndSummary: 'DayEndSummary',
   AuditLog: 'AuditLog',
   DemoRequest: 'DemoRequest',
-  PendingRegistration: 'PendingRegistration'
+  PendingRegistration: 'PendingRegistration',
+  QrOrderingSession: 'QrOrderingSession',
+  PrinterDevice: 'PrinterDevice',
+  PrinterRoutingRule: 'PrinterRoutingRule',
+  PrintJob: 'PrintJob',
+  CustomerConsent: 'CustomerConsent',
+  WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
+  InvoiceRecord: 'InvoiceRecord',
+  FeatureUsage: 'FeatureUsage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -183,7 +191,13 @@ export const RestaurantSettingScalarFieldEnum = {
   fssaiNumber: 'fssaiNumber',
   serviceChargePct: 'serviceChargePct',
   enableKOT: 'enableKOT',
-  enableTableMgmt: 'enableTableMgmt'
+  enableTableMgmt: 'enableTableMgmt',
+  autoAcceptQROrders: 'autoAcceptQROrders',
+  autoPrintKOT: 'autoPrintKOT',
+  autoPrintBill: 'autoPrintBill',
+  autoSendWhatsAppInvoice: 'autoSendWhatsAppInvoice',
+  whatsappPhoneNumberId: 'whatsappPhoneNumberId',
+  whatsappAccessToken: 'whatsappAccessToken'
 } as const
 
 export type RestaurantSettingScalarFieldEnum = (typeof RestaurantSettingScalarFieldEnum)[keyof typeof RestaurantSettingScalarFieldEnum]
@@ -263,7 +277,11 @@ export const TableScalarFieldEnum = {
   area: 'area',
   capacity: 'capacity',
   status: 'status',
-  currentOrderId: 'currentOrderId'
+  currentOrderId: 'currentOrderId',
+  qrToken: 'qrToken',
+  qrOrderingEnabled: 'qrOrderingEnabled',
+  waiterName: 'waiterName',
+  orderTotalPaise: 'orderTotalPaise'
 } as const
 
 export type TableScalarFieldEnum = (typeof TableScalarFieldEnum)[keyof typeof TableScalarFieldEnum]
@@ -276,6 +294,7 @@ export const OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   type: 'type',
   status: 'status',
+  serviceMode: 'serviceMode',
   tableId: 'tableId',
   customerId: 'customerId',
   customerName: 'customerName',
@@ -288,6 +307,12 @@ export const OrderScalarFieldEnum = {
   notes: 'notes',
   kotStatus: 'kotStatus',
   createdById: 'createdById',
+  isPaid: 'isPaid',
+  paidAt: 'paidAt',
+  billClosedAt: 'billClosedAt',
+  whatsappConsent: 'whatsappConsent',
+  whatsappStatus: 'whatsappStatus',
+  qrSessionId: 'qrSessionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -647,6 +672,141 @@ export const PendingRegistrationScalarFieldEnum = {
 } as const
 
 export type PendingRegistrationScalarFieldEnum = (typeof PendingRegistrationScalarFieldEnum)[keyof typeof PendingRegistrationScalarFieldEnum]
+
+
+export const QrOrderingSessionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  tableId: 'tableId',
+  sessionToken: 'sessionToken',
+  status: 'status',
+  guestName: 'guestName',
+  guestPhone: 'guestPhone',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type QrOrderingSessionScalarFieldEnum = (typeof QrOrderingSessionScalarFieldEnum)[keyof typeof QrOrderingSessionScalarFieldEnum]
+
+
+export const PrinterDeviceScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  name: 'name',
+  type: 'type',
+  paperWidth: 'paperWidth',
+  connectionString: 'connectionString',
+  status: 'status',
+  isDefaultBilling: 'isDefaultBilling',
+  isDefaultKOT: 'isDefaultKOT',
+  station: 'station',
+  lastActiveAt: 'lastActiveAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrinterDeviceScalarFieldEnum = (typeof PrinterDeviceScalarFieldEnum)[keyof typeof PrinterDeviceScalarFieldEnum]
+
+
+export const PrinterRoutingRuleScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  printerId: 'printerId',
+  station: 'station',
+  printKOT: 'printKOT',
+  printBill: 'printBill',
+  categoryIdsJson: 'categoryIdsJson'
+} as const
+
+export type PrinterRoutingRuleScalarFieldEnum = (typeof PrinterRoutingRuleScalarFieldEnum)[keyof typeof PrinterRoutingRuleScalarFieldEnum]
+
+
+export const PrintJobScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  printerId: 'printerId',
+  orderId: 'orderId',
+  jobType: 'jobType',
+  contentJson: 'contentJson',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrintJobScalarFieldEnum = (typeof PrintJobScalarFieldEnum)[keyof typeof PrintJobScalarFieldEnum]
+
+
+export const CustomerConsentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  customerId: 'customerId',
+  phone: 'phone',
+  channel: 'channel',
+  optIn: 'optIn',
+  optInSource: 'optInSource',
+  recordedAt: 'recordedAt',
+  ipAddress: 'ipAddress'
+} as const
+
+export type CustomerConsentScalarFieldEnum = (typeof CustomerConsentScalarFieldEnum)[keyof typeof CustomerConsentScalarFieldEnum]
+
+
+export const WhatsAppDeliveryLogScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  recipientPhone: 'recipientPhone',
+  templateName: 'templateName',
+  messageId: 'messageId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  invoiceUrl: 'invoiceUrl',
+  metadataJson: 'metadataJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WhatsAppDeliveryLogScalarFieldEnum = (typeof WhatsAppDeliveryLogScalarFieldEnum)[keyof typeof WhatsAppDeliveryLogScalarFieldEnum]
+
+
+export const InvoiceRecordScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  invoiceNumber: 'invoiceNumber',
+  fileUrl: 'fileUrl',
+  pdfStoragePath: 'pdfStoragePath',
+  subtotalPaise: 'subtotalPaise',
+  taxPaise: 'taxPaise',
+  discountPaise: 'discountPaise',
+  totalPaise: 'totalPaise',
+  customerPhone: 'customerPhone',
+  customerName: 'customerName',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceRecordScalarFieldEnum = (typeof InvoiceRecordScalarFieldEnum)[keyof typeof InvoiceRecordScalarFieldEnum]
+
+
+export const FeatureUsageScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  featureKey: 'featureKey',
+  count: 'count',
+  periodMonth: 'periodMonth',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeatureUsageScalarFieldEnum = (typeof FeatureUsageScalarFieldEnum)[keyof typeof FeatureUsageScalarFieldEnum]
 
 
 export const SortOrder = {

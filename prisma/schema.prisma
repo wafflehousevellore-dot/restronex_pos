@@ -60,6 +60,13 @@ model Tenant {
   expenses Expense[]
   supplierPrices SupplierPrice[]
   dayEnds DayEndSummary[]
+  printerDevices PrinterDevice[]
+  printJobs     PrintJob[]
+  customerConsents CustomerConsent[]
+  whatsAppLogs  WhatsAppDeliveryLog[]
+  invoices      InvoiceRecord[]
+  featureUsages FeatureUsage[]
+  qrSessions    QrOrderingSession[]
 }
 
 model Membership {
@@ -99,6 +106,9 @@ model Outlet {
   reservations Reservation[]
   expenses Expense[]
   dayEnds DayEndSummary[]
+  printers    PrinterDevice[]
+  printJobs   PrintJob[]
+  qrSessions  QrOrderingSession[]
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -113,6 +123,12 @@ model RestaurantSetting {
   serviceChargePct  Int    @default(0)
   enableKOT         Boolean @default(true)
   enableTableMgmt   Boolean @default(true)
+  autoAcceptQROrders       Boolean @default(true)
+  autoPrintKOT             Boolean @default(true)
+  autoPrintBill            Boolean @default(true)
+  autoSendWhatsAppInvoice  Boolean @default(false)
+  whatsappPhoneNumberId    String?
+  whatsappAccessToken      String?
   tenant            Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
@@ -194,10 +210,17 @@ model Table {
   capacity  Int    @default(4)
   status    String @default("AVAILABLE")
   currentOrderId String?
+  qrToken   String?
+  qrOrderingEnabled Boolean @default(true)
+  waiterName String?
+  orderTotalPaise Int @default(0)
   tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   outlet    Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  qrSessions QrOrderingSession[]
   @@unique([outletId, number])
   @@index([tenantId])
+  @@index([qrToken])
 }
 
 model Order {
@@ -207,6 +230,7 @@ model Order {
   orderNumber String
   type        String
   status      String @default("OPEN")
+  serviceMode String @default("DINE_IN")
   tableId     String?
   customerId  String?
   customerName String?
@@ -219,13 +243,24 @@ model Order {
   notes       String?
   kotStatus   String @default("PENDING")
   createdById String?
+  isPaid      Boolean @default(false)
+  paidAt      DateTime?
+  billClosedAt DateTime?
+  whatsappConsent Boolean @default(false)
+  whatsappStatus String?
+  qrSessionId String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   outlet      Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  table       Table? @relation(fields: [tableId], references: [id])
+  qrSession   QrOrderingSession? @relation(fields: [qrSessionId], references: [id])
   items       OrderItem[]
   payments    Payment[]
   kotTickets  KitchenTicket[]
+  invoice     InvoiceRecord?
+  printJobs   PrintJob[]
+  whatsAppLogs WhatsAppDeliveryLog[]
   @@unique([tenantId, orderNumber])
   @@index([tenantId, outletId])
   @@index([status])
@@ -371,6 +406,7 @@ model Customer {
   createdAt   DateTime @default(now())
   tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   loyaltyTxns LoyaltyTxn[]
+  consents    CustomerConsent[]
   @@unique([tenantId, phone])
   @@index([tenantId])
 }
@@ -576,4 +612,148 @@ model PendingRegistration {
 
   @@index([email])
   @@index([status])
+}
+
+model QrOrderingSession {
+  id           String   @id @default(cuid())
+  tenantId     String
+  outletId     String
+  tableId      String
+  sessionToken String   @unique
+  status       String   @default("ACTIVE") // ACTIVE, CLOSED
+  guestName    String?
+  guestPhone   String?
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  table        Table    @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  outlet       Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  orders       Order[]
+  @@index([tenantId, outletId])
+}
+
+model PrinterDevice {
+  id               String   @id @default(cuid())
+  tenantId         String
+  outletId         String
+  name             String
+  type             String   // BLUETOOTH_THERMAL, USB_THERMAL, NETWORK_LAN, CLOUD_PRINT
+  paperWidth       String   @default("80mm") // 58mm, 80mm
+  connectionString String?  // MAC address, IP:Port, USB device path, or Bluetooth UUID
+  status           String   @default("DISCONNECTED") // CONNECTED, DISCONNECTED, ERROR
+  isDefaultBilling Boolean  @default(false)
+  isDefaultKOT     Boolean  @default(false)
+  station          String?  // MAIN, BEVERAGE, KITCHEN, BAR, DESSERT
+  lastActiveAt     DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  outlet           Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  printJobs        PrintJob[]
+  routingRules     PrinterRoutingRule[]
+  @@index([tenantId, outletId])
+}
+
+model PrinterRoutingRule {
+  id              String   @id @default(cuid())
+  tenantId        String
+  outletId        String
+  printerId       String
+  station         String   // MAIN, KITCHEN, BAR, BEVERAGE, DESSERT, BILLING
+  printKOT        Boolean  @default(true)
+  printBill       Boolean  @default(false)
+  categoryIdsJson String?  // JSON array of category IDs routed to this printer
+  printer         PrinterDevice @relation(fields: [printerId], references: [id], onDelete: Cascade)
+  @@index([outletId])
+}
+
+model PrintJob {
+  id          String   @id @default(cuid())
+  tenantId    String
+  outletId    String
+  printerId   String?
+  orderId     String?
+  jobType     String   // KOT, BILL, RECEIPT, TEST, REPORT
+  contentJson String   // Formatted receipt / ESC-POS commands / JSON payload
+  status      String   @default("PENDING") // PENDING, PROCESSING, PRINTED, FAILED, RETRYING
+  attempts    Int      @default(0)
+  lastError   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  printer     PrinterDevice? @relation(fields: [printerId], references: [id], onDelete: SetNull)
+  order       Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  outlet      Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId, status])
+  @@index([outletId])
+}
+
+model CustomerConsent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  customerId  String?
+  phone       String
+  channel     String   @default("WHATSAPP") // WHATSAPP, SMS, EMAIL
+  optIn       Boolean  @default(true)
+  optInSource String   @default("POS_BILLING") // POS_BILLING, QR_ORDER, WEBSITE
+  recordedAt  DateTime @default(now())
+  ipAddress   String?
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  @@unique([tenantId, phone, channel])
+  @@index([tenantId])
+}
+
+model WhatsAppDeliveryLog {
+  id             String   @id @default(cuid())
+  tenantId       String
+  outletId       String?
+  orderId        String?
+  recipientPhone String
+  templateName   String
+  messageId      String?  // Meta message ID (wamid.xxx)
+  status         String   @default("QUEUED") // QUEUED, SENDING, SENT, DELIVERED, READ, FAILED, OPTED_OUT
+  errorMessage   String?
+  invoiceUrl     String?
+  metadataJson   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order          Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  @@index([tenantId, status])
+  @@index([recipientPhone])
+}
+
+model InvoiceRecord {
+  id             String   @id @default(cuid())
+  tenantId       String
+  outletId       String
+  orderId        String   @unique
+  invoiceNumber  String
+  fileUrl        String?
+  pdfStoragePath String?
+  subtotalPaise  Int
+  taxPaise       Int
+  discountPaise  Int
+  totalPaise     Int
+  customerPhone  String?
+  customerName   String?
+  status         String   @default("FINALIZED") // DRAFT, FINALIZED, VOIDED
+  createdAt      DateTime @default(now())
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@unique([tenantId, invoiceNumber])
+  @@index([tenantId, outletId])
+}
+
+model FeatureUsage {
+  id          String   @id @default(cuid())
+  tenantId    String
+  featureKey  String   // WHATSAPP_INVOICES, QR_ORDERS, KDS_STATIONS, ACTIVE_OUTLETS, PRINTERS
+  count       Int      @default(0)
+  periodMonth String   // YYYY-MM
+  updatedAt   DateTime @updatedAt
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@unique([tenantId, featureKey, periodMonth])
+  @@index([tenantId])
 }

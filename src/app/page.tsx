@@ -1,16 +1,106 @@
+"use client";
+
+import React, { useState } from "react";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";
-import { Check, Store, BarChart3, Truck, HelpCircle } from "lucide-react";
-import { pricingPlans } from "@/lib/brand";
+import {
+  Check,
+  Store,
+  Truck,
+  HelpCircle,
+  Printer,
+  MessageSquare,
+  QrCode,
+  ChefHat,
+  ShieldCheck,
+  Layers,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  CreditCard,
+  Receipt,
+  CheckCircle2,
+} from "lucide-react";
+import { pricingPlans, pricingComparison } from "@/lib/brand";
 
 export default function HomePage() {
+  const [activeTab, setActiveTab] = useState<"billing" | "tables" | "kds" | "whatsapp">("billing");
+
   const faqs = [
-    { q: "Can I manage multiple outlets from a single login?", a: "Yes. Our Growth and Business plans support multi-outlet operations with central menu distribution, cross-outlet inventory transfers, and consolidated sales reports." },
-    { q: "Does RestroNex work if the internet goes down?", a: "Yes. RestroNex includes local offline caching for fast counter billing and KOT generation. Data auto-synchronizes securely once the connection is restored." },
-    { q: "How are taxes and GST calculated?", a: "RestroNex uses strict minor-unit integer arithmetic (paise) to calculate 9% CGST + 9% SGST (18% GST total) or custom tax brackets, eliminating floating-point rounding errors." },
-    { q: "Can I change my plan later?", a: "Yes. You can upgrade or downgrade your subscription plan at any time through your restaurant settings, and entitlements update automatically." },
-    { q: "What payment methods are supported for customer bills?", a: "Cash, Dynamic UPI QR codes (GPay, PhonePe, Paytm), Credit/Debit cards, split payments, and customer loyalty wallet redemptions." },
+    {
+      q: "What hardware and printers does RestroNex support?",
+      a: "RestroNex supports standard ESC/POS thermal receipt printers across Bluetooth SPP (mobile & tablets), Network Ethernet/Wi-Fi LAN (kitchen stations via port 9100), and USB direct desktop connections. Both 80mm full-width and 58mm compact rolls are supported.",
+    },
+    {
+      q: "How does automated WhatsApp invoice delivery work?",
+      a: "RestroNex connects directly to the official Meta WhatsApp Business Cloud API. As soon as a cashier or waiter settles an order with customer consent, an itemized digital receipt with a direct PDF invoice link is dispatched to the customer's phone number.",
+    },
+    {
+      q: "Can customers order from their tables using QR codes?",
+      a: "Yes. In Growth and Business plans, each table generates a unique QR code. Guests scan the code with their smartphone camera, browse the live menu with veg/non-veg tags, customize dishes, and place orders directly to the kitchen without downloading any app.",
+    },
+    {
+      q: "How does recipe-level inventory deduction operate?",
+      a: "You define Bill-of-Materials (BOM) recipes linking menu dishes to raw store ingredients (e.g. 200g paneer, 50g cream per Paneer Butter Masala). When an order is placed and accepted in the kitchen, ingredient stock counts auto-deduct in real time.",
+    },
+    {
+      q: "How are GST and taxes calculated?",
+      a: "RestroNex uses strict minor-unit integer arithmetic (paise) to calculate 9% CGST + 9% SGST (18% GST total) or custom tax brackets. This ensures zero rounding discrepancies on audit logs and financial ledgers.",
+    },
+    {
+      q: "Can I manage multiple outlets from a single master dashboard?",
+      a: "Yes. Our Growth and Business plans support multi-outlet operations with central menu catalogs, outlet-specific pricing, cross-outlet inventory transfers, and aggregated chain performance reports.",
+    },
+    {
+      q: "What subscription plans are available?",
+      a: "We offer three simple plans: Starter at ₹200/month (1 outlet, 5 staff), Growth at ₹300/month (up to 5 outlets, 25 staff, full inventory and QR ordering), and Business at ₹500/month (up to 50 outlets, 200 staff, multi-chain features).",
+    },
+  ];
+
+  const operationalSteps = [
+    {
+      step: "01",
+      title: "Order Placement",
+      desc: "Fast counter billing with keyboard shortcuts, handheld waiter tablet ordering, or contactless table QR self-ordering by guests.",
+      icon: Store,
+    },
+    {
+      step: "02",
+      title: "Instant Kitchen Routing",
+      desc: "Digital KOT instantly fired to station-specific Kitchen Display Screens (KDS) and routed to hot-kitchen, bar, and bakery thermal printers.",
+      icon: ChefHat,
+    },
+    {
+      step: "03",
+      title: "Recipe Inventory Depletion",
+      desc: "Raw ingredients auto-deduct from stock based on Bill of Materials recipes with real-time low-stock threshold notifications.",
+      icon: Truck,
+    },
+    {
+      step: "04",
+      title: "1-Click Bill Settlement",
+      desc: "Split payments across Cash, Cards, and Dynamic UPI QR codes (GPay, PhonePe, Paytm) with exact paise integer math.",
+      icon: CreditCard,
+    },
+    {
+      step: "05",
+      title: "Paperless WhatsApp Delivery",
+      desc: "Official Meta WhatsApp Cloud API automatically sends an itemized tax invoice PDF link directly to the customer's smartphone.",
+      icon: MessageSquare,
+    },
+  ];
+
+  const solutions = [
+    { name: "Fine-Dining & Bistros", desc: "Multi-course service, table reservation timelines, course firing, and split billing.", href: "/solutions/fine-dine" },
+    { name: "Cafes & Roasteries", desc: "High-speed counter checkout, milk/bean inventory tracking, and loyalty rewards.", href: "/solutions/cafes" },
+    { name: "Quick Service (QSR)", desc: "Lightning fast 3-click token billing, combo meals, and customer-facing order screens.", href: "/solutions/qsr" },
+    { name: "Bakeries & Confectionery", desc: "Batch production tracking, expiry dates, custom celebration cake pre-orders.", href: "/solutions/bakeries" },
+    { name: "Pizzerias & Italian", desc: "Crust, topping & size modifiers, combo pricing, and rapid delivery dispatch.", href: "/solutions/pizzerias" },
+    { name: "Dessert & Ice Cream Parlors", desc: "Weight-based pricing, flavor modifiers, and rapid contactless payment queues.", href: "/solutions/dessert-shops" },
+    { name: "Food Courts & Hubs", desc: "Prepaid cards, multi-brand tenant management, and centralized food court cashiers.", href: "/solutions/food-courts" },
+    { name: "Cloud & Ghost Kitchens", desc: "Multi-brand virtual menus from a single kitchen, packaging stock control.", href: "/solutions/cloud-kitchens" },
+    { name: "Restaurant Chains", desc: "Central recipe management, cross-outlet transfers, and consolidated chain reports.", href: "/solutions/chains" },
   ];
 
   return (
@@ -18,126 +108,704 @@ export default function HomePage() {
       <Navbar />
 
       <main className="flex-1 bg-[#F8FAF9] text-[#172B25]">
-        {/* ===== HERO — POS-first Clean Light ===== */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#E8F5EE]/60 via-[#F8FAF9] to-white border-b border-[#E5EBE7] text-[#172B25]">
-          <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-[#16845B]/5 blur-[120px] pointer-events-none" />
-          <div className="absolute -bottom-40 -left-40 h-[600px] w-[600px] rounded-full bg-[#16845B]/5 blur-[120px] pointer-events-none" />
-          <div className="relative mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 pt-12 pb-12 lg:pt-16 lg:pb-16">
-            <div className="grid lg:grid-cols-[1.05fr_1.2fr] gap-8 lg:gap-12 items-center">
+        {/* ========================================================= */}
+        {/* SECTION 1 & 2: HERO & STRONG POSITIONING                  */}
+        {/* ========================================================= */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-[#E8F5EE]/70 via-[#F8FAF9] to-white border-b border-[#E5EBE7]">
+          <div className="absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-[#16845B]/5 blur-[120px] pointer-events-none" />
+          <div className="absolute -bottom-32 -left-32 h-[500px] w-[500px] rounded-full bg-[#16845B]/5 blur-[120px] pointer-events-none" />
+
+          <div className="relative mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-18 lg:pb-20">
+            <div className="grid lg:grid-cols-[1.1fr_1.15fr] gap-10 lg:gap-14 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1.5 text-xs font-bold text-[#16845B]">
-                  <span className="h-2 w-2 rounded-full bg-[#16845B] animate-pulse" />
-                  India&apos;s Modern Restaurant OS
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 px-3.5 py-1.5 text-xs font-bold text-[#16845B]">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>The Production-Ready Restaurant OS for India</span>
                 </div>
-                <h1 className="mt-4 text-[34px] sm:text-[44px] lg:text-[52px] font-black tracking-tight leading-[1.05] text-[#172B25]">
-                  Restaurant POS Software
+
+                <h1 className="mt-4 text-[36px] sm:text-[46px] lg:text-[54px] font-black tracking-tight leading-[1.05] text-[#172B25]">
+                  Restaurant POS
                   <br />
-                  <span>That Runs Your</span>
+                  <span>That Accelerates</span>
                   <br />
-                  <span className="text-[#16845B]">Entire Outlet</span>
+                  <span className="text-[#16845B]">Every Service Hour</span>
                 </h1>
-                <p className="mt-4 max-w-[560px] text-[15px] leading-7 text-[#718078]">
-                  RestroNex is a fast, reliable POS built for Indian restaurants. Billing, KOT/KDS, tables, inventory, CRM, and 94 reports — one unified workspace, fully offline-ready.
+
+                <p className="mt-4 max-w-[560px] text-[15px] sm:text-[16px] leading-relaxed text-[#718078]">
+                  Built for independent dining rooms, QSR counters, cafes, and multi-outlet chains.
+                  Experience 3-click billing, contactless table QR ordering, multi-station KDS, ESC/POS thermal printing, and automated WhatsApp invoices.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
+
+                <div className="mt-8 flex flex-wrap items-center gap-3">
                   <Link href="/get-started">
-                    <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition-all shadow-sm">
-                      Get Started →
+                    <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs flex items-center gap-2">
+                      <span>Start Now from ₹200/mo</span>
+                      <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
                   <Link href="/pricing">
-                    <button className="rounded-full border border-[#E5EBE7] bg-white px-7 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs transition-colors">
-                      View Pricing
+                    <button className="rounded-full border border-[#E5EBE7] bg-white px-7 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-2xs transition">
+                      Compare Plans
                     </button>
                   </Link>
                 </div>
-                <div className="mt-6 flex flex-wrap items-center gap-4 text-xs text-[#718078]">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white border border-[#E5EBE7] px-3 py-1 font-semibold text-[#172B25]">
-                    <span className="h-2 w-2 rounded-full bg-[#16845B]" /> Multi-Tenant Architecture
-                  </span>
-                  <span>✓ 14-Day Free Trial</span>
-                  <span>•</span>
-                  <span>✓ No Credit Card Required</span>
+
+                <div className="mt-8 pt-6 border-t border-[#E5EBE7] grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-semibold text-[#718078]">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Minor-Unit Math</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>ESC/POS Thermal</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>WhatsApp Cloud API</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Razorpay Verified</span>
+                  </div>
                 </div>
               </div>
 
+              {/* ========================================================= */}
+              {/* SECTION 3: REALISTIC RESTAURANT POS INTERACTIVE PREVIEW   */}
+              {/* ========================================================= */}
               <div className="relative">
-                <div className="flex gap-2 justify-center lg:justify-start">
+                {/* Interactive Mode Tabs */}
+                <div className="flex flex-wrap gap-1.5 p-1 bg-white border border-[#E5EBE7] rounded-2xl shadow-xs mb-3">
+                  <button
+                    onClick={() => setActiveTab("billing")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                      activeTab === "billing"
+                        ? "bg-[#16845B] text-white shadow-2xs"
+                        : "text-[#718078] hover:text-[#172B25] hover:bg-[#F8FAF9]"
+                    }`}
+                  >
+                    <Store className="h-3.5 w-3.5" />
+                    <span>POS Billing</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("tables")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                      activeTab === "tables"
+                        ? "bg-[#16845B] text-white shadow-2xs"
+                        : "text-[#718078] hover:text-[#172B25] hover:bg-[#F8FAF9]"
+                    }`}
+                  >
+                    <QrCode className="h-3.5 w-3.5" />
+                    <span>Tables & QR</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("kds")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                      activeTab === "kds"
+                        ? "bg-[#16845B] text-white shadow-2xs"
+                        : "text-[#718078] hover:text-[#172B25] hover:bg-[#F8FAF9]"
+                    }`}
+                  >
+                    <ChefHat className="h-3.5 w-3.5" />
+                    <span>KOT / KDS</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("whatsapp")}
+                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                      activeTab === "whatsapp"
+                        ? "bg-[#16845B] text-white shadow-2xs"
+                        : "text-[#718078] hover:text-[#172B25] hover:bg-[#F8FAF9]"
+                    }`}
+                  >
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    <span>WhatsApp Bill</span>
+                  </button>
+                </div>
+
+                {/* Preview Window Card */}
+                <div className="rounded-[28px] border border-[#E5EBE7] bg-white p-4 sm:p-5 shadow-xl">
+                  {/* Window Bar */}
+                  <div className="flex items-center justify-between pb-3 border-b border-[#E5EBE7] mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                      <span className="ml-2 text-xs font-bold text-[#172B25]">RestroNex Live Console</span>
+                    </div>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 px-2.5 py-0.5 text-[10px] font-bold text-[#16845B]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#16845B] animate-pulse" />
+                      Tenant Live Sync
+                    </span>
+                  </div>
+
+                  {/* TAB 1: POS BILLING */}
+                  {activeTab === "billing" && (
+                    <div className="grid grid-cols-[1.1fr_1.1fr] gap-3">
+                      <div className="space-y-2 bg-[#F8FAF9] p-3 rounded-2xl border border-[#E5EBE7]">
+                        <div className="text-[11px] font-bold uppercase tracking-wider text-[#718078]">Menu Catalog</div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { name: "Paneer Tikka", price: "₹280", tag: "VEG" },
+                            { name: "Butter Chicken", price: "₹360", tag: "NON-VEG" },
+                            { name: "Dal Makhani", price: "₹240", tag: "VEG" },
+                            { name: "Garlic Naan", price: "₹65", tag: "VEG" },
+                          ].map((item) => (
+                            <div key={item.name} className="p-2 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs">
+                              <span className={`text-[9px] font-extrabold px-1.5 py-0.2 rounded ${
+                                item.tag === "VEG" ? "bg-[#E8F5EE] text-[#16845B]" : "bg-red-50 text-red-600"
+                              }`}>
+                                {item.tag}
+                              </span>
+                              <div className="text-xs font-bold text-[#172B25] mt-1 truncate">{item.name}</div>
+                              <div className="text-[11px] font-extrabold text-[#16845B] mt-0.5">{item.price}</div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="p-2 rounded-xl bg-[#E8F5EE] border border-[#16845B]/20 text-[11px] font-bold text-[#16845B] text-center">
+                          + Tap to add to current order
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 bg-white p-3 rounded-2xl border border-[#E5EBE7]">
+                        <div className="flex justify-between items-center text-xs font-bold text-[#172B25] border-b border-[#E5EBE7] pb-1.5">
+                          <span>Table T-04 (Order #1084)</span>
+                          <span className="text-[#16845B]">Dine-In</span>
+                        </div>
+                        <div className="space-y-1 text-xs text-[#718078]">
+                          <div className="flex justify-between">
+                            <span>1x Butter Chicken</span>
+                            <span className="font-semibold text-[#172B25]">₹360.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>2x Garlic Naan</span>
+                            <span className="font-semibold text-[#172B25]">₹130.00</span>
+                          </div>
+                        </div>
+                        <div className="pt-2 border-t border-[#E5EBE7] space-y-1 text-[11px] text-[#718078]">
+                          <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span className="font-semibold text-[#172B25]">₹490.00</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>GST (9% CGST + 9% SGST)</span>
+                            <span className="font-semibold text-[#172B25]">₹88.20</span>
+                          </div>
+                          <div className="flex justify-between text-xs font-black text-[#172B25] pt-1 border-t border-dashed border-[#E5EBE7]">
+                            <span>Total Payable</span>
+                            <span className="text-[#16845B]">₹578.20</span>
+                          </div>
+                        </div>
+                        <button className="w-full py-2 rounded-xl bg-[#16845B] text-white text-xs font-bold shadow-2xs hover:bg-[#116B49] transition">
+                          Settle Bill & WhatsApp Receipt →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 2: TABLES & QR */}
+                  {activeTab === "tables" && (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-4 gap-2">
+                        {[
+                          { t: "T-01", status: "Available", color: "bg-white text-[#718078]" },
+                          { t: "T-02", status: "Occupied", color: "bg-[#16845B] text-white" },
+                          { t: "T-03", status: "KOT Fired", color: "bg-amber-100 text-amber-900 border-amber-300" },
+                          { t: "T-04", status: "Bill Ready", color: "bg-[#E8F5EE] text-[#16845B] border-[#16845B]/30" },
+                        ].map((table) => (
+                          <div key={table.t} className={`p-2.5 rounded-xl border text-center font-bold text-xs ${table.color}`}>
+                            <div>{table.t}</div>
+                            <div className="text-[10px] font-medium mt-0.5">{table.status}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] flex items-center gap-3">
+                        <div className="h-14 w-14 bg-white rounded-xl border border-[#E5EBE7] p-1.5 grid place-items-center shadow-2xs">
+                          <QrCode className="h-10 w-10 text-[#172B25]" />
+                        </div>
+                        <div className="space-y-0.5">
+                          <div className="text-xs font-bold text-[#172B25]">Contactless Table QR Token</div>
+                          <div className="text-[11px] text-[#718078]">
+                            Guests scan from camera. No app download required. Real-time menu browsing with direct KOT submission.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 3: KOT / KDS */}
+                  {activeTab === "kds" && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 rounded-2xl bg-[#F8FAF9] border-2 border-[#16845B] space-y-2">
+                        <div className="flex justify-between items-center text-xs font-bold text-[#16845B]">
+                          <span>KOT #402 • Table 02</span>
+                          <span className="px-2 py-0.5 rounded-full bg-[#E8F5EE] text-[10px]">PREPARING</span>
+                        </div>
+                        <div className="text-[11px] space-y-1 font-mono text-[#172B25]">
+                          <div>• 2x Paneer Butter Masala (Spicy)</div>
+                          <div>• 4x Butter Naan</div>
+                          <div>• 1x Jeera Rice</div>
+                        </div>
+                        <div className="pt-2 border-t border-[#E5EBE7] flex justify-between items-center text-[10px] text-[#718078]">
+                          <span className="flex items-center gap-1 font-bold text-amber-700">
+                            <Clock className="h-3 w-3" /> 07:42 mins
+                          </span>
+                          <span className="font-bold text-[#16845B]">Main Kitchen Station</span>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-2xl bg-white border border-[#E5EBE7] space-y-2">
+                        <div className="flex justify-between items-center text-xs font-bold text-[#172B25]">
+                          <span>KOT #403 • Table 05</span>
+                          <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px]">BAR STATION</span>
+                        </div>
+                        <div className="text-[11px] space-y-1 font-mono text-[#172B25]">
+                          <div>• 2x Fresh Lime Soda (Sweet)</div>
+                          <div>• 1x Cold Brew Coffee</div>
+                        </div>
+                        <div className="pt-2 border-t border-[#E5EBE7] flex justify-between items-center text-[10px] text-[#718078]">
+                          <span className="flex items-center gap-1 font-bold text-emerald-700">
+                            <Clock className="h-3 w-3" /> 02:15 mins
+                          </span>
+                          <span className="font-bold text-[#16845B]">Beverages</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 4: WHATSAPP BILL */}
+                  {activeTab === "whatsapp" && (
+                    <div className="p-3 rounded-2xl bg-[#E8F5EE]/40 border border-[#16845B]/20 space-y-2.5">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#16845B]">
+                        <MessageSquare className="h-4 w-4" />
+                        <span>Official Meta WhatsApp Cloud API Delivery</span>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-[#E5EBE7] space-y-1 text-xs shadow-2xs font-sans">
+                        <div className="font-bold text-[#172B25]">RestroNex Dining • Koramangala</div>
+                        <div className="text-[#718078] text-[11px]">
+                          Hi Rahul, thank you for dining with us! Here is your itemized digital tax invoice for Order #1084.
+                        </div>
+                        <div className="pt-1.5 flex items-center justify-between text-[11px] font-bold text-[#16845B]">
+                          <span>Invoice: INV-2026-0042 (₹578.20)</span>
+                          <span className="underline cursor-pointer">Download PDF</span>
+                        </div>
+                      </div>
+                      <div className="text-[10px] text-[#718078] flex items-center gap-1">
+                        <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
+                        <span>Instant delivery with zero paper consumption and customer consent tracking.</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 4: INTERACTIVE PRODUCT OVERVIEW                   */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-white border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">CORE CAPABILITIES</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                Engineered for Peak Restaurant Rush Hours
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                Every component is designed to eliminate billing delays, prevent kitchen miscommunication, and safeguard your margins.
+              </p>
+            </div>
+
+            <div className="mt-12 grid md:grid-cols-3 gap-6">
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Store className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Lightning Counter & Dine-in Billing</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Complete orders in 3 taps. Supports modifier add-ons, split bills, customer discount codes, and integrated paise-level GST tax math.
+                </p>
+                <Link href="/features/pos" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore POS Billing <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <ChefHat className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Smart Kitchen Display & KOT Routing</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Route food and beverage tickets to dedicated kitchen stations. Monitor preparation timers, ticket completion, and reduce food waste.
+                </p>
+                <Link href="/features/kitchen-display" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore KDS System <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Truck className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Recipe-Level BOM Inventory Control</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Link raw ingredients to menu dishes. Stock auto-depletes when dishes are prepared. Track purchase orders and wastage accurately.
+                </p>
+                <Link href="/features/inventory" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore Inventory <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Printer className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Thermal Printer Hardware Support</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Native ESC/POS support across Bluetooth SPP (mobile POS), Network LAN (kitchen stations port 9100), and USB counters in 80mm & 58mm.
+                </p>
+                <Link href="/features/printers" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore Thermal Printers <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <MessageSquare className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Meta WhatsApp Cloud Bill Delivery</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Auto-deliver itemized PDF tax receipts directly to customer mobile numbers upon bill settlement. Eliminate thermal paper costs.
+                </p>
+                <Link href="/features/whatsapp-invoices" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore WhatsApp Bills <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Layers className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Multi-Outlet Chain Architecture</h3>
+                <p className="text-xs leading-relaxed text-[#718078]">
+                  Centrally control menus, outlet pricing, staff roles, and cross-branch stock transfers. Aggregated owner analytics at your fingertips.
+                </p>
+                <Link href="/features/multi-outlet" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
+                  Explore Multi-Outlet <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 5: RESTAURANT OPERATIONS WORKFLOW                 */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">HOW IT WORKS</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                5-Step Restaurant Operational Flow
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                From the moment a customer enters to post-dining invoice delivery, RestroNex runs seamless end-to-end operations.
+              </p>
+            </div>
+
+            <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {operationalSteps.map((step) => {
+                const Icon = step.icon;
+                return (
+                  <div key={step.step} className="p-5 rounded-2xl bg-white border border-[#E5EBE7] shadow-2xs space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-[#16845B] bg-[#E8F5EE] px-2.5 py-1 rounded-full">
+                        {step.step}
+                      </span>
+                      <Icon className="h-4 w-4 text-[#718078]" />
+                    </div>
+                    <h4 className="text-sm font-bold text-[#172B25]">{step.title}</h4>
+                    <p className="text-xs text-[#718078] leading-relaxed">{step.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 6 & 7: TABLE MANAGEMENT & QR ORDERING DEMO        */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-white border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-10 items-center">
+              <div>
+                <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">TABLE & QR MANAGEMENT</span>
+                <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                  Real-Time Floor Plan & Contactless Table QR Ordering
+                </h2>
+                <p className="mt-3 text-sm text-[#718078] leading-relaxed">
+                  Organize dining zones (Indoor, AC Dining, Rooftop, Terrace, Bar). Waiters seat guests with one tap, relocate orders between tables, and check occupied or billed statuses in real-time.
+                </p>
+                <div className="mt-6 space-y-3 text-xs text-[#172B25] font-semibold">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Dynamic Table QR tokens generated instantly with printable SVG cards</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Guests browse mobile web menu without downloading any app</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Cooking notes and item modifiers passed directly to kitchen KOT</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Customer mobile number opt-in for automated WhatsApp invoice</span>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex gap-3">
+                  <Link href="/features/table-management">
+                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs">
+                      Explore Tables →
+                    </button>
+                  </Link>
+                  <Link href="/features/qr-ordering">
+                    <button className="rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9]">
+                      QR Ordering Flow
+                    </button>
+                  </Link>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-4 shadow-sm">
+                <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-3">
+                  <div className="text-xs font-bold text-[#172B25]">Main Dining Floor (8 Tables)</div>
+                  <span className="text-[11px] font-bold text-[#16845B] bg-[#E8F5EE] px-2.5 py-0.5 rounded-full">
+                    5 Occupied • 3 Available
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {[
-                    { id: "billing", label: "3-Click Billing", active: true },
-                    { id: "kot", label: "KOT → KDS" },
-                    { id: "inventory", label: "Inventory" },
-                    { id: "reports", label: "94 Reports" },
-                  ].map((t) => (
-                    <div
-                      key={t.id}
-                      className={`rounded-full px-4 py-2 text-xs font-bold border transition ${
-                        t.active ? "bg-[#16845B] border-[#16845B] text-white shadow-xs" : "bg-white border-[#E5EBE7] text-[#718078]"
-                      }`}
-                    >
-                      {t.label}
+                    { num: "01", status: "Available", seats: "2 Seats", bg: "bg-white border-[#E5EBE7] text-[#718078]" },
+                    { num: "02", status: "Occupied", seats: "4 Seats", bg: "bg-[#16845B] text-white border-[#16845B]" },
+                    { num: "03", status: "KOT Sent", seats: "4 Seats", bg: "bg-amber-50 text-amber-900 border-amber-300" },
+                    { num: "04", status: "Bill Out", seats: "6 Seats", bg: "bg-[#E8F5EE] text-[#16845B] border-[#16845B]/30" },
+                    { num: "05", status: "Occupied", seats: "2 Seats", bg: "bg-[#16845B] text-white border-[#16845B]" },
+                    { num: "06", status: "Available", seats: "4 Seats", bg: "bg-white border-[#E5EBE7] text-[#718078]" },
+                    { num: "07", status: "KOT Sent", seats: "6 Seats", bg: "bg-amber-50 text-amber-900 border-amber-300" },
+                    { num: "08", status: "Available", seats: "8 Seats", bg: "bg-white border-[#E5EBE7] text-[#718078]" },
+                  ].map((tb) => (
+                    <div key={tb.num} className={`p-3 rounded-2xl border text-center ${tb.bg}`}>
+                      <div className="text-sm font-extrabold">Table {tb.num}</div>
+                      <div className="text-[10px] mt-0.5">{tb.seats}</div>
+                      <div className="text-[10px] font-bold mt-1 uppercase">{tb.status}</div>
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                <div className="mt-4 rounded-[24px] border border-[#E5EBE7] bg-white p-3 sm:p-4 shadow-xl">
-                  <div className="rounded-2xl border border-[#E5EBE7] bg-white overflow-hidden">
-                    <div className="flex items-center justify-between border-b border-[#E5EBE7] bg-[#F8FAF9] px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                        <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                        <div className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                        <span className="ml-2 text-xs font-bold text-[#172B25] hidden sm:inline">RestroNex POS • Floor Plan • Live KOT</span>
-                        <span className="ml-2 text-xs font-bold text-[#172B25] sm:hidden">POS • Live</span>
-                      </div>
-                      <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-2.5 py-1 text-[10px] font-bold text-[#16845B]">KOT SENT • Table 12</span>
+        {/* ========================================================= */}
+        {/* SECTION 8: KOT & KITCHEN DISPLAY SYSTEM                   */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-10 items-center">
+              <div className="p-5 rounded-3xl bg-white border border-[#E5EBE7] space-y-4 shadow-sm order-2 lg:order-1">
+                <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-3">
+                  <div className="flex items-center gap-2">
+                    <ChefHat className="h-4 w-4 text-[#16845B]" />
+                    <span className="text-xs font-bold text-[#172B25]">Kitchen Station Display</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                    3 Active Tickets
+                  </span>
+                </div>
+                <div className="space-y-2.5">
+                  <div className="p-3.5 rounded-2xl bg-[#F8FAF9] border-2 border-[#16845B] space-y-2">
+                    <div className="flex justify-between items-center text-xs font-bold">
+                      <span className="text-[#172B25]">KOT #102 • Table 04</span>
+                      <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full text-[10px]">PREPARING</span>
                     </div>
-                    <div className="grid grid-cols-[1.15fr_1fr] gap-0">
-                      <div className="border-r border-[#E5EBE7] p-3 space-y-2 bg-[#F8FAF9]/50">
-                        <div className="grid grid-cols-3 gap-2">
-                          {["T01 Free", "T02 Billing", "T03 KOT", "T04 Reserved", "T05 Free", "T06 Busy"].map((t) => (
-                            <div
-                              key={t}
-                              className={`rounded-xl px-2 py-2 text-center text-[11px] font-bold border ${
-                                t.includes("Free")
-                                  ? "bg-white border-[#E5EBE7] text-[#718078]"
-                                  : t.includes("KOT")
-                                  ? "bg-amber-50 border-amber-200 text-amber-800"
-                                  : "bg-[#16845B] text-white border-[#16845B]"
-                              }`}
-                            >
-                              {t}
-                            </div>
-                          ))}
-                        </div>
-                        <div className="rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs shadow-xs">
-                          <div className="flex justify-between font-bold text-[#172B25]">
-                            <span>Order #4092</span>
-                            <span className="text-[#16845B]">Table 12</span>
-                          </div>
-                          <div className="mt-1 text-[#718078] text-[11px]">2x Paneer Tikka • 1x Dal Makhani • 4x Roti</div>
-                          <div className="mt-2 flex justify-between border-t border-[#E5EBE7] pt-1 text-[#172B25] font-bold">
-                            <span>Total (incl. GST)</span>
-                            <span>₹848.00</span>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="text-xs font-mono text-[#172B25] space-y-1">
+                      <div>2x Tandoori Chicken Half (Extra crispy)</div>
+                      <div>1x Garlic Butter Roti (No butter on 1)</div>
+                    </div>
+                    <div className="pt-2 border-t border-[#E5EBE7] flex justify-between items-center text-[11px]">
+                      <span className="text-amber-700 font-bold">⏱ 04:32</span>
+                      <span className="text-[#16845B] font-bold">Mark Ready →</span>
+                    </div>
+                  </div>
 
-                      <div className="p-3 bg-white">
-                        <div className="text-[11px] font-bold uppercase text-[#718078]">Quick Items</div>
-                        <div className="mt-2 grid grid-cols-2 gap-1.5">
-                          {["Butter Chicken", "Paneer Tikka", "Dal Makhani", "Garlic Naan"].map((item) => (
-                            <div key={item} className="rounded-lg border border-[#E5EBE7] p-2 text-left bg-[#F8FAF9] hover:bg-[#E8F5EE] transition-colors">
-                              <div className="text-[11px] font-bold text-[#172B25]">{item}</div>
-                              <div className="text-[10px] text-[#16845B] font-semibold mt-0.5">₹240+</div>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="mt-3 rounded-lg bg-[#E8F5EE] border border-[#E5EBE7] p-2 text-center">
-                          <span className="text-[11px] font-bold text-[#16845B]">3-Click Fast Settle Active</span>
-                        </div>
-                      </div>
+                  <div className="p-3.5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-2">
+                    <div className="flex justify-between items-center text-xs font-bold">
+                      <span className="text-[#172B25]">KOT #103 • Table 02</span>
+                      <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full text-[10px]">NEW TICKET</span>
                     </div>
+                    <div className="text-xs font-mono text-[#172B25] space-y-1">
+                      <div>1x Veg Hakka Noodles</div>
+                      <div>1x Chilli Paneer Dry</div>
+                    </div>
+                    <div className="pt-2 border-t border-[#E5EBE7] flex justify-between items-center text-[11px]">
+                      <span className="text-blue-700 font-bold">⏱ 00:45</span>
+                      <span className="text-[#16845B] font-bold">Accept Ticket →</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="order-1 lg:order-2">
+                <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">KITCHEN WORKFLOW</span>
+                <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                  Zero Misplaced Tickets & Live Station Routing
+                </h2>
+                <p className="mt-3 text-sm text-[#718078] leading-relaxed">
+                  Eliminate verbal confusion and paper delays. Orders automatically split by department: hot kitchen, Chinese wok, tandoor counter, beverage bar, and dessert bakery.
+                </p>
+                <div className="mt-6 space-y-3 text-xs text-[#172B25] font-semibold">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Color-coded urgency timers notify chefs before orders turn late</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Instant sound alerts when new KOT is dispatched from table or counter</span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#16845B] shrink-0" />
+                    <span>Bump tickets with touch screen or Bluetooth keyboard</span>
+                  </div>
+                </div>
+                <div className="mt-8">
+                  <Link href="/features/kitchen-display">
+                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs">
+                      Learn More About KDS →
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 9: INVENTORY & PURCHASE MANAGEMENT                */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-white border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">INVENTORY CONTROL</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                Raw Ingredient Tracking & Recipe Costing
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                Stop guessing food costs. RestroNex dynamically depletes inventory as dishes are billed and alerts you before ingredients run out.
+              </p>
+            </div>
+
+            <div className="mt-12 grid md:grid-cols-3 gap-6">
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Truck className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Recipe Bill-of-Materials (BOM)</h3>
+                <p className="text-xs text-[#718078] leading-relaxed">
+                  Map every menu item to exact ingredient portions (grams, ml, pieces). Calculates accurate plate food cost and margins automatically.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Clock className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Low Stock Threshold Alerts</h3>
+                <p className="text-xs text-[#718078] leading-relaxed">
+                  Never 86 a signature dish midway through a Saturday dinner rush. Receive automated alerts when butter, milk, or paneer fall below reorder thresholds.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-3">
+                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                  <Receipt className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold text-[#172B25]">Supplier Purchase Orders (PO)</h3>
+                <p className="text-xs text-[#718078] leading-relaxed">
+                  Track vendor price variance across suppliers. Create, approve, and record stock receiving with supplier tax invoice tracking.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================= */}
+        {/* SECTION 12 & 13: HARDWARE & WHATSAPP DELIVERY             */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Card 1: Printers */}
+              <div className="p-7 rounded-3xl bg-white border border-[#E5EBE7] space-y-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                    <Printer className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#172B25]">ESC/POS Thermal Hardware</h3>
+                    <p className="text-xs text-[#718078]">Bluetooth, Ethernet LAN & USB</p>
+                  </div>
+                </div>
+                <p className="text-xs text-[#718078] leading-relaxed">
+                  Print customer tax invoices and kitchen order tickets on standard ESC/POS thermal printers.
+                  Pair Bluetooth thermal printers directly from Chrome via Web Bluetooth or configure Ethernet IP printers (port 9100) for hot kitchen grease-proof printing.
+                </p>
+                <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs font-bold text-[#172B25]">
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>80mm & 58mm</div>
+                    <div className="text-[10px] text-[#718078] font-normal">Paper Roll Support</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>Port 9100</div>
+                    <div className="text-[10px] text-[#718078] font-normal">LAN Direct Socket</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>Web Bluetooth</div>
+                    <div className="text-[10px] text-[#718078] font-normal">Mobile SPP Pairing</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: WhatsApp */}
+              <div className="p-7 rounded-3xl bg-white border border-[#E5EBE7] space-y-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
+                    <MessageSquare className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-[#172B25]">Official Meta WhatsApp Cloud API</h3>
+                    <p className="text-xs text-[#718078]">Instant Paperless Invoicing</p>
+                  </div>
+                </div>
+                <p className="text-xs text-[#718078] leading-relaxed">
+                  Send digital PDF tax invoices straight to customers on WhatsApp immediately after order settlement.
+                  Compliant with customer consent requirements, official Meta utility message templates, and instant wa.me fallback links.
+                </p>
+                <div className="grid grid-cols-3 gap-2 pt-2 text-center text-xs font-bold text-[#172B25]">
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>100% Paperless</div>
+                    <div className="text-[10px] text-[#718078] font-normal">Eco & Cost Efficient</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>Meta Verified</div>
+                    <div className="text-[10px] text-[#718078] font-normal">Cloud API Gateway</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                    <div>wa.me Fallback</div>
+                    <div className="text-[10px] text-[#718078] font-normal">1-Click Direct Link</div>
                   </div>
                 </div>
               </div>
@@ -145,122 +813,87 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ===== HONEST RESTAURANT FORMATS ===== */}
-        <section className="bg-white border-b border-[#E5EBE7] py-6">
+        {/* ========================================================= */}
+        {/* SECTION 14: RESTAURANT SOLUTIONS                          */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-white border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="text-xs font-bold tracking-[0.14em] text-[#718078] uppercase">Engineered for all restaurant formats</div>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                {[
-                  "Fine-Dining & Bistros",
-                  "Cafes & Roasteries",
-                  "Quick Service (QSR)",
-                  "Bakeries & Confectioneries",
-                  "Pizzerias",
-                  "Dessert & Ice Cream Parlors",
-                  "Food Courts & Hubs",
-                  "Cloud & Ghost Kitchens",
-                  "Multi-Outlet Chains",
-                ].map((format) => (
-                  <span
-                    key={format}
-                    className="rounded-full border border-[#E5EBE7] bg-[#F8FAF9] px-4 py-1.5 text-xs font-bold text-[#172B25]"
-                  >
-                    {format}
-                  </span>
-                ))}
-              </div>
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">FITS EVERY FORMAT</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                Tailored for Every Type of Dining Establishment
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                From single counter coffee bars to 50-branch fine dining franchises, RestroNex adapts to your service model.
+              </p>
+            </div>
+
+            <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {solutions.map((sol) => (
+                <Link
+                  key={sol.name}
+                  href={sol.href}
+                  className="p-5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:bg-white hover:shadow-2xs transition group"
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-bold text-[#172B25] group-hover:text-[#16845B] transition">
+                      {sol.name}
+                    </h4>
+                    <ArrowRight className="h-4 w-4 text-[#718078] group-hover:text-[#16845B] group-hover:translate-x-0.5 transition" />
+                  </div>
+                  <p className="text-xs text-[#718078] mt-2 leading-relaxed">{sol.desc}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ===== 3 CORE PILLARS ===== */}
-        <section className="py-16 bg-[#F8FAF9]">
+        {/* ========================================================= */}
+        {/* SECTION 16: PRICING (HONEST ₹200 / ₹300 / ₹500)          */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]" id="pricing">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto">
-              <div className="text-xs font-bold tracking-widest text-[#16845B] uppercase">THE RESTAURANT OS</div>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">Everything needed to run an outlet with speed</h2>
-              <p className="mt-2 text-sm text-[#718078]">Built for speed during peak rush hours, accurate to the paise, and isolated per business tenant.</p>
-            </div>
-
-            <div className="mt-10 grid md:grid-cols-3 gap-6">
-              <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 shadow-xs hover:shadow-md transition">
-                <div className="h-10 w-10 rounded-xl bg-[#E8F5EE] border border-[#E5EBE7] grid place-items-center text-[#16845B]">
-                  <Store className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-[#172B25]">Fast Counter & Tableside Billing</h3>
-                <p className="mt-2 text-sm text-[#718078] leading-relaxed">
-                  Fire KOTs, split checks, apply permissioned discounts, and accept Cash, Cards, and Dynamic UPI QR codes without lag.
-                </p>
-                <Link href="/features/pos" className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore POS Billing →
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 shadow-xs hover:shadow-md transition">
-                <div className="h-10 w-10 rounded-xl bg-blue-50 border border-blue-100 grid place-items-center text-blue-600">
-                  <Truck className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-[#172B25]">Inventory & Recipe BOM</h3>
-                <p className="mt-2 text-sm text-[#718078] leading-relaxed">
-                  Raw ingredients auto-deduct when dishes are fulfilled. Track purchase orders, supplier costs, wastage, and low-stock alerts.
-                </p>
-                <Link href="/features/inventory" className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-blue-600">
-                  Explore Inventory →
-                </Link>
-              </div>
-
-              <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 shadow-xs hover:shadow-md transition">
-                <div className="h-10 w-10 rounded-xl bg-amber-50 border border-amber-100 grid place-items-center text-amber-600">
-                  <BarChart3 className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-[#172B25]">94 Real-Time Reports</h3>
-                <p className="mt-2 text-sm text-[#718078] leading-relaxed">
-                  Day-end sales summary, GST tax breakdowns (CGST + SGST), cashier shifts, item profitability, and multi-outlet benchmarks.
-                </p>
-                <Link href="/features/reports" className="mt-4 inline-flex items-center gap-1 text-xs font-bold text-amber-600">
-                  Explore Reports →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ===== THREE SUBSCRIPTION PLANS SECTION ===== */}
-        <section className="bg-white text-[#172B25] py-16 border-t border-[#E5EBE7]" id="plans">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#16845B]">TRANSPARENT SUBSCRIPTION PRICING</span>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black text-[#172B25]">Choose the plan that fits your restaurant</h2>
-              <p className="mt-3 text-sm text-[#718078]">Configurable plans with no hidden costs. 14-day free trial on all plans.</p>
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">SIMPLE PRICING</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                Transparent Restaurant Subscription Plans
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                Clear limits, zero hidden fees, and instantaneous online onboarding via Razorpay checkout.
+              </p>
             </div>
 
             <div className="mt-12 grid md:grid-cols-3 gap-6 items-stretch">
               {pricingPlans.map((plan) => (
                 <div
                   key={plan.id}
-                  className={`rounded-2xl border p-6 flex flex-col justify-between transition-all ${
+                  className={`rounded-3xl border p-6 flex flex-col justify-between transition ${
                     plan.highlighted
-                      ? "border-2 border-[#16845B] bg-white shadow-lg ring-4 ring-[#16845B]/10 relative md:-my-2"
-                      : "border-[#E5EBE7] bg-[#F8FAF9] shadow-xs hover:shadow-md"
+                      ? "border-2 border-[#16845B] bg-white shadow-lg relative"
+                      : "border-[#E5EBE7] bg-white shadow-2xs hover:shadow-xs"
                   }`}
                 >
                   {plan.highlighted && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#16845B] px-3.5 py-0.5 text-[11px] font-black uppercase text-white tracking-wider shadow-xs">
-                      Most Popular
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#16845B] px-3.5 py-0.5 text-[10px] font-black uppercase text-white tracking-wider shadow-2xs">
+                      Recommended
                     </div>
                   )}
-                  <div>
-                    <div className="text-lg font-black text-[#172B25]">{plan.name}</div>
-                    <div className="text-xs text-[#718078] mt-1">{plan.tagline}</div>
-                    <div className="mt-4 flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-[#172B25]">₹{plan.priceMonthly}</span>
-                      <span className="text-xs text-[#718078]">/ month + GST</span>
+
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-lg font-bold text-[#172B25]">{plan.name}</h3>
+                      <p className="text-xs text-[#718078] mt-1">{plan.tagline}</p>
                     </div>
 
-                    <div className="mt-6 space-y-2.5 border-t border-[#E5EBE7] pt-6">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl sm:text-4xl font-black text-[#172B25]">₹{plan.priceMonthly}</span>
+                      <span className="text-xs font-semibold text-[#718078]">/month</span>
+                      <span className="text-[11px] text-[#718078] ml-1">{plan.gstNote}</span>
+                    </div>
+
+                    <div className="pt-4 border-t border-[#E5EBE7] space-y-2 text-xs text-[#172B25]">
                       {plan.features.map((feat) => (
-                        <div key={feat} className="flex items-start gap-2.5 text-xs text-[#172B25]">
+                        <div key={feat} className="flex items-start gap-2">
                           <Check className="h-4 w-4 text-[#16845B] shrink-0 mt-0.5" />
                           <span>{feat}</span>
                         </div>
@@ -268,63 +901,134 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="mt-8">
-                    <Link href={`/get-started?plan=${plan.slug}`}>
+                  <div className="mt-6 pt-4 border-t border-[#E5EBE7]">
+                    <Link href={`/checkout?plan=${plan.slug}`}>
                       <button
-                        className={`w-full rounded-full py-3 text-xs font-bold transition-all shadow-xs ${
+                        className={`w-full py-3 rounded-full text-xs font-bold transition shadow-2xs ${
                           plan.highlighted
-                            ? "bg-[#16845B] text-white hover:bg-[#116B49]"
-                            : "border border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#E8F5EE] hover:text-[#16845B]"
+                            ? "bg-[#16845B] hover:bg-[#116B49] text-white"
+                            : "border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-[#E8F5EE] hover:text-[#16845B]"
                         }`}
                       >
-                        Get Started with {plan.name} →
+                        Subscribe to {plan.name} →
                       </button>
                     </Link>
                   </div>
                 </div>
               ))}
             </div>
+
+            {/* Feature Comparison Table */}
+            <div className="mt-12 rounded-3xl border border-[#E5EBE7] bg-white overflow-hidden shadow-2xs">
+              <div className="p-5 border-b border-[#E5EBE7] bg-[#F8FAF9]">
+                <h3 className="font-extrabold text-sm text-[#172B25]">Detailed Feature Comparison</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-[#E5EBE7] bg-[#F8FAF9]/50">
+                      <th className="p-3.5 font-bold text-[#718078]">Capability</th>
+                      <th className="p-3.5 font-bold text-[#172B25] text-center">Starter (₹200)</th>
+                      <th className="p-3.5 font-bold text-[#16845B] text-center">Growth (₹300)</th>
+                      <th className="p-3.5 font-bold text-[#172B25] text-center">Business (₹500)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E5EBE7]">
+                    {pricingComparison.rows.map((row, i) => (
+                      <tr key={i} className="hover:bg-[#F8FAF9]/50">
+                        <td className="p-3.5 font-semibold text-[#172B25]">{row.feature}</td>
+                        {row.values.map((v, idx) => (
+                          <td key={idx} className="p-3.5 text-center">
+                            {typeof v === "boolean" ? (
+                              v ? (
+                                <Check className="h-4 w-4 text-[#16845B] mx-auto font-bold" />
+                              ) : (
+                                <span className="text-[#A0ACA5]">—</span>
+                              )
+                            ) : (
+                              <span className="font-bold text-[#172B25]">{v}</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ===== FREQUENTLY ASKED QUESTIONS ===== */}
-        <section className="py-16 bg-[#F8FAF9] border-t border-[#E5EBE7]">
-          <div className="mx-auto max-w-[960px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#16845B]">QUESTIONS & ANSWERS</span>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">Frequently Asked Questions</h2>
+        {/* ========================================================= */}
+        {/* SECTION 17: FREQUENTLY ASKED QUESTIONS                    */}
+        {/* ========================================================= */}
+        <section className="py-16 bg-white border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">FREQUENT QUESTIONS</span>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
+                Everything You Need to Know
+              </h2>
+              <p className="mt-2 text-sm text-[#718078]">
+                Direct answers to common questions about hardware, GST compliance, and operations.
+              </p>
             </div>
 
-            <div className="mt-10 space-y-4">
-              {faqs.map((faq, i) => (
-                <div key={i} className="rounded-2xl border border-[#E5EBE7] bg-white p-5 shadow-xs">
-                  <h3 className="font-bold text-[#172B25] text-sm sm:text-base flex items-center gap-2">
+            <div className="mt-12 max-w-3xl mx-auto space-y-4">
+              {faqs.map((faq, idx) => (
+                <div key={idx} className="p-5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-2">
+                  <h4 className="text-sm font-bold text-[#172B25] flex items-center gap-2">
                     <HelpCircle className="h-4 w-4 text-[#16845B] shrink-0" />
                     <span>{faq.q}</span>
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#718078] leading-relaxed pl-6">{faq.a}</p>
+                  </h4>
+                  <p className="text-xs text-[#718078] leading-relaxed pl-6">{faq.a}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ===== CONVERSION SECTION ===== */}
-        <section className="bg-gradient-to-b from-[#F8FAF9] to-[#E8F5EE]/60 text-[#172B25] py-16 border-t border-[#E5EBE7]">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-black text-[#172B25]">Ready to streamline your restaurant operations?</h2>
-            <p className="mt-2 text-sm text-[#718078] max-w-xl mx-auto">
-              Start your 14-day free trial on any plan. Complete billing, KOT, and inventory in minutes.
+        {/* ========================================================= */}
+        {/* SECTION 18: SECURITY & COMPLIANCE                         */}
+        {/* ========================================================= */}
+        <section className="py-12 bg-[#F8FAF9] border-b border-[#E5EBE7]">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+            <div className="p-8 rounded-3xl bg-white border border-[#E5EBE7] grid sm:grid-cols-4 gap-6 text-center">
+              <div>
+                <ShieldCheck className="h-8 w-8 text-[#16845B] mx-auto mb-2" />
+                <h4 className="text-xs font-bold text-[#172B25]">Tenant Isolation</h4>
+                <p className="text-[11px] text-[#718078] mt-1">Strict database row isolation per restaurant entity.</p>
+              </div>
+              <div>
+                <Receipt className="h-8 w-8 text-[#16845B] mx-auto mb-2" />
+                <h4 className="text-xs font-bold text-[#172B25]">Paise Integer Math</h4>
+                <p className="text-[11px] text-[#718078] mt-1">Zero floating point discrepancies on tax calculations.</p>
+              </div>
+              <div>
+                <CreditCard className="h-8 w-8 text-[#16845B] mx-auto mb-2" />
+                <h4 className="text-xs font-bold text-[#172B25]">HMAC Payment Security</h4>
+                <p className="text-[11px] text-[#718078] mt-1">Cryptographically verified Razorpay webhooks.</p>
+              </div>
+              <div>
+                <Layers className="h-8 w-8 text-[#16845B] mx-auto mb-2" />
+                <h4 className="text-xs font-bold text-[#172B25]">Audit Logged</h4>
+                <p className="text-[11px] text-[#718078] mt-1">Immutable ledger for all bill voiding & staff edits.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Banner */}
+        <section className="py-16 bg-[#16845B] text-white">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <h2 className="text-2xl sm:text-3xl font-black">Ready to Modernize Your Restaurant Operations?</h2>
+            <p className="max-w-xl mx-auto text-xs sm:text-sm text-white/80 leading-relaxed">
+              Join modern restaurants, cafes, and QSRs running high-speed billing, tableside QR ordering, and paperless WhatsApp invoices.
             </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <div className="pt-2 flex justify-center gap-3">
               <Link href="/get-started">
-                <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-sm">
-                  Get Started Now →
-                </button>
-              </Link>
-              <Link href="/pricing">
-                <button className="rounded-full border border-[#E5EBE7] bg-white px-6 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs">
-                  Compare All Features
+                <button className="rounded-full bg-white text-[#16845B] px-8 py-3 text-xs font-black hover:bg-[#F8FAF9] shadow-sm transition">
+                  Create Restaurant Workspace →
                 </button>
               </Link>
             </div>

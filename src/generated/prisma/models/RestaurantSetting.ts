@@ -44,6 +44,12 @@ export type RestaurantSettingMinAggregateOutputType = {
   serviceChargePct: number | null
   enableKOT: boolean | null
   enableTableMgmt: boolean | null
+  autoAcceptQROrders: boolean | null
+  autoPrintKOT: boolean | null
+  autoPrintBill: boolean | null
+  autoSendWhatsAppInvoice: boolean | null
+  whatsappPhoneNumberId: string | null
+  whatsappAccessToken: string | null
 }
 
 export type RestaurantSettingMaxAggregateOutputType = {
@@ -56,6 +62,12 @@ export type RestaurantSettingMaxAggregateOutputType = {
   serviceChargePct: number | null
   enableKOT: boolean | null
   enableTableMgmt: boolean | null
+  autoAcceptQROrders: boolean | null
+  autoPrintKOT: boolean | null
+  autoPrintBill: boolean | null
+  autoSendWhatsAppInvoice: boolean | null
+  whatsappPhoneNumberId: string | null
+  whatsappAccessToken: string | null
 }
 
 export type RestaurantSettingCountAggregateOutputType = {
@@ -68,6 +80,12 @@ export type RestaurantSettingCountAggregateOutputType = {
   serviceChargePct: number
   enableKOT: number
   enableTableMgmt: number
+  autoAcceptQROrders: number
+  autoPrintKOT: number
+  autoPrintBill: number
+  autoSendWhatsAppInvoice: number
+  whatsappPhoneNumberId: number
+  whatsappAccessToken: number
   _all: number
 }
 
@@ -90,6 +108,12 @@ export type RestaurantSettingMinAggregateInputType = {
   serviceChargePct?: true
   enableKOT?: true
   enableTableMgmt?: true
+  autoAcceptQROrders?: true
+  autoPrintKOT?: true
+  autoPrintBill?: true
+  autoSendWhatsAppInvoice?: true
+  whatsappPhoneNumberId?: true
+  whatsappAccessToken?: true
 }
 
 export type RestaurantSettingMaxAggregateInputType = {
@@ -102,6 +126,12 @@ export type RestaurantSettingMaxAggregateInputType = {
   serviceChargePct?: true
   enableKOT?: true
   enableTableMgmt?: true
+  autoAcceptQROrders?: true
+  autoPrintKOT?: true
+  autoPrintBill?: true
+  autoSendWhatsAppInvoice?: true
+  whatsappPhoneNumberId?: true
+  whatsappAccessToken?: true
 }
 
 export type RestaurantSettingCountAggregateInputType = {
@@ -114,6 +144,12 @@ export type RestaurantSettingCountAggregateInputType = {
   serviceChargePct?: true
   enableKOT?: true
   enableTableMgmt?: true
+  autoAcceptQROrders?: true
+  autoPrintKOT?: true
+  autoPrintBill?: true
+  autoSendWhatsAppInvoice?: true
+  whatsappPhoneNumberId?: true
+  whatsappAccessToken?: true
   _all?: true
 }
 
@@ -213,6 +249,12 @@ export type RestaurantSettingGroupByOutputType = {
   serviceChargePct: number
   enableKOT: boolean
   enableTableMgmt: boolean
+  autoAcceptQROrders: boolean
+  autoPrintKOT: boolean
+  autoPrintBill: boolean
+  autoSendWhatsAppInvoice: boolean
+  whatsappPhoneNumberId: string | null
+  whatsappAccessToken: string | null
   _count: RestaurantSettingCountAggregateOutputType | null
   _avg: RestaurantSettingAvgAggregateOutputType | null
   _sum: RestaurantSettingSumAggregateOutputType | null
@@ -248,6 +290,12 @@ export type RestaurantSettingWhereInput = {
   serviceChargePct?: Prisma.IntFilter<"RestaurantSetting"> | number
   enableKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   enableTableMgmt?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoAcceptQROrders?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoPrintKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoPrintBill?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }
 
@@ -261,6 +309,12 @@ export type RestaurantSettingOrderByWithRelationInput = {
   serviceChargePct?: Prisma.SortOrder
   enableKOT?: Prisma.SortOrder
   enableTableMgmt?: Prisma.SortOrder
+  autoAcceptQROrders?: Prisma.SortOrder
+  autoPrintKOT?: Prisma.SortOrder
+  autoPrintBill?: Prisma.SortOrder
+  autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
 }
 
@@ -277,6 +331,12 @@ export type RestaurantSettingWhereUniqueInput = Prisma.AtLeast<{
   serviceChargePct?: Prisma.IntFilter<"RestaurantSetting"> | number
   enableKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   enableTableMgmt?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoAcceptQROrders?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoPrintKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoPrintBill?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }, "id" | "tenantId">
 
@@ -290,6 +350,12 @@ export type RestaurantSettingOrderByWithAggregationInput = {
   serviceChargePct?: Prisma.SortOrder
   enableKOT?: Prisma.SortOrder
   enableTableMgmt?: Prisma.SortOrder
+  autoAcceptQROrders?: Prisma.SortOrder
+  autoPrintKOT?: Prisma.SortOrder
+  autoPrintBill?: Prisma.SortOrder
+  autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RestaurantSettingCountOrderByAggregateInput
   _avg?: Prisma.RestaurantSettingAvgOrderByAggregateInput
   _max?: Prisma.RestaurantSettingMaxOrderByAggregateInput
@@ -310,6 +376,12 @@ export type RestaurantSettingScalarWhereWithAggregatesInput = {
   serviceChargePct?: Prisma.IntWithAggregatesFilter<"RestaurantSetting"> | number
   enableKOT?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
   enableTableMgmt?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  autoAcceptQROrders?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  autoPrintKOT?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  autoPrintBill?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  whatsappPhoneNumberId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
+  whatsappAccessToken?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
 }
 
 export type RestaurantSettingCreateInput = {
@@ -321,6 +393,12 @@ export type RestaurantSettingCreateInput = {
   serviceChargePct?: number
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: string | null
+  whatsappAccessToken?: string | null
   tenant: Prisma.TenantCreateNestedOneWithoutSettingsInput
 }
 
@@ -334,6 +412,12 @@ export type RestaurantSettingUncheckedCreateInput = {
   serviceChargePct?: number
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: string | null
+  whatsappAccessToken?: string | null
 }
 
 export type RestaurantSettingUpdateInput = {
@@ -345,6 +429,12 @@ export type RestaurantSettingUpdateInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSettingsNestedInput
 }
 
@@ -358,6 +448,12 @@ export type RestaurantSettingUncheckedUpdateInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantSettingCreateManyInput = {
@@ -370,6 +466,12 @@ export type RestaurantSettingCreateManyInput = {
   serviceChargePct?: number
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: string | null
+  whatsappAccessToken?: string | null
 }
 
 export type RestaurantSettingUpdateManyMutationInput = {
@@ -381,6 +483,12 @@ export type RestaurantSettingUpdateManyMutationInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantSettingUncheckedUpdateManyInput = {
@@ -393,6 +501,12 @@ export type RestaurantSettingUncheckedUpdateManyInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantSettingNullableScalarRelationFilter = {
@@ -410,6 +524,12 @@ export type RestaurantSettingCountOrderByAggregateInput = {
   serviceChargePct?: Prisma.SortOrder
   enableKOT?: Prisma.SortOrder
   enableTableMgmt?: Prisma.SortOrder
+  autoAcceptQROrders?: Prisma.SortOrder
+  autoPrintKOT?: Prisma.SortOrder
+  autoPrintBill?: Prisma.SortOrder
+  autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappPhoneNumberId?: Prisma.SortOrder
+  whatsappAccessToken?: Prisma.SortOrder
 }
 
 export type RestaurantSettingAvgOrderByAggregateInput = {
@@ -426,6 +546,12 @@ export type RestaurantSettingMaxOrderByAggregateInput = {
   serviceChargePct?: Prisma.SortOrder
   enableKOT?: Prisma.SortOrder
   enableTableMgmt?: Prisma.SortOrder
+  autoAcceptQROrders?: Prisma.SortOrder
+  autoPrintKOT?: Prisma.SortOrder
+  autoPrintBill?: Prisma.SortOrder
+  autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappPhoneNumberId?: Prisma.SortOrder
+  whatsappAccessToken?: Prisma.SortOrder
 }
 
 export type RestaurantSettingMinOrderByAggregateInput = {
@@ -438,6 +564,12 @@ export type RestaurantSettingMinOrderByAggregateInput = {
   serviceChargePct?: Prisma.SortOrder
   enableKOT?: Prisma.SortOrder
   enableTableMgmt?: Prisma.SortOrder
+  autoAcceptQROrders?: Prisma.SortOrder
+  autoPrintKOT?: Prisma.SortOrder
+  autoPrintBill?: Prisma.SortOrder
+  autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappPhoneNumberId?: Prisma.SortOrder
+  whatsappAccessToken?: Prisma.SortOrder
 }
 
 export type RestaurantSettingSumOrderByAggregateInput = {
@@ -485,6 +617,12 @@ export type RestaurantSettingCreateWithoutTenantInput = {
   serviceChargePct?: number
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: string | null
+  whatsappAccessToken?: string | null
 }
 
 export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
@@ -496,6 +634,12 @@ export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
   serviceChargePct?: number
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: string | null
+  whatsappAccessToken?: string | null
 }
 
 export type RestaurantSettingCreateOrConnectWithoutTenantInput = {
@@ -523,6 +667,12 @@ export type RestaurantSettingUpdateWithoutTenantInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
@@ -534,6 +684,12 @@ export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
   serviceChargePct?: Prisma.IntFieldUpdateOperationsInput | number
   enableKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   enableTableMgmt?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoAcceptQROrders?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -548,6 +704,12 @@ export type RestaurantSettingSelect<ExtArgs extends runtime.Types.Extensions.Int
   serviceChargePct?: boolean
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: boolean
+  whatsappAccessToken?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
@@ -561,6 +723,12 @@ export type RestaurantSettingSelectCreateManyAndReturn<ExtArgs extends runtime.T
   serviceChargePct?: boolean
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: boolean
+  whatsappAccessToken?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
@@ -574,6 +742,12 @@ export type RestaurantSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   serviceChargePct?: boolean
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: boolean
+  whatsappAccessToken?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
@@ -587,9 +761,15 @@ export type RestaurantSettingSelectScalar = {
   serviceChargePct?: boolean
   enableKOT?: boolean
   enableTableMgmt?: boolean
+  autoAcceptQROrders?: boolean
+  autoPrintKOT?: boolean
+  autoPrintBill?: boolean
+  autoSendWhatsAppInvoice?: boolean
+  whatsappPhoneNumberId?: boolean
+  whatsappAccessToken?: boolean
 }
 
-export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt", ExtArgs["result"]["restaurantSetting"]>
+export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt" | "autoAcceptQROrders" | "autoPrintKOT" | "autoPrintBill" | "autoSendWhatsAppInvoice" | "whatsappPhoneNumberId" | "whatsappAccessToken", ExtArgs["result"]["restaurantSetting"]>
 export type RestaurantSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -615,6 +795,12 @@ export type $RestaurantSettingPayload<ExtArgs extends runtime.Types.Extensions.I
     serviceChargePct: number
     enableKOT: boolean
     enableTableMgmt: boolean
+    autoAcceptQROrders: boolean
+    autoPrintKOT: boolean
+    autoPrintBill: boolean
+    autoSendWhatsAppInvoice: boolean
+    whatsappPhoneNumberId: string | null
+    whatsappAccessToken: string | null
   }, ExtArgs["result"]["restaurantSetting"]>
   composites: {}
 }
@@ -1048,6 +1234,12 @@ export interface RestaurantSettingFieldRefs {
   readonly serviceChargePct: Prisma.FieldRef<"RestaurantSetting", 'Int'>
   readonly enableKOT: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
   readonly enableTableMgmt: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly autoAcceptQROrders: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly autoPrintKOT: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly autoPrintBill: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly autoSendWhatsAppInvoice: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly whatsappPhoneNumberId: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappAccessToken: Prisma.FieldRef<"RestaurantSetting", 'String'>
 }
     
 

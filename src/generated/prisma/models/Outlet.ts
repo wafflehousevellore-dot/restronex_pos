@@ -248,6 +248,9 @@ export type OutletWhereInput = {
   reservations?: Prisma.ReservationListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   dayEnds?: Prisma.DayEndSummaryListRelationFilter
+  printers?: Prisma.PrinterDeviceListRelationFilter
+  printJobs?: Prisma.PrintJobListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }
 
 export type OutletOrderByWithRelationInput = {
@@ -273,6 +276,9 @@ export type OutletOrderByWithRelationInput = {
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   dayEnds?: Prisma.DayEndSummaryOrderByRelationAggregateInput
+  printers?: Prisma.PrinterDeviceOrderByRelationAggregateInput
+  printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
+  qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
 }
 
 export type OutletWhereUniqueInput = Prisma.AtLeast<{
@@ -302,6 +308,9 @@ export type OutletWhereUniqueInput = Prisma.AtLeast<{
   reservations?: Prisma.ReservationListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   dayEnds?: Prisma.DayEndSummaryListRelationFilter
+  printers?: Prisma.PrinterDeviceListRelationFilter
+  printJobs?: Prisma.PrintJobListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }, "id" | "tenantId_slug">
 
 export type OutletOrderByWithAggregationInput = {
@@ -362,6 +371,9 @@ export type OutletCreateInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateInput = {
@@ -386,6 +398,9 @@ export type OutletUncheckedCreateInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUpdateInput = {
@@ -410,6 +425,9 @@ export type OutletUpdateInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateInput = {
@@ -434,6 +452,9 @@ export type OutletUncheckedUpdateInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyInput = {
@@ -722,6 +743,48 @@ export type OutletUpdateOneRequiredWithoutDayEndsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutDayEndsInput, Prisma.OutletUpdateWithoutDayEndsInput>, Prisma.OutletUncheckedUpdateWithoutDayEndsInput>
 }
 
+export type OutletCreateNestedOneWithoutQrSessionsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutQrSessionsInput, Prisma.OutletUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutQrSessionsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutQrSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutQrSessionsInput, Prisma.OutletUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutQrSessionsInput
+  upsert?: Prisma.OutletUpsertWithoutQrSessionsInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutQrSessionsInput, Prisma.OutletUpdateWithoutQrSessionsInput>, Prisma.OutletUncheckedUpdateWithoutQrSessionsInput>
+}
+
+export type OutletCreateNestedOneWithoutPrintersInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPrintersInput, Prisma.OutletUncheckedCreateWithoutPrintersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPrintersInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutPrintersNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPrintersInput, Prisma.OutletUncheckedCreateWithoutPrintersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPrintersInput
+  upsert?: Prisma.OutletUpsertWithoutPrintersInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutPrintersInput, Prisma.OutletUpdateWithoutPrintersInput>, Prisma.OutletUncheckedUpdateWithoutPrintersInput>
+}
+
+export type OutletCreateNestedOneWithoutPrintJobsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPrintJobsInput, Prisma.OutletUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPrintJobsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutPrintJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPrintJobsInput, Prisma.OutletUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPrintJobsInput
+  upsert?: Prisma.OutletUpsertWithoutPrintJobsInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutPrintJobsInput, Prisma.OutletUpdateWithoutPrintJobsInput>, Prisma.OutletUncheckedUpdateWithoutPrintJobsInput>
+}
+
 export type OutletCreateWithoutTenantInput = {
   id?: string
   name: string
@@ -743,6 +806,9 @@ export type OutletCreateWithoutTenantInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTenantInput = {
@@ -766,6 +832,9 @@ export type OutletUncheckedCreateWithoutTenantInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTenantInput = {
@@ -833,6 +902,9 @@ export type OutletCreateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutMembershipsInput = {
@@ -856,6 +928,9 @@ export type OutletUncheckedCreateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutMembershipsInput = {
@@ -895,6 +970,9 @@ export type OutletUpdateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutMembershipsInput = {
@@ -918,6 +996,9 @@ export type OutletUncheckedUpdateWithoutMembershipsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTablesInput = {
@@ -941,6 +1022,9 @@ export type OutletCreateWithoutTablesInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTablesInput = {
@@ -964,6 +1048,9 @@ export type OutletUncheckedCreateWithoutTablesInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTablesInput = {
@@ -1003,6 +1090,9 @@ export type OutletUpdateWithoutTablesInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTablesInput = {
@@ -1026,6 +1116,9 @@ export type OutletUncheckedUpdateWithoutTablesInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutOrdersInput = {
@@ -1049,6 +1142,9 @@ export type OutletCreateWithoutOrdersInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOrdersInput = {
@@ -1072,6 +1168,9 @@ export type OutletUncheckedCreateWithoutOrdersInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOrdersInput = {
@@ -1111,6 +1210,9 @@ export type OutletUpdateWithoutOrdersInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOrdersInput = {
@@ -1134,6 +1236,9 @@ export type OutletUncheckedUpdateWithoutOrdersInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutShiftsInput = {
@@ -1157,6 +1262,9 @@ export type OutletCreateWithoutShiftsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutShiftsInput = {
@@ -1180,6 +1288,9 @@ export type OutletUncheckedCreateWithoutShiftsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutShiftsInput = {
@@ -1219,6 +1330,9 @@ export type OutletUpdateWithoutShiftsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutShiftsInput = {
@@ -1242,6 +1356,9 @@ export type OutletUncheckedUpdateWithoutShiftsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutStockMovementsInput = {
@@ -1265,6 +1382,9 @@ export type OutletCreateWithoutStockMovementsInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStockMovementsInput = {
@@ -1288,6 +1408,9 @@ export type OutletUncheckedCreateWithoutStockMovementsInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStockMovementsInput = {
@@ -1327,6 +1450,9 @@ export type OutletUpdateWithoutStockMovementsInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStockMovementsInput = {
@@ -1350,6 +1476,9 @@ export type OutletUncheckedUpdateWithoutStockMovementsInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTokensInput = {
@@ -1373,6 +1502,9 @@ export type OutletCreateWithoutTokensInput = {
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTokensInput = {
@@ -1396,6 +1528,9 @@ export type OutletUncheckedCreateWithoutTokensInput = {
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTokensInput = {
@@ -1435,6 +1570,9 @@ export type OutletUpdateWithoutTokensInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTokensInput = {
@@ -1458,6 +1596,9 @@ export type OutletUncheckedUpdateWithoutTokensInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutReservationsInput = {
@@ -1481,6 +1622,9 @@ export type OutletCreateWithoutReservationsInput = {
   tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutReservationsInput = {
@@ -1504,6 +1648,9 @@ export type OutletUncheckedCreateWithoutReservationsInput = {
   tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutReservationsInput = {
@@ -1543,6 +1690,9 @@ export type OutletUpdateWithoutReservationsInput = {
   tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutReservationsInput = {
@@ -1566,6 +1716,9 @@ export type OutletUncheckedUpdateWithoutReservationsInput = {
   tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutExpensesInput = {
@@ -1589,6 +1742,9 @@ export type OutletCreateWithoutExpensesInput = {
   tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutExpensesInput = {
@@ -1612,6 +1768,9 @@ export type OutletUncheckedCreateWithoutExpensesInput = {
   tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutExpensesInput = {
@@ -1651,6 +1810,9 @@ export type OutletUpdateWithoutExpensesInput = {
   tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutExpensesInput = {
@@ -1674,6 +1836,9 @@ export type OutletUncheckedUpdateWithoutExpensesInput = {
   tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutDayEndsInput = {
@@ -1697,6 +1862,9 @@ export type OutletCreateWithoutDayEndsInput = {
   tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
   reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutDayEndsInput = {
@@ -1720,6 +1888,9 @@ export type OutletUncheckedCreateWithoutDayEndsInput = {
   tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutDayEndsInput = {
@@ -1759,6 +1930,9 @@ export type OutletUpdateWithoutDayEndsInput = {
   tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutDayEndsInput = {
@@ -1782,6 +1956,369 @@ export type OutletUncheckedUpdateWithoutDayEndsInput = {
   tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutQrSessionsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutQrSessionsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutQrSessionsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutQrSessionsInput, Prisma.OutletUncheckedCreateWithoutQrSessionsInput>
+}
+
+export type OutletUpsertWithoutQrSessionsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutQrSessionsInput, Prisma.OutletUncheckedUpdateWithoutQrSessionsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutQrSessionsInput, Prisma.OutletUncheckedCreateWithoutQrSessionsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutQrSessionsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutQrSessionsInput, Prisma.OutletUncheckedUpdateWithoutQrSessionsInput>
+}
+
+export type OutletUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutPrintersInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutPrintersInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutPrintersInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPrintersInput, Prisma.OutletUncheckedCreateWithoutPrintersInput>
+}
+
+export type OutletUpsertWithoutPrintersInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutPrintersInput, Prisma.OutletUncheckedUpdateWithoutPrintersInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPrintersInput, Prisma.OutletUncheckedCreateWithoutPrintersInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutPrintersInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutPrintersInput, Prisma.OutletUncheckedUpdateWithoutPrintersInput>
+}
+
+export type OutletUpdateWithoutPrintersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutPrintersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutPrintJobsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutPrintJobsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutPrintJobsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPrintJobsInput, Prisma.OutletUncheckedCreateWithoutPrintJobsInput>
+}
+
+export type OutletUpsertWithoutPrintJobsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutPrintJobsInput, Prisma.OutletUncheckedUpdateWithoutPrintJobsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPrintJobsInput, Prisma.OutletUncheckedCreateWithoutPrintJobsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutPrintJobsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutPrintJobsInput, Prisma.OutletUncheckedUpdateWithoutPrintJobsInput>
+}
+
+export type OutletUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyTenantInput = {
@@ -1819,6 +2356,9 @@ export type OutletUpdateWithoutTenantInput = {
   reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTenantInput = {
@@ -1842,6 +2382,9 @@ export type OutletUncheckedUpdateWithoutTenantInput = {
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateManyWithoutTenantInput = {
@@ -1873,6 +2416,9 @@ export type OutletCountOutputType = {
   reservations: number
   expenses: number
   dayEnds: number
+  printers: number
+  printJobs: number
+  qrSessions: number
 }
 
 export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1885,6 +2431,9 @@ export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   reservations?: boolean | OutletCountOutputTypeCountReservationsArgs
   expenses?: boolean | OutletCountOutputTypeCountExpensesArgs
   dayEnds?: boolean | OutletCountOutputTypeCountDayEndsArgs
+  printers?: boolean | OutletCountOutputTypeCountPrintersArgs
+  printJobs?: boolean | OutletCountOutputTypeCountPrintJobsArgs
+  qrSessions?: boolean | OutletCountOutputTypeCountQrSessionsArgs
 }
 
 /**
@@ -1960,6 +2509,27 @@ export type OutletCountOutputTypeCountDayEndsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.DayEndSummaryWhereInput
 }
 
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountPrintersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrinterDeviceWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountPrintJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrintJobWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountQrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QrOrderingSessionWhereInput
+}
+
 
 export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1984,6 +2554,9 @@ export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   reservations?: boolean | Prisma.Outlet$reservationsArgs<ExtArgs>
   expenses?: boolean | Prisma.Outlet$expensesArgs<ExtArgs>
   dayEnds?: boolean | Prisma.Outlet$dayEndsArgs<ExtArgs>
+  printers?: boolean | Prisma.Outlet$printersArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Outlet$printJobsArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outlet"]>
 
@@ -2046,6 +2619,9 @@ export type OutletInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   reservations?: boolean | Prisma.Outlet$reservationsArgs<ExtArgs>
   expenses?: boolean | Prisma.Outlet$expensesArgs<ExtArgs>
   dayEnds?: boolean | Prisma.Outlet$dayEndsArgs<ExtArgs>
+  printers?: boolean | Prisma.Outlet$printersArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Outlet$printJobsArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OutletIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2068,6 +2644,9 @@ export type $OutletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     dayEnds: Prisma.$DayEndSummaryPayload<ExtArgs>[]
+    printers: Prisma.$PrinterDevicePayload<ExtArgs>[]
+    printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
+    qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2486,6 +3065,9 @@ export interface Prisma__OutletClient<T, Null = never, ExtArgs extends runtime.T
   reservations<T extends Prisma.Outlet$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Outlet$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dayEnds<T extends Prisma.Outlet$dayEndsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$dayEndsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DayEndSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  printers<T extends Prisma.Outlet$printersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$printersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrinterDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  printJobs<T extends Prisma.Outlet$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrSessions<T extends Prisma.Outlet$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3141,6 +3723,78 @@ export type Outlet$dayEndsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DayEndSummaryScalarFieldEnum | Prisma.DayEndSummaryScalarFieldEnum[]
+}
+
+/**
+ * Outlet.printers
+ */
+export type Outlet$printersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrinterDevice
+   */
+  select?: Prisma.PrinterDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrinterDevice
+   */
+  omit?: Prisma.PrinterDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrinterDeviceInclude<ExtArgs> | null
+  where?: Prisma.PrinterDeviceWhereInput
+  orderBy?: Prisma.PrinterDeviceOrderByWithRelationInput | Prisma.PrinterDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.PrinterDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrinterDeviceScalarFieldEnum | Prisma.PrinterDeviceScalarFieldEnum[]
+}
+
+/**
+ * Outlet.printJobs
+ */
+export type Outlet$printJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrintJob
+   */
+  select?: Prisma.PrintJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrintJob
+   */
+  omit?: Prisma.PrintJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrintJobInclude<ExtArgs> | null
+  where?: Prisma.PrintJobWhereInput
+  orderBy?: Prisma.PrintJobOrderByWithRelationInput | Prisma.PrintJobOrderByWithRelationInput[]
+  cursor?: Prisma.PrintJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrintJobScalarFieldEnum | Prisma.PrintJobScalarFieldEnum[]
+}
+
+/**
+ * Outlet.qrSessions
+ */
+export type Outlet$qrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QrOrderingSession
+   */
+  select?: Prisma.QrOrderingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QrOrderingSession
+   */
+  omit?: Prisma.QrOrderingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QrOrderingSessionInclude<ExtArgs> | null
+  where?: Prisma.QrOrderingSessionWhereInput
+  orderBy?: Prisma.QrOrderingSessionOrderByWithRelationInput | Prisma.QrOrderingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.QrOrderingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QrOrderingSessionScalarFieldEnum | Prisma.QrOrderingSessionScalarFieldEnum[]
 }
 
 /**

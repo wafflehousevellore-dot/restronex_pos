@@ -231,3 +231,43 @@ export type DemoRequest = Prisma.DemoRequestModel
  * 
  */
 export type PendingRegistration = Prisma.PendingRegistrationModel
+/**
+ * Model QrOrderingSession
+ * 
+ */
+export type QrOrderingSession = Prisma.QrOrderingSessionModel
+/**
+ * Model PrinterDevice
+ * 
+ */
+export type PrinterDevice = Prisma.PrinterDeviceModel
+/**
+ * Model PrinterRoutingRule
+ * 
+ */
+export type PrinterRoutingRule = Prisma.PrinterRoutingRuleModel
+/**
+ * Model PrintJob
+ * 
+ */
+export type PrintJob = Prisma.PrintJobModel
+/**
+ * Model CustomerConsent
+ * 
+ */
+export type CustomerConsent = Prisma.CustomerConsentModel
+/**
+ * Model WhatsAppDeliveryLog
+ * 
+ */
+export type WhatsAppDeliveryLog = Prisma.WhatsAppDeliveryLogModel
+/**
+ * Model InvoiceRecord
+ * 
+ */
+export type InvoiceRecord = Prisma.InvoiceRecordModel
+/**
+ * Model FeatureUsage
+ * 
+ */
+export type FeatureUsage = Prisma.FeatureUsageModel

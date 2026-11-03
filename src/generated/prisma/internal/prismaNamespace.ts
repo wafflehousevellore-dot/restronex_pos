@@ -434,7 +434,15 @@ export const ModelName = {
   DayEndSummary: 'DayEndSummary',
   AuditLog: 'AuditLog',
   DemoRequest: 'DemoRequest',
-  PendingRegistration: 'PendingRegistration'
+  PendingRegistration: 'PendingRegistration',
+  QrOrderingSession: 'QrOrderingSession',
+  PrinterDevice: 'PrinterDevice',
+  PrinterRoutingRule: 'PrinterRoutingRule',
+  PrintJob: 'PrintJob',
+  CustomerConsent: 'CustomerConsent',
+  WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
+  InvoiceRecord: 'InvoiceRecord',
+  FeatureUsage: 'FeatureUsage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -450,7 +458,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionPayment" | "webhookEvent" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration"
+    modelProps: "user" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionPayment" | "webhookEvent" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3266,6 +3274,598 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QrOrderingSession: {
+      payload: Prisma.$QrOrderingSessionPayload<ExtArgs>
+      fields: Prisma.QrOrderingSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QrOrderingSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QrOrderingSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.QrOrderingSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QrOrderingSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        findMany: {
+          args: Prisma.QrOrderingSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>[]
+        }
+        create: {
+          args: Prisma.QrOrderingSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        createMany: {
+          args: Prisma.QrOrderingSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QrOrderingSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.QrOrderingSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        update: {
+          args: Prisma.QrOrderingSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.QrOrderingSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QrOrderingSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QrOrderingSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.QrOrderingSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QrOrderingSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.QrOrderingSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQrOrderingSession>
+        }
+        groupBy: {
+          args: Prisma.QrOrderingSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QrOrderingSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QrOrderingSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QrOrderingSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    PrinterDevice: {
+      payload: Prisma.$PrinterDevicePayload<ExtArgs>
+      fields: Prisma.PrinterDeviceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrinterDeviceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrinterDeviceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        findFirst: {
+          args: Prisma.PrinterDeviceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrinterDeviceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        findMany: {
+          args: Prisma.PrinterDeviceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>[]
+        }
+        create: {
+          args: Prisma.PrinterDeviceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        createMany: {
+          args: Prisma.PrinterDeviceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrinterDeviceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>[]
+        }
+        delete: {
+          args: Prisma.PrinterDeviceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        update: {
+          args: Prisma.PrinterDeviceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        deleteMany: {
+          args: Prisma.PrinterDeviceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrinterDeviceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrinterDeviceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>[]
+        }
+        upsert: {
+          args: Prisma.PrinterDeviceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterDevicePayload>
+        }
+        aggregate: {
+          args: Prisma.PrinterDeviceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrinterDevice>
+        }
+        groupBy: {
+          args: Prisma.PrinterDeviceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrinterDeviceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrinterDeviceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrinterDeviceCountAggregateOutputType> | number
+        }
+      }
+    }
+    PrinterRoutingRule: {
+      payload: Prisma.$PrinterRoutingRulePayload<ExtArgs>
+      fields: Prisma.PrinterRoutingRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrinterRoutingRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrinterRoutingRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        findFirst: {
+          args: Prisma.PrinterRoutingRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrinterRoutingRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        findMany: {
+          args: Prisma.PrinterRoutingRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>[]
+        }
+        create: {
+          args: Prisma.PrinterRoutingRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        createMany: {
+          args: Prisma.PrinterRoutingRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrinterRoutingRuleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>[]
+        }
+        delete: {
+          args: Prisma.PrinterRoutingRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        update: {
+          args: Prisma.PrinterRoutingRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.PrinterRoutingRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrinterRoutingRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrinterRoutingRuleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>[]
+        }
+        upsert: {
+          args: Prisma.PrinterRoutingRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrinterRoutingRulePayload>
+        }
+        aggregate: {
+          args: Prisma.PrinterRoutingRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrinterRoutingRule>
+        }
+        groupBy: {
+          args: Prisma.PrinterRoutingRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrinterRoutingRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrinterRoutingRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrinterRoutingRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    PrintJob: {
+      payload: Prisma.$PrintJobPayload<ExtArgs>
+      fields: Prisma.PrintJobFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrintJobFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrintJobFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        findFirst: {
+          args: Prisma.PrintJobFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrintJobFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        findMany: {
+          args: Prisma.PrintJobFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>[]
+        }
+        create: {
+          args: Prisma.PrintJobCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        createMany: {
+          args: Prisma.PrintJobCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrintJobCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>[]
+        }
+        delete: {
+          args: Prisma.PrintJobDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        update: {
+          args: Prisma.PrintJobUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        deleteMany: {
+          args: Prisma.PrintJobDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrintJobUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrintJobUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>[]
+        }
+        upsert: {
+          args: Prisma.PrintJobUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrintJobPayload>
+        }
+        aggregate: {
+          args: Prisma.PrintJobAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrintJob>
+        }
+        groupBy: {
+          args: Prisma.PrintJobGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrintJobGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrintJobCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrintJobCountAggregateOutputType> | number
+        }
+      }
+    }
+    CustomerConsent: {
+      payload: Prisma.$CustomerConsentPayload<ExtArgs>
+      fields: Prisma.CustomerConsentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomerConsentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomerConsentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        findFirst: {
+          args: Prisma.CustomerConsentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomerConsentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        findMany: {
+          args: Prisma.CustomerConsentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>[]
+        }
+        create: {
+          args: Prisma.CustomerConsentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        createMany: {
+          args: Prisma.CustomerConsentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CustomerConsentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>[]
+        }
+        delete: {
+          args: Prisma.CustomerConsentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        update: {
+          args: Prisma.CustomerConsentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomerConsentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomerConsentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CustomerConsentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CustomerConsentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerConsentPayload>
+        }
+        aggregate: {
+          args: Prisma.CustomerConsentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomerConsent>
+        }
+        groupBy: {
+          args: Prisma.CustomerConsentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomerConsentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomerConsentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomerConsentCountAggregateOutputType> | number
+        }
+      }
+    }
+    WhatsAppDeliveryLog: {
+      payload: Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>
+      fields: Prisma.WhatsAppDeliveryLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WhatsAppDeliveryLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WhatsAppDeliveryLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        findFirst: {
+          args: Prisma.WhatsAppDeliveryLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WhatsAppDeliveryLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        findMany: {
+          args: Prisma.WhatsAppDeliveryLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>[]
+        }
+        create: {
+          args: Prisma.WhatsAppDeliveryLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        createMany: {
+          args: Prisma.WhatsAppDeliveryLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WhatsAppDeliveryLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>[]
+        }
+        delete: {
+          args: Prisma.WhatsAppDeliveryLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        update: {
+          args: Prisma.WhatsAppDeliveryLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.WhatsAppDeliveryLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WhatsAppDeliveryLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WhatsAppDeliveryLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.WhatsAppDeliveryLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsAppDeliveryLogPayload>
+        }
+        aggregate: {
+          args: Prisma.WhatsAppDeliveryLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWhatsAppDeliveryLog>
+        }
+        groupBy: {
+          args: Prisma.WhatsAppDeliveryLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsAppDeliveryLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WhatsAppDeliveryLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsAppDeliveryLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    InvoiceRecord: {
+      payload: Prisma.$InvoiceRecordPayload<ExtArgs>
+      fields: Prisma.InvoiceRecordFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvoiceRecordFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvoiceRecordFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        findFirst: {
+          args: Prisma.InvoiceRecordFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvoiceRecordFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        findMany: {
+          args: Prisma.InvoiceRecordFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>[]
+        }
+        create: {
+          args: Prisma.InvoiceRecordCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        createMany: {
+          args: Prisma.InvoiceRecordCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvoiceRecordCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>[]
+        }
+        delete: {
+          args: Prisma.InvoiceRecordDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        update: {
+          args: Prisma.InvoiceRecordUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        deleteMany: {
+          args: Prisma.InvoiceRecordDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvoiceRecordUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvoiceRecordUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>[]
+        }
+        upsert: {
+          args: Prisma.InvoiceRecordUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceRecordPayload>
+        }
+        aggregate: {
+          args: Prisma.InvoiceRecordAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvoiceRecord>
+        }
+        groupBy: {
+          args: Prisma.InvoiceRecordGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceRecordGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvoiceRecordCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceRecordCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeatureUsage: {
+      payload: Prisma.$FeatureUsagePayload<ExtArgs>
+      fields: Prisma.FeatureUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeatureUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeatureUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.FeatureUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeatureUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        findMany: {
+          args: Prisma.FeatureUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>[]
+        }
+        create: {
+          args: Prisma.FeatureUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        createMany: {
+          args: Prisma.FeatureUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeatureUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.FeatureUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        update: {
+          args: Prisma.FeatureUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.FeatureUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeatureUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeatureUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.FeatureUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.FeatureUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeatureUsage>
+        }
+        groupBy: {
+          args: Prisma.FeatureUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeatureUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeatureUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeatureUsageCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3381,7 +3981,13 @@ export const RestaurantSettingScalarFieldEnum = {
   fssaiNumber: 'fssaiNumber',
   serviceChargePct: 'serviceChargePct',
   enableKOT: 'enableKOT',
-  enableTableMgmt: 'enableTableMgmt'
+  enableTableMgmt: 'enableTableMgmt',
+  autoAcceptQROrders: 'autoAcceptQROrders',
+  autoPrintKOT: 'autoPrintKOT',
+  autoPrintBill: 'autoPrintBill',
+  autoSendWhatsAppInvoice: 'autoSendWhatsAppInvoice',
+  whatsappPhoneNumberId: 'whatsappPhoneNumberId',
+  whatsappAccessToken: 'whatsappAccessToken'
 } as const
 
 export type RestaurantSettingScalarFieldEnum = (typeof RestaurantSettingScalarFieldEnum)[keyof typeof RestaurantSettingScalarFieldEnum]
@@ -3461,7 +4067,11 @@ export const TableScalarFieldEnum = {
   area: 'area',
   capacity: 'capacity',
   status: 'status',
-  currentOrderId: 'currentOrderId'
+  currentOrderId: 'currentOrderId',
+  qrToken: 'qrToken',
+  qrOrderingEnabled: 'qrOrderingEnabled',
+  waiterName: 'waiterName',
+  orderTotalPaise: 'orderTotalPaise'
 } as const
 
 export type TableScalarFieldEnum = (typeof TableScalarFieldEnum)[keyof typeof TableScalarFieldEnum]
@@ -3474,6 +4084,7 @@ export const OrderScalarFieldEnum = {
   orderNumber: 'orderNumber',
   type: 'type',
   status: 'status',
+  serviceMode: 'serviceMode',
   tableId: 'tableId',
   customerId: 'customerId',
   customerName: 'customerName',
@@ -3486,6 +4097,12 @@ export const OrderScalarFieldEnum = {
   notes: 'notes',
   kotStatus: 'kotStatus',
   createdById: 'createdById',
+  isPaid: 'isPaid',
+  paidAt: 'paidAt',
+  billClosedAt: 'billClosedAt',
+  whatsappConsent: 'whatsappConsent',
+  whatsappStatus: 'whatsappStatus',
+  qrSessionId: 'qrSessionId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3847,6 +4464,141 @@ export const PendingRegistrationScalarFieldEnum = {
 export type PendingRegistrationScalarFieldEnum = (typeof PendingRegistrationScalarFieldEnum)[keyof typeof PendingRegistrationScalarFieldEnum]
 
 
+export const QrOrderingSessionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  tableId: 'tableId',
+  sessionToken: 'sessionToken',
+  status: 'status',
+  guestName: 'guestName',
+  guestPhone: 'guestPhone',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt'
+} as const
+
+export type QrOrderingSessionScalarFieldEnum = (typeof QrOrderingSessionScalarFieldEnum)[keyof typeof QrOrderingSessionScalarFieldEnum]
+
+
+export const PrinterDeviceScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  name: 'name',
+  type: 'type',
+  paperWidth: 'paperWidth',
+  connectionString: 'connectionString',
+  status: 'status',
+  isDefaultBilling: 'isDefaultBilling',
+  isDefaultKOT: 'isDefaultKOT',
+  station: 'station',
+  lastActiveAt: 'lastActiveAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrinterDeviceScalarFieldEnum = (typeof PrinterDeviceScalarFieldEnum)[keyof typeof PrinterDeviceScalarFieldEnum]
+
+
+export const PrinterRoutingRuleScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  printerId: 'printerId',
+  station: 'station',
+  printKOT: 'printKOT',
+  printBill: 'printBill',
+  categoryIdsJson: 'categoryIdsJson'
+} as const
+
+export type PrinterRoutingRuleScalarFieldEnum = (typeof PrinterRoutingRuleScalarFieldEnum)[keyof typeof PrinterRoutingRuleScalarFieldEnum]
+
+
+export const PrintJobScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  printerId: 'printerId',
+  orderId: 'orderId',
+  jobType: 'jobType',
+  contentJson: 'contentJson',
+  status: 'status',
+  attempts: 'attempts',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrintJobScalarFieldEnum = (typeof PrintJobScalarFieldEnum)[keyof typeof PrintJobScalarFieldEnum]
+
+
+export const CustomerConsentScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  customerId: 'customerId',
+  phone: 'phone',
+  channel: 'channel',
+  optIn: 'optIn',
+  optInSource: 'optInSource',
+  recordedAt: 'recordedAt',
+  ipAddress: 'ipAddress'
+} as const
+
+export type CustomerConsentScalarFieldEnum = (typeof CustomerConsentScalarFieldEnum)[keyof typeof CustomerConsentScalarFieldEnum]
+
+
+export const WhatsAppDeliveryLogScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  recipientPhone: 'recipientPhone',
+  templateName: 'templateName',
+  messageId: 'messageId',
+  status: 'status',
+  errorMessage: 'errorMessage',
+  invoiceUrl: 'invoiceUrl',
+  metadataJson: 'metadataJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WhatsAppDeliveryLogScalarFieldEnum = (typeof WhatsAppDeliveryLogScalarFieldEnum)[keyof typeof WhatsAppDeliveryLogScalarFieldEnum]
+
+
+export const InvoiceRecordScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  invoiceNumber: 'invoiceNumber',
+  fileUrl: 'fileUrl',
+  pdfStoragePath: 'pdfStoragePath',
+  subtotalPaise: 'subtotalPaise',
+  taxPaise: 'taxPaise',
+  discountPaise: 'discountPaise',
+  totalPaise: 'totalPaise',
+  customerPhone: 'customerPhone',
+  customerName: 'customerName',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceRecordScalarFieldEnum = (typeof InvoiceRecordScalarFieldEnum)[keyof typeof InvoiceRecordScalarFieldEnum]
+
+
+export const FeatureUsageScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  featureKey: 'featureKey',
+  count: 'count',
+  periodMonth: 'periodMonth',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeatureUsageScalarFieldEnum = (typeof FeatureUsageScalarFieldEnum)[keyof typeof FeatureUsageScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -4128,6 +4880,14 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   demoRequest?: Prisma.DemoRequestOmit
   pendingRegistration?: Prisma.PendingRegistrationOmit
+  qrOrderingSession?: Prisma.QrOrderingSessionOmit
+  printerDevice?: Prisma.PrinterDeviceOmit
+  printerRoutingRule?: Prisma.PrinterRoutingRuleOmit
+  printJob?: Prisma.PrintJobOmit
+  customerConsent?: Prisma.CustomerConsentOmit
+  whatsAppDeliveryLog?: Prisma.WhatsAppDeliveryLogOmit
+  invoiceRecord?: Prisma.InvoiceRecordOmit
+  featureUsage?: Prisma.FeatureUsageOmit
 }
 
 /* Types for Logging */

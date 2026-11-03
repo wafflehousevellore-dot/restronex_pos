@@ -14,6 +14,12 @@ export type Entitlements = {
   canUseInventory: boolean;
   canUseKDS: boolean;
   canUseIntegrations: boolean;
+  canUseTables: boolean;
+  canUseQROrdering: boolean;
+  canUsePrinters: boolean;
+  canUseMultiPrinters: boolean;
+  canUseWhatsAppInvoices: boolean;
+  canUseMultiOutlet: boolean;
 };
 
 export async function getEntitlements(tenantId: string): Promise<Entitlements> {
@@ -37,16 +43,28 @@ export async function getEntitlements(tenantId: string): Promise<Entitlements> {
       canUseInventory: false,
       canUseKDS: false,
       canUseIntegrations: false,
+      canUseTables: false,
+      canUseQROrdering: false,
+      canUsePrinters: false,
+      canUseMultiPrinters: false,
+      canUseWhatsAppInvoices: false,
+      canUseMultiOutlet: false,
     };
   }
   const now = new Date();
   const isTrialActive = sub.status === "TRIALING" && sub.trialEndsAt && sub.trialEndsAt > now;
   const isActive = sub.status === "ACTIVE" || isTrialActive;
-  // Consider TRIALING as active for onboarding/POS demo
   const hasActive = isActive || sub.status === "TRIALING";
+
   let features: string[] = [];
-  try { features = JSON.parse(sub.plan.featuresJson || "[]"); } catch { features = []; }
+  try {
+    features = JSON.parse(sub.plan.featuresJson || "[]");
+  } catch {
+    features = [];
+  }
   const planSlug = sub.plan.slug;
+  const isGrowthOrBusiness = planSlug === "growth" || planSlug === "business";
+
   return {
     hasActiveSubscription: hasActive,
     planSlug,
@@ -58,9 +76,15 @@ export async function getEntitlements(tenantId: string): Promise<Entitlements> {
     trialEndsAt: sub.trialEndsAt,
     isTrialing: sub.status === "TRIALING",
     canUsePOS: hasActive,
-    canUseInventory: hasActive && (planSlug !== "starter"), // starter limited
+    canUseInventory: hasActive && isGrowthOrBusiness,
     canUseKDS: hasActive,
-    canUseIntegrations: hasActive && planSlug !== "starter",
+    canUseIntegrations: hasActive && isGrowthOrBusiness,
+    canUseTables: hasActive,
+    canUseQROrdering: hasActive && isGrowthOrBusiness,
+    canUsePrinters: hasActive,
+    canUseMultiPrinters: hasActive && isGrowthOrBusiness,
+    canUseWhatsAppInvoices: hasActive && isGrowthOrBusiness,
+    canUseMultiOutlet: hasActive && sub.plan.maxOutlets > 1,
   };
 }
 

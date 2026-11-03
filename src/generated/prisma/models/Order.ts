@@ -49,6 +49,7 @@ export type OrderMinAggregateOutputType = {
   orderNumber: string | null
   type: string | null
   status: string | null
+  serviceMode: string | null
   tableId: string | null
   customerId: string | null
   customerName: string | null
@@ -61,6 +62,12 @@ export type OrderMinAggregateOutputType = {
   notes: string | null
   kotStatus: string | null
   createdById: string | null
+  isPaid: boolean | null
+  paidAt: Date | null
+  billClosedAt: Date | null
+  whatsappConsent: boolean | null
+  whatsappStatus: string | null
+  qrSessionId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +79,7 @@ export type OrderMaxAggregateOutputType = {
   orderNumber: string | null
   type: string | null
   status: string | null
+  serviceMode: string | null
   tableId: string | null
   customerId: string | null
   customerName: string | null
@@ -84,6 +92,12 @@ export type OrderMaxAggregateOutputType = {
   notes: string | null
   kotStatus: string | null
   createdById: string | null
+  isPaid: boolean | null
+  paidAt: Date | null
+  billClosedAt: Date | null
+  whatsappConsent: boolean | null
+  whatsappStatus: string | null
+  qrSessionId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -95,6 +109,7 @@ export type OrderCountAggregateOutputType = {
   orderNumber: number
   type: number
   status: number
+  serviceMode: number
   tableId: number
   customerId: number
   customerName: number
@@ -107,6 +122,12 @@ export type OrderCountAggregateOutputType = {
   notes: number
   kotStatus: number
   createdById: number
+  isPaid: number
+  paidAt: number
+  billClosedAt: number
+  whatsappConsent: number
+  whatsappStatus: number
+  qrSessionId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -136,6 +157,7 @@ export type OrderMinAggregateInputType = {
   orderNumber?: true
   type?: true
   status?: true
+  serviceMode?: true
   tableId?: true
   customerId?: true
   customerName?: true
@@ -148,6 +170,12 @@ export type OrderMinAggregateInputType = {
   notes?: true
   kotStatus?: true
   createdById?: true
+  isPaid?: true
+  paidAt?: true
+  billClosedAt?: true
+  whatsappConsent?: true
+  whatsappStatus?: true
+  qrSessionId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -159,6 +187,7 @@ export type OrderMaxAggregateInputType = {
   orderNumber?: true
   type?: true
   status?: true
+  serviceMode?: true
   tableId?: true
   customerId?: true
   customerName?: true
@@ -171,6 +200,12 @@ export type OrderMaxAggregateInputType = {
   notes?: true
   kotStatus?: true
   createdById?: true
+  isPaid?: true
+  paidAt?: true
+  billClosedAt?: true
+  whatsappConsent?: true
+  whatsappStatus?: true
+  qrSessionId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -182,6 +217,7 @@ export type OrderCountAggregateInputType = {
   orderNumber?: true
   type?: true
   status?: true
+  serviceMode?: true
   tableId?: true
   customerId?: true
   customerName?: true
@@ -194,6 +230,12 @@ export type OrderCountAggregateInputType = {
   notes?: true
   kotStatus?: true
   createdById?: true
+  isPaid?: true
+  paidAt?: true
+  billClosedAt?: true
+  whatsappConsent?: true
+  whatsappStatus?: true
+  qrSessionId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -292,6 +334,7 @@ export type OrderGroupByOutputType = {
   orderNumber: string
   type: string
   status: string
+  serviceMode: string
   tableId: string | null
   customerId: string | null
   customerName: string | null
@@ -304,6 +347,12 @@ export type OrderGroupByOutputType = {
   notes: string | null
   kotStatus: string
   createdById: string | null
+  isPaid: boolean
+  paidAt: Date | null
+  billClosedAt: Date | null
+  whatsappConsent: boolean
+  whatsappStatus: string | null
+  qrSessionId: string | null
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
@@ -338,6 +387,7 @@ export type OrderWhereInput = {
   orderNumber?: Prisma.StringFilter<"Order"> | string
   type?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.StringFilter<"Order"> | string
+  serviceMode?: Prisma.StringFilter<"Order"> | string
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerName?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -350,13 +400,24 @@ export type OrderWhereInput = {
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   kotStatus?: Prisma.StringFilter<"Order"> | string
   createdById?: Prisma.StringNullableFilter<"Order"> | string | null
+  isPaid?: Prisma.BoolFilter<"Order"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
+  whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletScalarRelationFilter, Prisma.OutletWhereInput>
+  table?: Prisma.XOR<Prisma.TableNullableScalarRelationFilter, Prisma.TableWhereInput> | null
+  qrSession?: Prisma.XOR<Prisma.QrOrderingSessionNullableScalarRelationFilter, Prisma.QrOrderingSessionWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   kotTickets?: Prisma.KitchenTicketListRelationFilter
+  invoice?: Prisma.XOR<Prisma.InvoiceRecordNullableScalarRelationFilter, Prisma.InvoiceRecordWhereInput> | null
+  printJobs?: Prisma.PrintJobListRelationFilter
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -366,6 +427,7 @@ export type OrderOrderByWithRelationInput = {
   orderNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  serviceMode?: Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -378,13 +440,24 @@ export type OrderOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   kotStatus?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  billClosedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConsent?: Prisma.SortOrder
+  whatsappStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   outlet?: Prisma.OutletOrderByWithRelationInput
+  table?: Prisma.TableOrderByWithRelationInput
+  qrSession?: Prisma.QrOrderingSessionOrderByWithRelationInput
   items?: Prisma.OrderItemOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   kotTickets?: Prisma.KitchenTicketOrderByRelationAggregateInput
+  invoice?: Prisma.InvoiceRecordOrderByWithRelationInput
+  printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogOrderByRelationAggregateInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -398,6 +471,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   orderNumber?: Prisma.StringFilter<"Order"> | string
   type?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.StringFilter<"Order"> | string
+  serviceMode?: Prisma.StringFilter<"Order"> | string
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerName?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -410,13 +484,24 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   kotStatus?: Prisma.StringFilter<"Order"> | string
   createdById?: Prisma.StringNullableFilter<"Order"> | string | null
+  isPaid?: Prisma.BoolFilter<"Order"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
+  whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletScalarRelationFilter, Prisma.OutletWhereInput>
+  table?: Prisma.XOR<Prisma.TableNullableScalarRelationFilter, Prisma.TableWhereInput> | null
+  qrSession?: Prisma.XOR<Prisma.QrOrderingSessionNullableScalarRelationFilter, Prisma.QrOrderingSessionWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   kotTickets?: Prisma.KitchenTicketListRelationFilter
+  invoice?: Prisma.XOR<Prisma.InvoiceRecordNullableScalarRelationFilter, Prisma.InvoiceRecordWhereInput> | null
+  printJobs?: Prisma.PrintJobListRelationFilter
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
 }, "id" | "tenantId_orderNumber">
 
 export type OrderOrderByWithAggregationInput = {
@@ -426,6 +511,7 @@ export type OrderOrderByWithAggregationInput = {
   orderNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  serviceMode?: Prisma.SortOrder
   tableId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   customerName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -438,6 +524,12 @@ export type OrderOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   kotStatus?: Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  billClosedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConsent?: Prisma.SortOrder
+  whatsappStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
@@ -457,6 +549,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   orderNumber?: Prisma.StringWithAggregatesFilter<"Order"> | string
   type?: Prisma.StringWithAggregatesFilter<"Order"> | string
   status?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  serviceMode?: Prisma.StringWithAggregatesFilter<"Order"> | string
   tableId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   customerId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   customerName?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -469,6 +562,12 @@ export type OrderScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   kotStatus?: Prisma.StringWithAggregatesFilter<"Order"> | string
   createdById?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  isPaid?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  billClosedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  whatsappConsent?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  whatsappStatus?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  qrSessionId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -478,7 +577,7 @@ export type OrderCreateInput = {
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -490,13 +589,23 @@ export type OrderCreateInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -506,6 +615,7 @@ export type OrderUncheckedCreateInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -518,11 +628,20 @@ export type OrderUncheckedCreateInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -530,7 +649,7 @@ export type OrderUpdateInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -542,13 +661,23 @@ export type OrderUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -558,6 +687,7 @@ export type OrderUncheckedUpdateInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -570,11 +700,20 @@ export type OrderUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -584,6 +723,7 @@ export type OrderCreateManyInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -596,6 +736,12 @@ export type OrderCreateManyInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -605,7 +751,7 @@ export type OrderUpdateManyMutationInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -617,6 +763,11 @@ export type OrderUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -628,6 +779,7 @@ export type OrderUncheckedUpdateManyInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -640,6 +792,12 @@ export type OrderUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -666,6 +824,7 @@ export type OrderCountOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  serviceMode?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
@@ -678,6 +837,12 @@ export type OrderCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   kotStatus?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  billClosedAt?: Prisma.SortOrder
+  whatsappConsent?: Prisma.SortOrder
+  whatsappStatus?: Prisma.SortOrder
+  qrSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -697,6 +862,7 @@ export type OrderMaxOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  serviceMode?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
@@ -709,6 +875,12 @@ export type OrderMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   kotStatus?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  billClosedAt?: Prisma.SortOrder
+  whatsappConsent?: Prisma.SortOrder
+  whatsappStatus?: Prisma.SortOrder
+  qrSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -720,6 +892,7 @@ export type OrderMinOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   type?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  serviceMode?: Prisma.SortOrder
   tableId?: Prisma.SortOrder
   customerId?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
@@ -732,6 +905,12 @@ export type OrderMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   kotStatus?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
+  billClosedAt?: Prisma.SortOrder
+  whatsappConsent?: Prisma.SortOrder
+  whatsappStatus?: Prisma.SortOrder
+  qrSessionId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -747,6 +926,11 @@ export type OrderSumOrderByAggregateInput = {
 export type OrderScalarRelationFilter = {
   is?: Prisma.OrderWhereInput
   isNot?: Prisma.OrderWhereInput
+}
+
+export type OrderNullableScalarRelationFilter = {
+  is?: Prisma.OrderWhereInput | null
+  isNot?: Prisma.OrderWhereInput | null
 }
 
 export type OrderCreateNestedManyWithoutTenantInput = {
@@ -833,6 +1017,52 @@ export type OrderUncheckedUpdateManyWithoutOutletNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type OrderCreateNestedManyWithoutTableInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput> | Prisma.OrderCreateWithoutTableInput[] | Prisma.OrderUncheckedCreateWithoutTableInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTableInput | Prisma.OrderCreateOrConnectWithoutTableInput[]
+  createMany?: Prisma.OrderCreateManyTableInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutTableInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput> | Prisma.OrderCreateWithoutTableInput[] | Prisma.OrderUncheckedCreateWithoutTableInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTableInput | Prisma.OrderCreateOrConnectWithoutTableInput[]
+  createMany?: Prisma.OrderCreateManyTableInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutTableNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput> | Prisma.OrderCreateWithoutTableInput[] | Prisma.OrderUncheckedCreateWithoutTableInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTableInput | Prisma.OrderCreateOrConnectWithoutTableInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTableInput | Prisma.OrderUpsertWithWhereUniqueWithoutTableInput[]
+  createMany?: Prisma.OrderCreateManyTableInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTableInput | Prisma.OrderUpdateWithWhereUniqueWithoutTableInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTableInput | Prisma.OrderUpdateManyWithWhereWithoutTableInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutTableNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput> | Prisma.OrderCreateWithoutTableInput[] | Prisma.OrderUncheckedCreateWithoutTableInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutTableInput | Prisma.OrderCreateOrConnectWithoutTableInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutTableInput | Prisma.OrderUpsertWithWhereUniqueWithoutTableInput[]
+  createMany?: Prisma.OrderCreateManyTableInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutTableInput | Prisma.OrderUpdateWithWhereUniqueWithoutTableInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutTableInput | Prisma.OrderUpdateManyWithWhereWithoutTableInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type OrderCreateNestedOneWithoutItemsInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutItemsInput, Prisma.OrderUncheckedCreateWithoutItemsInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutItemsInput
@@ -875,12 +1105,100 @@ export type OrderUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrderUpdateWithoutPaymentsInput>, Prisma.OrderUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type OrderCreateNestedManyWithoutQrSessionInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput> | Prisma.OrderCreateWithoutQrSessionInput[] | Prisma.OrderUncheckedCreateWithoutQrSessionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutQrSessionInput | Prisma.OrderCreateOrConnectWithoutQrSessionInput[]
+  createMany?: Prisma.OrderCreateManyQrSessionInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUncheckedCreateNestedManyWithoutQrSessionInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput> | Prisma.OrderCreateWithoutQrSessionInput[] | Prisma.OrderUncheckedCreateWithoutQrSessionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutQrSessionInput | Prisma.OrderCreateOrConnectWithoutQrSessionInput[]
+  createMany?: Prisma.OrderCreateManyQrSessionInputEnvelope
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+}
+
+export type OrderUpdateManyWithoutQrSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput> | Prisma.OrderCreateWithoutQrSessionInput[] | Prisma.OrderUncheckedCreateWithoutQrSessionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutQrSessionInput | Prisma.OrderCreateOrConnectWithoutQrSessionInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutQrSessionInput | Prisma.OrderUpsertWithWhereUniqueWithoutQrSessionInput[]
+  createMany?: Prisma.OrderCreateManyQrSessionInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutQrSessionInput | Prisma.OrderUpdateWithWhereUniqueWithoutQrSessionInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutQrSessionInput | Prisma.OrderUpdateManyWithWhereWithoutQrSessionInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderUncheckedUpdateManyWithoutQrSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput> | Prisma.OrderCreateWithoutQrSessionInput[] | Prisma.OrderUncheckedCreateWithoutQrSessionInput[]
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutQrSessionInput | Prisma.OrderCreateOrConnectWithoutQrSessionInput[]
+  upsert?: Prisma.OrderUpsertWithWhereUniqueWithoutQrSessionInput | Prisma.OrderUpsertWithWhereUniqueWithoutQrSessionInput[]
+  createMany?: Prisma.OrderCreateManyQrSessionInputEnvelope
+  set?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  disconnect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  delete?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  connect?: Prisma.OrderWhereUniqueInput | Prisma.OrderWhereUniqueInput[]
+  update?: Prisma.OrderUpdateWithWhereUniqueWithoutQrSessionInput | Prisma.OrderUpdateWithWhereUniqueWithoutQrSessionInput[]
+  updateMany?: Prisma.OrderUpdateManyWithWhereWithoutQrSessionInput | Prisma.OrderUpdateManyWithWhereWithoutQrSessionInput[]
+  deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
+}
+
+export type OrderCreateNestedOneWithoutPrintJobsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPrintJobsInput, Prisma.OrderUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPrintJobsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutPrintJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPrintJobsInput, Prisma.OrderUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPrintJobsInput
+  upsert?: Prisma.OrderUpsertWithoutPrintJobsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPrintJobsInput, Prisma.OrderUpdateWithoutPrintJobsInput>, Prisma.OrderUncheckedUpdateWithoutPrintJobsInput>
+}
+
+export type OrderCreateNestedOneWithoutWhatsAppLogsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedCreateWithoutWhatsAppLogsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutWhatsAppLogsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutWhatsAppLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedCreateWithoutWhatsAppLogsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutWhatsAppLogsInput
+  upsert?: Prisma.OrderUpsertWithoutWhatsAppLogsInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutWhatsAppLogsInput, Prisma.OrderUpdateWithoutWhatsAppLogsInput>, Prisma.OrderUncheckedUpdateWithoutWhatsAppLogsInput>
+}
+
+export type OrderCreateNestedOneWithoutInvoiceInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutInvoiceInput, Prisma.OrderUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutInvoiceInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutInvoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutInvoiceInput, Prisma.OrderUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutInvoiceInput
+  upsert?: Prisma.OrderUpsertWithoutInvoiceInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutInvoiceInput, Prisma.OrderUpdateWithoutInvoiceInput>, Prisma.OrderUncheckedUpdateWithoutInvoiceInput>
+}
+
 export type OrderCreateWithoutTenantInput = {
   id?: string
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -892,12 +1210,22 @@ export type OrderCreateWithoutTenantInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTenantInput = {
@@ -906,6 +1234,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -918,11 +1247,20 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTenantInput = {
@@ -961,6 +1299,7 @@ export type OrderScalarWhereInput = {
   orderNumber?: Prisma.StringFilter<"Order"> | string
   type?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.StringFilter<"Order"> | string
+  serviceMode?: Prisma.StringFilter<"Order"> | string
   tableId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerId?: Prisma.StringNullableFilter<"Order"> | string | null
   customerName?: Prisma.StringNullableFilter<"Order"> | string | null
@@ -973,6 +1312,12 @@ export type OrderScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Order"> | string | null
   kotStatus?: Prisma.StringFilter<"Order"> | string
   createdById?: Prisma.StringNullableFilter<"Order"> | string | null
+  isPaid?: Prisma.BoolFilter<"Order"> | boolean
+  paidAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
+  whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
@@ -982,7 +1327,7 @@ export type OrderCreateWithoutOutletInput = {
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -994,12 +1339,22 @@ export type OrderCreateWithoutOutletInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutOutletInput = {
@@ -1008,6 +1363,7 @@ export type OrderUncheckedCreateWithoutOutletInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1020,11 +1376,20 @@ export type OrderUncheckedCreateWithoutOutletInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutOutletInput = {
@@ -1053,12 +1418,12 @@ export type OrderUpdateManyWithWhereWithoutOutletInput = {
   data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutOutletInput>
 }
 
-export type OrderCreateWithoutItemsInput = {
+export type OrderCreateWithoutTableInput = {
   id?: string
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -1070,12 +1435,118 @@ export type OrderCreateWithoutItemsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutTableInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutTableInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput>
+}
+
+export type OrderCreateManyTableInputEnvelope = {
+  data: Prisma.OrderCreateManyTableInput | Prisma.OrderCreateManyTableInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderUpsertWithWhereUniqueWithoutTableInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutTableInput, Prisma.OrderUncheckedUpdateWithoutTableInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutTableInput, Prisma.OrderUncheckedCreateWithoutTableInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutTableInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutTableInput, Prisma.OrderUncheckedUpdateWithoutTableInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutTableInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutTableInput>
+}
+
+export type OrderCreateWithoutItemsInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
@@ -1085,6 +1556,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1097,10 +1569,19 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutItemsInput = {
@@ -1124,7 +1605,7 @@ export type OrderUpdateWithoutItemsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1136,12 +1617,22 @@ export type OrderUpdateWithoutItemsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -1151,6 +1642,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1163,10 +1655,19 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutKotTicketsInput = {
@@ -1174,7 +1675,7 @@ export type OrderCreateWithoutKotTicketsInput = {
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -1186,12 +1687,22 @@ export type OrderCreateWithoutKotTicketsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutKotTicketsInput = {
@@ -1201,6 +1712,7 @@ export type OrderUncheckedCreateWithoutKotTicketsInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1213,10 +1725,19 @@ export type OrderUncheckedCreateWithoutKotTicketsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutKotTicketsInput = {
@@ -1240,7 +1761,7 @@ export type OrderUpdateWithoutKotTicketsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1252,12 +1773,22 @@ export type OrderUpdateWithoutKotTicketsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutKotTicketsInput = {
@@ -1267,6 +1798,7 @@ export type OrderUncheckedUpdateWithoutKotTicketsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1279,10 +1811,19 @@ export type OrderUncheckedUpdateWithoutKotTicketsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPaymentsInput = {
@@ -1290,7 +1831,7 @@ export type OrderCreateWithoutPaymentsInput = {
   orderNumber: string
   type: string
   status?: string
-  tableId?: string | null
+  serviceMode?: string
   customerId?: string | null
   customerName?: string | null
   customerPhone?: string | null
@@ -1302,12 +1843,22 @@ export type OrderCreateWithoutPaymentsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
   outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentsInput = {
@@ -1317,6 +1868,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1329,10 +1881,19 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentsInput = {
@@ -1356,7 +1917,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1368,12 +1929,22 @@ export type OrderUpdateWithoutPaymentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
   outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentsInput = {
@@ -1383,6 +1954,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1395,18 +1967,64 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
-export type OrderCreateManyTenantInput = {
+export type OrderCreateWithoutQrSessionInput = {
   id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutQrSessionInput = {
+  id?: string
+  tenantId: string
   outletId: string
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1419,6 +2037,540 @@ export type OrderCreateManyTenantInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutQrSessionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput>
+}
+
+export type OrderCreateManyQrSessionInputEnvelope = {
+  data: Prisma.OrderCreateManyQrSessionInput | Prisma.OrderCreateManyQrSessionInput[]
+  skipDuplicates?: boolean
+}
+
+export type OrderUpsertWithWhereUniqueWithoutQrSessionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutQrSessionInput, Prisma.OrderUncheckedUpdateWithoutQrSessionInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput>
+}
+
+export type OrderUpdateWithWhereUniqueWithoutQrSessionInput = {
+  where: Prisma.OrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutQrSessionInput, Prisma.OrderUncheckedUpdateWithoutQrSessionInput>
+}
+
+export type OrderUpdateManyWithWhereWithoutQrSessionInput = {
+  where: Prisma.OrderScalarWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateManyMutationInput, Prisma.OrderUncheckedUpdateManyWithoutQrSessionInput>
+}
+
+export type OrderCreateWithoutPrintJobsInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutPrintJobsInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutPrintJobsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPrintJobsInput, Prisma.OrderUncheckedCreateWithoutPrintJobsInput>
+}
+
+export type OrderUpsertWithoutPrintJobsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutPrintJobsInput, Prisma.OrderUncheckedUpdateWithoutPrintJobsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPrintJobsInput, Prisma.OrderUncheckedCreateWithoutPrintJobsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutPrintJobsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutPrintJobsInput, Prisma.OrderUncheckedUpdateWithoutPrintJobsInput>
+}
+
+export type OrderUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutWhatsAppLogsInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutWhatsAppLogsInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutWhatsAppLogsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedCreateWithoutWhatsAppLogsInput>
+}
+
+export type OrderUpsertWithoutWhatsAppLogsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedUpdateWithoutWhatsAppLogsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedCreateWithoutWhatsAppLogsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutWhatsAppLogsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutWhatsAppLogsInput, Prisma.OrderUncheckedUpdateWithoutWhatsAppLogsInput>
+}
+
+export type OrderUpdateWithoutWhatsAppLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutWhatsAppLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutInvoiceInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutInvoiceInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutInvoiceInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutInvoiceInput, Prisma.OrderUncheckedCreateWithoutInvoiceInput>
+}
+
+export type OrderUpsertWithoutInvoiceInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutInvoiceInput, Prisma.OrderUncheckedUpdateWithoutInvoiceInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutInvoiceInput, Prisma.OrderUncheckedCreateWithoutInvoiceInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutInvoiceInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutInvoiceInput, Prisma.OrderUncheckedUpdateWithoutInvoiceInput>
+}
+
+export type OrderUpdateWithoutInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateManyTenantInput = {
+  id?: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1428,7 +2580,7 @@ export type OrderUpdateWithoutTenantInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1440,12 +2592,22 @@ export type OrderUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTenantInput = {
@@ -1454,6 +2616,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1466,11 +2629,20 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTenantInput = {
@@ -1479,6 +2651,7 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1491,6 +2664,12 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1501,6 +2680,7 @@ export type OrderCreateManyOutletInput = {
   orderNumber: string
   type: string
   status?: string
+  serviceMode?: string
   tableId?: string | null
   customerId?: string | null
   customerName?: string | null
@@ -1513,6 +2693,12 @@ export type OrderCreateManyOutletInput = {
   notes?: string | null
   kotStatus?: string
   createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1522,7 +2708,7 @@ export type OrderUpdateWithoutOutletInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
-  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1534,12 +2720,22 @@ export type OrderUpdateWithoutOutletInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutOutletInput = {
@@ -1548,6 +2744,7 @@ export type OrderUncheckedUpdateWithoutOutletInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1560,11 +2757,20 @@ export type OrderUncheckedUpdateWithoutOutletInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutOutletInput = {
@@ -1573,6 +2779,7 @@ export type OrderUncheckedUpdateManyWithoutOutletInput = {
   orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
   tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1585,6 +2792,268 @@ export type OrderUncheckedUpdateManyWithoutOutletInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderCreateManyTableInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutTableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutTableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutTableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrderCreateManyQrSessionInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrderUpdateWithoutQrSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutQrSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateManyWithoutQrSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1598,12 +3067,16 @@ export type OrderCountOutputType = {
   items: number
   payments: number
   kotTickets: number
+  printJobs: number
+  whatsAppLogs: number
 }
 
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | OrderCountOutputTypeCountItemsArgs
   payments?: boolean | OrderCountOutputTypeCountPaymentsArgs
   kotTickets?: boolean | OrderCountOutputTypeCountKotTicketsArgs
+  printJobs?: boolean | OrderCountOutputTypeCountPrintJobsArgs
+  whatsAppLogs?: boolean | OrderCountOutputTypeCountWhatsAppLogsArgs
 }
 
 /**
@@ -1637,6 +3110,20 @@ export type OrderCountOutputTypeCountKotTicketsArgs<ExtArgs extends runtime.Type
   where?: Prisma.KitchenTicketWhereInput
 }
 
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountPrintJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrintJobWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountWhatsAppLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WhatsAppDeliveryLogWhereInput
+}
+
 
 export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1645,6 +3132,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   orderNumber?: boolean
   type?: boolean
   status?: boolean
+  serviceMode?: boolean
   tableId?: boolean
   customerId?: boolean
   customerName?: boolean
@@ -1657,13 +3145,24 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notes?: boolean
   kotStatus?: boolean
   createdById?: boolean
+  isPaid?: boolean
+  paidAt?: boolean
+  billClosedAt?: boolean
+  whatsappConsent?: boolean
+  whatsappStatus?: boolean
+  qrSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Order$paymentsArgs<ExtArgs>
   kotTickets?: boolean | Prisma.Order$kotTicketsArgs<ExtArgs>
+  invoice?: boolean | Prisma.Order$invoiceArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
+  whatsAppLogs?: boolean | Prisma.Order$whatsAppLogsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1674,6 +3173,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderNumber?: boolean
   type?: boolean
   status?: boolean
+  serviceMode?: boolean
   tableId?: boolean
   customerId?: boolean
   customerName?: boolean
@@ -1686,10 +3186,18 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   kotStatus?: boolean
   createdById?: boolean
+  isPaid?: boolean
+  paidAt?: boolean
+  billClosedAt?: boolean
+  whatsappConsent?: boolean
+  whatsappStatus?: boolean
+  qrSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1699,6 +3207,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   orderNumber?: boolean
   type?: boolean
   status?: boolean
+  serviceMode?: boolean
   tableId?: boolean
   customerId?: boolean
   customerName?: boolean
@@ -1711,10 +3220,18 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   notes?: boolean
   kotStatus?: boolean
   createdById?: boolean
+  isPaid?: boolean
+  paidAt?: boolean
+  billClosedAt?: boolean
+  whatsappConsent?: boolean
+  whatsappStatus?: boolean
+  qrSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
 export type OrderSelectScalar = {
@@ -1724,6 +3241,7 @@ export type OrderSelectScalar = {
   orderNumber?: boolean
   type?: boolean
   status?: boolean
+  serviceMode?: boolean
   tableId?: boolean
   customerId?: boolean
   customerName?: boolean
@@ -1736,26 +3254,41 @@ export type OrderSelectScalar = {
   notes?: boolean
   kotStatus?: boolean
   createdById?: boolean
+  isPaid?: boolean
+  paidAt?: boolean
+  billClosedAt?: boolean
+  whatsappConsent?: boolean
+  whatsappStatus?: boolean
+  qrSessionId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderNumber" | "type" | "status" | "tableId" | "customerId" | "customerName" | "customerPhone" | "subtotalPaise" | "taxPaise" | "discountPaise" | "serviceChargePaise" | "totalPaise" | "notes" | "kotStatus" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderNumber" | "type" | "status" | "serviceMode" | "tableId" | "customerId" | "customerName" | "customerPhone" | "subtotalPaise" | "taxPaise" | "discountPaise" | "serviceChargePaise" | "totalPaise" | "notes" | "kotStatus" | "createdById" | "isPaid" | "paidAt" | "billClosedAt" | "whatsappConsent" | "whatsappStatus" | "qrSessionId" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Order$paymentsArgs<ExtArgs>
   kotTickets?: boolean | Prisma.Order$kotTicketsArgs<ExtArgs>
+  invoice?: boolean | Prisma.Order$invoiceArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
+  whatsAppLogs?: boolean | Prisma.Order$whatsAppLogsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  table?: boolean | Prisma.Order$tableArgs<ExtArgs>
+  qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1763,9 +3296,14 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     outlet: Prisma.$OutletPayload<ExtArgs>
+    table: Prisma.$TablePayload<ExtArgs> | null
+    qrSession: Prisma.$QrOrderingSessionPayload<ExtArgs> | null
     items: Prisma.$OrderItemPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     kotTickets: Prisma.$KitchenTicketPayload<ExtArgs>[]
+    invoice: Prisma.$InvoiceRecordPayload<ExtArgs> | null
+    printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
+    whatsAppLogs: Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1774,6 +3312,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     orderNumber: string
     type: string
     status: string
+    serviceMode: string
     tableId: string | null
     customerId: string | null
     customerName: string | null
@@ -1786,6 +3325,12 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     notes: string | null
     kotStatus: string
     createdById: string | null
+    isPaid: boolean
+    paidAt: Date | null
+    billClosedAt: Date | null
+    whatsappConsent: boolean
+    whatsappStatus: string | null
+    qrSessionId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -2184,9 +3729,14 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outlet<T extends Prisma.OutletDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutletDefaultArgs<ExtArgs>>): Prisma.Prisma__OutletClient<runtime.Types.Result.GetResult<Prisma.$OutletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  table<T extends Prisma.Order$tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$tableArgs<ExtArgs>>): Prisma.Prisma__TableClient<runtime.Types.Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  qrSession<T extends Prisma.Order$qrSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$qrSessionArgs<ExtArgs>>): Prisma.Prisma__QrOrderingSessionClient<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Order$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kotTickets<T extends Prisma.Order$kotTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$kotTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KitchenTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invoice<T extends Prisma.Order$invoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$invoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceRecordClient<runtime.Types.Result.GetResult<Prisma.$InvoiceRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  printJobs<T extends Prisma.Order$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  whatsAppLogs<T extends Prisma.Order$whatsAppLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$whatsAppLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2222,6 +3772,7 @@ export interface OrderFieldRefs {
   readonly orderNumber: Prisma.FieldRef<"Order", 'String'>
   readonly type: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'String'>
+  readonly serviceMode: Prisma.FieldRef<"Order", 'String'>
   readonly tableId: Prisma.FieldRef<"Order", 'String'>
   readonly customerId: Prisma.FieldRef<"Order", 'String'>
   readonly customerName: Prisma.FieldRef<"Order", 'String'>
@@ -2234,6 +3785,12 @@ export interface OrderFieldRefs {
   readonly notes: Prisma.FieldRef<"Order", 'String'>
   readonly kotStatus: Prisma.FieldRef<"Order", 'String'>
   readonly createdById: Prisma.FieldRef<"Order", 'String'>
+  readonly isPaid: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly paidAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly billClosedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly whatsappConsent: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly whatsappStatus: Prisma.FieldRef<"Order", 'String'>
+  readonly qrSessionId: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }
@@ -2637,6 +4194,44 @@ export type OrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Order.table
+ */
+export type Order$tableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Table
+   */
+  select?: Prisma.TableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Table
+   */
+  omit?: Prisma.TableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TableInclude<ExtArgs> | null
+  where?: Prisma.TableWhereInput
+}
+
+/**
+ * Order.qrSession
+ */
+export type Order$qrSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QrOrderingSession
+   */
+  select?: Prisma.QrOrderingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QrOrderingSession
+   */
+  omit?: Prisma.QrOrderingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QrOrderingSessionInclude<ExtArgs> | null
+  where?: Prisma.QrOrderingSessionWhereInput
+}
+
+/**
  * Order.items
  */
 export type Order$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2706,6 +4301,73 @@ export type Order$kotTicketsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.KitchenTicketScalarFieldEnum | Prisma.KitchenTicketScalarFieldEnum[]
+}
+
+/**
+ * Order.invoice
+ */
+export type Order$invoiceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceRecord
+   */
+  select?: Prisma.InvoiceRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceRecord
+   */
+  omit?: Prisma.InvoiceRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceRecordInclude<ExtArgs> | null
+  where?: Prisma.InvoiceRecordWhereInput
+}
+
+/**
+ * Order.printJobs
+ */
+export type Order$printJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrintJob
+   */
+  select?: Prisma.PrintJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrintJob
+   */
+  omit?: Prisma.PrintJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrintJobInclude<ExtArgs> | null
+  where?: Prisma.PrintJobWhereInput
+  orderBy?: Prisma.PrintJobOrderByWithRelationInput | Prisma.PrintJobOrderByWithRelationInput[]
+  cursor?: Prisma.PrintJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrintJobScalarFieldEnum | Prisma.PrintJobScalarFieldEnum[]
+}
+
+/**
+ * Order.whatsAppLogs
+ */
+export type Order$whatsAppLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WhatsAppDeliveryLog
+   */
+  select?: Prisma.WhatsAppDeliveryLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WhatsAppDeliveryLog
+   */
+  omit?: Prisma.WhatsAppDeliveryLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WhatsAppDeliveryLogInclude<ExtArgs> | null
+  where?: Prisma.WhatsAppDeliveryLogWhereInput
+  orderBy?: Prisma.WhatsAppDeliveryLogOrderByWithRelationInput | Prisma.WhatsAppDeliveryLogOrderByWithRelationInput[]
+  cursor?: Prisma.WhatsAppDeliveryLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WhatsAppDeliveryLogScalarFieldEnum | Prisma.WhatsAppDeliveryLogScalarFieldEnum[]
 }
 
 /**

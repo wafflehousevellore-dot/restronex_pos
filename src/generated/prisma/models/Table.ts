@@ -28,10 +28,12 @@ export type AggregateTable = {
 
 export type TableAvgAggregateOutputType = {
   capacity: number | null
+  orderTotalPaise: number | null
 }
 
 export type TableSumAggregateOutputType = {
   capacity: number | null
+  orderTotalPaise: number | null
 }
 
 export type TableMinAggregateOutputType = {
@@ -43,6 +45,10 @@ export type TableMinAggregateOutputType = {
   capacity: number | null
   status: string | null
   currentOrderId: string | null
+  qrToken: string | null
+  qrOrderingEnabled: boolean | null
+  waiterName: string | null
+  orderTotalPaise: number | null
 }
 
 export type TableMaxAggregateOutputType = {
@@ -54,6 +60,10 @@ export type TableMaxAggregateOutputType = {
   capacity: number | null
   status: string | null
   currentOrderId: string | null
+  qrToken: string | null
+  qrOrderingEnabled: boolean | null
+  waiterName: string | null
+  orderTotalPaise: number | null
 }
 
 export type TableCountAggregateOutputType = {
@@ -65,16 +75,22 @@ export type TableCountAggregateOutputType = {
   capacity: number
   status: number
   currentOrderId: number
+  qrToken: number
+  qrOrderingEnabled: number
+  waiterName: number
+  orderTotalPaise: number
   _all: number
 }
 
 
 export type TableAvgAggregateInputType = {
   capacity?: true
+  orderTotalPaise?: true
 }
 
 export type TableSumAggregateInputType = {
   capacity?: true
+  orderTotalPaise?: true
 }
 
 export type TableMinAggregateInputType = {
@@ -86,6 +102,10 @@ export type TableMinAggregateInputType = {
   capacity?: true
   status?: true
   currentOrderId?: true
+  qrToken?: true
+  qrOrderingEnabled?: true
+  waiterName?: true
+  orderTotalPaise?: true
 }
 
 export type TableMaxAggregateInputType = {
@@ -97,6 +117,10 @@ export type TableMaxAggregateInputType = {
   capacity?: true
   status?: true
   currentOrderId?: true
+  qrToken?: true
+  qrOrderingEnabled?: true
+  waiterName?: true
+  orderTotalPaise?: true
 }
 
 export type TableCountAggregateInputType = {
@@ -108,6 +132,10 @@ export type TableCountAggregateInputType = {
   capacity?: true
   status?: true
   currentOrderId?: true
+  qrToken?: true
+  qrOrderingEnabled?: true
+  waiterName?: true
+  orderTotalPaise?: true
   _all?: true
 }
 
@@ -206,6 +234,10 @@ export type TableGroupByOutputType = {
   capacity: number
   status: string
   currentOrderId: string | null
+  qrToken: string | null
+  qrOrderingEnabled: boolean
+  waiterName: string | null
+  orderTotalPaise: number
   _count: TableCountAggregateOutputType | null
   _avg: TableAvgAggregateOutputType | null
   _sum: TableSumAggregateOutputType | null
@@ -240,8 +272,14 @@ export type TableWhereInput = {
   capacity?: Prisma.IntFilter<"Table"> | number
   status?: Prisma.StringFilter<"Table"> | string
   currentOrderId?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrToken?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrOrderingEnabled?: Prisma.BoolFilter<"Table"> | boolean
+  waiterName?: Prisma.StringNullableFilter<"Table"> | string | null
+  orderTotalPaise?: Prisma.IntFilter<"Table"> | number
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletScalarRelationFilter, Prisma.OutletWhereInput>
+  orders?: Prisma.OrderListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }
 
 export type TableOrderByWithRelationInput = {
@@ -253,8 +291,14 @@ export type TableOrderByWithRelationInput = {
   capacity?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrOrderingEnabled?: Prisma.SortOrder
+  waiterName?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   outlet?: Prisma.OutletOrderByWithRelationInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
+  qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
 }
 
 export type TableWhereUniqueInput = Prisma.AtLeast<{
@@ -270,8 +314,14 @@ export type TableWhereUniqueInput = Prisma.AtLeast<{
   capacity?: Prisma.IntFilter<"Table"> | number
   status?: Prisma.StringFilter<"Table"> | string
   currentOrderId?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrToken?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrOrderingEnabled?: Prisma.BoolFilter<"Table"> | boolean
+  waiterName?: Prisma.StringNullableFilter<"Table"> | string | null
+  orderTotalPaise?: Prisma.IntFilter<"Table"> | number
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletScalarRelationFilter, Prisma.OutletWhereInput>
+  orders?: Prisma.OrderListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }, "id" | "outletId_number">
 
 export type TableOrderByWithAggregationInput = {
@@ -283,6 +333,10 @@ export type TableOrderByWithAggregationInput = {
   capacity?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  qrOrderingEnabled?: Prisma.SortOrder
+  waiterName?: Prisma.SortOrderInput | Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
   _count?: Prisma.TableCountOrderByAggregateInput
   _avg?: Prisma.TableAvgOrderByAggregateInput
   _max?: Prisma.TableMaxOrderByAggregateInput
@@ -302,6 +356,10 @@ export type TableScalarWhereWithAggregatesInput = {
   capacity?: Prisma.IntWithAggregatesFilter<"Table"> | number
   status?: Prisma.StringWithAggregatesFilter<"Table"> | string
   currentOrderId?: Prisma.StringNullableWithAggregatesFilter<"Table"> | string | null
+  qrToken?: Prisma.StringNullableWithAggregatesFilter<"Table"> | string | null
+  qrOrderingEnabled?: Prisma.BoolWithAggregatesFilter<"Table"> | boolean
+  waiterName?: Prisma.StringNullableWithAggregatesFilter<"Table"> | string | null
+  orderTotalPaise?: Prisma.IntWithAggregatesFilter<"Table"> | number
 }
 
 export type TableCreateInput = {
@@ -311,8 +369,14 @@ export type TableCreateInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
   tenant: Prisma.TenantCreateNestedOneWithoutTablesInput
   outlet: Prisma.OutletCreateNestedOneWithoutTablesInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTableInput
 }
 
 export type TableUncheckedCreateInput = {
@@ -324,6 +388,12 @@ export type TableUncheckedCreateInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTableInput
 }
 
 export type TableUpdateInput = {
@@ -333,8 +403,14 @@ export type TableUpdateInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTablesNestedInput
   outlet?: Prisma.OutletUpdateOneRequiredWithoutTablesNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTableNestedInput
 }
 
 export type TableUncheckedUpdateInput = {
@@ -346,6 +422,12 @@ export type TableUncheckedUpdateInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTableNestedInput
 }
 
 export type TableCreateManyInput = {
@@ -357,6 +439,10 @@ export type TableCreateManyInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
 }
 
 export type TableUpdateManyMutationInput = {
@@ -366,6 +452,10 @@ export type TableUpdateManyMutationInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type TableUncheckedUpdateManyInput = {
@@ -377,6 +467,10 @@ export type TableUncheckedUpdateManyInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type TableListRelationFilter = {
@@ -403,10 +497,15 @@ export type TableCountOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentOrderId?: Prisma.SortOrder
+  qrToken?: Prisma.SortOrder
+  qrOrderingEnabled?: Prisma.SortOrder
+  waiterName?: Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
 }
 
 export type TableAvgOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
 }
 
 export type TableMaxOrderByAggregateInput = {
@@ -418,6 +517,10 @@ export type TableMaxOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentOrderId?: Prisma.SortOrder
+  qrToken?: Prisma.SortOrder
+  qrOrderingEnabled?: Prisma.SortOrder
+  waiterName?: Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
 }
 
 export type TableMinOrderByAggregateInput = {
@@ -429,10 +532,25 @@ export type TableMinOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentOrderId?: Prisma.SortOrder
+  qrToken?: Prisma.SortOrder
+  qrOrderingEnabled?: Prisma.SortOrder
+  waiterName?: Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
 }
 
 export type TableSumOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
+  orderTotalPaise?: Prisma.SortOrder
+}
+
+export type TableNullableScalarRelationFilter = {
+  is?: Prisma.TableWhereInput | null
+  isNot?: Prisma.TableWhereInput | null
+}
+
+export type TableScalarRelationFilter = {
+  is?: Prisma.TableWhereInput
+  isNot?: Prisma.TableWhereInput
 }
 
 export type TableCreateNestedManyWithoutTenantInput = {
@@ -519,6 +637,36 @@ export type TableUncheckedUpdateManyWithoutOutletNestedInput = {
   deleteMany?: Prisma.TableScalarWhereInput | Prisma.TableScalarWhereInput[]
 }
 
+export type TableCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.TableCreateWithoutOrdersInput, Prisma.TableUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.TableCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.TableWhereUniqueInput
+}
+
+export type TableUpdateOneWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.TableCreateWithoutOrdersInput, Prisma.TableUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.TableCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.TableUpsertWithoutOrdersInput
+  disconnect?: Prisma.TableWhereInput | boolean
+  delete?: Prisma.TableWhereInput | boolean
+  connect?: Prisma.TableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TableUpdateToOneWithWhereWithoutOrdersInput, Prisma.TableUpdateWithoutOrdersInput>, Prisma.TableUncheckedUpdateWithoutOrdersInput>
+}
+
+export type TableCreateNestedOneWithoutQrSessionsInput = {
+  create?: Prisma.XOR<Prisma.TableCreateWithoutQrSessionsInput, Prisma.TableUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.TableCreateOrConnectWithoutQrSessionsInput
+  connect?: Prisma.TableWhereUniqueInput
+}
+
+export type TableUpdateOneRequiredWithoutQrSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TableCreateWithoutQrSessionsInput, Prisma.TableUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.TableCreateOrConnectWithoutQrSessionsInput
+  upsert?: Prisma.TableUpsertWithoutQrSessionsInput
+  connect?: Prisma.TableWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TableUpdateToOneWithWhereWithoutQrSessionsInput, Prisma.TableUpdateWithoutQrSessionsInput>, Prisma.TableUncheckedUpdateWithoutQrSessionsInput>
+}
+
 export type TableCreateWithoutTenantInput = {
   id?: string
   number: string
@@ -526,7 +674,13 @@ export type TableCreateWithoutTenantInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
   outlet: Prisma.OutletCreateNestedOneWithoutTablesInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTableInput
 }
 
 export type TableUncheckedCreateWithoutTenantInput = {
@@ -537,6 +691,12 @@ export type TableUncheckedCreateWithoutTenantInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTableInput
 }
 
 export type TableCreateOrConnectWithoutTenantInput = {
@@ -577,6 +737,10 @@ export type TableScalarWhereInput = {
   capacity?: Prisma.IntFilter<"Table"> | number
   status?: Prisma.StringFilter<"Table"> | string
   currentOrderId?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrToken?: Prisma.StringNullableFilter<"Table"> | string | null
+  qrOrderingEnabled?: Prisma.BoolFilter<"Table"> | boolean
+  waiterName?: Prisma.StringNullableFilter<"Table"> | string | null
+  orderTotalPaise?: Prisma.IntFilter<"Table"> | number
 }
 
 export type TableCreateWithoutOutletInput = {
@@ -586,7 +750,13 @@ export type TableCreateWithoutOutletInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
   tenant: Prisma.TenantCreateNestedOneWithoutTablesInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTableInput
 }
 
 export type TableUncheckedCreateWithoutOutletInput = {
@@ -597,6 +767,12 @@ export type TableUncheckedCreateWithoutOutletInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTableInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTableInput
 }
 
 export type TableCreateOrConnectWithoutOutletInput = {
@@ -625,6 +801,166 @@ export type TableUpdateManyWithWhereWithoutOutletInput = {
   data: Prisma.XOR<Prisma.TableUpdateManyMutationInput, Prisma.TableUncheckedUpdateManyWithoutOutletInput>
 }
 
+export type TableCreateWithoutOrdersInput = {
+  id?: string
+  number: string
+  area?: string
+  capacity?: number
+  status?: string
+  currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  tenant: Prisma.TenantCreateNestedOneWithoutTablesInput
+  outlet: Prisma.OutletCreateNestedOneWithoutTablesInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTableInput
+}
+
+export type TableUncheckedCreateWithoutOrdersInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  number: string
+  area?: string
+  capacity?: number
+  status?: string
+  currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTableInput
+}
+
+export type TableCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.TableWhereUniqueInput
+  create: Prisma.XOR<Prisma.TableCreateWithoutOrdersInput, Prisma.TableUncheckedCreateWithoutOrdersInput>
+}
+
+export type TableUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.TableUpdateWithoutOrdersInput, Prisma.TableUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.TableCreateWithoutOrdersInput, Prisma.TableUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.TableWhereInput
+}
+
+export type TableUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.TableWhereInput
+  data: Prisma.XOR<Prisma.TableUpdateWithoutOrdersInput, Prisma.TableUncheckedUpdateWithoutOrdersInput>
+}
+
+export type TableUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  area?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutTablesNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutTablesNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTableNestedInput
+}
+
+export type TableUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  area?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTableNestedInput
+}
+
+export type TableCreateWithoutQrSessionsInput = {
+  id?: string
+  number: string
+  area?: string
+  capacity?: number
+  status?: string
+  currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  tenant: Prisma.TenantCreateNestedOneWithoutTablesInput
+  outlet: Prisma.OutletCreateNestedOneWithoutTablesInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTableInput
+}
+
+export type TableUncheckedCreateWithoutQrSessionsInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  number: string
+  area?: string
+  capacity?: number
+  status?: string
+  currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTableInput
+}
+
+export type TableCreateOrConnectWithoutQrSessionsInput = {
+  where: Prisma.TableWhereUniqueInput
+  create: Prisma.XOR<Prisma.TableCreateWithoutQrSessionsInput, Prisma.TableUncheckedCreateWithoutQrSessionsInput>
+}
+
+export type TableUpsertWithoutQrSessionsInput = {
+  update: Prisma.XOR<Prisma.TableUpdateWithoutQrSessionsInput, Prisma.TableUncheckedUpdateWithoutQrSessionsInput>
+  create: Prisma.XOR<Prisma.TableCreateWithoutQrSessionsInput, Prisma.TableUncheckedCreateWithoutQrSessionsInput>
+  where?: Prisma.TableWhereInput
+}
+
+export type TableUpdateToOneWithWhereWithoutQrSessionsInput = {
+  where?: Prisma.TableWhereInput
+  data: Prisma.XOR<Prisma.TableUpdateWithoutQrSessionsInput, Prisma.TableUncheckedUpdateWithoutQrSessionsInput>
+}
+
+export type TableUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  area?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutTablesNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutTablesNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTableNestedInput
+}
+
+export type TableUncheckedUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  area?: Prisma.StringFieldUpdateOperationsInput | string
+  capacity?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTableNestedInput
+}
+
 export type TableCreateManyTenantInput = {
   id?: string
   outletId: string
@@ -633,6 +969,10 @@ export type TableCreateManyTenantInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
 }
 
 export type TableUpdateWithoutTenantInput = {
@@ -642,7 +982,13 @@ export type TableUpdateWithoutTenantInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
   outlet?: Prisma.OutletUpdateOneRequiredWithoutTablesNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTableNestedInput
 }
 
 export type TableUncheckedUpdateWithoutTenantInput = {
@@ -653,6 +999,12 @@ export type TableUncheckedUpdateWithoutTenantInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTableNestedInput
 }
 
 export type TableUncheckedUpdateManyWithoutTenantInput = {
@@ -663,6 +1015,10 @@ export type TableUncheckedUpdateManyWithoutTenantInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type TableCreateManyOutletInput = {
@@ -673,6 +1029,10 @@ export type TableCreateManyOutletInput = {
   capacity?: number
   status?: string
   currentOrderId?: string | null
+  qrToken?: string | null
+  qrOrderingEnabled?: boolean
+  waiterName?: string | null
+  orderTotalPaise?: number
 }
 
 export type TableUpdateWithoutOutletInput = {
@@ -682,7 +1042,13 @@ export type TableUpdateWithoutOutletInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
   tenant?: Prisma.TenantUpdateOneRequiredWithoutTablesNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTableNestedInput
 }
 
 export type TableUncheckedUpdateWithoutOutletInput = {
@@ -693,6 +1059,12 @@ export type TableUncheckedUpdateWithoutOutletInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTableNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTableNestedInput
 }
 
 export type TableUncheckedUpdateManyWithoutOutletInput = {
@@ -703,8 +1075,50 @@ export type TableUncheckedUpdateManyWithoutOutletInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrOrderingEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  waiterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  orderTotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
+
+/**
+ * Count Type TableCountOutputType
+ */
+
+export type TableCountOutputType = {
+  orders: number
+  qrSessions: number
+}
+
+export type TableCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orders?: boolean | TableCountOutputTypeCountOrdersArgs
+  qrSessions?: boolean | TableCountOutputTypeCountQrSessionsArgs
+}
+
+/**
+ * TableCountOutputType without action
+ */
+export type TableCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TableCountOutputType
+   */
+  select?: Prisma.TableCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * TableCountOutputType without action
+ */
+export type TableCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * TableCountOutputType without action
+ */
+export type TableCountOutputTypeCountQrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QrOrderingSessionWhereInput
+}
 
 
 export type TableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -716,8 +1130,15 @@ export type TableSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   capacity?: boolean
   status?: boolean
   currentOrderId?: boolean
+  qrToken?: boolean
+  qrOrderingEnabled?: boolean
+  waiterName?: boolean
+  orderTotalPaise?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  orders?: boolean | Prisma.Table$ordersArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Table$qrSessionsArgs<ExtArgs>
+  _count?: boolean | Prisma.TableCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["table"]>
 
 export type TableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -729,6 +1150,10 @@ export type TableSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   capacity?: boolean
   status?: boolean
   currentOrderId?: boolean
+  qrToken?: boolean
+  qrOrderingEnabled?: boolean
+  waiterName?: boolean
+  orderTotalPaise?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["table"]>
@@ -742,6 +1167,10 @@ export type TableSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   capacity?: boolean
   status?: boolean
   currentOrderId?: boolean
+  qrToken?: boolean
+  qrOrderingEnabled?: boolean
+  waiterName?: boolean
+  orderTotalPaise?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["table"]>
@@ -755,12 +1184,19 @@ export type TableSelectScalar = {
   capacity?: boolean
   status?: boolean
   currentOrderId?: boolean
+  qrToken?: boolean
+  qrOrderingEnabled?: boolean
+  waiterName?: boolean
+  orderTotalPaise?: boolean
 }
 
-export type TableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "number" | "area" | "capacity" | "status" | "currentOrderId", ExtArgs["result"]["table"]>
+export type TableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "number" | "area" | "capacity" | "status" | "currentOrderId" | "qrToken" | "qrOrderingEnabled" | "waiterName" | "orderTotalPaise", ExtArgs["result"]["table"]>
 export type TableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
+  orders?: boolean | Prisma.Table$ordersArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Table$qrSessionsArgs<ExtArgs>
+  _count?: boolean | Prisma.TableCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TableIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -776,6 +1212,8 @@ export type $TablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     outlet: Prisma.$OutletPayload<ExtArgs>
+    orders: Prisma.$OrderPayload<ExtArgs>[]
+    qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -786,6 +1224,10 @@ export type $TablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     capacity: number
     status: string
     currentOrderId: string | null
+    qrToken: string | null
+    qrOrderingEnabled: boolean
+    waiterName: string | null
+    orderTotalPaise: number
   }, ExtArgs["result"]["table"]>
   composites: {}
 }
@@ -1182,6 +1624,8 @@ export interface Prisma__TableClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outlet<T extends Prisma.OutletDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OutletDefaultArgs<ExtArgs>>): Prisma.Prisma__OutletClient<runtime.Types.Result.GetResult<Prisma.$OutletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orders<T extends Prisma.Table$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Table$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrSessions<T extends Prisma.Table$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Table$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1219,6 +1663,10 @@ export interface TableFieldRefs {
   readonly capacity: Prisma.FieldRef<"Table", 'Int'>
   readonly status: Prisma.FieldRef<"Table", 'String'>
   readonly currentOrderId: Prisma.FieldRef<"Table", 'String'>
+  readonly qrToken: Prisma.FieldRef<"Table", 'String'>
+  readonly qrOrderingEnabled: Prisma.FieldRef<"Table", 'Boolean'>
+  readonly waiterName: Prisma.FieldRef<"Table", 'String'>
+  readonly orderTotalPaise: Prisma.FieldRef<"Table", 'Int'>
 }
     
 
@@ -1617,6 +2065,54 @@ export type TableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Tables to delete.
    */
   limit?: number
+}
+
+/**
+ * Table.orders
+ */
+export type Table$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * Table.qrSessions
+ */
+export type Table$qrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QrOrderingSession
+   */
+  select?: Prisma.QrOrderingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QrOrderingSession
+   */
+  omit?: Prisma.QrOrderingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QrOrderingSessionInclude<ExtArgs> | null
+  where?: Prisma.QrOrderingSessionWhereInput
+  orderBy?: Prisma.QrOrderingSessionOrderByWithRelationInput | Prisma.QrOrderingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.QrOrderingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QrOrderingSessionScalarFieldEnum | Prisma.QrOrderingSessionScalarFieldEnum[]
 }
 
 /**

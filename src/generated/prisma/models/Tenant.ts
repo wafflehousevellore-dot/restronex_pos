@@ -326,6 +326,13 @@ export type TenantWhereInput = {
   expenses?: Prisma.ExpenseListRelationFilter
   supplierPrices?: Prisma.SupplierPriceListRelationFilter
   dayEnds?: Prisma.DayEndSummaryListRelationFilter
+  printerDevices?: Prisma.PrinterDeviceListRelationFilter
+  printJobs?: Prisma.PrintJobListRelationFilter
+  customerConsents?: Prisma.CustomerConsentListRelationFilter
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
+  invoices?: Prisma.InvoiceRecordListRelationFilter
+  featureUsages?: Prisma.FeatureUsageListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -367,6 +374,13 @@ export type TenantOrderByWithRelationInput = {
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   supplierPrices?: Prisma.SupplierPriceOrderByRelationAggregateInput
   dayEnds?: Prisma.DayEndSummaryOrderByRelationAggregateInput
+  printerDevices?: Prisma.PrinterDeviceOrderByRelationAggregateInput
+  printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
+  customerConsents?: Prisma.CustomerConsentOrderByRelationAggregateInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogOrderByRelationAggregateInput
+  invoices?: Prisma.InvoiceRecordOrderByRelationAggregateInput
+  featureUsages?: Prisma.FeatureUsageOrderByRelationAggregateInput
+  qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -411,6 +425,13 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   expenses?: Prisma.ExpenseListRelationFilter
   supplierPrices?: Prisma.SupplierPriceListRelationFilter
   dayEnds?: Prisma.DayEndSummaryListRelationFilter
+  printerDevices?: Prisma.PrinterDeviceListRelationFilter
+  printJobs?: Prisma.PrintJobListRelationFilter
+  customerConsents?: Prisma.CustomerConsentListRelationFilter
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
+  invoices?: Prisma.InvoiceRecordListRelationFilter
+  featureUsages?: Prisma.FeatureUsageListRelationFilter
+  qrSessions?: Prisma.QrOrderingSessionListRelationFilter
 }, "id" | "clerkOrgId" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -498,6 +519,13 @@ export type TenantCreateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -539,6 +567,13 @@ export type TenantUncheckedCreateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -580,6 +615,13 @@ export type TenantUpdateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -621,6 +663,13 @@ export type TenantUncheckedUpdateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -1073,6 +1122,104 @@ export type TenantUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.TenantUpdateWithoutAuditLogsInput>, Prisma.TenantUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type TenantCreateNestedOneWithoutQrSessionsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutQrSessionsInput, Prisma.TenantUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutQrSessionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutQrSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutQrSessionsInput, Prisma.TenantUncheckedCreateWithoutQrSessionsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutQrSessionsInput
+  upsert?: Prisma.TenantUpsertWithoutQrSessionsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutQrSessionsInput, Prisma.TenantUpdateWithoutQrSessionsInput>, Prisma.TenantUncheckedUpdateWithoutQrSessionsInput>
+}
+
+export type TenantCreateNestedOneWithoutPrinterDevicesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPrinterDevicesInput, Prisma.TenantUncheckedCreateWithoutPrinterDevicesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPrinterDevicesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutPrinterDevicesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPrinterDevicesInput, Prisma.TenantUncheckedCreateWithoutPrinterDevicesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPrinterDevicesInput
+  upsert?: Prisma.TenantUpsertWithoutPrinterDevicesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutPrinterDevicesInput, Prisma.TenantUpdateWithoutPrinterDevicesInput>, Prisma.TenantUncheckedUpdateWithoutPrinterDevicesInput>
+}
+
+export type TenantCreateNestedOneWithoutPrintJobsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPrintJobsInput, Prisma.TenantUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPrintJobsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutPrintJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutPrintJobsInput, Prisma.TenantUncheckedCreateWithoutPrintJobsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutPrintJobsInput
+  upsert?: Prisma.TenantUpsertWithoutPrintJobsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutPrintJobsInput, Prisma.TenantUpdateWithoutPrintJobsInput>, Prisma.TenantUncheckedUpdateWithoutPrintJobsInput>
+}
+
+export type TenantCreateNestedOneWithoutCustomerConsentsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutCustomerConsentsInput, Prisma.TenantUncheckedCreateWithoutCustomerConsentsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCustomerConsentsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutCustomerConsentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutCustomerConsentsInput, Prisma.TenantUncheckedCreateWithoutCustomerConsentsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCustomerConsentsInput
+  upsert?: Prisma.TenantUpsertWithoutCustomerConsentsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutCustomerConsentsInput, Prisma.TenantUpdateWithoutCustomerConsentsInput>, Prisma.TenantUncheckedUpdateWithoutCustomerConsentsInput>
+}
+
+export type TenantCreateNestedOneWithoutWhatsAppLogsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedCreateWithoutWhatsAppLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutWhatsAppLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutWhatsAppLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedCreateWithoutWhatsAppLogsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutWhatsAppLogsInput
+  upsert?: Prisma.TenantUpsertWithoutWhatsAppLogsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutWhatsAppLogsInput, Prisma.TenantUpdateWithoutWhatsAppLogsInput>, Prisma.TenantUncheckedUpdateWithoutWhatsAppLogsInput>
+}
+
+export type TenantCreateNestedOneWithoutInvoicesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutInvoicesInput, Prisma.TenantUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutInvoicesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutInvoicesInput, Prisma.TenantUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutInvoicesInput
+  upsert?: Prisma.TenantUpsertWithoutInvoicesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutInvoicesInput, Prisma.TenantUpdateWithoutInvoicesInput>, Prisma.TenantUncheckedUpdateWithoutInvoicesInput>
+}
+
+export type TenantCreateNestedOneWithoutFeatureUsagesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutFeatureUsagesInput, Prisma.TenantUncheckedCreateWithoutFeatureUsagesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutFeatureUsagesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutFeatureUsagesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutFeatureUsagesInput, Prisma.TenantUncheckedCreateWithoutFeatureUsagesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutFeatureUsagesInput
+  upsert?: Prisma.TenantUpsertWithoutFeatureUsagesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutFeatureUsagesInput, Prisma.TenantUpdateWithoutFeatureUsagesInput>, Prisma.TenantUncheckedUpdateWithoutFeatureUsagesInput>
+}
+
 export type TenantCreateWithoutMembershipsInput = {
   id?: string
   clerkOrgId?: string | null
@@ -1111,6 +1258,13 @@ export type TenantCreateWithoutMembershipsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMembershipsInput = {
@@ -1151,6 +1305,13 @@ export type TenantUncheckedCreateWithoutMembershipsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMembershipsInput = {
@@ -1207,6 +1368,13 @@ export type TenantUpdateWithoutMembershipsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMembershipsInput = {
@@ -1247,6 +1415,13 @@ export type TenantUncheckedUpdateWithoutMembershipsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOutletsInput = {
@@ -1287,6 +1462,13 @@ export type TenantCreateWithoutOutletsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOutletsInput = {
@@ -1327,6 +1509,13 @@ export type TenantUncheckedCreateWithoutOutletsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOutletsInput = {
@@ -1383,6 +1572,13 @@ export type TenantUpdateWithoutOutletsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOutletsInput = {
@@ -1423,6 +1619,13 @@ export type TenantUncheckedUpdateWithoutOutletsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSettingsInput = {
@@ -1463,6 +1666,13 @@ export type TenantCreateWithoutSettingsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSettingsInput = {
@@ -1503,6 +1713,13 @@ export type TenantUncheckedCreateWithoutSettingsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSettingsInput = {
@@ -1559,6 +1776,13 @@ export type TenantUpdateWithoutSettingsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSettingsInput = {
@@ -1599,6 +1823,13 @@ export type TenantUncheckedUpdateWithoutSettingsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTaxConfigsInput = {
@@ -1639,6 +1870,13 @@ export type TenantCreateWithoutTaxConfigsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTaxConfigsInput = {
@@ -1679,6 +1917,13 @@ export type TenantUncheckedCreateWithoutTaxConfigsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTaxConfigsInput = {
@@ -1735,6 +1980,13 @@ export type TenantUpdateWithoutTaxConfigsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTaxConfigsInput = {
@@ -1775,6 +2027,13 @@ export type TenantUncheckedUpdateWithoutTaxConfigsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCategoriesInput = {
@@ -1815,6 +2074,13 @@ export type TenantCreateWithoutCategoriesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCategoriesInput = {
@@ -1855,6 +2121,13 @@ export type TenantUncheckedCreateWithoutCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCategoriesInput = {
@@ -1911,6 +2184,13 @@ export type TenantUpdateWithoutCategoriesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCategoriesInput = {
@@ -1951,6 +2231,13 @@ export type TenantUncheckedUpdateWithoutCategoriesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMenuItemsInput = {
@@ -1991,6 +2278,13 @@ export type TenantCreateWithoutMenuItemsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMenuItemsInput = {
@@ -2031,6 +2325,13 @@ export type TenantUncheckedCreateWithoutMenuItemsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMenuItemsInput = {
@@ -2087,6 +2388,13 @@ export type TenantUpdateWithoutMenuItemsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMenuItemsInput = {
@@ -2127,6 +2435,13 @@ export type TenantUncheckedUpdateWithoutMenuItemsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTablesInput = {
@@ -2167,6 +2482,13 @@ export type TenantCreateWithoutTablesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTablesInput = {
@@ -2207,6 +2529,13 @@ export type TenantUncheckedCreateWithoutTablesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTablesInput = {
@@ -2263,6 +2592,13 @@ export type TenantUpdateWithoutTablesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTablesInput = {
@@ -2303,6 +2639,13 @@ export type TenantUncheckedUpdateWithoutTablesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrdersInput = {
@@ -2343,6 +2686,13 @@ export type TenantCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrdersInput = {
@@ -2383,6 +2733,13 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrdersInput = {
@@ -2439,6 +2796,13 @@ export type TenantUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrdersInput = {
@@ -2479,6 +2843,13 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInventoryItemsInput = {
@@ -2519,6 +2890,13 @@ export type TenantCreateWithoutInventoryItemsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInventoryItemsInput = {
@@ -2559,6 +2937,13 @@ export type TenantUncheckedCreateWithoutInventoryItemsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInventoryItemsInput = {
@@ -2615,6 +3000,13 @@ export type TenantUpdateWithoutInventoryItemsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInventoryItemsInput = {
@@ -2655,6 +3047,13 @@ export type TenantUncheckedUpdateWithoutInventoryItemsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSuppliersInput = {
@@ -2695,6 +3094,13 @@ export type TenantCreateWithoutSuppliersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSuppliersInput = {
@@ -2735,6 +3141,13 @@ export type TenantUncheckedCreateWithoutSuppliersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSuppliersInput = {
@@ -2791,6 +3204,13 @@ export type TenantUpdateWithoutSuppliersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSuppliersInput = {
@@ -2831,6 +3251,13 @@ export type TenantUncheckedUpdateWithoutSuppliersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPurchaseOrdersInput = {
@@ -2871,6 +3298,13 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -2911,6 +3345,13 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -2967,6 +3408,13 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -3007,6 +3455,13 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStockMovementsInput = {
@@ -3047,6 +3502,13 @@ export type TenantCreateWithoutStockMovementsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStockMovementsInput = {
@@ -3087,6 +3549,13 @@ export type TenantUncheckedCreateWithoutStockMovementsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStockMovementsInput = {
@@ -3143,6 +3612,13 @@ export type TenantUpdateWithoutStockMovementsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStockMovementsInput = {
@@ -3183,6 +3659,13 @@ export type TenantUncheckedUpdateWithoutStockMovementsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCustomersInput = {
@@ -3223,6 +3706,13 @@ export type TenantCreateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomersInput = {
@@ -3263,6 +3753,13 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomersInput = {
@@ -3319,6 +3816,13 @@ export type TenantUpdateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomersInput = {
@@ -3359,6 +3863,13 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSubscriptionsInput = {
@@ -3399,6 +3910,13 @@ export type TenantCreateWithoutSubscriptionsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSubscriptionsInput = {
@@ -3439,6 +3957,13 @@ export type TenantUncheckedCreateWithoutSubscriptionsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSubscriptionsInput = {
@@ -3495,6 +4020,13 @@ export type TenantUpdateWithoutSubscriptionsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSubscriptionsInput = {
@@ -3535,6 +4067,13 @@ export type TenantUncheckedUpdateWithoutSubscriptionsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutIntegrationConfigsInput = {
@@ -3575,6 +4114,13 @@ export type TenantCreateWithoutIntegrationConfigsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutIntegrationConfigsInput = {
@@ -3615,6 +4161,13 @@ export type TenantUncheckedCreateWithoutIntegrationConfigsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutIntegrationConfigsInput = {
@@ -3671,6 +4224,13 @@ export type TenantUpdateWithoutIntegrationConfigsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutIntegrationConfigsInput = {
@@ -3711,6 +4271,13 @@ export type TenantUncheckedUpdateWithoutIntegrationConfigsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTokensInput = {
@@ -3751,6 +4318,13 @@ export type TenantCreateWithoutTokensInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTokensInput = {
@@ -3791,6 +4365,13 @@ export type TenantUncheckedCreateWithoutTokensInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTokensInput = {
@@ -3847,6 +4428,13 @@ export type TenantUpdateWithoutTokensInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTokensInput = {
@@ -3887,6 +4475,13 @@ export type TenantUncheckedUpdateWithoutTokensInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutReservationsInput = {
@@ -3927,6 +4522,13 @@ export type TenantCreateWithoutReservationsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutReservationsInput = {
@@ -3967,6 +4569,13 @@ export type TenantUncheckedCreateWithoutReservationsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutReservationsInput = {
@@ -4023,6 +4632,13 @@ export type TenantUpdateWithoutReservationsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutReservationsInput = {
@@ -4063,6 +4679,13 @@ export type TenantUncheckedUpdateWithoutReservationsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutFeedbacksInput = {
@@ -4103,6 +4726,13 @@ export type TenantCreateWithoutFeedbacksInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutFeedbacksInput = {
@@ -4143,6 +4773,13 @@ export type TenantUncheckedCreateWithoutFeedbacksInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutFeedbacksInput = {
@@ -4199,6 +4836,13 @@ export type TenantUpdateWithoutFeedbacksInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutFeedbacksInput = {
@@ -4239,6 +4883,13 @@ export type TenantUncheckedUpdateWithoutFeedbacksInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutExpensesInput = {
@@ -4279,6 +4930,13 @@ export type TenantCreateWithoutExpensesInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutExpensesInput = {
@@ -4319,6 +4977,13 @@ export type TenantUncheckedCreateWithoutExpensesInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutExpensesInput = {
@@ -4375,6 +5040,13 @@ export type TenantUpdateWithoutExpensesInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutExpensesInput = {
@@ -4415,6 +5087,13 @@ export type TenantUncheckedUpdateWithoutExpensesInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSupplierPricesInput = {
@@ -4455,6 +5134,13 @@ export type TenantCreateWithoutSupplierPricesInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSupplierPricesInput = {
@@ -4495,6 +5181,13 @@ export type TenantUncheckedCreateWithoutSupplierPricesInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSupplierPricesInput = {
@@ -4551,6 +5244,13 @@ export type TenantUpdateWithoutSupplierPricesInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSupplierPricesInput = {
@@ -4591,6 +5291,13 @@ export type TenantUncheckedUpdateWithoutSupplierPricesInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDayEndsInput = {
@@ -4631,6 +5338,13 @@ export type TenantCreateWithoutDayEndsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDayEndsInput = {
@@ -4671,6 +5385,13 @@ export type TenantUncheckedCreateWithoutDayEndsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDayEndsInput = {
@@ -4727,6 +5448,13 @@ export type TenantUpdateWithoutDayEndsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDayEndsInput = {
@@ -4767,6 +5495,13 @@ export type TenantUncheckedUpdateWithoutDayEndsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAuditLogsInput = {
@@ -4807,6 +5542,13 @@ export type TenantCreateWithoutAuditLogsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAuditLogsInput = {
@@ -4847,6 +5589,13 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
   dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAuditLogsInput = {
@@ -4903,6 +5652,13 @@ export type TenantUpdateWithoutAuditLogsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAuditLogsInput = {
@@ -4943,6 +5699,1441 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
   dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutQrSessionsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutQrSessionsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutQrSessionsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutQrSessionsInput, Prisma.TenantUncheckedCreateWithoutQrSessionsInput>
+}
+
+export type TenantUpsertWithoutQrSessionsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutQrSessionsInput, Prisma.TenantUncheckedUpdateWithoutQrSessionsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutQrSessionsInput, Prisma.TenantUncheckedCreateWithoutQrSessionsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutQrSessionsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutQrSessionsInput, Prisma.TenantUncheckedUpdateWithoutQrSessionsInput>
+}
+
+export type TenantUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutQrSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutPrinterDevicesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutPrinterDevicesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutPrinterDevicesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPrinterDevicesInput, Prisma.TenantUncheckedCreateWithoutPrinterDevicesInput>
+}
+
+export type TenantUpsertWithoutPrinterDevicesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutPrinterDevicesInput, Prisma.TenantUncheckedUpdateWithoutPrinterDevicesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPrinterDevicesInput, Prisma.TenantUncheckedCreateWithoutPrinterDevicesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutPrinterDevicesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutPrinterDevicesInput, Prisma.TenantUncheckedUpdateWithoutPrinterDevicesInput>
+}
+
+export type TenantUpdateWithoutPrinterDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutPrinterDevicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutPrintJobsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutPrintJobsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutPrintJobsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPrintJobsInput, Prisma.TenantUncheckedCreateWithoutPrintJobsInput>
+}
+
+export type TenantUpsertWithoutPrintJobsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutPrintJobsInput, Prisma.TenantUncheckedUpdateWithoutPrintJobsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutPrintJobsInput, Prisma.TenantUncheckedCreateWithoutPrintJobsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutPrintJobsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutPrintJobsInput, Prisma.TenantUncheckedUpdateWithoutPrintJobsInput>
+}
+
+export type TenantUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutPrintJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutCustomerConsentsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutCustomerConsentsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutCustomerConsentsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutCustomerConsentsInput, Prisma.TenantUncheckedCreateWithoutCustomerConsentsInput>
+}
+
+export type TenantUpsertWithoutCustomerConsentsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutCustomerConsentsInput, Prisma.TenantUncheckedUpdateWithoutCustomerConsentsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutCustomerConsentsInput, Prisma.TenantUncheckedCreateWithoutCustomerConsentsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutCustomerConsentsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutCustomerConsentsInput, Prisma.TenantUncheckedUpdateWithoutCustomerConsentsInput>
+}
+
+export type TenantUpdateWithoutCustomerConsentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutCustomerConsentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutWhatsAppLogsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutWhatsAppLogsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutWhatsAppLogsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedCreateWithoutWhatsAppLogsInput>
+}
+
+export type TenantUpsertWithoutWhatsAppLogsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedUpdateWithoutWhatsAppLogsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedCreateWithoutWhatsAppLogsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutWhatsAppLogsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutWhatsAppLogsInput, Prisma.TenantUncheckedUpdateWithoutWhatsAppLogsInput>
+}
+
+export type TenantUpdateWithoutWhatsAppLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutWhatsAppLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutInvoicesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutInvoicesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutInvoicesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutInvoicesInput, Prisma.TenantUncheckedCreateWithoutInvoicesInput>
+}
+
+export type TenantUpsertWithoutInvoicesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutInvoicesInput, Prisma.TenantUncheckedUpdateWithoutInvoicesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutInvoicesInput, Prisma.TenantUncheckedCreateWithoutInvoicesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutInvoicesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutInvoicesInput, Prisma.TenantUncheckedUpdateWithoutInvoicesInput>
+}
+
+export type TenantUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutFeatureUsagesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutFeatureUsagesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutFeatureUsagesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutFeatureUsagesInput, Prisma.TenantUncheckedCreateWithoutFeatureUsagesInput>
+}
+
+export type TenantUpsertWithoutFeatureUsagesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutFeatureUsagesInput, Prisma.TenantUncheckedUpdateWithoutFeatureUsagesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutFeatureUsagesInput, Prisma.TenantUncheckedCreateWithoutFeatureUsagesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutFeatureUsagesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutFeatureUsagesInput, Prisma.TenantUncheckedUpdateWithoutFeatureUsagesInput>
+}
+
+export type TenantUpdateWithoutFeatureUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutFeatureUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -4972,6 +7163,13 @@ export type TenantCountOutputType = {
   expenses: number
   supplierPrices: number
   dayEnds: number
+  printerDevices: number
+  printJobs: number
+  customerConsents: number
+  whatsAppLogs: number
+  invoices: number
+  featureUsages: number
+  qrSessions: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4996,6 +7194,13 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   expenses?: boolean | TenantCountOutputTypeCountExpensesArgs
   supplierPrices?: boolean | TenantCountOutputTypeCountSupplierPricesArgs
   dayEnds?: boolean | TenantCountOutputTypeCountDayEndsArgs
+  printerDevices?: boolean | TenantCountOutputTypeCountPrinterDevicesArgs
+  printJobs?: boolean | TenantCountOutputTypeCountPrintJobsArgs
+  customerConsents?: boolean | TenantCountOutputTypeCountCustomerConsentsArgs
+  whatsAppLogs?: boolean | TenantCountOutputTypeCountWhatsAppLogsArgs
+  invoices?: boolean | TenantCountOutputTypeCountInvoicesArgs
+  featureUsages?: boolean | TenantCountOutputTypeCountFeatureUsagesArgs
+  qrSessions?: boolean | TenantCountOutputTypeCountQrSessionsArgs
 }
 
 /**
@@ -5155,6 +7360,55 @@ export type TenantCountOutputTypeCountDayEndsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.DayEndSummaryWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountPrinterDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrinterDeviceWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountPrintJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PrintJobWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountCustomerConsentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomerConsentWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountWhatsAppLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WhatsAppDeliveryLogWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceRecordWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountFeatureUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeatureUsageWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountQrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QrOrderingSessionWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5195,6 +7449,13 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   expenses?: boolean | Prisma.Tenant$expensesArgs<ExtArgs>
   supplierPrices?: boolean | Prisma.Tenant$supplierPricesArgs<ExtArgs>
   dayEnds?: boolean | Prisma.Tenant$dayEndsArgs<ExtArgs>
+  printerDevices?: boolean | Prisma.Tenant$printerDevicesArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Tenant$printJobsArgs<ExtArgs>
+  customerConsents?: boolean | Prisma.Tenant$customerConsentsArgs<ExtArgs>
+  whatsAppLogs?: boolean | Prisma.Tenant$whatsAppLogsArgs<ExtArgs>
+  invoices?: boolean | Prisma.Tenant$invoicesArgs<ExtArgs>
+  featureUsages?: boolean | Prisma.Tenant$featureUsagesArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Tenant$qrSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -5279,6 +7540,13 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   expenses?: boolean | Prisma.Tenant$expensesArgs<ExtArgs>
   supplierPrices?: boolean | Prisma.Tenant$supplierPricesArgs<ExtArgs>
   dayEnds?: boolean | Prisma.Tenant$dayEndsArgs<ExtArgs>
+  printerDevices?: boolean | Prisma.Tenant$printerDevicesArgs<ExtArgs>
+  printJobs?: boolean | Prisma.Tenant$printJobsArgs<ExtArgs>
+  customerConsents?: boolean | Prisma.Tenant$customerConsentsArgs<ExtArgs>
+  whatsAppLogs?: boolean | Prisma.Tenant$whatsAppLogsArgs<ExtArgs>
+  invoices?: boolean | Prisma.Tenant$invoicesArgs<ExtArgs>
+  featureUsages?: boolean | Prisma.Tenant$featureUsagesArgs<ExtArgs>
+  qrSessions?: boolean | Prisma.Tenant$qrSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -5309,6 +7577,13 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     supplierPrices: Prisma.$SupplierPricePayload<ExtArgs>[]
     dayEnds: Prisma.$DayEndSummaryPayload<ExtArgs>[]
+    printerDevices: Prisma.$PrinterDevicePayload<ExtArgs>[]
+    printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
+    customerConsents: Prisma.$CustomerConsentPayload<ExtArgs>[]
+    whatsAppLogs: Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>[]
+    invoices: Prisma.$InvoiceRecordPayload<ExtArgs>[]
+    featureUsages: Prisma.$FeatureUsagePayload<ExtArgs>[]
+    qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5743,6 +8018,13 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   expenses<T extends Prisma.Tenant$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supplierPrices<T extends Prisma.Tenant$supplierPricesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$supplierPricesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dayEnds<T extends Prisma.Tenant$dayEndsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$dayEndsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DayEndSummaryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  printerDevices<T extends Prisma.Tenant$printerDevicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$printerDevicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrinterDevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  printJobs<T extends Prisma.Tenant$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  customerConsents<T extends Prisma.Tenant$customerConsentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$customerConsentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  whatsAppLogs<T extends Prisma.Tenant$whatsAppLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$whatsAppLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invoices<T extends Prisma.Tenant$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  featureUsages<T extends Prisma.Tenant$featureUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$featureUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrSessions<T extends Prisma.Tenant$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6701,6 +8983,174 @@ export type Tenant$dayEndsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DayEndSummaryScalarFieldEnum | Prisma.DayEndSummaryScalarFieldEnum[]
+}
+
+/**
+ * Tenant.printerDevices
+ */
+export type Tenant$printerDevicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrinterDevice
+   */
+  select?: Prisma.PrinterDeviceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrinterDevice
+   */
+  omit?: Prisma.PrinterDeviceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrinterDeviceInclude<ExtArgs> | null
+  where?: Prisma.PrinterDeviceWhereInput
+  orderBy?: Prisma.PrinterDeviceOrderByWithRelationInput | Prisma.PrinterDeviceOrderByWithRelationInput[]
+  cursor?: Prisma.PrinterDeviceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrinterDeviceScalarFieldEnum | Prisma.PrinterDeviceScalarFieldEnum[]
+}
+
+/**
+ * Tenant.printJobs
+ */
+export type Tenant$printJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PrintJob
+   */
+  select?: Prisma.PrintJobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PrintJob
+   */
+  omit?: Prisma.PrintJobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PrintJobInclude<ExtArgs> | null
+  where?: Prisma.PrintJobWhereInput
+  orderBy?: Prisma.PrintJobOrderByWithRelationInput | Prisma.PrintJobOrderByWithRelationInput[]
+  cursor?: Prisma.PrintJobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PrintJobScalarFieldEnum | Prisma.PrintJobScalarFieldEnum[]
+}
+
+/**
+ * Tenant.customerConsents
+ */
+export type Tenant$customerConsentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomerConsent
+   */
+  select?: Prisma.CustomerConsentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomerConsent
+   */
+  omit?: Prisma.CustomerConsentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerConsentInclude<ExtArgs> | null
+  where?: Prisma.CustomerConsentWhereInput
+  orderBy?: Prisma.CustomerConsentOrderByWithRelationInput | Prisma.CustomerConsentOrderByWithRelationInput[]
+  cursor?: Prisma.CustomerConsentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomerConsentScalarFieldEnum | Prisma.CustomerConsentScalarFieldEnum[]
+}
+
+/**
+ * Tenant.whatsAppLogs
+ */
+export type Tenant$whatsAppLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WhatsAppDeliveryLog
+   */
+  select?: Prisma.WhatsAppDeliveryLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WhatsAppDeliveryLog
+   */
+  omit?: Prisma.WhatsAppDeliveryLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WhatsAppDeliveryLogInclude<ExtArgs> | null
+  where?: Prisma.WhatsAppDeliveryLogWhereInput
+  orderBy?: Prisma.WhatsAppDeliveryLogOrderByWithRelationInput | Prisma.WhatsAppDeliveryLogOrderByWithRelationInput[]
+  cursor?: Prisma.WhatsAppDeliveryLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WhatsAppDeliveryLogScalarFieldEnum | Prisma.WhatsAppDeliveryLogScalarFieldEnum[]
+}
+
+/**
+ * Tenant.invoices
+ */
+export type Tenant$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceRecord
+   */
+  select?: Prisma.InvoiceRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceRecord
+   */
+  omit?: Prisma.InvoiceRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceRecordInclude<ExtArgs> | null
+  where?: Prisma.InvoiceRecordWhereInput
+  orderBy?: Prisma.InvoiceRecordOrderByWithRelationInput | Prisma.InvoiceRecordOrderByWithRelationInput[]
+  cursor?: Prisma.InvoiceRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvoiceRecordScalarFieldEnum | Prisma.InvoiceRecordScalarFieldEnum[]
+}
+
+/**
+ * Tenant.featureUsages
+ */
+export type Tenant$featureUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeatureUsage
+   */
+  select?: Prisma.FeatureUsageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeatureUsage
+   */
+  omit?: Prisma.FeatureUsageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeatureUsageInclude<ExtArgs> | null
+  where?: Prisma.FeatureUsageWhereInput
+  orderBy?: Prisma.FeatureUsageOrderByWithRelationInput | Prisma.FeatureUsageOrderByWithRelationInput[]
+  cursor?: Prisma.FeatureUsageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeatureUsageScalarFieldEnum | Prisma.FeatureUsageScalarFieldEnum[]
+}
+
+/**
+ * Tenant.qrSessions
+ */
+export type Tenant$qrSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QrOrderingSession
+   */
+  select?: Prisma.QrOrderingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QrOrderingSession
+   */
+  omit?: Prisma.QrOrderingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QrOrderingSessionInclude<ExtArgs> | null
+  where?: Prisma.QrOrderingSessionWhereInput
+  orderBy?: Prisma.QrOrderingSessionOrderByWithRelationInput | Prisma.QrOrderingSessionOrderByWithRelationInput[]
+  cursor?: Prisma.QrOrderingSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QrOrderingSessionScalarFieldEnum | Prisma.QrOrderingSessionScalarFieldEnum[]
 }
 
 /**

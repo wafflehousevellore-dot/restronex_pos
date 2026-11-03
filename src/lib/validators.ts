@@ -41,9 +41,11 @@ export const createOutletSchema = z.object({
 export const orderCreateSchema = z.object({
   outletId: z.string(),
   type: z.enum(["DINE_IN","TAKEAWAY","DELIVERY","QR"]),
+  serviceMode: z.enum(["DINE_IN","TAKEAWAY","DELIVERY"]).optional(),
   tableId: z.string().nullable().optional(),
   customerName: z.string().optional(),
   customerPhone: z.string().optional(),
+  whatsappConsent: z.boolean().optional().default(false),
   notes: z.string().optional(),
   items: z.array(z.object({
     menuItemId: z.string(),
@@ -55,7 +57,8 @@ export const orderCreateSchema = z.object({
     notes: z.string().optional(),
   })).min(1),
   discountPaise: z.number().int().min(0).default(0),
-  paymentMethod: z.enum(["CASH", "UPI", "CARD"]).optional().default("CASH"),
+  paymentMethod: z.enum(["CASH", "UPI", "CARD", "SPLIT"]).optional().default("CASH"),
+  splitPayments: z.array(z.object({ method: z.string(), amountPaise: z.number().int() })).optional(),
 });
 
 export const menuItemSchema = z.object({
