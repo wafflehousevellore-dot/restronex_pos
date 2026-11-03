@@ -5,6 +5,7 @@ import zlib from "zlib";
 import { PrismaClient } from "../generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 import { SEED_DB_GZIP_BASE64 } from "./seedDbBuffer";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
@@ -44,7 +45,13 @@ function getPrisma(): PrismaClient {
   let prisma: PrismaClient;
 
   if (dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://")) {
-    const adapter = new PrismaPg({ connectionString: dbUrl });
+    const pool = new pg.Pool({
+      connectionString: dbUrl,
+      max: Number(process.env.PG_POOL_MAX || 15),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    });
+    const adapter = new PrismaPg(pool);
     prisma = new PrismaClient({ adapter });
   } else {
     const finalDbPath = ensureDatabaseFile();
@@ -52,7 +59,7 @@ function getPrisma(): PrismaClient {
     prisma = new PrismaClient({ adapter });
   }
 
-  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+  globalForPrisma.prisma = prisma;
   return prisma;
 }
 

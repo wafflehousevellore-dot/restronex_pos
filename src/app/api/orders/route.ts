@@ -15,12 +15,17 @@ export async function GET(req: NextRequest) {
 
   const outletId = req.nextUrl.searchParams.get("outletId");
   const status = req.nextUrl.searchParams.get("status");
+  const limit = Math.min(Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 50), 100);
+  const cursor = req.nextUrl.searchParams.get("cursor");
+
   const where: any = { tenantId };
   if (outletId) where.outletId = outletId;
   if (status) where.status = status;
 
   const orders = await prisma.order.findMany({
     where,
+    take: limit,
+    ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
     include: {
       items: true,
       payments: true,
@@ -30,7 +35,6 @@ export async function GET(req: NextRequest) {
       whatsAppLogs: { orderBy: { createdAt: "desc" }, take: 2 },
     },
     orderBy: { createdAt: "desc" },
-    take: 100,
   });
 
   return NextResponse.json(orders);
@@ -49,6 +53,29 @@ export async function POST(req: NextRequest) {
   const parsed = orderCreateSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   const d = parsed.data;
+
+  // Idempotency check: prevent duplicate charges / duplicate order insertions
+  const idempotencyKey = (body as any).idempotencyKey ? String((body as any).idempotencyKey).trim() : null;
+  if (idempotencyKey) {
+    const existing = await prisma.order.findFirst({
+      where: { idempotencyKey },
+      include: {
+        items: true,
+        payments: true,
+        invoice: true,
+        table: { select: { id: true, number: true, area: true } },
+      },
+    });
+    if (existing) {
+      return NextResponse.json({
+        ...existing,
+        orderId: existing.id,
+        orderNumber: existing.orderNumber,
+        invoiceNumber: existing.invoice?.invoiceNumber,
+        replayed: true,
+      });
+    }
+  }
 
   // Verify outlet belongs to tenant
   const outlet = await prisma.outlet.findFirst({ where: { id: d.outletId, tenantId } });
@@ -101,27 +128,27 @@ export async function POST(req: NextRequest) {
         billClosedAt: now,
         whatsappConsent: d.whatsappConsent || false,
         whatsappStatus: d.whatsappConsent && d.customerPhone ? "QUEUED" : null,
+        idempotencyKey: idempotencyKey || null,
       },
     });
 
-    // 2. Create Order Items
-    for (const it of d.items) {
+    // 2. High-performance batch create of all order items in single SQL query
+    const orderItemsData = d.items.map((it) => {
       const modsPrice = (it as any).modifiers?.reduce((s: number, m: any) => s + (m.pricePaise || 0), 0) || 0;
-      await tx.orderItem.create({
-        data: {
-          orderId: o.id,
-          menuItemId: it.menuItemId,
-          name: it.name,
-          quantity: it.quantity,
-          unitPricePaise: it.unitPricePaise,
-          variantName: (it as any).variantName,
-          modifiersJson: (it as any).modifiers ? JSON.stringify((it as any).modifiers) : null,
-          notes: (it as any).notes,
-          totalPaise: (it.unitPricePaise + modsPrice) * it.quantity,
-          kotStatus: "SENT",
-        },
-      });
-    }
+      return {
+        orderId: o.id,
+        menuItemId: it.menuItemId,
+        name: it.name,
+        quantity: it.quantity,
+        unitPricePaise: it.unitPricePaise,
+        variantName: (it as any).variantName || null,
+        modifiersJson: (it as any).modifiers ? JSON.stringify((it as any).modifiers) : null,
+        notes: (it as any).notes || null,
+        totalPaise: (it.unitPricePaise + modsPrice) * it.quantity,
+        kotStatus: "SENT",
+      };
+    });
+    await tx.orderItem.createMany({ data: orderItemsData });
 
     // 3. Create Kitchen Tickets (KOT)
     await tx.kitchenTicket.create({
@@ -136,16 +163,14 @@ export async function POST(req: NextRequest) {
 
     // 4. Record Payments
     if (d.splitPayments && d.splitPayments.length > 0) {
-      for (const sp of d.splitPayments) {
-        await tx.payment.create({
-          data: {
-            orderId: o.id,
-            method: sp.method,
-            amountPaise: sp.amountPaise,
-            status: "COMPLETED",
-          },
-        });
-      }
+      await tx.payment.createMany({
+        data: d.splitPayments.map((sp) => ({
+          orderId: o.id,
+          method: sp.method,
+          amountPaise: sp.amountPaise,
+          status: "COMPLETED",
+        })),
+      });
     } else {
       const payMethod = d.paymentMethod || "CASH";
       await tx.payment.create({

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
+import { appCache, getOrSetCache } from "@/lib/cache";
 import crypto from "crypto";
 
 export async function GET(req: NextRequest) {
@@ -13,30 +14,38 @@ export async function GET(req: NextRequest) {
   if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const outletId = req.nextUrl.searchParams.get("outletId");
-  const where: any = { tenantId };
-  if (outletId) where.outletId = outletId;
+  const cacheKey = `tables_${tenantId}_${outletId || "all"}`;
 
-  const tables = await prisma.table.findMany({
-    where,
-    include: {
-      outlet: { select: { id: true, name: true, slug: true } },
+  const enriched = await getOrSetCache(
+    cacheKey,
+    async () => {
+      const where: any = { tenantId };
+      if (outletId) where.outletId = outletId;
+
+      const tables = await prisma.table.findMany({
+        where,
+        include: {
+          outlet: { select: { id: true, name: true, slug: true } },
+        },
+        orderBy: { number: "asc" },
+      });
+
+      return tables.map((t) => {
+        if (!t.qrToken) {
+          const token = `tbl_${crypto.randomBytes(6).toString("hex")}`;
+          // fire-and-forget token update to not block response
+          prisma.table.update({ where: { id: t.id }, data: { qrToken: token } }).catch(() => {});
+          return { ...t, qrToken: token };
+        }
+        return t;
+      });
     },
-    orderBy: { number: "asc" },
-  });
-
-  // Ensure every table has a unique qrToken
-  const enriched = await Promise.all(
-    tables.map(async (t) => {
-      if (!t.qrToken) {
-        const token = `tbl_${crypto.randomBytes(6).toString("hex")}`;
-        await prisma.table.update({ where: { id: t.id }, data: { qrToken: token } });
-        return { ...t, qrToken: token };
-      }
-      return t;
-    })
+    8
   );
 
-  return NextResponse.json(enriched);
+  const res = NextResponse.json(enriched);
+  res.headers.set("Cache-Control", "private, s-maxage=5, stale-while-revalidate=15");
+  return res;
 }
 
 export async function POST(req: NextRequest) {
@@ -79,6 +88,8 @@ export async function POST(req: NextRequest) {
       waiterName: body.waiterName || null,
     },
   });
+
+  appCache.delPrefix(`tables_${tenantId}`);
 
   await prisma.auditLog.create({
     data: {
@@ -184,5 +195,6 @@ export async function DELETE(req: NextRequest) {
   }
 
   await prisma.table.delete({ where: { id: tableId } });
+  appCache.delPrefix(`tables_${table.tenantId}`);
   return NextResponse.json({ ok: true, deleted: true });
 }

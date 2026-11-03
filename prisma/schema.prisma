@@ -181,6 +181,8 @@ model MenuItem {
   recipe      Recipe?
   @@index([tenantId])
   @@index([categoryId])
+  @@index([tenantId, isActive])
+  @@index([categoryId, isActive])
 }
 
 model MenuVariant {
@@ -221,6 +223,8 @@ model Table {
   @@unique([outletId, number])
   @@index([tenantId])
   @@index([qrToken])
+  @@index([tenantId, outletId])
+  @@index([outletId, status])
 }
 
 model Order {
@@ -249,6 +253,7 @@ model Order {
   whatsappConsent Boolean @default(false)
   whatsappStatus String?
   qrSessionId String?
+  idempotencyKey String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -264,6 +269,11 @@ model Order {
   @@unique([tenantId, orderNumber])
   @@index([tenantId, outletId])
   @@index([status])
+  @@index([tenantId, createdAt])
+  @@index([outletId, createdAt])
+  @@index([tenantId, status, createdAt])
+  @@index([tableId])
+  @@index([idempotencyKey])
 }
 
 model OrderItem {
@@ -281,6 +291,7 @@ model OrderItem {
   order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
   @@index([orderId])
+  @@index([orderId, menuItemId])
 }
 
 model KitchenTicket {
@@ -392,6 +403,8 @@ model StockMovement {
   tenant          Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   outlet          Outlet? @relation(fields: [outletId], references: [id])
   @@index([tenantId])
+  @@index([tenantId, createdAt])
+  @@index([outletId, createdAt])
 }
 
 model Customer {

@@ -313,6 +313,7 @@ export const OrderScalarFieldEnum = {
   whatsappConsent: 'whatsappConsent',
   whatsappStatus: 'whatsappStatus',
   qrSessionId: 'qrSessionId',
+  idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
