@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { calcCheckoutTotals } from "@/lib/checkout";
-import { Check, Loader2, CreditCard, Tag, X, QrCode, Copy, Smartphone, CheckCheck } from "lucide-react";
+import { Check, Loader2, CreditCard, Tag, X, ShieldCheck, Zap, Lock } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -57,11 +57,18 @@ export default function CheckoutClient({
   const [msg, setMsg] = useState<{type:"success"|"error"|"info"; text:string} | null>(null);
   const [step, setStep] = useState<"summary"|"processing"|"success">("summary");
   const [paymentId, setPaymentId] = useState<string | null>(null);
-  const [paymentMode, setPaymentMode] = useState<"QR" | "GATEWAY">("QR");
-  const [copiedUpi, setCopiedUpi] = useState(false);
-  const [qrVerifying, setQrVerifying] = useState(false);
   const [showCouponInput, setShowCouponInput] = useState(false);
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
+
+  // Preload official Razorpay checkout script
+  useEffect(() => {
+    if (typeof window !== "undefined" && !window.Razorpay) {
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.async = true;
+      document.body.appendChild(s);
+    }
+  }, []);
 
   useEffect(()=>{
     try {
@@ -144,66 +151,6 @@ export default function CheckoutClient({
     setCoupon("");
     setCouponInput("");
     setCouponStatus(null);
-  }
-
-  function copyUpiId() {
-    navigator.clipboard.writeText("restronex@icici");
-    setCopiedUpi(true);
-    setTimeout(() => setCopiedUpi(false), 2000);
-  }
-
-  async function simulatePaidTest() {
-    if (!isAuthenticated) {
-      router.push(`/sign-up?plan=${plan}&cycle=${cycle}&next=${encodeURIComponent(`/checkout?plan=${plan}&cycle=${cycle}&outlets=${outlets}`)}`);
-      return;
-    }
-    setQrVerifying(true);
-    setMsg({ type: "info", text: "Creating secure order & preparing QR verification..." });
-    try {
-      const res = await fetch("/api/checkout/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
-        body: JSON.stringify({ planSlug: plan, billingCycle: cycle, outletCount: outlets, coupon: coupon || undefined }),
-      });
-      const j = await res.json();
-      if (!res.ok) throw new Error(j.error || `Order failed ${res.status}`);
-
-      setStep("processing");
-      setMsg({ type: "info", text: `Verifying QR payment of ${formatINR(j.amountPaise)} on server...` });
-
-      const qrPaymentId = `pay_qr_${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36)}`;
-      const v = await fetch("/api/checkout/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          razorpay_order_id: j.orderId,
-          razorpay_payment_id: qrPaymentId,
-          razorpay_signature: "mock_verified",
-          planSlug: plan,
-          billingCycle: cycle,
-          outletCount: outlets,
-        }),
-      });
-      const vj = await v.json();
-      if (!v.ok) {
-        setMsg({ type: "error", text: vj.error || "Verification failed" });
-        setStep("summary");
-        return;
-      }
-      setPaymentId(vj.subscriptionPaymentId || qrPaymentId);
-      setMsg({
-        type: "success",
-        text: `✓ QR Payment verified! Subscription ${vj.subscriptionId || "ACTIVE"} activated. Redirecting to onboarding...`,
-      });
-      setStep("success");
-      setTimeout(() => router.push(vj.next || "/app/onboarding"), 1200);
-    } catch (e: any) {
-      setMsg({ type: "error", text: e.message });
-      setStep("summary");
-    } finally {
-      setQrVerifying(false);
-    }
   }
 
   async function startCheckout(){
@@ -462,61 +409,72 @@ export default function CheckoutClient({
           </CardContent>
         </Card>
 
-        {/* Payment Card */}
+        {/* Official Razorpay Payment Card */}
         <Card className="bg-white border-[#E5EBE7] shadow-sm h-fit lg:sticky lg:top-6">
-          <CardHeader>
-            <CardTitle className="text-[#172B25] flex items-center justify-between">
-              <span className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-[#16845B]" /> Payment Options</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider text-[#16845B] bg-[#E8F5EE] border border-[#E5EBE7] px-2.5 py-0.5 rounded-full">
-                Razorpay Secure
+          <CardHeader className="pb-3 border-b border-[#E5EBE7]">
+            <CardTitle className="text-[#172B25] flex items-center justify-between text-base">
+              <span className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-[#16845B]" />
+                Official Razorpay Checkout
+              </span>
+              <span className="text-[10px] uppercase font-bold tracking-wider text-[#16845B] bg-[#E8F5EE] border border-[#16845B]/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                <ShieldCheck className="h-3 w-3" />
+                RBI Verified
               </span>
             </CardTitle>
-            <p className="text-xs text-[#718078]">Select method • Instant receipt & access</p>
+            <p className="text-xs text-[#718078] mt-1">
+              Direct checkout via Razorpay official payment gateway
+            </p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Mode Switcher */}
-            <div className="grid grid-cols-3 gap-2 text-center text-xs">
-              <button
-                type="button"
-                onClick={() => setPaymentMode("QR")}
-                className={`p-2.5 rounded-xl border text-[#172B25] flex flex-col items-center gap-1 transition ${
-                  paymentMode === "QR"
-                    ? "border-[#16845B] bg-[#E8F5EE] text-[#16845B] font-bold shadow-xs"
-                    : "border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white"
-                }`}
-              >
-                <span className="text-base">⚡</span>
-                <span className="font-bold text-[11px] flex items-center gap-1">
-                  UPI / QR <span className="h-1.5 w-1.5 rounded-full bg-[#16845B] animate-pulse" />
-                </span>
-                <span className="text-[9px] text-[#718078]">Scan & Pay</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setPaymentMode("GATEWAY")}
-                className={`p-2.5 rounded-xl border text-[#172B25] flex flex-col items-center gap-1 transition ${
-                  paymentMode === "GATEWAY"
-                    ? "border-[#16845B] bg-[#E8F5EE] text-[#16845B] font-bold shadow-xs"
-                    : "border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white"
-                }`}
-              >
-                <span className="text-base">💳</span>
-                <span className="font-semibold text-[11px]">Cards</span>
-                <span className="text-[9px] text-[#718078]">Visa, MC, RuPay</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setPaymentMode("GATEWAY")}
-                className={`p-2.5 rounded-xl border text-[#172B25] flex flex-col items-center gap-1 transition ${
-                  paymentMode === "GATEWAY"
-                    ? "border-[#16845B] bg-[#E8F5EE] text-[#16845B] font-bold shadow-xs"
-                    : "border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white"
-                }`}
-              >
-                <span className="text-base">🏦</span>
-                <span className="font-semibold text-[11px]">Net Banking</span>
-                <span className="text-[9px] text-[#718078]">50+ Banks</span>
-              </button>
+          <CardContent className="space-y-4 pt-4">
+            {/* Accepted Methods Banner */}
+            <div className="rounded-2xl border border-[#E5EBE7] bg-[#F8FAF9] p-3.5 space-y-3">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#718078] flex items-center justify-between">
+                <span>Accepted Payment Methods</span>
+                <span className="text-[#16845B] font-semibold lowercase">all in 1 checkout</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="rounded-xl border border-[#E5EBE7] bg-white p-2.5 flex items-center gap-2.5 shadow-2xs">
+                  <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] grid place-items-center text-sm font-black text-[#16845B] shrink-0">
+                    ⚡
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[#172B25] text-xs">UPI & QR</div>
+                    <div className="text-[10px] text-[#718078] truncate">GPay, PhonePe, Paytm, CRED</div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-[#E5EBE7] bg-white p-2.5 flex items-center gap-2.5 shadow-2xs">
+                  <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] grid place-items-center text-sm font-black text-[#16845B] shrink-0">
+                    💳
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[#172B25] text-xs">Debit & Credit</div>
+                    <div className="text-[10px] text-[#718078] truncate">Visa, Mastercard, RuPay</div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-[#E5EBE7] bg-white p-2.5 flex items-center gap-2.5 shadow-2xs">
+                  <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] grid place-items-center text-sm font-black text-[#16845B] shrink-0">
+                    🏦
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[#172B25] text-xs">Net Banking</div>
+                    <div className="text-[10px] text-[#718078] truncate">50+ Indian Banks</div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-[#E5EBE7] bg-white p-2.5 flex items-center gap-2.5 shadow-2xs">
+                  <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] grid place-items-center text-sm font-black text-[#16845B] shrink-0">
+                    👛
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-bold text-[#172B25] text-xs">Wallets & EMI</div>
+                    <div className="text-[10px] text-[#718078] truncate">Paytm, Mobikwik & more</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Promo Code */}
@@ -545,13 +503,13 @@ export default function CheckoutClient({
                     <Input
                       value={couponInput}
                       onChange={e => { setCouponInput(e.target.value); setCouponStatus(null); }}
-                      placeholder="Enter promo code"
+                      placeholder="Enter promo code (e.g. PAY2, WELCOME10)"
                       className="flex-1 bg-white border-[#E5EBE7] text-[#172B25] text-xs h-9"
                     />
                     <Button
                       type="button"
                       size="sm"
-                      className="rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs h-9 px-4"
+                      className="rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs h-9 px-4 cursor-pointer"
                       onClick={() => applyCouponCode()}
                     >
                       Apply
@@ -561,7 +519,7 @@ export default function CheckoutClient({
                         type="button"
                         size="sm"
                         variant="outline"
-                        className="rounded-xl border-red-200 bg-red-50 text-red-600 text-xs h-9 px-2"
+                        className="rounded-xl border-red-200 bg-red-50 text-red-600 text-xs h-9 px-2 cursor-pointer"
                         onClick={removeCouponCode}
                       >
                         <X className="h-3.5 w-3.5" />
@@ -571,7 +529,7 @@ export default function CheckoutClient({
                         type="button"
                         size="sm"
                         variant="ghost"
-                        className="text-[#718078] text-xs h-9 px-2"
+                        className="text-[#718078] text-xs h-9 px-2 cursor-pointer"
                         onClick={() => setShowCouponInput(false)}
                       >
                         Cancel
@@ -587,94 +545,69 @@ export default function CheckoutClient({
               )}
             </div>
 
-            {/* DIRECT SCAN & PAY UPI QR */}
-            {paymentMode === "QR" ? (
-              <div className="rounded-2xl border border-[#E5EBE7] bg-[#F8FAF9] p-4 text-center space-y-3.5 shadow-xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#172B25]">
-                    <QrCode className="h-4 w-4 text-[#16845B]" /> Scan & Pay via UPI QR
-                  </div>
-                  <span className="text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] border border-[#E5EBE7] px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#16845B] animate-pulse" /> Auto-Detecting
-                  </span>
-                </div>
-
-                {/* QR Code Container */}
-                <div className="mx-auto w-fit p-3 bg-white rounded-2xl shadow-sm border border-[#E5EBE7]">
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`upi://pay?pa=restronex@icici&pn=RestroNex%20Restaurant%20OS&am=${(totals.totalPaise/100).toFixed(2)}&cu=INR&tn=RestroNex_${plan}_Plan`)}&margin=4`}
-                    alt="Scan UPI QR Code to Pay"
-                    className="w-40 h-40 object-contain rounded-lg"
-                    loading="eager"
-                  />
-                  <div className="text-[11px] text-[#172B25] font-black mt-1.5 text-center">
-                    Pay {formatINR(totals.totalPaise)} • GPay / PhonePe / Paytm / Any UPI
-                  </div>
-                </div>
-
-                {/* UPI ID */}
-                <div className="flex items-center justify-between bg-white border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <Smartphone className="h-3.5 w-3.5 text-[#16845B]" />
-                    <span className="text-[#718078] text-[11px]">UPI ID:</span>
-                    <span className="font-mono font-bold text-[#172B25] text-[11px]">restronex@icici</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={copyUpiId}
-                    className="text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] px-2 py-1 rounded-md transition flex items-center gap-1"
-                  >
-                    {copiedUpi ? <><CheckCheck className="h-3 w-3" /> Copied</> : <><Copy className="h-3 w-3" /> Copy</>}
-                  </button>
-                </div>
-
-                <Button
-                  onClick={simulatePaidTest}
-                  disabled={qrVerifying || step === "processing"}
-                  className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 text-xs font-bold shadow-xs"
-                >
-                  {qrVerifying ? (
-                    <><Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" /> Checking Razorpay…</>
-                  ) : (
-                    `⚡ Check & Auto-Verify Payment`
-                  )}
-                </Button>
-
-                <button
-                  type="button"
-                  onClick={() => { setPaymentMode("GATEWAY"); startCheckout(); }}
-                  className="text-xs text-[#718078] hover:text-[#16845B] underline transition text-center block w-full pt-1"
-                >
-                  Or open in Razorpay Modal Popup (Cards / Netbanking / UPI) →
-                </button>
-              </div>
-            ) : (
-              /* GATEWAY POPUP MODE */
-              <div className="space-y-3">
-                <Button
-                  onClick={startCheckout}
-                  disabled={loading || step === "processing"}
-                  className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-6 text-sm font-black shadow-sm"
-                >
-                  {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Creating order…</> : step === "processing" ? "Verifying…" : `Pay securely — ${formatINR(totals.totalPaise)} →`}
-                </Button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMode("QR")}
-                  className="text-xs text-[#16845B] hover:underline flex items-center justify-center gap-1 w-full text-center"
-                >
-                  <QrCode className="h-3.5 w-3.5" /> Switch back to QR Code Scan & Pay
-                </button>
-              </div>
-            )}
-
-            {totals.trialEligible && (
-              <Button variant="outline" onClick={startTrial} disabled={loading} className="w-full rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9]">
-                Start 14-day free trial — no card
+            {/* Official Razorpay Pay Action */}
+            <div className="space-y-3 pt-1">
+              <Button
+                onClick={startCheckout}
+                disabled={loading || step === "processing"}
+                className="w-full rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white py-6 text-sm font-black shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.01]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                    Opening Razorpay Gateway…
+                  </>
+                ) : step === "processing" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-1" />
+                    Verifying Payment…
+                  </>
+                ) : (
+                  <>
+                    <Lock className="h-4 w-4" />
+                    Pay {formatINR(totals.totalPaise)} via Razorpay →
+                  </>
+                )}
               </Button>
-            )}
 
-            <div className="text-xs text-[#718078] text-center">By paying you agree to Terms • Subscription auto-renews • Cancel anytime</div>
+              {totals.trialEligible && (
+                <Button
+                  variant="outline"
+                  onClick={startTrial}
+                  disabled={loading || step === "processing"}
+                  className="w-full rounded-xl border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] text-xs font-semibold py-2.5 transition cursor-pointer"
+                >
+                  Start 14-day free trial — no card required
+                </Button>
+              )}
+            </div>
+
+            {/* Trust and Compliance Badges */}
+            <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3 space-y-2 text-center">
+              <div className="flex items-center justify-center gap-3 text-[11px] font-semibold text-[#172B25]">
+                <span className="flex items-center gap-1">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
+                  PCI-DSS Level 1
+                </span>
+                <span className="text-[#E5EBE7]">•</span>
+                <span className="flex items-center gap-1">
+                  <Lock className="h-3.5 w-3.5 text-[#16845B]" />
+                  256-Bit SSL
+                </span>
+                <span className="text-[#E5EBE7]">•</span>
+                <span className="flex items-center gap-1">
+                  <Zap className="h-3.5 w-3.5 text-[#16845B]" />
+                  Instant Activation
+                </span>
+              </div>
+              <div className="text-[10px] text-[#718078]">
+                Protected by Razorpay official payment infrastructure. GST invoice delivered instantly.
+              </div>
+            </div>
+
+            <div className="text-[11px] text-[#718078] text-center pt-1">
+              By paying you agree to Terms • Subscription auto-renews • Cancel anytime
+            </div>
           </CardContent>
         </Card>
       </div>
