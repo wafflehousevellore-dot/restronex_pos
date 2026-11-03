@@ -1,5 +1,8 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { UserButton, OrganizationSwitcher } from "@clerk/nextjs";
 import {
@@ -21,11 +24,7 @@ import {
   Menu,
   X,
   ShieldCheck,
-  Printer,
-  MessageSquare,
 } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
 
 const nav = [
   { label: "Dashboard", href: "/app/dashboard", icon: LayoutDashboard },
@@ -33,19 +32,19 @@ const nav = [
   { label: "Orders", href: "/app/orders", icon: FileText },
   { label: "Floor & Tables", href: "/app/tables", icon: Table2 },
   { label: "Kitchen (KDS)", href: "/app/kitchen", icon: ChefHat },
-  { label: "Tokens Queue", href: "/app/tokens", icon: FileText },
   { label: "Menu Catalog", href: "/app/menu", icon: Utensils },
   { label: "Inventory", href: "/app/inventory", icon: Box },
   { label: "Purchases", href: "/app/purchases", icon: Box },
-  { label: "Customers & CRM", href: "/app/customers", icon: Users },
+  { label: "Customers", href: "/app/customers", icon: Users },
   { label: "Reports & Analytics", href: "/app/reports", icon: BarChart3 },
   { label: "Outlets", href: "/app/outlets", icon: Building2 },
   { label: "Staff & Team", href: "/app/staff", icon: UserCog },
-  { label: "Devices & Printers", href: "/app/settings/printers", icon: Printer },
-  { label: "WhatsApp Billing", href: "/app/settings/whatsapp", icon: MessageSquare },
   { label: "Integrations", href: "/app/integrations", icon: Plug },
   { label: "Subscription", href: "/app/subscription", icon: CreditCard },
+  { label: "Marketplace", href: "/app/marketplace", icon: Plug },
+  { label: "Tokens", href: "/app/tokens", icon: FileText },
   { label: "Reservations", href: "/app/reservations", icon: Table2 },
+  { label: "Feedback", href: "/app/feedback", icon: Users },
   { label: "Expenses", href: "/app/expenses", icon: CreditCard },
   { label: "Settings", href: "/app/settings", icon: Settings },
   { label: "Audit Logs", href: "/app/audit-logs", icon: FileText },
@@ -63,16 +62,23 @@ export default function AppShell({
   outlet?: any;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [mobile, setMobile] = useState(false);
 
   async function signOut() {
     await fetch("/api/auth/sign-out", { method: "POST", credentials: "same-origin" });
-    router.push("/sign-in");
+    window.location.href = "/sign-in";
   }
 
   return (
     <div className="min-h-screen bg-[#F8FAF9] text-[#172B25] flex">
+      {/* Mobile Drawer Overlay */}
+      {mobile && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 lg:hidden backdrop-blur-xs"
+          onClick={() => setMobile(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-[268px] bg-white text-[#172B25] flex flex-col border-r border-[#E5EBE7] ${
@@ -80,7 +86,7 @@ export default function AppShell({
         } transition-transform shadow-xs`}
       >
         {/* Brand Header */}
-        <div className="h-[68px] flex items-center justify-between px-5 border-b border-[#E5EBE7] bg-white">
+        <div className="h-[68px] flex items-center justify-between px-5 border-b border-[#E5EBE7] bg-white shrink-0">
           <Link href="/app/dashboard" className="flex items-center gap-2.5">
             <Logo size="small" />
           </Link>
@@ -94,7 +100,7 @@ export default function AppShell({
 
         {/* Tenant / Outlet Info Card */}
         {tenant && (
-          <div className="px-3.5 py-3 border-b border-[#E5EBE7] bg-[#F8FAF9]/50">
+          <div className="px-3.5 py-3 border-b border-[#E5EBE7] bg-[#F8FAF9]/50 shrink-0">
             <div className="rounded-xl bg-white border border-[#E5EBE7] p-3 shadow-2xs">
               <div className="flex items-center justify-between gap-1">
                 <span className="text-xs font-bold text-[#172B25] truncate">
@@ -150,7 +156,7 @@ export default function AppShell({
         </nav>
 
         {/* User & Org Switcher Bottom Panel */}
-        <div className="p-3.5 border-t border-[#E5EBE7] bg-white space-y-3">
+        <div className="p-3.5 border-t border-[#E5EBE7] bg-white space-y-3 shrink-0">
           <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-2">
             <div className="text-[10px] font-bold tracking-widest text-[#718078] uppercase mb-1 px-1">
               Organization
@@ -158,8 +164,8 @@ export default function AppShell({
             <OrganizationSwitcher
               hidePersonal
               createOrganizationMode="navigation"
-              createOrganizationUrl="/app/organization"
-              afterCreateOrganizationUrl="/app/organization"
+              createOrganizationUrl="/organization"
+              afterCreateOrganizationUrl="/organization"
               afterSelectOrganizationUrl="/app/dashboard"
               appearance={{
                 elements: {

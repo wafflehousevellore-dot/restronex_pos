@@ -57,9 +57,15 @@ export default function PlansAdminClient({ initialPlans }: { initialPlans: any[]
       <div className="flex flex-wrap justify-between items-center gap-3">
         <div>
           <h1 className="text-2xl font-black text-[#172B25]">Subscription Plans Management</h1>
-          <p className="text-sm text-[#718078]">Configure pricing, outlet allowances, and staff account limits across the platform.</p>
+          <p className="text-sm text-[#718078]">
+            Configure pricing, outlet allowances, and staff account limits across the platform.
+          </p>
         </div>
-        {msg && <span className="text-xs font-bold text-[#16845B] bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1 rounded-full">{msg}</span>}
+        {msg && (
+          <span className="text-xs font-bold text-[#16845B] bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1 rounded-full">
+            {msg}
+          </span>
+        )}
       </div>
 
       <div className="grid gap-4">
