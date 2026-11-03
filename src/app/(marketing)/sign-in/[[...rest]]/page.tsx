@@ -18,7 +18,7 @@ export default function SignInPage() {
       document.cookie.split("; ").find((s) => s.startsWith("restronex_plan="))?.split("=")[1] ||
       localStorage.getItem("restronex_plan");
     const cycle = p.get("cycle") || "MONTHLY";
-    const next = p.get("next") || (plan ? `/checkout?plan=${plan}&cycle=${cycle}` : "/organization");
+    const next = p.get("next") || (plan ? `/checkout?plan=${plan}&cycle=${cycle}` : "/app/organization");
     setPlanInfo({ plan: plan ? decodeURIComponent(plan) : null, cycle, next });
     if (plan) {
       document.cookie = `restronex_plan=${encodeURIComponent(
@@ -42,10 +42,10 @@ export default function SignInPage() {
           routing="path"
           path="/sign-in"
           signUpUrl={`/sign-up?plan=${planInfo.plan || ""}&cycle=${planInfo.cycle || ""}&next=${encodeURIComponent(
-            planInfo.next || "/organization"
+            planInfo.next || "/app/organization"
           )}`}
-          forceRedirectUrl={planInfo.next || "/organization"}
-          fallbackRedirectUrl="/organization"
+          forceRedirectUrl={planInfo.next || "/app/organization"}
+          fallbackRedirectUrl="/app/organization"
         />
       </div>
 

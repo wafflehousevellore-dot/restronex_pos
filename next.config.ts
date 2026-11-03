@@ -27,6 +27,15 @@ const nextConfig: NextConfig = {
       ? [new URL(process.env.NEXT_PUBLIC_APP_URL).hostname]
       : []),
   ],
+  async redirects() {
+    return [
+      {
+        source: "/organization",
+        destination: "/app/organization",
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {

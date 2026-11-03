@@ -158,8 +158,8 @@ export default function AppShell({
             <OrganizationSwitcher
               hidePersonal
               createOrganizationMode="navigation"
-              createOrganizationUrl="/organization"
-              afterCreateOrganizationUrl="/organization"
+              createOrganizationUrl="/app/organization"
+              afterCreateOrganizationUrl="/app/organization"
               afterSelectOrganizationUrl="/app/dashboard"
               appearance={{
                 elements: {

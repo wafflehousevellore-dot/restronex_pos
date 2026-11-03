@@ -27,7 +27,7 @@ export async function POST(req: NextRequest){
     const user = await prisma.user.create({ data: { email: parsed.data.email, name: parsed.data.name, role: "OWNER", clerkId: hash.slice(0,20) }});
     await prisma.auditLog.create({ data: { userId: user.id, action: "USER_SIGNUP", entity:"User", entityId: user.id, metadataJson: JSON.stringify({ email:user.email, pwHash: hash }) }});
     await createSession({ id: user.id, email: user.email, name: user.name }, { secure: isHttpsFromRequest(req) });
-    const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/organization";
+    const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/app/organization";
     const plan = (data.plan as string) || req.nextUrl.searchParams.get("plan");
     const cycle = (data.cycle as string) || req.nextUrl.searchParams.get("cycle");
     const accept = req.headers.get("accept") || "";
