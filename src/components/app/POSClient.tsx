@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
-import { Tag, Check, X, CreditCard, Banknote, QrCode } from "lucide-react";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2 } from "lucide-react";
 import Link from "next/link";
 
 type MenuItem = {
@@ -18,6 +18,24 @@ type MenuItem = {
 };
 type Table = { id: string; number: string; status: string; area: string };
 type Outlet = { id: string; name: string };
+
+export type ReceiptData = {
+  orderNumber: string;
+  invoiceNumber: string;
+  outletName: string;
+  date: string;
+  orderType: string;
+  tableName?: string;
+  customerName?: string;
+  customerPhone?: string;
+  paymentMethod: string;
+  items: { name: string; quantity: number; unitPricePaise: number }[];
+  subtotalPaise: number;
+  discountPaise: number;
+  cgstPaise: number;
+  sgstPaise: number;
+  totalPaise: number;
+};
 
 function calculateCouponDiscount(code: string, subtotalPaise: number): number {
   const c = code.trim().toUpperCase();
@@ -71,6 +89,8 @@ export default function POSClient({
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [posting, setPosting] = useState(false);
   const [lastOrder, setLastOrder] = useState<{ orderNumber: string; total: number } | null>(null);
+  const [activeReceipt, setActiveReceipt] = useState<ReceiptData | null>(null);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const categories = useMemo(
     () => Array.from(new Set(items.map((i) => (i.category?.name || "Other").trim()).filter(Boolean))),
@@ -219,6 +239,39 @@ export default function POSClient({
       }
       const orderNumber = (j.orderNumber as string) || (j.orderId as string) || "OK";
       const billedTotal = (j as unknown as { totals: { total: number } }).totals?.total ?? total;
+      const invoiceNumber = (j.invoiceNumber as string) || `INV-${orderNumber.replace("ORD-", "")}`;
+      const outletObj = outlets.find((o) => o.id === selectedOutlet);
+
+      const receipt: ReceiptData = {
+        orderNumber,
+        invoiceNumber,
+        outletName: outletObj?.name || "RestroNex Restaurant",
+        date: new Date().toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        orderType: orderType.replace("_", " "),
+        tableName: selectedTableLabel || undefined,
+        customerName: customerName.trim() || undefined,
+        customerPhone: customerPhone.trim() || undefined,
+        paymentMethod,
+        items: cart.map((c) => ({
+          name: c.name,
+          quantity: c.quantity,
+          unitPricePaise: c.unitPricePaise,
+        })),
+        subtotalPaise: subtotal,
+        discountPaise,
+        cgstPaise: cgst,
+        sgstPaise: sgst,
+        totalPaise: billedTotal,
+      };
+
+      setActiveReceipt(receipt);
+      setShowReceipt(true);
       setLastOrder({ orderNumber, total: billedTotal });
       setMsg({
         type: "success",
@@ -296,10 +349,18 @@ export default function POSClient({
           <div>
             <div className="text-sm font-black text-[#172B25]">Last order: {lastOrder.orderNumber}</div>
             <div className="text-xs text-[#718078]">
-              Total {formatINR(lastOrder.total)} • Sent to kitchen • View in Orders / Kitchen
+              Total {formatINR(lastOrder.total)} • Sent to kitchen • Ready to print or send via WhatsApp
             </div>
           </div>
           <div className="flex gap-2">
+            {activeReceipt && (
+              <button
+                onClick={() => setShowReceipt(true)}
+                className="rounded-full bg-[#16845B] text-white px-4 py-2 text-xs font-bold hover:bg-[#116B49] shadow-xs flex items-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="h-3.5 w-3.5" /> Print Bill
+              </button>
+            )}
             <Link
               href="/app/orders"
               className="rounded-full bg-white border border-[#E5EBE7] text-[#172B25] px-4 py-2 text-xs font-bold hover:bg-[#F8FAF9] shadow-xs"
@@ -308,7 +369,7 @@ export default function POSClient({
             </Link>
             <Link
               href="/app/kitchen"
-              className="rounded-full bg-[#16845B] text-white px-4 py-2 text-xs font-bold hover:bg-[#116B49] shadow-xs"
+              className="rounded-full bg-white border border-[#E5EBE7] text-[#172B25] px-4 py-2 text-xs font-bold hover:bg-[#F8FAF9] shadow-xs"
             >
               KDS →
             </Link>
@@ -408,6 +469,35 @@ export default function POSClient({
                     </option>
                   ))}
                 </select>
+                {orderType === "DINE_IN" && tables.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1 max-h-16 overflow-y-auto">
+                    {tables.map((t) => {
+                      const isOccupied = t.status === "OCCUPIED";
+                      const isSelected = selectedTable === t.id;
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => setSelectedTable(isSelected ? "" : t.id)}
+                          className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer ${
+                            isSelected
+                              ? "bg-[#16845B] text-white border-[#16845B] shadow-2xs"
+                              : isOccupied
+                              ? "bg-amber-50 border-amber-200 text-amber-900"
+                              : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
+                          }`}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              isSelected ? "bg-white" : isOccupied ? "bg-amber-500" : "bg-emerald-500"
+                            }`}
+                          />
+                          {t.number}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div>
                 <Label className="text-[#718078] text-xs font-semibold">Customer phone</Label>
@@ -684,6 +774,190 @@ export default function POSClient({
           </CardContent>
         </Card>
       </div>
+
+      {/* Thermal Bill Receipt Modal */}
+      {showReceipt && activeReceipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-[#E5EBE7] overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-[#E5EBE7] flex justify-between items-center bg-[#F8FAF9]">
+              <div className="flex items-center gap-2">
+                <Receipt className="h-5 w-5 text-[#16845B]" />
+                <span className="font-black text-sm text-[#172B25]">Tax Invoice & Bill Receipt</span>
+              </div>
+              <button
+                onClick={() => setShowReceipt(false)}
+                className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:text-[#172B25] flex items-center justify-center cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Scrollable Receipt Preview & Printable Zone */}
+            <div className="p-6 overflow-y-auto bg-[#F8FAF9]/50 flex justify-center">
+              <div
+                id="thermal-receipt-printable"
+                className="w-full max-w-[340px] bg-white p-5 rounded-2xl border border-[#E5EBE7] shadow-xs font-mono text-xs text-[#172B25] space-y-3"
+              >
+                {/* Header */}
+                <div className="text-center pb-2 border-b border-dashed border-[#718078]/40">
+                  <div className="text-base font-black tracking-tight uppercase text-[#172B25]">
+                    {activeReceipt.outletName}
+                  </div>
+                  <div className="text-[10px] text-[#718078] mt-0.5">RestroNex Restaurant OS</div>
+                  <div className="text-[10px] font-bold text-[#16845B] mt-1 bg-[#E8F5EE] px-2 py-0.5 rounded-full inline-block">
+                    TAX INVOICE
+                  </div>
+                </div>
+
+                {/* Metadata */}
+                <div className="text-[11px] space-y-1 text-[#718078] pb-2 border-b border-dashed border-[#718078]/40">
+                  <div className="flex justify-between">
+                    <span>Invoice:</span>
+                    <span className="font-bold text-[#172B25]">{activeReceipt.invoiceNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Order #:</span>
+                    <span className="font-bold text-[#172B25]">{activeReceipt.orderNumber}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Date:</span>
+                    <span>{activeReceipt.date}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Mode:</span>
+                    <span className="font-bold text-[#172B25]">
+                      {activeReceipt.orderType}
+                      {activeReceipt.tableName ? ` • Table ${activeReceipt.tableName}` : ""}
+                    </span>
+                  </div>
+                  {activeReceipt.customerName && (
+                    <div className="flex justify-between">
+                      <span>Customer:</span>
+                      <span>{activeReceipt.customerName}</span>
+                    </div>
+                  )}
+                  {activeReceipt.customerPhone && (
+                    <div className="flex justify-between">
+                      <span>Phone:</span>
+                      <span>{activeReceipt.customerPhone}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Itemized Table */}
+                <div className="pb-2 border-b border-dashed border-[#718078]/40">
+                  <div className="grid grid-cols-[24px_1fr_60px] font-bold text-[10px] uppercase text-[#718078] pb-1.5 border-b border-slate-200">
+                    <span>Qty</span>
+                    <span>Item</span>
+                    <span className="text-right">Amount</span>
+                  </div>
+                  <div className="divide-y divide-slate-100 mt-1">
+                    {activeReceipt.items.map((it, idx) => (
+                      <div key={idx} className="grid grid-cols-[24px_1fr_60px] py-1.5 text-[11px]">
+                        <span className="font-bold text-[#172B25]">{it.quantity}</span>
+                        <span className="truncate pr-1 text-[#172B25]">{it.name}</span>
+                        <span className="text-right font-medium text-[#172B25]">
+                          {formatINR(it.quantity * it.unitPricePaise)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Totals & Tax Breakdown */}
+                <div className="space-y-1 text-[11px] pb-2 border-b border-dashed border-[#718078]/40">
+                  <div className="flex justify-between text-[#718078]">
+                    <span>Subtotal:</span>
+                    <span>{formatINR(activeReceipt.subtotalPaise)}</span>
+                  </div>
+                  {activeReceipt.discountPaise > 0 && (
+                    <div className="flex justify-between text-[#16845B] font-bold">
+                      <span>Discount:</span>
+                      <span>−{formatINR(activeReceipt.discountPaise)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-[#718078]">
+                    <span>CGST (9%):</span>
+                    <span>{formatINR(activeReceipt.cgstPaise)}</span>
+                  </div>
+                  <div className="flex justify-between text-[#718078]">
+                    <span>SGST (9%):</span>
+                    <span>{formatINR(activeReceipt.sgstPaise)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm font-black pt-1 border-t border-slate-200 text-[#172B25]">
+                    <span>TOTAL:</span>
+                    <span className="text-[#16845B]">{formatINR(activeReceipt.totalPaise)}</span>
+                  </div>
+                  <div className="flex justify-between text-[10px] text-[#718078] pt-0.5">
+                    <span>Payment Mode:</span>
+                    <span className="font-bold uppercase text-[#172B25]">{activeReceipt.paymentMethod}</span>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="text-center pt-1 text-[10px] text-[#718078]">
+                  <div>Thank you for dining with us!</div>
+                  <div>Please visit again • FSSAI Registered</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions Bar */}
+            <div className="p-4 border-t border-[#E5EBE7] bg-white flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={() => window.print()}
+                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Printer className="h-4 w-4" /> Print Thermal Receipt (80mm)
+              </button>
+              {activeReceipt.customerPhone ? (
+                <a
+                  href={`https://wa.me/${activeReceipt.customerPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                    `🧾 *Tax Invoice from ${activeReceipt.outletName}*\n` +
+                      `Invoice: ${activeReceipt.invoiceNumber}\n` +
+                      `Order: ${activeReceipt.orderNumber}\n` +
+                      `Date: ${activeReceipt.date}\n` +
+                      `Total: ${formatINR(activeReceipt.totalPaise)} (${activeReceipt.paymentMethod})\n\n` +
+                      `Thank you for dining with us! Please visit again.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <MessageSquare className="h-4 w-4" /> WhatsApp
+                </a>
+              ) : (
+                <button
+                  onClick={() => {
+                    const phone = prompt("Enter customer WhatsApp number (+91):");
+                    if (phone) {
+                      window.open(
+                        `https://wa.me/${phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                          `🧾 *Tax Invoice from ${activeReceipt.outletName}*\n` +
+                            `Invoice: ${activeReceipt.invoiceNumber}\n` +
+                            `Order: ${activeReceipt.orderNumber}\n` +
+                            `Total: ${formatINR(activeReceipt.totalPaise)}\n\n` +
+                            `Thank you for dining with us!`
+                        )}`,
+                        "_blank"
+                      );
+                    }
+                  }}
+                  className="rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-white py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Share2 className="h-4 w-4 text-[#718078]" /> Share
+                </button>
+              )}
+              <button
+                onClick={() => setShowReceipt(false)}
+                className="rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:bg-[#F8FAF9] py-2.5 px-4 text-xs font-semibold cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
