@@ -634,7 +634,7 @@ export default function TablesFloorPlanPage() {
               {/* Generated QR Badge Design */}
               <div id="qr-badge-printable" className="p-6 rounded-2xl border-2 border-dashed border-[#16845B]/40 bg-[#F8FAF9] space-y-3">
                 <div className="text-xs uppercase font-extrabold tracking-widest text-[#16845B] truncate px-1" title={restaurantDisplayName}>
-                  {restaurantDisplayName} • TABLE ORDER
+                  {restaurantDisplayName} TABLE ORDER
                 </div>
                 <div className="text-2xl font-black text-[#172B25]">TABLE {qrModalTable.number}</div>
                 <p className="text-[11px] text-[#718078]">Scan with any camera or UPI app to view menu & order</p>
