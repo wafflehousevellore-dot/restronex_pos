@@ -117,6 +117,11 @@ export type KitchenTicket = Prisma.KitchenTicketModel
  */
 export type Payment = Prisma.PaymentModel
 /**
+ * Model PaymentRefund
+ * 
+ */
+export type PaymentRefund = Prisma.PaymentRefundModel
+/**
  * Model CashierShift
  * 
  */
@@ -181,6 +186,21 @@ export type SubscriptionPayment = Prisma.SubscriptionPaymentModel
  * 
  */
 export type WebhookEvent = Prisma.WebhookEventModel
+/**
+ * Model TenantPaymentGatewayConfig
+ * 
+ */
+export type TenantPaymentGatewayConfig = Prisma.TenantPaymentGatewayConfigModel
+/**
+ * Model PaymentAttempt
+ * 
+ */
+export type PaymentAttempt = Prisma.PaymentAttemptModel
+/**
+ * Model PaymentReconciliationLog
+ * 
+ */
+export type PaymentReconciliationLog = Prisma.PaymentReconciliationLogModel
 /**
  * Model IntegrationConfig
  * 

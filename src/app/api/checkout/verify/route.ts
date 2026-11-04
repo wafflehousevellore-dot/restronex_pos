@@ -88,6 +88,8 @@ export async function POST(req: NextRequest){
   const periodDays = billingCycle === "ANNUAL" ? 365 : 30;
   const now = new Date();
   const periodEnd = new Date(now.getTime() + periodDays*24*60*60*1000);
+  const graceEnd = new Date(periodEnd.getTime() + 7 * 24 * 60 * 60 * 1000);
+
   let subscription = await prisma.subscription.findFirst({ where:{ tenantId: activeTenantId, planId: plan.id }});
   if (subscription) {
     // Update existing: set ACTIVE, extend period, handle cancelled->active
@@ -98,6 +100,9 @@ export async function POST(req: NextRequest){
         billingCycle,
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
+        gracePeriodEndsAt: graceEnd,
+        cancelAtPeriodEnd: false,
+        cancelledAt: null,
         trialEndsAt: null,
       }
     });
@@ -112,6 +117,8 @@ export async function POST(req: NextRequest){
         billingCycle,
         currentPeriodStart: now,
         currentPeriodEnd: periodEnd,
+        gracePeriodEndsAt: graceEnd,
+        cancelAtPeriodEnd: false,
         trialEndsAt: null,
       }
     });
@@ -123,14 +130,26 @@ export async function POST(req: NextRequest){
     payment = await prisma.subscriptionPayment.create({
       data:{
         subscriptionId: subscription.id,
+        tenantId: activeTenantId,
         amountPaise: expected.totalPaise,
         status:"COMPLETED",
         provider:"RAZORPAY",
         providerPaymentId: razorpay_payment_id,
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+        razorpaySignature: razorpay_signature,
+        invoiceNumber: `INV-SUB-${Date.now().toString(36).toUpperCase()}`,
       }
     });
   } else if (payment.status !== "COMPLETED") {
-    payment = await prisma.subscriptionPayment.update({ where:{ id: payment.id }, data:{ status:"COMPLETED" }});
+    payment = await prisma.subscriptionPayment.update({
+      where:{ id: payment.id },
+      data:{
+        status:"COMPLETED",
+        razorpayPaymentId: razorpay_payment_id,
+        razorpaySignature: razorpay_signature,
+      }
+    });
   }
 
   // Also record webhook event for audit (idempotent key)

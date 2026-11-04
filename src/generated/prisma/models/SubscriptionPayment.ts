@@ -37,30 +37,51 @@ export type SubscriptionPaymentSumAggregateOutputType = {
 export type SubscriptionPaymentMinAggregateOutputType = {
   id: string | null
   subscriptionId: string | null
+  tenantId: string | null
   amountPaise: number | null
   status: string | null
   provider: string | null
   providerPaymentId: string | null
+  razorpayOrderId: string | null
+  razorpayPaymentId: string | null
+  razorpaySignature: string | null
+  invoiceNumber: string | null
+  receiptUrl: string | null
+  failureReason: string | null
   createdAt: Date | null
 }
 
 export type SubscriptionPaymentMaxAggregateOutputType = {
   id: string | null
   subscriptionId: string | null
+  tenantId: string | null
   amountPaise: number | null
   status: string | null
   provider: string | null
   providerPaymentId: string | null
+  razorpayOrderId: string | null
+  razorpayPaymentId: string | null
+  razorpaySignature: string | null
+  invoiceNumber: string | null
+  receiptUrl: string | null
+  failureReason: string | null
   createdAt: Date | null
 }
 
 export type SubscriptionPaymentCountAggregateOutputType = {
   id: number
   subscriptionId: number
+  tenantId: number
   amountPaise: number
   status: number
   provider: number
   providerPaymentId: number
+  razorpayOrderId: number
+  razorpayPaymentId: number
+  razorpaySignature: number
+  invoiceNumber: number
+  receiptUrl: number
+  failureReason: number
   createdAt: number
   _all: number
 }
@@ -77,30 +98,51 @@ export type SubscriptionPaymentSumAggregateInputType = {
 export type SubscriptionPaymentMinAggregateInputType = {
   id?: true
   subscriptionId?: true
+  tenantId?: true
   amountPaise?: true
   status?: true
   provider?: true
   providerPaymentId?: true
+  razorpayOrderId?: true
+  razorpayPaymentId?: true
+  razorpaySignature?: true
+  invoiceNumber?: true
+  receiptUrl?: true
+  failureReason?: true
   createdAt?: true
 }
 
 export type SubscriptionPaymentMaxAggregateInputType = {
   id?: true
   subscriptionId?: true
+  tenantId?: true
   amountPaise?: true
   status?: true
   provider?: true
   providerPaymentId?: true
+  razorpayOrderId?: true
+  razorpayPaymentId?: true
+  razorpaySignature?: true
+  invoiceNumber?: true
+  receiptUrl?: true
+  failureReason?: true
   createdAt?: true
 }
 
 export type SubscriptionPaymentCountAggregateInputType = {
   id?: true
   subscriptionId?: true
+  tenantId?: true
   amountPaise?: true
   status?: true
   provider?: true
   providerPaymentId?: true
+  razorpayOrderId?: true
+  razorpayPaymentId?: true
+  razorpaySignature?: true
+  invoiceNumber?: true
+  receiptUrl?: true
+  failureReason?: true
   createdAt?: true
   _all?: true
 }
@@ -194,10 +236,17 @@ export type SubscriptionPaymentGroupByArgs<ExtArgs extends runtime.Types.Extensi
 export type SubscriptionPaymentGroupByOutputType = {
   id: string
   subscriptionId: string
+  tenantId: string | null
   amountPaise: number
   status: string
   provider: string
   providerPaymentId: string | null
+  razorpayOrderId: string | null
+  razorpayPaymentId: string | null
+  razorpaySignature: string | null
+  invoiceNumber: string | null
+  receiptUrl: string | null
+  failureReason: string | null
   createdAt: Date
   _count: SubscriptionPaymentCountAggregateOutputType | null
   _avg: SubscriptionPaymentAvgAggregateOutputType | null
@@ -227,10 +276,17 @@ export type SubscriptionPaymentWhereInput = {
   NOT?: Prisma.SubscriptionPaymentWhereInput | Prisma.SubscriptionPaymentWhereInput[]
   id?: Prisma.StringFilter<"SubscriptionPayment"> | string
   subscriptionId?: Prisma.StringFilter<"SubscriptionPayment"> | string
+  tenantId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   amountPaise?: Prisma.IntFilter<"SubscriptionPayment"> | number
   status?: Prisma.StringFilter<"SubscriptionPayment"> | string
   provider?: Prisma.StringFilter<"SubscriptionPayment"> | string
   providerPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayOrderId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpaySignature?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  invoiceNumber?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  receiptUrl?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPayment"> | Date | string
   subscription?: Prisma.XOR<Prisma.SubscriptionScalarRelationFilter, Prisma.SubscriptionWhereInput>
 }
@@ -238,10 +294,17 @@ export type SubscriptionPaymentWhereInput = {
 export type SubscriptionPaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrderInput | Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   providerPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   subscription?: Prisma.SubscriptionOrderByWithRelationInput
 }
@@ -252,10 +315,17 @@ export type SubscriptionPaymentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SubscriptionPaymentWhereInput[]
   NOT?: Prisma.SubscriptionPaymentWhereInput | Prisma.SubscriptionPaymentWhereInput[]
   subscriptionId?: Prisma.StringFilter<"SubscriptionPayment"> | string
+  tenantId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   amountPaise?: Prisma.IntFilter<"SubscriptionPayment"> | number
   status?: Prisma.StringFilter<"SubscriptionPayment"> | string
   provider?: Prisma.StringFilter<"SubscriptionPayment"> | string
   providerPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayOrderId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpaySignature?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  invoiceNumber?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  receiptUrl?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPayment"> | Date | string
   subscription?: Prisma.XOR<Prisma.SubscriptionScalarRelationFilter, Prisma.SubscriptionWhereInput>
 }, "id">
@@ -263,10 +333,17 @@ export type SubscriptionPaymentWhereUniqueInput = Prisma.AtLeast<{
 export type SubscriptionPaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrderInput | Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   providerPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  receiptUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionPaymentCountOrderByAggregateInput
   _avg?: Prisma.SubscriptionPaymentAvgOrderByAggregateInput
@@ -281,19 +358,33 @@ export type SubscriptionPaymentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SubscriptionPaymentScalarWhereWithAggregatesInput | Prisma.SubscriptionPaymentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SubscriptionPayment"> | string
   subscriptionId?: Prisma.StringWithAggregatesFilter<"SubscriptionPayment"> | string
+  tenantId?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
   amountPaise?: Prisma.IntWithAggregatesFilter<"SubscriptionPayment"> | number
   status?: Prisma.StringWithAggregatesFilter<"SubscriptionPayment"> | string
   provider?: Prisma.StringWithAggregatesFilter<"SubscriptionPayment"> | string
   providerPaymentId?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  razorpayOrderId?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  razorpaySignature?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  invoiceNumber?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  receiptUrl?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
+  failureReason?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPayment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPayment"> | Date | string
 }
 
 export type SubscriptionPaymentCreateInput = {
   id?: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
   subscription: Prisma.SubscriptionCreateNestedOneWithoutPaymentsInput
 }
@@ -301,19 +392,33 @@ export type SubscriptionPaymentCreateInput = {
 export type SubscriptionPaymentUncheckedCreateInput = {
   id?: string
   subscriptionId: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
 }
 
 export type SubscriptionPaymentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subscription?: Prisma.SubscriptionUpdateOneRequiredWithoutPaymentsNestedInput
 }
@@ -321,39 +426,67 @@ export type SubscriptionPaymentUpdateInput = {
 export type SubscriptionPaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionPaymentCreateManyInput = {
   id?: string
   subscriptionId: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
 }
 
 export type SubscriptionPaymentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionPaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subscriptionId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -370,10 +503,17 @@ export type SubscriptionPaymentOrderByRelationAggregateInput = {
 export type SubscriptionPaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   providerPaymentId?: Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrder
+  invoiceNumber?: Prisma.SortOrder
+  receiptUrl?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -384,20 +524,34 @@ export type SubscriptionPaymentAvgOrderByAggregateInput = {
 export type SubscriptionPaymentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   providerPaymentId?: Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrder
+  invoiceNumber?: Prisma.SortOrder
+  receiptUrl?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type SubscriptionPaymentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   subscriptionId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   provider?: Prisma.SortOrder
   providerPaymentId?: Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrder
+  invoiceNumber?: Prisma.SortOrder
+  receiptUrl?: Prisma.SortOrder
+  failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -449,19 +603,33 @@ export type SubscriptionPaymentUncheckedUpdateManyWithoutSubscriptionNestedInput
 
 export type SubscriptionPaymentCreateWithoutSubscriptionInput = {
   id?: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
 }
 
 export type SubscriptionPaymentUncheckedCreateWithoutSubscriptionInput = {
   id?: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
 }
 
@@ -497,46 +665,81 @@ export type SubscriptionPaymentScalarWhereInput = {
   NOT?: Prisma.SubscriptionPaymentScalarWhereInput | Prisma.SubscriptionPaymentScalarWhereInput[]
   id?: Prisma.StringFilter<"SubscriptionPayment"> | string
   subscriptionId?: Prisma.StringFilter<"SubscriptionPayment"> | string
+  tenantId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   amountPaise?: Prisma.IntFilter<"SubscriptionPayment"> | number
   status?: Prisma.StringFilter<"SubscriptionPayment"> | string
   provider?: Prisma.StringFilter<"SubscriptionPayment"> | string
   providerPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayOrderId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  razorpaySignature?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  invoiceNumber?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  receiptUrl?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
+  failureReason?: Prisma.StringNullableFilter<"SubscriptionPayment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPayment"> | Date | string
 }
 
 export type SubscriptionPaymentCreateManySubscriptionInput = {
   id?: string
+  tenantId?: string | null
   amountPaise: number
   status?: string
   provider?: string
   providerPaymentId?: string | null
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
+  invoiceNumber?: string | null
+  receiptUrl?: string | null
+  failureReason?: string | null
   createdAt?: Date | string
 }
 
 export type SubscriptionPaymentUpdateWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionPaymentUncheckedUpdateWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SubscriptionPaymentUncheckedUpdateManyWithoutSubscriptionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   provider?: Prisma.StringFieldUpdateOperationsInput | string
   providerPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receiptUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -545,10 +748,17 @@ export type SubscriptionPaymentUncheckedUpdateManyWithoutSubscriptionInput = {
 export type SubscriptionPaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   subscriptionId?: boolean
+  tenantId?: boolean
   amountPaise?: boolean
   status?: boolean
   provider?: boolean
   providerPaymentId?: boolean
+  razorpayOrderId?: boolean
+  razorpayPaymentId?: boolean
+  razorpaySignature?: boolean
+  invoiceNumber?: boolean
+  receiptUrl?: boolean
+  failureReason?: boolean
   createdAt?: boolean
   subscription?: boolean | Prisma.SubscriptionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPayment"]>
@@ -556,10 +766,17 @@ export type SubscriptionPaymentSelect<ExtArgs extends runtime.Types.Extensions.I
 export type SubscriptionPaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   subscriptionId?: boolean
+  tenantId?: boolean
   amountPaise?: boolean
   status?: boolean
   provider?: boolean
   providerPaymentId?: boolean
+  razorpayOrderId?: boolean
+  razorpayPaymentId?: boolean
+  razorpaySignature?: boolean
+  invoiceNumber?: boolean
+  receiptUrl?: boolean
+  failureReason?: boolean
   createdAt?: boolean
   subscription?: boolean | Prisma.SubscriptionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPayment"]>
@@ -567,10 +784,17 @@ export type SubscriptionPaymentSelectCreateManyAndReturn<ExtArgs extends runtime
 export type SubscriptionPaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   subscriptionId?: boolean
+  tenantId?: boolean
   amountPaise?: boolean
   status?: boolean
   provider?: boolean
   providerPaymentId?: boolean
+  razorpayOrderId?: boolean
+  razorpayPaymentId?: boolean
+  razorpaySignature?: boolean
+  invoiceNumber?: boolean
+  receiptUrl?: boolean
+  failureReason?: boolean
   createdAt?: boolean
   subscription?: boolean | Prisma.SubscriptionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPayment"]>
@@ -578,14 +802,21 @@ export type SubscriptionPaymentSelectUpdateManyAndReturn<ExtArgs extends runtime
 export type SubscriptionPaymentSelectScalar = {
   id?: boolean
   subscriptionId?: boolean
+  tenantId?: boolean
   amountPaise?: boolean
   status?: boolean
   provider?: boolean
   providerPaymentId?: boolean
+  razorpayOrderId?: boolean
+  razorpayPaymentId?: boolean
+  razorpaySignature?: boolean
+  invoiceNumber?: boolean
+  receiptUrl?: boolean
+  failureReason?: boolean
   createdAt?: boolean
 }
 
-export type SubscriptionPaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subscriptionId" | "amountPaise" | "status" | "provider" | "providerPaymentId" | "createdAt", ExtArgs["result"]["subscriptionPayment"]>
+export type SubscriptionPaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "subscriptionId" | "tenantId" | "amountPaise" | "status" | "provider" | "providerPaymentId" | "razorpayOrderId" | "razorpayPaymentId" | "razorpaySignature" | "invoiceNumber" | "receiptUrl" | "failureReason" | "createdAt", ExtArgs["result"]["subscriptionPayment"]>
 export type SubscriptionPaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subscription?: boolean | Prisma.SubscriptionDefaultArgs<ExtArgs>
 }
@@ -604,10 +835,17 @@ export type $SubscriptionPaymentPayload<ExtArgs extends runtime.Types.Extensions
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     subscriptionId: string
+    tenantId: string | null
     amountPaise: number
     status: string
     provider: string
     providerPaymentId: string | null
+    razorpayOrderId: string | null
+    razorpayPaymentId: string | null
+    razorpaySignature: string | null
+    invoiceNumber: string | null
+    receiptUrl: string | null
+    failureReason: string | null
     createdAt: Date
   }, ExtArgs["result"]["subscriptionPayment"]>
   composites: {}
@@ -1035,10 +1273,17 @@ export interface Prisma__SubscriptionPaymentClient<T, Null = never, ExtArgs exte
 export interface SubscriptionPaymentFieldRefs {
   readonly id: Prisma.FieldRef<"SubscriptionPayment", 'String'>
   readonly subscriptionId: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly tenantId: Prisma.FieldRef<"SubscriptionPayment", 'String'>
   readonly amountPaise: Prisma.FieldRef<"SubscriptionPayment", 'Int'>
   readonly status: Prisma.FieldRef<"SubscriptionPayment", 'String'>
   readonly provider: Prisma.FieldRef<"SubscriptionPayment", 'String'>
   readonly providerPaymentId: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly razorpayOrderId: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly razorpayPaymentId: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly razorpaySignature: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly invoiceNumber: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly receiptUrl: Prisma.FieldRef<"SubscriptionPayment", 'String'>
+  readonly failureReason: Prisma.FieldRef<"SubscriptionPayment", 'String'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionPayment", 'DateTime'>
 }
     

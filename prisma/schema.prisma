@@ -67,6 +67,9 @@ model Tenant {
   invoices      InvoiceRecord[]
   featureUsages FeatureUsage[]
   qrSessions    QrOrderingSession[]
+  paymentGatewayConfig TenantPaymentGatewayConfig?
+  paymentAttempts PaymentAttempt[]
+  paymentRefunds PaymentRefund[]
 }
 
 model Membership {
@@ -262,6 +265,7 @@ model Order {
   qrSession   QrOrderingSession? @relation(fields: [qrSessionId], references: [id])
   items       OrderItem[]
   payments    Payment[]
+  paymentAttempts PaymentAttempt[]
   kotTickets  KitchenTicket[]
   invoice     InvoiceRecord?
   printJobs   PrintJob[]
@@ -309,14 +313,45 @@ model KitchenTicket {
 }
 
 model Payment {
-  id          String @id @default(cuid())
-  orderId     String
-  method      String
-  amountPaise Int
-  status      String @default("COMPLETED")
-  reference   String?
-  createdAt   DateTime @default(now())
-  order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  orderId            String
+  tenantId           String?
+  outletId           String?
+  method             String   // CASH | CARD | UPI | RAZORPAY_ONLINE | EXTERNAL_CARD
+  amountPaise        Int
+  status             String   @default("COMPLETED") // COMPLETED | FAILED | REFUNDED | PARTIALLY_REFUNDED
+  reference          String?
+  isGatewayConfirmed Boolean  @default(false)
+  razorpayPaymentId  String?
+  cardLast4          String?
+  cardNetwork        String?
+  upiVpa             String?
+  refundedPaise      Int      @default(0)
+  createdAt          DateTime @default(now())
+  order              Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  refunds            PaymentRefund[]
+  @@index([orderId])
+  @@index([tenantId, createdAt])
+  @@index([razorpayPaymentId])
+}
+
+model PaymentRefund {
+  id               String   @id @default(cuid())
+  tenantId         String
+  paymentId        String
+  orderId          String
+  amountPaise      Int
+  reason           String?
+  status           String   @default("PENDING") // PENDING | PROCESSED | FAILED
+  razorpayRefundId String?
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  payment          Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
+  @@index([paymentId])
+  @@index([orderId])
 }
 
 model CashierShift {
@@ -449,38 +484,122 @@ model SubscriptionPlan {
 }
 
 model Subscription {
-  id          String @id @default(cuid())
-  tenantId    String
-  planId      String
-  status      String @default("TRIALING")
-  billingCycle String @default("MONTHLY")
-  currentPeriodStart DateTime @default(now())
-  currentPeriodEnd   DateTime
-  trialEndsAt DateTime?
-  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  plan        SubscriptionPlan @relation(fields: [planId], references: [id])
-  payments    SubscriptionPayment[]
+  id                      String   @id @default(cuid())
+  tenantId                String
+  planId                  String
+  status                  String   @default("TRIALING") // TRIALING | PENDING | ACTIVE | PAST_DUE | HALTED | CANCELLED | EXPIRED
+  billingCycle            String   @default("MONTHLY") // MONTHLY | ANNUAL
+  currentPeriodStart      DateTime @default(now())
+  currentPeriodEnd        DateTime
+  trialEndsAt             DateTime?
+  gracePeriodEndsAt       DateTime?
+  cancelledAt             DateTime?
+  cancelAtPeriodEnd       Boolean  @default(false)
+  razorpaySubscriptionId  String?
+  razorpayCustomerId      String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @default(now()) @updatedAt
+  tenant                  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan                    SubscriptionPlan @relation(fields: [planId], references: [id])
+  payments                SubscriptionPayment[]
   @@index([tenantId, status])
+  @@index([razorpaySubscriptionId])
 }
 
 model SubscriptionPayment {
-  id              String @id @default(cuid())
-  subscriptionId  String
-  amountPaise     Int
-  status          String @default("PENDING")
-  provider        String @default("RAZORPAY")
+  id                String   @id @default(cuid())
+  subscriptionId    String
+  tenantId          String?
+  amountPaise       Int
+  status            String   @default("PENDING") // PENDING | COMPLETED | FAILED | REFUNDED
+  provider          String   @default("RAZORPAY")
   providerPaymentId String?
-  createdAt       DateTime @default(now())
-  subscription    Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  razorpaySignature String?
+  invoiceNumber     String?
+  receiptUrl        String?
+  failureReason     String?
+  createdAt         DateTime @default(now())
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  @@index([subscriptionId])
+  @@index([providerPaymentId])
+  @@index([razorpayPaymentId])
 }
 
 model WebhookEvent {
-  id          String @id @default(cuid())
-  provider    String
-  eventId     String @unique
+  id          String    @id @default(cuid())
+  provider    String    @default("RAZORPAY")
+  eventId     String    @unique
+  eventType   String?
+  tenantId    String?
   payloadJson String
-  processed   Boolean @default(false)
-  createdAt   DateTime @default(now())
+  processed   Boolean   @default(false)
+  status      String    @default("PENDING") // PENDING | PROCESSED | FAILED | IGNORED
+  error       String?
+  attempts    Int       @default(0)
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+  @@index([tenantId])
+  @@index([eventType])
+  @@index([status])
+}
+
+model TenantPaymentGatewayConfig {
+  id                     String   @id @default(cuid())
+  tenantId               String   @unique
+  provider               String   @default("RAZORPAY")
+  isEnabled              Boolean  @default(false)
+  keyId                  String?
+  keySecretEncrypted     String?
+  webhookSecretEncrypted String?
+  merchantName           String?
+  routeAccountId         String?
+  autoCapture            Boolean  @default(true)
+  cashEnabled            Boolean  @default(true)
+  cardTerminalEnabled    Boolean  @default(true)
+  upiManualEnabled       Boolean  @default(true)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  tenant                 Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model PaymentAttempt {
+  id                String    @id @default(cuid())
+  tenantId          String
+  outletId          String
+  orderId           String
+  gatewayType       String    @default("DIRECT_RAZORPAY") // DIRECT_RAZORPAY | PLATFORM_ROUTE | CASH | EXTERNAL_CARD | UPI_MANUAL
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  amountPaise       Int
+  currency          String    @default("INR")
+  status            String    @default("INITIATED") // INITIATED | AUTHORIZED | CAPTURED | FAILED | REFUNDED
+  errorCode         String?
+  errorMessage      String?
+  idempotencyKey    String?   @unique
+  verifiedAt        DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  order             Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId, orderId])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
+}
+
+model PaymentReconciliationLog {
+  id           String   @id @default(cuid())
+  tenantId     String?
+  source       String   // SUBSCRIPTION | ORDER
+  referenceId  String
+  status       String   // MATCHED | DISCREPANCY | RESOLVED | FAILED
+  notes        String?
+  metadataJson String?
+  reconciledAt DateTime @default(now())
+  @@index([tenantId])
+  @@index([status])
+  @@index([source, referenceId])
 }
 
 model IntegrationConfig {

@@ -422,6 +422,7 @@ export type OrderWhereInput = {
   qrSession?: Prisma.XOR<Prisma.QrOrderingSessionNullableScalarRelationFilter, Prisma.QrOrderingSessionWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  paymentAttempts?: Prisma.PaymentAttemptListRelationFilter
   kotTickets?: Prisma.KitchenTicketListRelationFilter
   invoice?: Prisma.XOR<Prisma.InvoiceRecordNullableScalarRelationFilter, Prisma.InvoiceRecordWhereInput> | null
   printJobs?: Prisma.PrintJobListRelationFilter
@@ -463,6 +464,7 @@ export type OrderOrderByWithRelationInput = {
   qrSession?: Prisma.QrOrderingSessionOrderByWithRelationInput
   items?: Prisma.OrderItemOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  paymentAttempts?: Prisma.PaymentAttemptOrderByRelationAggregateInput
   kotTickets?: Prisma.KitchenTicketOrderByRelationAggregateInput
   invoice?: Prisma.InvoiceRecordOrderByWithRelationInput
   printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
@@ -508,6 +510,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   qrSession?: Prisma.XOR<Prisma.QrOrderingSessionNullableScalarRelationFilter, Prisma.QrOrderingSessionWhereInput> | null
   items?: Prisma.OrderItemListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  paymentAttempts?: Prisma.PaymentAttemptListRelationFilter
   kotTickets?: Prisma.KitchenTicketListRelationFilter
   invoice?: Prisma.XOR<Prisma.InvoiceRecordNullableScalarRelationFilter, Prisma.InvoiceRecordWhereInput> | null
   printJobs?: Prisma.PrintJobListRelationFilter
@@ -615,6 +618,7 @@ export type OrderCreateInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -652,6 +656,7 @@ export type OrderUncheckedCreateInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -689,6 +694,7 @@ export type OrderUpdateInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -726,6 +732,7 @@ export type OrderUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -1127,6 +1134,20 @@ export type OrderUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPaymentsInput, Prisma.OrderUpdateWithoutPaymentsInput>, Prisma.OrderUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type OrderCreateNestedOneWithoutPaymentAttemptsInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedCreateWithoutPaymentAttemptsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentAttemptsInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutPaymentAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedCreateWithoutPaymentAttemptsInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutPaymentAttemptsInput
+  upsert?: Prisma.OrderUpsertWithoutPaymentAttemptsInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutPaymentAttemptsInput, Prisma.OrderUpdateWithoutPaymentAttemptsInput>, Prisma.OrderUncheckedUpdateWithoutPaymentAttemptsInput>
+}
+
 export type OrderCreateNestedManyWithoutQrSessionInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutQrSessionInput, Prisma.OrderUncheckedCreateWithoutQrSessionInput> | Prisma.OrderCreateWithoutQrSessionInput[] | Prisma.OrderUncheckedCreateWithoutQrSessionInput[]
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutQrSessionInput | Prisma.OrderCreateOrConnectWithoutQrSessionInput[]
@@ -1245,6 +1266,7 @@ export type OrderCreateWithoutTenantInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -1281,6 +1303,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -1377,6 +1400,7 @@ export type OrderCreateWithoutOutletInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -1413,6 +1437,7 @@ export type OrderUncheckedCreateWithoutOutletInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -1475,6 +1500,7 @@ export type OrderCreateWithoutTableInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -1511,6 +1537,7 @@ export type OrderUncheckedCreateWithoutTableInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -1573,6 +1600,7 @@ export type OrderCreateWithoutItemsInput = {
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -1609,6 +1637,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -1661,6 +1690,7 @@ export type OrderUpdateWithoutItemsInput = {
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -1697,6 +1727,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -1734,6 +1765,7 @@ export type OrderCreateWithoutKotTicketsInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
@@ -1770,6 +1802,7 @@ export type OrderUncheckedCreateWithoutKotTicketsInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
@@ -1822,6 +1855,7 @@ export type OrderUpdateWithoutKotTicketsInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
@@ -1858,6 +1892,7 @@ export type OrderUncheckedUpdateWithoutKotTicketsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
@@ -1893,6 +1928,7 @@ export type OrderCreateWithoutPaymentsInput = {
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -1929,6 +1965,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -1981,6 +2018,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -2017,6 +2055,171 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutPaymentAttemptsInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  idempotencyKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutPaymentAttemptsInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  qrSessionId?: string | null
+  idempotencyKey?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutPaymentAttemptsInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedCreateWithoutPaymentAttemptsInput>
+}
+
+export type OrderUpsertWithoutPaymentAttemptsInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedUpdateWithoutPaymentAttemptsInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedCreateWithoutPaymentAttemptsInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutPaymentAttemptsInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutPaymentAttemptsInput, Prisma.OrderUncheckedUpdateWithoutPaymentAttemptsInput>
+}
+
+export type OrderUpdateWithoutPaymentAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutPaymentAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -2053,6 +2256,7 @@ export type OrderCreateWithoutQrSessionInput = {
   table?: Prisma.TableCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -2089,6 +2293,7 @@ export type OrderUncheckedCreateWithoutQrSessionInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -2152,6 +2357,7 @@ export type OrderCreateWithoutPrintJobsInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
@@ -2188,6 +2394,7 @@ export type OrderUncheckedCreateWithoutPrintJobsInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
@@ -2240,6 +2447,7 @@ export type OrderUpdateWithoutPrintJobsInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
@@ -2276,6 +2484,7 @@ export type OrderUncheckedUpdateWithoutPrintJobsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
@@ -2312,6 +2521,7 @@ export type OrderCreateWithoutWhatsAppLogsInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
@@ -2348,6 +2558,7 @@ export type OrderUncheckedCreateWithoutWhatsAppLogsInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
@@ -2400,6 +2611,7 @@ export type OrderUpdateWithoutWhatsAppLogsInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -2436,6 +2648,7 @@ export type OrderUncheckedUpdateWithoutWhatsAppLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -2472,6 +2685,7 @@ export type OrderCreateWithoutInvoiceInput = {
   qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
@@ -2508,6 +2722,7 @@ export type OrderUncheckedCreateWithoutInvoiceInput = {
   updatedAt?: Date | string
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
   kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
@@ -2560,6 +2775,7 @@ export type OrderUpdateWithoutInvoiceInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
@@ -2596,6 +2812,7 @@ export type OrderUncheckedUpdateWithoutInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
@@ -2661,6 +2878,7 @@ export type OrderUpdateWithoutTenantInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -2697,6 +2915,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -2793,6 +3012,7 @@ export type OrderUpdateWithoutOutletInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -2829,6 +3049,7 @@ export type OrderUncheckedUpdateWithoutOutletInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -2925,6 +3146,7 @@ export type OrderUpdateWithoutTableInput = {
   qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -2961,6 +3183,7 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -3057,6 +3280,7 @@ export type OrderUpdateWithoutQrSessionInput = {
   table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
@@ -3093,6 +3317,7 @@ export type OrderUncheckedUpdateWithoutQrSessionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
   kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
@@ -3137,6 +3362,7 @@ export type OrderUncheckedUpdateManyWithoutQrSessionInput = {
 export type OrderCountOutputType = {
   items: number
   payments: number
+  paymentAttempts: number
   kotTickets: number
   printJobs: number
   whatsAppLogs: number
@@ -3145,6 +3371,7 @@ export type OrderCountOutputType = {
 export type OrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | OrderCountOutputTypeCountItemsArgs
   payments?: boolean | OrderCountOutputTypeCountPaymentsArgs
+  paymentAttempts?: boolean | OrderCountOutputTypeCountPaymentAttemptsArgs
   kotTickets?: boolean | OrderCountOutputTypeCountKotTicketsArgs
   printJobs?: boolean | OrderCountOutputTypeCountPrintJobsArgs
   whatsAppLogs?: boolean | OrderCountOutputTypeCountWhatsAppLogsArgs
@@ -3172,6 +3399,13 @@ export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Ext
  */
 export type OrderCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * OrderCountOutputType without action
+ */
+export type OrderCountOutputTypeCountPaymentAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentAttemptWhereInput
 }
 
 /**
@@ -3231,6 +3465,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Order$paymentsArgs<ExtArgs>
+  paymentAttempts?: boolean | Prisma.Order$paymentAttemptsArgs<ExtArgs>
   kotTickets?: boolean | Prisma.Order$kotTicketsArgs<ExtArgs>
   invoice?: boolean | Prisma.Order$invoiceArgs<ExtArgs>
   printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
@@ -3347,6 +3582,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   qrSession?: boolean | Prisma.Order$qrSessionArgs<ExtArgs>
   items?: boolean | Prisma.Order$itemsArgs<ExtArgs>
   payments?: boolean | Prisma.Order$paymentsArgs<ExtArgs>
+  paymentAttempts?: boolean | Prisma.Order$paymentAttemptsArgs<ExtArgs>
   kotTickets?: boolean | Prisma.Order$kotTicketsArgs<ExtArgs>
   invoice?: boolean | Prisma.Order$invoiceArgs<ExtArgs>
   printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
@@ -3375,6 +3611,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     qrSession: Prisma.$QrOrderingSessionPayload<ExtArgs> | null
     items: Prisma.$OrderItemPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    paymentAttempts: Prisma.$PaymentAttemptPayload<ExtArgs>[]
     kotTickets: Prisma.$KitchenTicketPayload<ExtArgs>[]
     invoice: Prisma.$InvoiceRecordPayload<ExtArgs> | null
     printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
@@ -3809,6 +4046,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   qrSession<T extends Prisma.Order$qrSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$qrSessionArgs<ExtArgs>>): Prisma.Prisma__QrOrderingSessionClient<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   items<T extends Prisma.Order$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Order$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentAttempts<T extends Prisma.Order$paymentAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$paymentAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   kotTickets<T extends Prisma.Order$kotTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$kotTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KitchenTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoice<T extends Prisma.Order$invoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$invoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceRecordClient<runtime.Types.Result.GetResult<Prisma.$InvoiceRecordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   printJobs<T extends Prisma.Order$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4354,6 +4592,30 @@ export type Order$paymentsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Order.paymentAttempts
+ */
+export type Order$paymentAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentAttempt
+   */
+  select?: Prisma.PaymentAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentAttempt
+   */
+  omit?: Prisma.PaymentAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentAttemptInclude<ExtArgs> | null
+  where?: Prisma.PaymentAttemptWhereInput
+  orderBy?: Prisma.PaymentAttemptOrderByWithRelationInput | Prisma.PaymentAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentAttemptScalarFieldEnum | Prisma.PaymentAttemptScalarFieldEnum[]
 }
 
 /**

@@ -28,39 +28,65 @@ export type AggregatePayment = {
 
 export type PaymentAvgAggregateOutputType = {
   amountPaise: number | null
+  refundedPaise: number | null
 }
 
 export type PaymentSumAggregateOutputType = {
   amountPaise: number | null
+  refundedPaise: number | null
 }
 
 export type PaymentMinAggregateOutputType = {
   id: string | null
   orderId: string | null
+  tenantId: string | null
+  outletId: string | null
   method: string | null
   amountPaise: number | null
   status: string | null
   reference: string | null
+  isGatewayConfirmed: boolean | null
+  razorpayPaymentId: string | null
+  cardLast4: string | null
+  cardNetwork: string | null
+  upiVpa: string | null
+  refundedPaise: number | null
   createdAt: Date | null
 }
 
 export type PaymentMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
+  tenantId: string | null
+  outletId: string | null
   method: string | null
   amountPaise: number | null
   status: string | null
   reference: string | null
+  isGatewayConfirmed: boolean | null
+  razorpayPaymentId: string | null
+  cardLast4: string | null
+  cardNetwork: string | null
+  upiVpa: string | null
+  refundedPaise: number | null
   createdAt: Date | null
 }
 
 export type PaymentCountAggregateOutputType = {
   id: number
   orderId: number
+  tenantId: number
+  outletId: number
   method: number
   amountPaise: number
   status: number
   reference: number
+  isGatewayConfirmed: number
+  razorpayPaymentId: number
+  cardLast4: number
+  cardNetwork: number
+  upiVpa: number
+  refundedPaise: number
   createdAt: number
   _all: number
 }
@@ -68,39 +94,65 @@ export type PaymentCountAggregateOutputType = {
 
 export type PaymentAvgAggregateInputType = {
   amountPaise?: true
+  refundedPaise?: true
 }
 
 export type PaymentSumAggregateInputType = {
   amountPaise?: true
+  refundedPaise?: true
 }
 
 export type PaymentMinAggregateInputType = {
   id?: true
   orderId?: true
+  tenantId?: true
+  outletId?: true
   method?: true
   amountPaise?: true
   status?: true
   reference?: true
+  isGatewayConfirmed?: true
+  razorpayPaymentId?: true
+  cardLast4?: true
+  cardNetwork?: true
+  upiVpa?: true
+  refundedPaise?: true
   createdAt?: true
 }
 
 export type PaymentMaxAggregateInputType = {
   id?: true
   orderId?: true
+  tenantId?: true
+  outletId?: true
   method?: true
   amountPaise?: true
   status?: true
   reference?: true
+  isGatewayConfirmed?: true
+  razorpayPaymentId?: true
+  cardLast4?: true
+  cardNetwork?: true
+  upiVpa?: true
+  refundedPaise?: true
   createdAt?: true
 }
 
 export type PaymentCountAggregateInputType = {
   id?: true
   orderId?: true
+  tenantId?: true
+  outletId?: true
   method?: true
   amountPaise?: true
   status?: true
   reference?: true
+  isGatewayConfirmed?: true
+  razorpayPaymentId?: true
+  cardLast4?: true
+  cardNetwork?: true
+  upiVpa?: true
+  refundedPaise?: true
   createdAt?: true
   _all?: true
 }
@@ -194,10 +246,18 @@ export type PaymentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type PaymentGroupByOutputType = {
   id: string
   orderId: string
+  tenantId: string | null
+  outletId: string | null
   method: string
   amountPaise: number
   status: string
   reference: string | null
+  isGatewayConfirmed: boolean
+  razorpayPaymentId: string | null
+  cardLast4: string | null
+  cardNetwork: string | null
+  upiVpa: string | null
+  refundedPaise: number
   createdAt: Date
   _count: PaymentCountAggregateOutputType | null
   _avg: PaymentAvgAggregateOutputType | null
@@ -227,23 +287,41 @@ export type PaymentWhereInput = {
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   id?: Prisma.StringFilter<"Payment"> | string
   orderId?: Prisma.StringFilter<"Payment"> | string
+  tenantId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  outletId?: Prisma.StringNullableFilter<"Payment"> | string | null
   method?: Prisma.StringFilter<"Payment"> | string
   amountPaise?: Prisma.IntFilter<"Payment"> | number
   status?: Prisma.StringFilter<"Payment"> | string
   reference?: Prisma.StringNullableFilter<"Payment"> | string | null
+  isGatewayConfirmed?: Prisma.BoolFilter<"Payment"> | boolean
+  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardLast4?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardNetwork?: Prisma.StringNullableFilter<"Payment"> | string | null
+  upiVpa?: Prisma.StringNullableFilter<"Payment"> | string | null
+  refundedPaise?: Prisma.IntFilter<"Payment"> | number
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  refunds?: Prisma.PaymentRefundListRelationFilter
 }
 
 export type PaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
   method?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  isGatewayConfirmed?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardLast4?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardNetwork?: Prisma.SortOrderInput | Prisma.SortOrder
+  upiVpa?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
+  refunds?: Prisma.PaymentRefundOrderByRelationAggregateInput
 }
 
 export type PaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -252,21 +330,38 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PaymentWhereInput[]
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   orderId?: Prisma.StringFilter<"Payment"> | string
+  tenantId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  outletId?: Prisma.StringNullableFilter<"Payment"> | string | null
   method?: Prisma.StringFilter<"Payment"> | string
   amountPaise?: Prisma.IntFilter<"Payment"> | number
   status?: Prisma.StringFilter<"Payment"> | string
   reference?: Prisma.StringNullableFilter<"Payment"> | string | null
+  isGatewayConfirmed?: Prisma.BoolFilter<"Payment"> | boolean
+  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardLast4?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardNetwork?: Prisma.StringNullableFilter<"Payment"> | string | null
+  upiVpa?: Prisma.StringNullableFilter<"Payment"> | string | null
+  refundedPaise?: Prisma.IntFilter<"Payment"> | number
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
+  refunds?: Prisma.PaymentRefundListRelationFilter
 }, "id">
 
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
   method?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  isGatewayConfirmed?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardLast4?: Prisma.SortOrderInput | Prisma.SortOrder
+  cardNetwork?: Prisma.SortOrderInput | Prisma.SortOrder
+  upiVpa?: Prisma.SortOrderInput | Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.PaymentCountOrderByAggregateInput
   _avg?: Prisma.PaymentAvgOrderByAggregateInput
@@ -281,79 +376,147 @@ export type PaymentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PaymentScalarWhereWithAggregatesInput | Prisma.PaymentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
+  tenantId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  outletId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   method?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   amountPaise?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   status?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   reference?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  isGatewayConfirmed?: Prisma.BoolWithAggregatesFilter<"Payment"> | boolean
+  razorpayPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  cardLast4?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  cardNetwork?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  upiVpa?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  refundedPaise?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
 }
 
 export type PaymentCreateInput = {
   id?: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutPaymentsInput
+  refunds?: Prisma.PaymentRefundCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateInput = {
   id?: string
   orderId: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
+  refunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutPaymentsNestedInput
+  refunds?: Prisma.PaymentRefundUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentCreateManyInput = {
   id?: string
   orderId: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
 }
 
 export type PaymentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -370,39 +533,70 @@ export type PaymentOrderByRelationAggregateInput = {
 export type PaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   method?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  isGatewayConfirmed?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  cardLast4?: Prisma.SortOrder
+  cardNetwork?: Prisma.SortOrder
+  upiVpa?: Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type PaymentAvgOrderByAggregateInput = {
   amountPaise?: Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
 }
 
 export type PaymentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   method?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  isGatewayConfirmed?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  cardLast4?: Prisma.SortOrder
+  cardNetwork?: Prisma.SortOrder
+  upiVpa?: Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type PaymentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  tenantId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   method?: Prisma.SortOrder
   amountPaise?: Prisma.SortOrder
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  isGatewayConfirmed?: Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrder
+  cardLast4?: Prisma.SortOrder
+  cardNetwork?: Prisma.SortOrder
+  upiVpa?: Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type PaymentSumOrderByAggregateInput = {
   amountPaise?: Prisma.SortOrder
+  refundedPaise?: Prisma.SortOrder
+}
+
+export type PaymentScalarRelationFilter = {
+  is?: Prisma.PaymentWhereInput
+  isNot?: Prisma.PaymentWhereInput
 }
 
 export type PaymentCreateNestedManyWithoutOrderInput = {
@@ -447,22 +641,54 @@ export type PaymentUncheckedUpdateManyWithoutOrderNestedInput = {
   deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
 }
 
+export type PaymentCreateNestedOneWithoutRefundsInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutRefundsInput, Prisma.PaymentUncheckedCreateWithoutRefundsInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutRefundsInput
+  connect?: Prisma.PaymentWhereUniqueInput
+}
+
+export type PaymentUpdateOneRequiredWithoutRefundsNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutRefundsInput, Prisma.PaymentUncheckedCreateWithoutRefundsInput>
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutRefundsInput
+  upsert?: Prisma.PaymentUpsertWithoutRefundsInput
+  connect?: Prisma.PaymentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PaymentUpdateToOneWithWhereWithoutRefundsInput, Prisma.PaymentUpdateWithoutRefundsInput>, Prisma.PaymentUncheckedUpdateWithoutRefundsInput>
+}
+
 export type PaymentCreateWithoutOrderInput = {
   id?: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
+  refunds?: Prisma.PaymentRefundCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateWithoutOrderInput = {
   id?: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
+  refunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutPaymentInput
 }
 
 export type PaymentCreateOrConnectWithoutOrderInput = {
@@ -497,69 +723,246 @@ export type PaymentScalarWhereInput = {
   NOT?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
   id?: Prisma.StringFilter<"Payment"> | string
   orderId?: Prisma.StringFilter<"Payment"> | string
+  tenantId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  outletId?: Prisma.StringNullableFilter<"Payment"> | string | null
   method?: Prisma.StringFilter<"Payment"> | string
   amountPaise?: Prisma.IntFilter<"Payment"> | number
   status?: Prisma.StringFilter<"Payment"> | string
   reference?: Prisma.StringNullableFilter<"Payment"> | string | null
+  isGatewayConfirmed?: Prisma.BoolFilter<"Payment"> | boolean
+  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardLast4?: Prisma.StringNullableFilter<"Payment"> | string | null
+  cardNetwork?: Prisma.StringNullableFilter<"Payment"> | string | null
+  upiVpa?: Prisma.StringNullableFilter<"Payment"> | string | null
+  refundedPaise?: Prisma.IntFilter<"Payment"> | number
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
 }
 
-export type PaymentCreateManyOrderInput = {
+export type PaymentCreateWithoutRefundsInput = {
   id?: string
+  tenantId?: string | null
+  outletId?: string | null
   method: string
   amountPaise: number
   status?: string
   reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
+  createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutPaymentsInput
+}
+
+export type PaymentUncheckedCreateWithoutRefundsInput = {
+  id?: string
+  orderId: string
+  tenantId?: string | null
+  outletId?: string | null
+  method: string
+  amountPaise: number
+  status?: string
+  reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
+  createdAt?: Date | string
+}
+
+export type PaymentCreateOrConnectWithoutRefundsInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutRefundsInput, Prisma.PaymentUncheckedCreateWithoutRefundsInput>
+}
+
+export type PaymentUpsertWithoutRefundsInput = {
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutRefundsInput, Prisma.PaymentUncheckedUpdateWithoutRefundsInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutRefundsInput, Prisma.PaymentUncheckedCreateWithoutRefundsInput>
+  where?: Prisma.PaymentWhereInput
+}
+
+export type PaymentUpdateToOneWithWhereWithoutRefundsInput = {
+  where?: Prisma.PaymentWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutRefundsInput, Prisma.PaymentUncheckedUpdateWithoutRefundsInput>
+}
+
+export type PaymentUpdateWithoutRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  method?: Prisma.StringFieldUpdateOperationsInput | string
+  amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutPaymentsNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  method?: Prisma.StringFieldUpdateOperationsInput | string
+  amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaymentCreateManyOrderInput = {
+  id?: string
+  tenantId?: string | null
+  outletId?: string | null
+  method: string
+  amountPaise: number
+  status?: string
+  reference?: string | null
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: string | null
+  cardLast4?: string | null
+  cardNetwork?: string | null
+  upiVpa?: string | null
+  refundedPaise?: number
   createdAt?: Date | string
 }
 
 export type PaymentUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refunds?: Prisma.PaymentRefundUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   method?: Prisma.StringFieldUpdateOperationsInput | string
   amountPaise?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isGatewayConfirmed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardLast4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cardNetwork?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  upiVpa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refundedPaise?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type PaymentCountOutputType
+ */
+
+export type PaymentCountOutputType = {
+  refunds: number
+}
+
+export type PaymentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  refunds?: boolean | PaymentCountOutputTypeCountRefundsArgs
+}
+
+/**
+ * PaymentCountOutputType without action
+ */
+export type PaymentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentCountOutputType
+   */
+  select?: Prisma.PaymentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PaymentCountOutputType without action
+ */
+export type PaymentCountOutputTypeCountRefundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentRefundWhereInput
+}
 
 
 export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  tenantId?: boolean
+  outletId?: boolean
   method?: boolean
   amountPaise?: boolean
   status?: boolean
   reference?: boolean
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: boolean
+  cardLast4?: boolean
+  cardNetwork?: boolean
+  upiVpa?: boolean
+  refundedPaise?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  refunds?: boolean | Prisma.Payment$refundsArgs<ExtArgs>
+  _count?: boolean | Prisma.PaymentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  tenantId?: boolean
+  outletId?: boolean
   method?: boolean
   amountPaise?: boolean
   status?: boolean
   reference?: boolean
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: boolean
+  cardLast4?: boolean
+  cardNetwork?: boolean
+  upiVpa?: boolean
+  refundedPaise?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
@@ -567,10 +970,18 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  tenantId?: boolean
+  outletId?: boolean
   method?: boolean
   amountPaise?: boolean
   status?: boolean
   reference?: boolean
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: boolean
+  cardLast4?: boolean
+  cardNetwork?: boolean
+  upiVpa?: boolean
+  refundedPaise?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
@@ -578,16 +989,26 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type PaymentSelectScalar = {
   id?: boolean
   orderId?: boolean
+  tenantId?: boolean
+  outletId?: boolean
   method?: boolean
   amountPaise?: boolean
   status?: boolean
   reference?: boolean
+  isGatewayConfirmed?: boolean
+  razorpayPaymentId?: boolean
+  cardLast4?: boolean
+  cardNetwork?: boolean
+  upiVpa?: boolean
+  refundedPaise?: boolean
   createdAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "method" | "amountPaise" | "status" | "reference" | "createdAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "tenantId" | "outletId" | "method" | "amountPaise" | "status" | "reference" | "isGatewayConfirmed" | "razorpayPaymentId" | "cardLast4" | "cardNetwork" | "upiVpa" | "refundedPaise" | "createdAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
+  refunds?: boolean | Prisma.Payment$refundsArgs<ExtArgs>
+  _count?: boolean | Prisma.PaymentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -600,14 +1021,23 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Payment"
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
+    refunds: Prisma.$PaymentRefundPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
+    tenantId: string | null
+    outletId: string | null
     method: string
     amountPaise: number
     status: string
     reference: string | null
+    isGatewayConfirmed: boolean
+    razorpayPaymentId: string | null
+    cardLast4: string | null
+    cardNetwork: string | null
+    upiVpa: string | null
+    refundedPaise: number
     createdAt: Date
   }, ExtArgs["result"]["payment"]>
   composites: {}
@@ -1004,6 +1434,7 @@ readonly fields: PaymentFieldRefs;
 export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  refunds<T extends Prisma.Payment$refundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$refundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1035,10 +1466,18 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
 export interface PaymentFieldRefs {
   readonly id: Prisma.FieldRef<"Payment", 'String'>
   readonly orderId: Prisma.FieldRef<"Payment", 'String'>
+  readonly tenantId: Prisma.FieldRef<"Payment", 'String'>
+  readonly outletId: Prisma.FieldRef<"Payment", 'String'>
   readonly method: Prisma.FieldRef<"Payment", 'String'>
   readonly amountPaise: Prisma.FieldRef<"Payment", 'Int'>
   readonly status: Prisma.FieldRef<"Payment", 'String'>
   readonly reference: Prisma.FieldRef<"Payment", 'String'>
+  readonly isGatewayConfirmed: Prisma.FieldRef<"Payment", 'Boolean'>
+  readonly razorpayPaymentId: Prisma.FieldRef<"Payment", 'String'>
+  readonly cardLast4: Prisma.FieldRef<"Payment", 'String'>
+  readonly cardNetwork: Prisma.FieldRef<"Payment", 'String'>
+  readonly upiVpa: Prisma.FieldRef<"Payment", 'String'>
+  readonly refundedPaise: Prisma.FieldRef<"Payment", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>
 }
     
@@ -1438,6 +1877,30 @@ export type PaymentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Payments to delete.
    */
   limit?: number
+}
+
+/**
+ * Payment.refunds
+ */
+export type Payment$refundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentRefund
+   */
+  select?: Prisma.PaymentRefundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentRefund
+   */
+  omit?: Prisma.PaymentRefundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentRefundInclude<ExtArgs> | null
+  where?: Prisma.PaymentRefundWhereInput
+  orderBy?: Prisma.PaymentRefundOrderByWithRelationInput | Prisma.PaymentRefundOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentRefundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentRefundScalarFieldEnum | Prisma.PaymentRefundScalarFieldEnum[]
 }
 
 /**

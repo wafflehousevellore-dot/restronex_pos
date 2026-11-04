@@ -99,8 +99,9 @@ export async function POST(req: NextRequest) {
   const orderNumber = `ORD-${dateStr}-${randCode}`;
   const invoiceNumber = `INV-${dateStr}-${randCode}`;
 
+  const isOnlineGateway = d.paymentMethod === "RAZORPAY_ONLINE";
   const isTakeawayOrDelivery = d.type === "TAKEAWAY" || d.type === "DELIVERY";
-  const initialStatus = isTakeawayOrDelivery ? "BILLED" : "BILLED";
+  const initialStatus = isOnlineGateway ? "PLACED" : "BILLED";
 
   const order = await prisma.$transaction(async (tx) => {
     // 1. Create primary Order record
@@ -123,9 +124,9 @@ export async function POST(req: NextRequest) {
         totalPaise: totals.total,
         createdById: userId,
         kotStatus: "SENT",
-        isPaid: true,
-        paidAt: now,
-        billClosedAt: now,
+        isPaid: !isOnlineGateway,
+        paidAt: !isOnlineGateway ? now : null,
+        billClosedAt: !isOnlineGateway ? now : null,
         whatsappConsent: d.whatsappConsent || false,
         whatsappStatus: d.whatsappConsent && d.customerPhone ? "QUEUED" : null,
         idempotencyKey: idempotencyKey || null,
@@ -166,9 +167,13 @@ export async function POST(req: NextRequest) {
       await tx.payment.createMany({
         data: d.splitPayments.map((sp) => ({
           orderId: o.id,
+          tenantId,
+          outletId: d.outletId,
           method: sp.method,
           amountPaise: sp.amountPaise,
           status: "COMPLETED",
+          isGatewayConfirmed: false,
+          reference: sp.reference || "Split POS Payment",
         })),
       });
     } else {
@@ -176,9 +181,13 @@ export async function POST(req: NextRequest) {
       await tx.payment.create({
         data: {
           orderId: o.id,
+          tenantId,
+          outletId: d.outletId,
           method: payMethod,
           amountPaise: totals.total,
-          status: "COMPLETED",
+          status: isOnlineGateway ? "PENDING" : "COMPLETED",
+          isGatewayConfirmed: false,
+          reference: payMethod === "CASH" ? "Cash at Counter" : payMethod === "CARD" ? "Card Terminal" : "Staff POS Recorded",
         },
       });
     }

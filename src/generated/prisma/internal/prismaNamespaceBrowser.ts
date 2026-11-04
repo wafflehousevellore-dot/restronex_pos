@@ -66,6 +66,7 @@ export const ModelName = {
   OrderItem: 'OrderItem',
   KitchenTicket: 'KitchenTicket',
   Payment: 'Payment',
+  PaymentRefund: 'PaymentRefund',
   CashierShift: 'CashierShift',
   InventoryItem: 'InventoryItem',
   Recipe: 'Recipe',
@@ -79,6 +80,9 @@ export const ModelName = {
   Subscription: 'Subscription',
   SubscriptionPayment: 'SubscriptionPayment',
   WebhookEvent: 'WebhookEvent',
+  TenantPaymentGatewayConfig: 'TenantPaymentGatewayConfig',
+  PaymentAttempt: 'PaymentAttempt',
+  PaymentReconciliationLog: 'PaymentReconciliationLog',
   IntegrationConfig: 'IntegrationConfig',
   Token: 'Token',
   Reservation: 'Reservation',
@@ -356,14 +360,39 @@ export type KitchenTicketScalarFieldEnum = (typeof KitchenTicketScalarFieldEnum)
 export const PaymentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
   method: 'method',
   amountPaise: 'amountPaise',
   status: 'status',
   reference: 'reference',
+  isGatewayConfirmed: 'isGatewayConfirmed',
+  razorpayPaymentId: 'razorpayPaymentId',
+  cardLast4: 'cardLast4',
+  cardNetwork: 'cardNetwork',
+  upiVpa: 'upiVpa',
+  refundedPaise: 'refundedPaise',
   createdAt: 'createdAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentRefundScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  paymentId: 'paymentId',
+  orderId: 'orderId',
+  amountPaise: 'amountPaise',
+  reason: 'reason',
+  status: 'status',
+  razorpayRefundId: 'razorpayRefundId',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentRefundScalarFieldEnum = (typeof PaymentRefundScalarFieldEnum)[keyof typeof PaymentRefundScalarFieldEnum]
 
 
 export const CashierShiftScalarFieldEnum = {
@@ -503,7 +532,14 @@ export const SubscriptionScalarFieldEnum = {
   billingCycle: 'billingCycle',
   currentPeriodStart: 'currentPeriodStart',
   currentPeriodEnd: 'currentPeriodEnd',
-  trialEndsAt: 'trialEndsAt'
+  trialEndsAt: 'trialEndsAt',
+  gracePeriodEndsAt: 'gracePeriodEndsAt',
+  cancelledAt: 'cancelledAt',
+  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
+  razorpaySubscriptionId: 'razorpaySubscriptionId',
+  razorpayCustomerId: 'razorpayCustomerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
@@ -512,10 +548,17 @@ export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[k
 export const SubscriptionPaymentScalarFieldEnum = {
   id: 'id',
   subscriptionId: 'subscriptionId',
+  tenantId: 'tenantId',
   amountPaise: 'amountPaise',
   status: 'status',
   provider: 'provider',
   providerPaymentId: 'providerPaymentId',
+  razorpayOrderId: 'razorpayOrderId',
+  razorpayPaymentId: 'razorpayPaymentId',
+  razorpaySignature: 'razorpaySignature',
+  invoiceNumber: 'invoiceNumber',
+  receiptUrl: 'receiptUrl',
+  failureReason: 'failureReason',
   createdAt: 'createdAt'
 } as const
 
@@ -526,12 +569,75 @@ export const WebhookEventScalarFieldEnum = {
   id: 'id',
   provider: 'provider',
   eventId: 'eventId',
+  eventType: 'eventType',
+  tenantId: 'tenantId',
   payloadJson: 'payloadJson',
   processed: 'processed',
+  status: 'status',
+  error: 'error',
+  attempts: 'attempts',
+  processedAt: 'processedAt',
   createdAt: 'createdAt'
 } as const
 
 export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
+
+
+export const TenantPaymentGatewayConfigScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  provider: 'provider',
+  isEnabled: 'isEnabled',
+  keyId: 'keyId',
+  keySecretEncrypted: 'keySecretEncrypted',
+  webhookSecretEncrypted: 'webhookSecretEncrypted',
+  merchantName: 'merchantName',
+  routeAccountId: 'routeAccountId',
+  autoCapture: 'autoCapture',
+  cashEnabled: 'cashEnabled',
+  cardTerminalEnabled: 'cardTerminalEnabled',
+  upiManualEnabled: 'upiManualEnabled',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TenantPaymentGatewayConfigScalarFieldEnum = (typeof TenantPaymentGatewayConfigScalarFieldEnum)[keyof typeof TenantPaymentGatewayConfigScalarFieldEnum]
+
+
+export const PaymentAttemptScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  gatewayType: 'gatewayType',
+  razorpayOrderId: 'razorpayOrderId',
+  razorpayPaymentId: 'razorpayPaymentId',
+  amountPaise: 'amountPaise',
+  currency: 'currency',
+  status: 'status',
+  errorCode: 'errorCode',
+  errorMessage: 'errorMessage',
+  idempotencyKey: 'idempotencyKey',
+  verifiedAt: 'verifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentAttemptScalarFieldEnum = (typeof PaymentAttemptScalarFieldEnum)[keyof typeof PaymentAttemptScalarFieldEnum]
+
+
+export const PaymentReconciliationLogScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  source: 'source',
+  referenceId: 'referenceId',
+  status: 'status',
+  notes: 'notes',
+  metadataJson: 'metadataJson',
+  reconciledAt: 'reconciledAt'
+} as const
+
+export type PaymentReconciliationLogScalarFieldEnum = (typeof PaymentReconciliationLogScalarFieldEnum)[keyof typeof PaymentReconciliationLogScalarFieldEnum]
 
 
 export const IntegrationConfigScalarFieldEnum = {

@@ -37,6 +37,7 @@ const nav = [
   { label: "Purchases", href: "/app/purchases", icon: Box },
   { label: "Customers", href: "/app/customers", icon: Users },
   { label: "Reports & Analytics", href: "/app/reports", icon: BarChart3 },
+  { label: "Payments & Gateway", href: "/app/payments", icon: CreditCard },
   { label: "Outlets", href: "/app/outlets", icon: Building2 },
   { label: "Staff & Team", href: "/app/staff", icon: UserCog },
   { label: "Integrations", href: "/app/integrations", icon: Plug },
