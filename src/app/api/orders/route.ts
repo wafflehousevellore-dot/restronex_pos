@@ -213,31 +213,66 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // 6. Record Customer & Consent if phone is provided
+    // 6. Record Customer, Loyalty Rewards & Consent if phone is provided
     if (d.customerPhone) {
       const cleanPhone = d.customerPhone.trim();
+      const pointsEarned = Math.floor(totals.total / 10000) * 5; // 5 points per ₹100 spent
+      const pointsRedeemed = Math.max(0, d.loyaltyPointsRedeemed || 0);
+
       const existingCustomer = await tx.customer.findUnique({
         where: { tenantId_phone: { tenantId, phone: cleanPhone } },
       });
+
+      let customerId = "";
+
       if (existingCustomer) {
+        customerId = existingCustomer.id;
+        const newBalance = Math.max(0, existingCustomer.loyaltyPoints - pointsRedeemed + pointsEarned);
         await tx.customer.update({
           where: { id: existingCustomer.id },
           data: {
             totalSpentPaise: existingCustomer.totalSpentPaise + totals.total,
             visitCount: existingCustomer.visitCount + 1,
+            loyaltyPoints: newBalance,
             name: d.customerName?.trim() || existingCustomer.name,
           },
         });
       } else {
-        await tx.customer.create({
+        const newCustomer = await tx.customer.create({
           data: {
             tenantId,
             name: d.customerName?.trim() || "Guest Customer",
             phone: cleanPhone,
+            loyaltyPoints: Math.max(0, pointsEarned - pointsRedeemed),
             totalSpentPaise: totals.total,
             visitCount: 1,
           },
         });
+        customerId = newCustomer.id;
+      }
+
+      // Record loyalty transaction ledger
+      if (customerId) {
+        if (pointsRedeemed > 0) {
+          await tx.loyaltyTxn.create({
+            data: {
+              customerId,
+              points: -pointsRedeemed,
+              type: "REDEEM",
+              reference: `Order #${orderNumber}`,
+            },
+          });
+        }
+        if (pointsEarned > 0) {
+          await tx.loyaltyTxn.create({
+            data: {
+              customerId,
+              points: pointsEarned,
+              type: "EARN",
+              reference: `Order #${orderNumber}`,
+            },
+          });
+        }
       }
 
       if (d.whatsappConsent) {
@@ -258,6 +293,34 @@ export async function POST(req: NextRequest) {
             metadataJson: JSON.stringify({ orderNumber, totalPaise: totals.total, invoiceNumber }),
           },
         });
+      }
+    }
+
+    // 7. Auto-Deduct Inventory via Recipe Bill of Materials (BOM)
+    for (const it of d.items) {
+      if (!it.menuItemId) continue;
+      const recipe = await tx.recipe.findUnique({
+        where: { menuItemId: it.menuItemId },
+        include: { ingredients: true },
+      });
+      if (recipe && recipe.ingredients.length > 0) {
+        for (const ing of recipe.ingredients) {
+          const deductQty = (ing.quantity * it.quantity) / (recipe.yieldQty || 1);
+          await tx.inventoryItem.update({
+            where: { id: ing.inventoryItemId },
+            data: { currentStock: { decrement: deductQty } },
+          });
+          await tx.stockMovement.create({
+            data: {
+              tenantId,
+              outletId: d.outletId,
+              inventoryItemId: ing.inventoryItemId,
+              quantity: -deductQty,
+              type: "SALE_CONSUMPTION",
+              reference: `Order #${orderNumber}: ${it.name} ×${it.quantity}`,
+            },
+          });
+        }
       }
     }
 

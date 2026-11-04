@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
-import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2 } from "lucide-react";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, Percent } from "lucide-react";
 import Link from "next/link";
 
 type MenuItem = {
@@ -92,6 +92,19 @@ export default function POSClient({
     null
   );
   const [couponError, setCouponError] = useState<string | null>(null);
+  const [customerLoyalty, setCustomerLoyalty] = useState<{
+    id: string;
+    name: string;
+    points: number;
+    visitCount: number;
+  } | null>(null);
+  const [redeemPoints, setRedeemPoints] = useState(false);
+  const [managerPinModal, setManagerPinModal] = useState<{
+    open: boolean;
+    pendingDiscount?: { code: string; discountPaise: number };
+  } | null>(null);
+  const [managerPinInput, setManagerPinInput] = useState("");
+  const [pinError, setPinError] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [posting, setPosting] = useState(false);
@@ -132,6 +145,34 @@ export default function POSClient({
       setLoadingTableOrder(false);
     }
   }
+
+  // Auto-fetch Customer Loyalty profile when phone is typed (>= 10 digits)
+  useEffect(() => {
+    const clean = customerPhone.replace(/\D/g, "");
+    if (clean.length >= 10) {
+      apiFetch(`/api/customers?phone=${clean}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.id) {
+            setCustomerLoyalty({
+              id: data.id,
+              name: data.name,
+              points: data.loyaltyPoints || 0,
+              visitCount: data.visitCount || 0,
+            });
+            if (!customerName || customerName === "Guest Customer") {
+              setCustomerName(data.name);
+            }
+          } else {
+            setCustomerLoyalty(null);
+          }
+        })
+        .catch(() => setCustomerLoyalty(null));
+    } else {
+      setCustomerLoyalty(null);
+      setRedeemPoints(false);
+    }
+  }, [customerPhone]);
 
   const categories = useMemo(
     () => Array.from(new Set(items.map((i) => (i.category?.name || "Other").trim()).filter(Boolean))),
@@ -184,11 +225,60 @@ export default function POSClient({
     (s, c) => s + (Number(c.unitPricePaise) || 0) * (Number(c.quantity) || 0),
     0
   );
-  const discountPaise = appliedCoupon ? Math.min(appliedCoupon.discountPaise, subtotal) : 0;
+  const couponDiscountPaise = appliedCoupon ? Math.min(appliedCoupon.discountPaise, subtotal) : 0;
+  const afterCoupon = Math.max(0, subtotal - couponDiscountPaise);
+
+  // Loyalty Points: 1 point = ₹1 (100 paise)
+  const maxPointsCanRedeem = customerLoyalty ? Math.min(customerLoyalty.points, Math.floor(afterCoupon / 100)) : 0;
+  const loyaltyDiscountPaise = redeemPoints ? maxPointsCanRedeem * 100 : 0;
+  const discountPaise = couponDiscountPaise + loyaltyDiscountPaise;
+
   const taxable = Math.max(0, subtotal - discountPaise);
   const cgst = Math.round(taxable * 0.09);
   const sgst = Math.round(taxable * 0.09);
   const total = taxable + cgst + sgst;
+  const pointsToEarn = Math.floor(total / 10000) * 5; // 5 pts per ₹100 spent
+
+  function applyQuickDiscount(type: "PCT" | "FLAT", value: number, label: string) {
+    if (cart.length === 0) {
+      setCouponError("Add items to cart before applying discount");
+      return;
+    }
+    const computedPaise = type === "PCT" ? Math.round((subtotal * value) / 100) : value * 100;
+
+    // Security check: discounts > 15% or flat > ₹150 require Manager PIN
+    const isHighDiscount = (type === "PCT" && value > 15) || (type === "FLAT" && value > 150);
+    if (isHighDiscount) {
+      setManagerPinModal({
+        open: true,
+        pendingDiscount: { code: label, discountPaise: computedPaise },
+      });
+      setManagerPinInput("");
+      setPinError(null);
+      return;
+    }
+
+    setAppliedCoupon({ code: label, discountPaise: computedPaise });
+    setCouponCode(label);
+    setCouponError(null);
+  }
+
+  function verifyManagerPin() {
+    // Default Manager PIN is 1234
+    if (managerPinInput === "1234") {
+      if (managerPinModal?.pendingDiscount) {
+        setAppliedCoupon(managerPinModal.pendingDiscount);
+        setCouponCode(managerPinModal.pendingDiscount.code);
+        setCouponError(null);
+        setMsg({ type: "success", text: `Manager authorized ${managerPinModal.pendingDiscount.code} discount.` });
+      }
+      setManagerPinModal(null);
+      setManagerPinInput("");
+      setPinError(null);
+    } else {
+      setPinError("Invalid Manager PIN. Default PIN is 1234.");
+    }
+  }
 
   function applyPOSCoupon(codeToApply?: string) {
     const target = (codeToApply || couponCode).trim().toUpperCase();
@@ -256,6 +346,7 @@ export default function POSClient({
             unitPricePaise: c.unitPricePaise,
           })),
           discountPaise,
+          loyaltyPointsRedeemed: redeemPoints ? maxPointsCanRedeem : 0,
           paymentMethod,
         }),
       });
@@ -323,6 +414,8 @@ export default function POSClient({
       setCart([]);
       setAppliedCoupon(null);
       setCouponCode("");
+      setRedeemPoints(false);
+      setCustomerLoyalty(null);
     } catch (err: unknown) {
       const m = err instanceof Error ? err.message : String(err);
       setMsg({ type: "error", text: m });
@@ -701,11 +794,46 @@ export default function POSClient({
               )}
             </div>
 
-            {/* Coupon Code in POS */}
-            <div className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] p-3 space-y-2">
+            {/* Customer Loyalty Profile & Redemption */}
+            {customerLoyalty && (
+              <div className="rounded-xl border border-[#16845B]/30 bg-[#E8F5EE]/50 p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#172B25]">
+                    <Sparkles className="h-4 w-4 text-[#16845B]" />
+                    <span>Loyalty: {customerLoyalty.name}</span>
+                  </div>
+                  <span className="rounded-full bg-[#16845B] text-white px-2.5 py-0.5 text-[11px] font-black">
+                    {customerLoyalty.points} pts (₹{customerLoyalty.points})
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className="text-[11px] text-[#718078]">
+                    {maxPointsCanRedeem > 0
+                      ? `Redeem up to ${maxPointsCanRedeem} pts`
+                      : "Points balance exhausted"}
+                  </span>
+                  {maxPointsCanRedeem > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setRedeemPoints(!redeemPoints)}
+                      className={`rounded-full px-3 py-1 text-xs font-bold transition shadow-2xs cursor-pointer ${
+                        redeemPoints
+                          ? "bg-[#16845B] text-white"
+                          : "bg-white border border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
+                      }`}
+                    >
+                      {redeemPoints ? "Points Applied ✓" : "Redeem Points"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Quick Discounts & Coupon Code in POS */}
+            <div className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] p-3 space-y-2.5">
               <div className="flex items-center justify-between">
                 <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1.5">
-                  <Tag className="h-3.5 w-3.5 text-[#16845B]" /> Coupon Code
+                  <Tag className="h-3.5 w-3.5 text-[#16845B]" /> Discounts & Offers
                 </Label>
                 {appliedCoupon && (
                   <span className="text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -714,14 +842,40 @@ export default function POSClient({
                 )}
               </div>
 
-              <div className="flex gap-2">
+              {/* Quick Discount Presets */}
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                {[
+                  { label: "5%", type: "PCT" as const, val: 5 },
+                  { label: "10%", type: "PCT" as const, val: 10 },
+                  { label: "15%", type: "PCT" as const, val: 15 },
+                  { label: "20%*", type: "PCT" as const, val: 20 },
+                  { label: "₹50", type: "FLAT" as const, val: 50 },
+                  { label: "₹100*", type: "FLAT" as const, val: 100 },
+                ].map((d) => (
+                  <button
+                    key={d.label}
+                    type="button"
+                    onClick={() => applyQuickDiscount(d.type, d.val, `${d.label} OFF`)}
+                    className={`rounded-lg px-2.5 py-1 text-[11px] font-bold border transition cursor-pointer ${
+                      appliedCoupon?.code === `${d.label} OFF`
+                        ? "bg-[#16845B] text-white border-[#16845B]"
+                        : "bg-white border-[#E5EBE7] text-[#172B25] hover:border-[#16845B]"
+                    }`}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+              <div className="text-[9.5px] text-[#718078] italic">*Discounts &gt;15% require Manager PIN</div>
+
+              <div className="flex gap-2 pt-1">
                 <Input
                   value={couponCode}
                   onChange={(e) => {
                     setCouponCode(e.target.value);
                     setCouponError(null);
                   }}
-                  placeholder="Enter code (e.g. SAVE10)"
+                  placeholder="Promo code (e.g. WELCOME10)"
                   className="bg-white border-[#E5EBE7] text-[#172B25] text-xs h-9"
                 />
                 <button
@@ -736,7 +890,7 @@ export default function POSClient({
                     type="button"
                     onClick={removePOSCoupon}
                     className="rounded-xl bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 text-xs px-2.5 py-2 shrink-0 flex items-center justify-center cursor-pointer"
-                    title="Remove coupon"
+                    title="Remove discount"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -756,10 +910,16 @@ export default function POSClient({
                 <span>Subtotal</span>
                 <span className="text-[#172B25] font-semibold">{formatINR(subtotal)}</span>
               </div>
-              {discountPaise > 0 && (
+              {couponDiscountPaise > 0 && (
                 <div className="flex justify-between text-xs text-[#16845B] font-bold bg-[#E8F5EE] px-2 py-1 rounded-lg">
-                  <span>Coupon Discount ({appliedCoupon?.code})</span>
-                  <span>−{formatINR(discountPaise)}</span>
+                  <span>Discount ({appliedCoupon?.code})</span>
+                  <span>−{formatINR(couponDiscountPaise)}</span>
+                </div>
+              )}
+              {loyaltyDiscountPaise > 0 && (
+                <div className="flex justify-between text-xs text-[#16845B] font-bold bg-[#E8F5EE] px-2 py-1 rounded-lg">
+                  <span>Loyalty Points ({maxPointsCanRedeem} pts)</span>
+                  <span>−{formatINR(loyaltyDiscountPaise)}</span>
                 </div>
               )}
               <div className="flex justify-between text-xs text-[#718078]">
@@ -774,6 +934,12 @@ export default function POSClient({
                 <span>Total Payable</span>
                 <span className="text-[#16845B] text-base">{formatINR(total)}</span>
               </div>
+              {total > 0 && (
+                <div className="flex items-center justify-between text-[11px] font-bold text-[#16845B] bg-[#E8F5EE]/60 px-2.5 py-1 rounded-md">
+                  <span>⭐ Rewards to Earn</span>
+                  <span>+{pointsToEarn} loyalty pts</span>
+                </div>
+              )}
               <div className="text-[11px] text-[#718078] text-center pt-1">
                 Inclusive of all taxes • {orderType.replace("_", " ")}{" "}
                 {selectedTableLabel ? `• Table ${selectedTableLabel}` : ""} • Pay via {paymentMethod}
@@ -834,6 +1000,82 @@ export default function POSClient({
           </CardContent>
         </Card>
       </div>
+
+      {/* Manager PIN Override Modal */}
+      {managerPinModal?.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-[#E5EBE7] space-y-4">
+            <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="h-5 w-5 text-amber-600" />
+                <span className="font-extrabold text-sm text-[#172B25]">Manager Authorization</span>
+              </div>
+              <button
+                onClick={() => {
+                  setManagerPinModal(null);
+                  setPinError(null);
+                }}
+                className="h-7 w-7 rounded-full bg-[#F8FAF9] text-[#718078] grid place-items-center hover:text-[#172B25]"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="text-center space-y-1">
+              <p className="text-xs font-semibold text-[#172B25]">
+                Authorizing {managerPinModal.pendingDiscount?.code}
+              </p>
+              <p className="text-[11px] text-[#718078]">
+                Discounts &gt;15% require Manager Passcode (Default: <b>1234</b>)
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-[#718078]">Enter 4-Digit Manager PIN</Label>
+              <Input
+                type="password"
+                maxLength={4}
+                autoFocus
+                value={managerPinInput}
+                onChange={(e) => {
+                  setManagerPinInput(e.target.value);
+                  setPinError(null);
+                }}
+                placeholder="• • • •"
+                className="text-center text-lg tracking-widest font-mono font-bold bg-[#F8FAF9] border-[#E5EBE7]"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") verifyManagerPin();
+                }}
+              />
+              {pinError && (
+                <div className="text-xs text-red-600 bg-red-50 p-2 rounded-lg text-center font-medium">
+                  {pinError}
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setManagerPinModal(null);
+                  setPinError(null);
+                }}
+                className="flex-1 rounded-full border border-[#E5EBE7] bg-white py-2.5 text-xs font-bold text-[#718078] hover:bg-[#F8FAF9]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={verifyManagerPin}
+                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold shadow-xs transition"
+              >
+                Authorize Discount
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Thermal Bill Receipt Modal */}
       {showReceipt && activeReceipt && (

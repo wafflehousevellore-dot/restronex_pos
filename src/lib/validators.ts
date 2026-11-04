@@ -57,6 +57,8 @@ export const orderCreateSchema = z.object({
     notes: z.string().optional(),
   })).min(1),
   discountPaise: z.number().int().min(0).default(0),
+  discountReason: z.string().optional(),
+  loyaltyPointsRedeemed: z.number().int().min(0).optional().default(0),
   paymentMethod: z.enum(["CASH", "UPI", "CARD", "SPLIT", "RAZORPAY_ONLINE"]).optional().default("CASH"),
   splitPayments: z.array(z.object({ method: z.string(), amountPaise: z.number().int(), reference: z.string().optional() })).optional(),
 });

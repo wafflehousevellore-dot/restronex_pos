@@ -3,7 +3,7 @@
 import { apiFetch } from "@/lib/api";
 import { useEffect, useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, ChefHat, Volume2, VolumeX, RefreshCw } from "lucide-react";
+import { Clock, ChefHat, Volume2, VolumeX, RefreshCw, Printer, X } from "lucide-react";
 
 function playKitchenChime() {
   try {
@@ -37,16 +37,18 @@ export default function KitchenPage() {
   const [stationFilter, setStationFilter] = useState("ALL");
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const prevTicketCount = useRef(0);
+  const [kotModalTicket, setKotModalTicket] = useState<any | null>(null);
+  const knownTicketIds = useRef<Set<string>>(new Set());
 
   async function load() {
     try {
       const j = await apiFetch("/api/kds").then((r) => r.json()).catch(() => []);
       if (Array.isArray(j)) {
-        if (soundEnabled && j.length > prevTicketCount.current && prevTicketCount.current > 0) {
-          playKitchenChime();
+        if (knownTicketIds.current.size > 0 && soundEnabled) {
+          const hasNew = j.some((t: any) => !knownTicketIds.current.has(t.id));
+          if (hasNew) playKitchenChime();
         }
-        prevTicketCount.current = j.length;
+        knownTicketIds.current = new Set(j.map((t: any) => t.id));
         setTickets(j);
       }
     } catch {}
@@ -212,14 +214,23 @@ export default function KitchenPage() {
                           </div>
                         </div>
 
-                        <div className="text-right">
-                          <span className="text-[10px] rounded-full bg-white border border-[#E5EBE7] px-2 py-0.5 text-[#718078] font-bold uppercase">
-                            {t.station || "MAIN"}
-                          </span>
+                        <div className="text-right flex flex-col items-end">
+                          <div className="flex items-center gap-1">
+                            <span className="text-[10px] rounded-full bg-white border border-[#E5EBE7] px-2 py-0.5 text-[#718078] font-bold uppercase">
+                              {t.station || "MAIN"}
+                            </span>
+                            <button
+                              onClick={() => setKotModalTicket(t)}
+                              title="Print Thermal KOT Ticket"
+                              className="p-1 rounded-md text-[#718078] hover:text-[#172B25] hover:bg-white border border-transparent hover:border-[#E5EBE7] transition"
+                            >
+                              <Printer className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                           <div
                             className={`flex items-center gap-1 text-[10px] font-bold mt-1 justify-end ${
                               elapsed.isUrgent
-                                ? "text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded"
+                                ? "text-red-600 bg-red-50 border border-red-200 px-1.5 py-0.5 rounded animate-pulse"
                                 : elapsed.isWarning
                                 ? "text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded"
                                 : "text-[#718078]"
@@ -288,6 +299,80 @@ export default function KitchenPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Thermal KOT Modal */}
+      {kotModalTicket && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 space-y-4 shadow-2xl border border-[#E5EBE7]">
+            <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-3">
+              <h3 className="font-extrabold text-base text-[#172B25] flex items-center gap-2">
+                <Printer className="h-4 w-4 text-[#16845B]" />
+                Kitchen Order Ticket (KOT)
+              </h3>
+              <button
+                onClick={() => setKotModalTicket(null)}
+                className="h-7 w-7 rounded-full bg-[#F8FAF9] text-[#718078] grid place-items-center hover:text-[#172B25]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Printable KOT Ticket */}
+            <div id="kot-printable" className="p-4 bg-[#F8FAF9] rounded-2xl border border-[#E5EBE7] font-mono text-xs space-y-2 text-black">
+              <div className="text-center border-b border-dashed border-gray-400 pb-2">
+                <div className="font-black text-sm uppercase">KITCHEN ORDER TICKET (KOT)</div>
+                <div className="text-[11px] text-gray-600">Station: {kotModalTicket.station || "MAIN KITCHEN"}</div>
+              </div>
+
+              <div className="flex justify-between text-[11px] pt-1">
+                <span><b>Order:</b> {kotModalTicket.order?.orderNumber || kotModalTicket.orderId.slice(0, 8)}</span>
+                <span><b>Table:</b> {kotModalTicket.order?.table?.number ? `Table ${kotModalTicket.order.table.number}` : "Takeaway"}</span>
+              </div>
+              <div className="text-[10px] text-gray-500">
+                Time: {new Date(kotModalTicket.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+              </div>
+
+              {kotModalTicket.order?.notes && (
+                <div className="p-1.5 bg-amber-50 border border-amber-300 rounded text-[11px] text-amber-900 font-sans">
+                  <b>Special Note:</b> {kotModalTicket.order.notes}
+                </div>
+              )}
+
+              <div className="border-t border-b border-dashed border-gray-400 py-2 space-y-1 my-2">
+                <div className="flex justify-between font-bold text-[11px]">
+                  <span>ITEM</span>
+                  <span>QTY</span>
+                </div>
+                {kotModalTicket.order?.items?.map((it: any) => (
+                  <div key={it.id} className="flex justify-between text-xs">
+                    <span className="font-semibold">{it.name}</span>
+                    <span className="font-bold">×{it.quantity}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center text-[10px] text-gray-500 pt-1">
+                KDS Ticket ID: {kotModalTicket.id.slice(0, 10)}
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => setKotModalTicket(null)}
+                className="flex-1 rounded-full border border-[#E5EBE7] bg-white py-2.5 text-xs font-bold text-[#718078] hover:bg-[#F8FAF9]"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5"
+              >
+                <Printer className="h-4 w-4" /> Print KOT (80mm)
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

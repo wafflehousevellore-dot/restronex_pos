@@ -131,10 +131,11 @@ html {
   }
   #thermal-receipt-printable, #thermal-receipt-printable *,
   #z-report-printable, #z-report-printable *,
+  #kot-printable, #kot-printable *,
   #qr-badge-printable, #qr-badge-printable * {
     visibility: visible !important;
   }
-  #thermal-receipt-printable, #z-report-printable {
+  #thermal-receipt-printable, #z-report-printable, #kot-printable {
     position: fixed !important;
     left: 0 !important;
     top: 0 !important;
