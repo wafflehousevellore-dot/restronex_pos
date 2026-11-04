@@ -230,8 +230,9 @@ async function main() {
 
     if (!res.ok) throw new Error(`KDS PATCH returned HTTP ${res.status}`);
     const data = await res.json();
-    if (data.ticket?.status !== "PREPARING" && !data.ok) {
-      throw new Error("Ticket status not updated to PREPARING");
+    const updatedStatus = data.status || data.ticket?.status;
+    if (updatedStatus !== "PREPARING") {
+      throw new Error(`Ticket status not updated to PREPARING (got ${updatedStatus})`);
     }
   });
 
@@ -281,7 +282,8 @@ async function main() {
 
     if (!res.ok) throw new Error(`Recipe creation returned HTTP ${res.status}`);
     const data = await res.json();
-    if (!data.recipe?.id) throw new Error("Recipe response missing recipe.id");
+    const recipeId = data.id || data.recipe?.id;
+    if (!recipeId) throw new Error("Recipe response missing id");
   });
 
   // -------------------------------------------------------------------------
@@ -322,7 +324,8 @@ async function main() {
 
     if (!res.ok) throw new Error(`Customer creation returned HTTP ${res.status}`);
     const data = await res.json();
-    if (!data.customer?.id) throw new Error("Customer response missing customer.id");
+    const customerId = data.id || data.customer?.id;
+    if (!customerId) throw new Error("Customer response missing id");
 
     // Lookup customer by phone
     const lookup = await fetch(`${BASE_URL}/api/customers?phone=${testPhone}`, {
@@ -330,8 +333,9 @@ async function main() {
     });
     if (!lookup.ok) throw new Error(`Customer lookup returned HTTP ${lookup.status}`);
     const lookupData = await lookup.json();
-    if (!lookupData.customer || lookupData.customer.phone !== testPhone) {
-      throw new Error("Customer phone lookup failed");
+    const foundPhone = lookupData?.phone || lookupData?.customer?.phone;
+    if (foundPhone !== testPhone) {
+      throw new Error(`Customer phone lookup failed: got ${foundPhone}`);
     }
   });
 
