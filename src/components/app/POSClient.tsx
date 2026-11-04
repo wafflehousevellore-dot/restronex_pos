@@ -626,9 +626,9 @@ export default function POSClient({
                   <div className="mx-auto w-fit p-2 bg-white rounded-xl shadow-xs border border-[#E5EBE7]">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-                        `upi://pay?pa=restronex@icici&pn=RestroNex%20Restaurant&am=${(
-                          total / 100
-                        ).toFixed(2)}&cu=INR`
+                        `upi://pay?pa=restronex@icici&pn=${encodeURIComponent(
+                          outlets.find((o) => o.id === selectedOutlet)?.name || "Restaurant"
+                        )}&am=${(total / 100).toFixed(2)}&cu=INR`
                       )}&margin=2`}
                       alt="Customer UPI QR Code"
                       className="w-28 h-28 object-contain rounded"

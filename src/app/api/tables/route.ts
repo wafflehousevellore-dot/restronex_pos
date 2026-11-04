@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
         where,
         include: {
           outlet: { select: { id: true, name: true, slug: true } },
+          tenant: { select: { id: true, name: true } },
         },
         orderBy: { number: "asc" },
       });

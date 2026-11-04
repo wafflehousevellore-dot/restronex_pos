@@ -10,6 +10,7 @@ import { QrCode, Plus, ArrowRightLeft, Check, X, Printer, RefreshCw } from "luci
 export default function TablesFloorPlanPage() {
   const [tables, setTables] = useState<any[]>([]);
   const [outlets, setOutlets] = useState<any[]>([]);
+  const [tenantName, setTenantName] = useState<string>("");
   const [selectedOutlet, setSelectedOutlet] = useState<string>("");
   const [form, setForm] = useState({ number: "", area: "Main Hall", capacity: "4", waiterName: "" });
   const [qrModalTable, setQrModalTable] = useState<any | null>(null);
@@ -19,15 +20,20 @@ export default function TablesFloorPlanPage() {
 
   const loadData = useCallback(async () => {
     try {
-      const [oList, tList] = await Promise.all([
+      const [oList, tList, mList] = await Promise.all([
         apiFetch("/api/outlets").then((r) => r.json()).catch(() => []),
         apiFetch("/api/tables").then((r) => r.json()).catch(() => []),
+        apiFetch("/api/tenants").then((r) => r.json()).catch(() => []),
       ]);
       if (Array.isArray(oList)) {
         setOutlets(oList);
         if (oList.length > 0 && !selectedOutlet) setSelectedOutlet(oList[0].id);
       }
       if (Array.isArray(tList)) setTables(tList);
+      if (Array.isArray(mList) && mList.length > 0) {
+        const found = mList[0]?.tenant?.name;
+        if (found) setTenantName(found);
+      }
     } catch {
       setMsg({ type: "error", text: "Failed to load floor tables" });
     }
@@ -345,60 +351,71 @@ export default function TablesFloorPlanPage() {
       ))}
 
       {/* QR Code Modal */}
-      {qrModalTable && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-white rounded-3xl p-6 text-center space-y-4 shadow-2xl border border-[#E5EBE7]">
-            <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-3">
-              <h3 className="font-extrabold text-base text-[#172B25]">Table {qrModalTable.number} QR Badge</h3>
-              <button
-                onClick={() => setQrModalTable(null)}
-                className="h-7 w-7 rounded-full bg-[#F8FAF9] text-[#718078] grid place-items-center"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+      {qrModalTable && (() => {
+        const restaurantDisplayName = (
+          qrModalTable.tenant?.name ||
+          tenantName ||
+          qrModalTable.outlet?.name ||
+          "Restaurant"
+        ).toUpperCase();
 
-            {/* Generated QR Badge Design */}
-            <div className="p-6 rounded-2xl border-2 border-dashed border-[#16845B]/40 bg-[#F8FAF9] space-y-3">
-              <div className="text-xs uppercase font-extrabold tracking-widest text-[#16845B]">RestroNex Table Order</div>
-              <div className="text-2xl font-black text-[#172B25]">TABLE {qrModalTable.number}</div>
-              <p className="text-[11px] text-[#718078]">Scan with any camera or UPI app to view menu & order</p>
-
-              <div className="h-44 w-44 mx-auto bg-white border border-[#E5EBE7] rounded-2xl grid place-items-center shadow-xs">
-                {/* SVG QR Code Simulation with live target link */}
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
-                    `${typeof window !== "undefined" ? window.location.origin : "https://restronex.vercel.app"}/order/table/${qrModalTable.qrToken}`
-                  )}`}
-                  alt={`QR Code for Table ${qrModalTable.number}`}
-                  className="h-36 w-36 object-contain"
-                />
+        return (
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="w-full max-w-sm bg-white rounded-3xl p-6 text-center space-y-4 shadow-2xl border border-[#E5EBE7]">
+              <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-3">
+                <h3 className="font-extrabold text-base text-[#172B25]">Table {qrModalTable.number} QR Badge</h3>
+                <button
+                  onClick={() => setQrModalTable(null)}
+                  className="h-7 w-7 rounded-full bg-[#F8FAF9] text-[#718078] grid place-items-center"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
 
-              <div className="text-[10px] text-[#718078] font-mono break-all pt-1">
-                Token: {qrModalTable.qrToken}
-              </div>
-            </div>
+              {/* Generated QR Badge Design */}
+              <div id="qr-badge-printable" className="p-6 rounded-2xl border-2 border-dashed border-[#16845B]/40 bg-[#F8FAF9] space-y-3">
+                <div className="text-xs uppercase font-extrabold tracking-widest text-[#16845B] truncate px-1" title={restaurantDisplayName}>
+                  {restaurantDisplayName} • TABLE ORDER
+                </div>
+                <div className="text-2xl font-black text-[#172B25]">TABLE {qrModalTable.number}</div>
+                <p className="text-[11px] text-[#718078]">Scan with any camera or UPI app to view menu & order</p>
 
-            <div className="flex gap-2 pt-2">
-              <a
-                href={`/order/table/${qrModalTable.qrToken}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition shadow-xs"
-              >
-                Open Guest Menu →
-              </a>
-              <button
-                onClick={() => window.print()}
-                className="rounded-full border border-[#E5EBE7] bg-white px-4 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs flex items-center gap-1.5"
-              >
-                <Printer className="h-3.5 w-3.5" /> Print
-              </button>
+                <div className="h-44 w-44 mx-auto bg-white border border-[#E5EBE7] rounded-2xl grid place-items-center shadow-xs">
+                  {/* SVG QR Code Simulation with live target link */}
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                      `${typeof window !== "undefined" ? window.location.origin : "https://restronex.vercel.app"}/order/table/${qrModalTable.qrToken}`
+                    )}`}
+                    alt={`QR Code for Table ${qrModalTable.number}`}
+                    className="h-36 w-36 object-contain"
+                  />
+                </div>
+
+                <div className="text-[10px] text-[#718078] font-mono break-all pt-1">
+                  Token: {qrModalTable.qrToken}
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <a
+                  href={`/order/table/${qrModalTable.qrToken}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition shadow-xs"
+                >
+                  Open Guest Menu →
+                </a>
+                <button
+                  onClick={() => window.print()}
+                  className="rounded-full border border-[#E5EBE7] bg-white px-4 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs flex items-center gap-1.5"
+                >
+                  <Printer className="h-3.5 w-3.5" /> Print
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Move / Shift Order Modal */}
       {moveModalTable && (
