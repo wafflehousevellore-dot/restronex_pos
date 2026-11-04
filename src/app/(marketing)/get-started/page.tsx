@@ -83,7 +83,7 @@ function GetStartedContent() {
           {/* Progress Header */}
           <div className="text-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-3.5 py-1 text-xs font-bold text-[#16845B]">
-              <Sparkles className="h-3.5 w-3.5 text-[#16845B]" /> 14-DAY RISK-FREE TRIAL
+              <Sparkles className="h-3.5 w-3.5 text-[#16845B]" /> INSTANT RESTAURANT ACTIVATION
             </span>
             <h1 className="mt-4 text-3xl sm:text-4xl font-black text-[#172B25]">
               {step === 1 ? "Step 1: Choose Your Plan" : "Step 2: Enter Restaurant Details"}
@@ -310,7 +310,7 @@ function GetStartedContent() {
                         <span>Validating Details...</span>
                       ) : (
                         <>
-                          <span>Create Account & Start Trial</span>
+                          <span>Continue to Secure Checkout</span>
                           <ArrowRight className="h-4 w-4" />
                         </>
                       )}

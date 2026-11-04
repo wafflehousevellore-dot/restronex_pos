@@ -146,7 +146,7 @@ export default function TableManagementFeaturePage() {
                 Book Interactive Demo →
               </Link>
               <Link href="/sign-up" className="rounded-full border border-[#E5EBE7] bg-white px-6 py-3 text-sm font-bold text-[#172B25] hover:bg-[#F8FAF9] transition shadow-xs">
-                Start 14-Day Free Trial
+                Get Started Now
               </Link>
             </div>
           </div>

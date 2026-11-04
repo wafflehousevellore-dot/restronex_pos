@@ -21,7 +21,7 @@ export default function SignUpPage() {
       p.get("cycle") ||
       document.cookie.split("; ").find((s) => s.startsWith("restronex_cycle="))?.split("=")[1] ||
       "MONTHLY";
-    const next = p.get("next") || (plan ? `/checkout?plan=${plan}&cycle=${cycle}` : "/app/organization");
+    const next = p.get("next") || (plan ? `/app/auth-callback?plan=${plan}&cycle=${cycle}` : "/app/auth-callback");
     setPlanInfo({ plan: plan ? decodeURIComponent(plan) : null, cycle, next });
     if (plan) {
       document.cookie = `restronex_plan=${encodeURIComponent(
@@ -34,7 +34,7 @@ export default function SignUpPage() {
   return (
     <PageShell
       title="Create your RestroNex account"
-      subtitle="Start your 14-day free trial — no card required. Clerk Organizations enabled."
+      subtitle="Direct restaurant POS subscription & instant onboarding. Clerk Organizations enabled."
       badge="Sign Up • Clerk"
     >
       {planInfo.plan && (
@@ -50,10 +50,10 @@ export default function SignUpPage() {
           routing="path"
           path="/sign-up"
           signInUrl={`/sign-in?plan=${planInfo.plan || ""}&cycle=${planInfo.cycle || ""}&next=${encodeURIComponent(
-            planInfo.next || "/app/organization"
+            planInfo.next || "/app/auth-callback"
           )}`}
-          forceRedirectUrl={planInfo.next || "/app/organization"}
-          fallbackRedirectUrl="/app/organization"
+          forceRedirectUrl={planInfo.next || "/app/auth-callback"}
+          fallbackRedirectUrl="/app/auth-callback"
         />
       </div>
 

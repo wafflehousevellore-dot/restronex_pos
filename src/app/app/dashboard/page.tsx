@@ -44,6 +44,10 @@ export default async function Dashboard(){
   }
   const tenant = await prisma.tenant.findUnique({ where:{ id: tenantId }, include:{ outlets:true }});
   if (!tenant) redirect("/app/organization");
+  const ent = await getEntitlements(tenantId);
+  if (!ent.hasActiveSubscription) {
+    redirect("/checkout?reason=subscription_required");
+  }
   if (!tenant.onboardingComplete) {
     const stepNames = ["Business","Outlet","Tables","Menu","Tax","Staff","Plan","Launch"];
     return (
@@ -67,7 +71,6 @@ export default async function Dashboard(){
     );
   }
 
-  const ent = await getEntitlements(tenantId);
   const orders = await prisma.order.findMany({ where:{ tenantId }});
   const totalSales = orders.reduce((s,o)=>s+o.totalPaise,0);
   const todayOrders = orders.filter(o=> new Date(o.createdAt).toDateString()===new Date().toDateString());

@@ -52,9 +52,13 @@ export async function getEntitlements(tenantId: string): Promise<Entitlements> {
     };
   }
   const now = new Date();
-  const isTrialActive = sub.status === "TRIALING" && sub.trialEndsAt && sub.trialEndsAt > now;
-  const isActive = sub.status === "ACTIVE" || isTrialActive;
-  const hasActive = isActive || sub.status === "TRIALING";
+  const periodEnd = new Date(sub.currentPeriodEnd);
+  const graceEnd = sub.gracePeriodEndsAt || new Date(periodEnd.getTime() + 7 * 24 * 60 * 60 * 1000);
+  
+  // Free trials completely removed — subscription must be verified paid ACTIVE or within 7-day grace period
+  const isPaidActive = sub.status === "ACTIVE" && now <= periodEnd;
+  const isGraceActive = (sub.status === "ACTIVE" || sub.status === "PAST_DUE") && now > periodEnd && now <= graceEnd;
+  const hasActive = isPaidActive || isGraceActive;
 
   let features: string[] = [];
   try {
@@ -73,8 +77,8 @@ export async function getEntitlements(tenantId: string): Promise<Entitlements> {
     maxUsers: sub.plan.maxUsers,
     features,
     subscriptionStatus: sub.status,
-    trialEndsAt: sub.trialEndsAt,
-    isTrialing: sub.status === "TRIALING",
+    trialEndsAt: null,
+    isTrialing: false,
     canUsePOS: hasActive,
     canUseInventory: hasActive && isGrowthOrBusiness,
     canUseKDS: hasActive,

@@ -115,11 +115,11 @@ export default function Pricing() {
         <div className="rounded-2xl border border-[#E5EBE7] bg-white p-8 text-center max-w-3xl w-full space-y-4 shadow-sm">
           <h3 className="text-2xl font-black text-[#172B25]">Ready to streamline your restaurant operations?</h3>
           <p className="text-sm text-[#718078] max-w-xl mx-auto">
-            Get started with our 14-day free trial on any plan. Complete billing, menu management, KDS, and inventory ready in 5 minutes.
+            Choose a plan tailored to your business scale. Complete billing, menu management, KDS, and inventory ready in 5 minutes.
           </p>
           <div className="pt-2 flex flex-wrap gap-3 justify-center items-center">
             <Link href="/get-started" className="rounded-full bg-[#16845B] px-8 py-3 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs">
-              Start 14-Day Free Trial →
+              Choose Plan & Get Started →
             </Link>
             <Link href="/sign-in" className="rounded-full border border-[#E5EBE7] bg-white px-6 py-3 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] transition">
               Sign In to Existing Account

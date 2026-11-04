@@ -2,7 +2,7 @@ import { pricingPlans } from "./brand";
 
 export type BillingCycle = "MONTHLY" | "ANNUAL";
 export const GST_BPS = 1800; // 18%
-export const TRIAL_DAYS = 14;
+export const TRIAL_DAYS = 0; // Free trials disabled
 
 export function getPlanBySlug(slug: string) {
   return pricingPlans.find(p => p.slug === slug) || null;
@@ -55,7 +55,7 @@ export function calcCheckoutTotals(opts: {
     gstPaise: gst,
     gstBps: GST_BPS,
     totalPaise: total,
-    trialEligible: plan.slug !== "enterprise", // enterprise contact sales no trial
+    trialEligible: false, // Free trials disabled - direct payment required
   };
 }
 

@@ -5,6 +5,7 @@ import { PageShell } from "@/components/marketing/PageShell";
 import CheckoutClient from "./CheckoutClient";
 import { calcCheckoutTotals } from "@/lib/checkout";
 import { isRazorpayConfigured, isWebhookConfigured } from "@/lib/razorpay";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -40,13 +41,33 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   const razorConfigured = isRazorpayConfigured();
   const webhookConfigured = isWebhookConfigured();
 
-  // Load tenant if exists to show trial eligibility
+  // If already paid and subscription is active, do not prompt payment again
   let tenantId: string | null = null;
   let hasTenant = false;
   if (userId) {
-    const mem = await prisma.membership.findFirst({ where: { userId }});
+    const mem = await prisma.membership.findFirst({
+      where: { userId },
+      include: {
+        tenant: {
+          include: {
+            subscriptions: {
+              where: { status: "ACTIVE", currentPeriodEnd: { gte: new Date() } },
+              include: { plan: true },
+            },
+          },
+        },
+      },
+    });
     tenantId = mem?.tenantId || null;
     hasTenant = !!tenantId;
+    const activeSub = mem?.tenant?.subscriptions?.[0];
+    if (activeSub && sp.renew !== "true" && sp.change !== "true") {
+      if (mem?.tenant?.onboardingComplete) {
+        redirect("/app/pos");
+      } else {
+        redirect("/app/onboarding");
+      }
+    }
   }
 
   return (

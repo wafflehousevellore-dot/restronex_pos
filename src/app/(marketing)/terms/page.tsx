@@ -10,7 +10,7 @@ export default function Terms() {
       <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs max-w-3xl mx-auto">
         <div className="space-y-4 text-sm leading-relaxed text-[#718078]">
           <p>
-            By using RestroNex you agree to our subscription, billing, and fair-use terms. Trials convert per plan rules. Failed payments may restrict features; entitlements are gated server-side.
+            By using RestroNex you agree to our subscription, billing, and fair-use terms. Subscriptions activate immediately upon payment verification. Failed payments may restrict features; entitlements are gated server-side.
           </p>
           <p>
             You are responsible for accurate tax configuration and menu pricing. RestroNex provides tooling, not legal tax advice.

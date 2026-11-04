@@ -75,7 +75,7 @@ export async function getTenantSubscriptionEntitlements(tenantId: string): Promi
 
   const isPastPeriod = now > periodEnd;
   const isGracePeriod = isPastPeriod && now <= gracePeriodEnd;
-  const isTrial = subscription.status === "TRIALING";
+  const isTrial = false; // Free trials completely removed across platform
 
   let effectiveStatus = subscription.status as SubscriptionEntitlements["status"];
   if (isPastPeriod) {
@@ -86,9 +86,9 @@ export async function getTenantSubscriptionEntitlements(tenantId: string): Promi
     }
   }
 
+  // Access is granted exclusively if active paid or within grace period
   const hasAccess =
     effectiveStatus === "ACTIVE" ||
-    effectiveStatus === "TRIALING" ||
     (effectiveStatus === "PAST_DUE" && isGracePeriod);
 
   let features: string[] = [];

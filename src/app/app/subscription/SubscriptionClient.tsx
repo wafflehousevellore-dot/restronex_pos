@@ -198,8 +198,6 @@ export default function SubscriptionClient() {
                       className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase ${
                         ent.status === "ACTIVE"
                           ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
-                          : ent.status === "TRIALING"
-                          ? "bg-blue-50 border-blue-200 text-blue-700"
                           : ent.status === "PAST_DUE"
                           ? "bg-amber-50 border-amber-200 text-amber-700"
                           : "bg-red-50 border-red-200 text-red-600"

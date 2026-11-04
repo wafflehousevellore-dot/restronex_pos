@@ -29,6 +29,10 @@ model Tenant {
   businessType  String
   email         String
   phone         String
+  address       String?
+  city          String?
+  state         String?
+  pincode       String?
   country       String   @default("IN")
   timeZone      String   @default("Asia/Kolkata")
   currency      String   @default("INR")
@@ -487,7 +491,7 @@ model Subscription {
   id                      String   @id @default(cuid())
   tenantId                String
   planId                  String
-  status                  String   @default("TRIALING") // TRIALING | PENDING | ACTIVE | PAST_DUE | HALTED | CANCELLED | EXPIRED
+  status                  String   @default("PENDING") // PENDING | ACTIVE | PAST_DUE | HALTED | CANCELLED | EXPIRED
   billingCycle            String   @default("MONTHLY") // MONTHLY | ANNUAL
   currentPeriodStart      DateTime @default(now())
   currentPeriodEnd        DateTime

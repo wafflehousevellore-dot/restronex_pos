@@ -82,7 +82,7 @@ export default function PricingSelector() {
             </button>
           </div>
           <div className="text-xs text-[#718078] font-medium text-center">
-            14-day free trial on Starter & Growth • No credit card required for trial • +18% GST on checkout
+            Instant activation on Starter, Growth & Business • +18% GST on checkout • Official Razorpay Gateway
           </div>
         </div>
 
@@ -188,7 +188,7 @@ export default function PricingSelector() {
               href="/sign-up?plan=growth&cycle=MONTHLY"
               className="rounded-full bg-[#16845B] text-white px-5 py-2.5 font-bold hover:bg-[#116B49] shadow-xs"
             >
-              Get Started — Growth Trial →
+              Get Started with Growth →
             </Link>
             <Link
               href="/contact"

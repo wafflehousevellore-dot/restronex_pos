@@ -255,22 +255,6 @@ export default function CheckoutClient({
     }
   }
 
-  async function startTrial(){
-    if (!isAuthenticated) { router.push(`/sign-up?plan=${plan}&cycle=${cycle}&next=/checkout`); return; }
-    setLoading(true); setMsg({type:"info", text: "Starting 14-day free trial (no card)..."});
-    try{
-      const res = await fetch("/api/checkout/start-trial", {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({ planSlug: plan, billingCycle: cycle }),
-      });
-      const j = await res.json();
-      if (!res.ok) throw new Error(j.error);
-      setMsg({type:"success", text: `✓ Trial started • ${j.trialEndsAt ? new Date(j.trialEndsAt).toLocaleDateString() : "14 days"} • ${j.subscriptionId}`});
-      setTimeout(()=> router.push("/app/onboarding"), 800);
-    }catch(e:any){ setMsg({type:"error", text: e.message }); } finally { setLoading(false); }
-  }
-
   if (step==="success" && paymentId) {
     return (
       <div className="max-w-2xl mx-auto space-y-4">
@@ -354,7 +338,7 @@ export default function CheckoutClient({
                   <div className="text-xs text-[#718078] mt-0.5">{totals.plan.tagline} • {totals.plan.maxOutlets} outlets included</div>
                 </div>
                 <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B] px-3 py-1 text-xs font-bold">
-                  {totals.trialEligible ? "Trial eligible" : "Enterprise"}
+                  Instant Activation
                 </span>
               </div>
               <ul className="mt-4 space-y-2 text-xs text-[#718078]">
@@ -569,17 +553,6 @@ export default function CheckoutClient({
                   </>
                 )}
               </Button>
-
-              {totals.trialEligible && (
-                <Button
-                  variant="outline"
-                  onClick={startTrial}
-                  disabled={loading || step === "processing"}
-                  className="w-full rounded-xl border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] text-xs font-semibold py-2.5 transition cursor-pointer"
-                >
-                  Start 14-day free trial — no card required
-                </Button>
-              )}
             </div>
 
             {/* Trust and Compliance Badges */}

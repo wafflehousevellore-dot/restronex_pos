@@ -18,6 +18,7 @@ export async function POST(req: NextRequest){
   const slug = slugify(body.name) + "-" + Math.random().toString(36).slice(2,6);
   const tenant = await prisma.tenant.create({ data:{
     name: body.name, slug, businessType: body.businessType, email: body.email || user.email, phone: body.phone || "+91 90000 00000",
+    address: body.address || null, city: body.city || null, state: body.state || null, pincode: body.pincode || null,
     country: body.country||"IN", timeZone: body.timeZone||"Asia/Kolkata", currency: body.currency||"INR",
   }});
   await prisma.membership.create({ data:{ userId, tenantId: tenant.id, role:"OWNER"}});
@@ -41,9 +42,6 @@ export async function POST(req: NextRequest){
   const outlet = await prisma.outlet.create({ data:{ tenantId: tenant.id, name: body.outletName || `${body.name} — Main Outlet`, slug:"main-"+slug.slice(0,8), address: body.address||"Koramangala, Bengaluru", city: body.city||"Bengaluru", phone: body.phone||"+91 90000 00000"}});
   // seed tables
   for(let i=1;i<=12;i++) await prisma.table.create({ data:{ tenantId: tenant.id, outletId: outlet.id, number:`T${String(i).padStart(2,"0")}`, area: i<=6?"Main Hall": i<=10?"Terrace":"AC", capacity: [2,4,4,6][i%4] }});
-  // seed subscription trial
-  const plan = await prisma.subscriptionPlan.findFirst({ where:{ slug:"growth"}}) || await prisma.subscriptionPlan.findFirst();
-  if(plan) await prisma.subscription.create({ data:{ tenantId: tenant.id, planId: plan.id, status:"TRIALING", currentPeriodEnd: new Date(Date.now()+14*24*60*60*1000), trialEndsAt: new Date(Date.now()+14*24*60*60*1000), billingCycle:"MONTHLY" }});
   await prisma.auditLog.create({ data:{ tenantId: tenant.id, userId, action:"TENANT_CREATED", entity:"Tenant", entityId: tenant.id, metadataJson: JSON.stringify({ name: tenant.name }) }});
   return NextResponse.json({ ok:true, tenantId: tenant.id, slug: tenant.slug });
 }

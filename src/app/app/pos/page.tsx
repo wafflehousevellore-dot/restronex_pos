@@ -15,10 +15,10 @@ export default async function POSPage(){
   if (!ent.hasActiveSubscription) {
     redirect(`/checkout?reason=subscription_required`);
   }
-  // Also check onboarding — redirect to correct step if not complete (honest: allow POS but suggest completion)
+  // Block POS access if onboarding is incomplete
   const tenant = await prisma.tenant.findUnique({ where:{ id: tenantId }});
-  if (tenant && !tenant.onboardingComplete && tenant.onboardingStep < 6) {
-    // Not blocking, but we pass hint to client via props if needed
+  if (!tenant || !tenant.onboardingComplete) {
+    redirect("/app/onboarding");
   }
   const [outlets, tables, menuItems] = await Promise.all([
     prisma.outlet.findMany({ where:{ tenantId }, orderBy:{ createdAt:"asc" }}),
