@@ -15,12 +15,16 @@ export async function GET(req: NextRequest) {
 
   const outletId = req.nextUrl.searchParams.get("outletId");
   const status = req.nextUrl.searchParams.get("status");
+  const orderId = req.nextUrl.searchParams.get("orderId");
+  const tableId = req.nextUrl.searchParams.get("tableId");
   const limit = Math.min(Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 50), 100);
   const cursor = req.nextUrl.searchParams.get("cursor");
 
   const where: any = { tenantId };
   if (outletId) where.outletId = outletId;
   if (status) where.status = status;
+  if (orderId) where.id = orderId;
+  if (tableId) where.tableId = tableId;
 
   const orders = await prisma.order.findMany({
     where,

@@ -16,7 +16,14 @@ type MenuItem = {
   isVeg: boolean;
   category?: { name: string };
 };
-type Table = { id: string; number: string; status: string; area: string };
+type Table = {
+  id: string;
+  number: string;
+  status: string;
+  area: string;
+  currentOrderId?: string | null;
+  orderTotalPaise?: number | null;
+};
 type Outlet = { id: string; name: string };
 
 export type ReceiptData = {
@@ -91,6 +98,40 @@ export default function POSClient({
   const [lastOrder, setLastOrder] = useState<{ orderNumber: string; total: number } | null>(null);
   const [activeReceipt, setActiveReceipt] = useState<ReceiptData | null>(null);
   const [showReceipt, setShowReceipt] = useState(false);
+  const [loadingTableOrder, setLoadingTableOrder] = useState(false);
+
+  async function loadActiveTableOrder(orderId: string) {
+    setLoadingTableOrder(true);
+    try {
+      const res = await apiFetch(`/api/orders?orderId=${orderId}`);
+      const orders = await res.json();
+      const ord = Array.isArray(orders) ? orders[0] : orders;
+      if (ord && Array.isArray(ord.items)) {
+        setCart(
+          ord.items.map((it: any) => ({
+            menuItemId: it.menuItemId,
+            name: it.name,
+            quantity: it.quantity,
+            unitPricePaise: it.unitPricePaise,
+          }))
+        );
+        if (ord.customerName && ord.customerName !== "Table Guest") {
+          setCustomerName(ord.customerName);
+        }
+        if (ord.customerPhone) {
+          setCustomerPhone(ord.customerPhone);
+        }
+        setMsg({
+          type: "info",
+          text: `Loaded active order #${ord.orderNumber} for Table ${selectedTableLabel}. Ready to bill.`,
+        });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Failed to load active table order" });
+    } finally {
+      setLoadingTableOrder(false);
+    }
+  }
 
   const categories = useMemo(
     () => Array.from(new Set(items.map((i) => (i.category?.name || "Other").trim()).filter(Boolean))),
@@ -290,7 +331,8 @@ export default function POSClient({
     }
   }
 
-  const selectedTableLabel = selectedTable ? tables.find((t) => t.id === selectedTable)?.number || "" : "";
+  const selectedTableObj = selectedTable ? tables.find((t) => t.id === selectedTable) || null : null;
+  const selectedTableLabel = selectedTableObj?.number || "";
 
   if (initialItems.length === 0 && initialOutlets.length === 0) {
     return (
@@ -496,6 +538,24 @@ export default function POSClient({
                         </button>
                       );
                     })}
+                  </div>
+                )}
+                {selectedTableObj && selectedTableObj.status === "OCCUPIED" && selectedTableObj.currentOrderId && (
+                  <div className="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
+                    <div className="text-xs">
+                      <div className="font-extrabold text-amber-950">Active Table {selectedTableObj.number} Order</div>
+                      <div className="text-[11px] text-amber-800">
+                        Running bill: {formatINR(selectedTableObj.orderTotalPaise || 0)}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => loadActiveTableOrder(selectedTableObj.currentOrderId!)}
+                      disabled={loadingTableOrder}
+                      className="rounded-lg bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
+                    >
+                      {loadingTableOrder ? "Loading..." : "Load Cart →"}
+                    </button>
                   </div>
                 )}
               </div>

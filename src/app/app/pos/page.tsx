@@ -29,7 +29,14 @@ export default async function POSPage(){
     id: m.id, name: m.name, pricePaise: m.pricePaise, categoryId: m.categoryId, isVeg: m.isVeg,
     category: m.category ? { name: m.category.name } : undefined,
   }));
-  const tableData = tables.map(t=> ({ id:t.id, number:t.number, status:t.status, area:t.area }));
+  const tableData = tables.map(t=> ({
+    id: t.id,
+    number: t.number,
+    status: t.status,
+    area: t.area,
+    currentOrderId: t.currentOrderId,
+    orderTotalPaise: t.orderTotalPaise,
+  }));
   const outletData = outlets.map(o=> ({ id:o.id, name:o.name }));
   return <POSClient initialItems={items} initialTables={tableData} initialOutlets={outletData} />;
 }
