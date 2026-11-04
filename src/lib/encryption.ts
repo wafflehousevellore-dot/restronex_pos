@@ -72,3 +72,4 @@ export function maskCredential(cred: string | null | undefined): string {
   if (cred.length <= 8) return "••••••••";
   return `${cred.slice(0, 8)}••••••••${cred.slice(-4)}`;
 }
+

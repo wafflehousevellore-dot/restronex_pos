@@ -89,3 +89,4 @@ export async function resolveTenantGateway(tenantId: string): Promise<ResolvedGa
     client: null,
   };
 }
+
