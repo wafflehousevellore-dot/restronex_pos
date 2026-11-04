@@ -106,6 +106,26 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
             const existing = await prisma.membership.findFirst({ where: { userId: dbUser.id, tenantId: tenantByClerk.id }});
             if (!existing) await prisma.membership.create({ data: { userId: dbUser.id, tenantId: tenantByClerk.id, role: "OWNER" }});
           }
+
+          // Auto-sync organization name from Clerk if it differs
+          try {
+            const { clerkClient } = await import("@clerk/nextjs/server");
+            const client = await clerkClient();
+            const org = await client.organizations.getOrganization({ organizationId: orgId });
+            if (org?.name && org.name !== tenantByClerk.name) {
+              await prisma.tenant.update({
+                where: { id: tenantByClerk.id },
+                data: { name: org.name },
+              });
+              await prisma.restaurantSetting.updateMany({
+                where: { tenantId: tenantByClerk.id },
+                data: { receiptHeader: org.name },
+              });
+              tenantByClerk.name = org.name;
+            }
+          } catch {
+            // non-blocking
+          }
         }
       }
 
