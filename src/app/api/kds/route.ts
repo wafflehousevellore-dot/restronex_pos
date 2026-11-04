@@ -7,7 +7,19 @@ export async function GET(req: NextRequest){
   const tenantId = await resolveTenantId(userId, req.nextUrl.searchParams.get("tenantId"));
   if(!tenantId) return NextResponse.json({error:"tenant"},{status:400});
   const memChk=await prisma.membership.findFirst({where:{userId, tenantId}}); if(!memChk) return NextResponse.json({error:"Forbidden"},{status:403});
-  const tickets=await prisma.kitchenTicket.findMany({ where:{ tenantId }, include:{ order:{ include:{ items:true } } }, orderBy:{ createdAt:"desc"}, take:50 });
+  const tickets = await prisma.kitchenTicket.findMany({
+    where: { tenantId },
+    include: {
+      order: {
+        include: {
+          items: true,
+          table: { select: { id: true, number: true, area: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 60,
+  });
   return NextResponse.json(tickets);
 }
 export async function PATCH(req: NextRequest){
