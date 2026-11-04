@@ -145,15 +145,17 @@ export default function AppShell({
             );
           })}
 
-          <div className="pt-2 mt-2 border-t border-[#E5EBE7]">
-            <Link
-              href="/platform"
-              className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#16845B] hover:bg-[#E8F5EE] transition"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              <span>Platform Admin →</span>
-            </Link>
-          </div>
+          {user?.isPlatformAdmin && (
+            <div className="pt-2 mt-2 border-t border-[#E5EBE7]">
+              <Link
+                href="/platform"
+                className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13px] font-semibold text-[#16845B] hover:bg-[#E8F5EE] transition"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                <span>Platform Admin →</span>
+              </Link>
+            </div>
+          )}
         </nav>
 
         {/* User & Org Switcher Bottom Panel */}
