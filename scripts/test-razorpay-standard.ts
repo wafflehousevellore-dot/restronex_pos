@@ -2,8 +2,8 @@ import crypto from "crypto";
 
 async function runTests() {
   console.log("=== Testing Razorpay Standard Web Checkout Integration ===");
-  const keyId = "rzp_test_Tw2GUF5e3EgBGA";
-  const keySecret = "w7JShTokTc0xP9Ev2ib6d4UP";
+  const keyId = process.env.RAZORPAY_KEY_ID || "rzp_test_TwEoFI71eS2MXB";
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || "pToxExFNcb5bMi4E76MbuRbZ";
 
   // 1. Test Order Creation via Razorpay API
   console.log("\n[TEST 1] Creating Order with amount = 50000 paise (₹500)...");

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import crypto from "crypto";
 import { POST as createOrderHandler } from "../src/app/api/create-order/route";
 import { POST as verifyPaymentHandler } from "../src/app/api/verify-payment/route";
