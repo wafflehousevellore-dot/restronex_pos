@@ -1,9 +1,9 @@
 "use client";
 
 import { apiFetch } from "@/lib/api";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, ChefHat, Volume2, VolumeX, RefreshCw, Printer, X } from "lucide-react";
+import { Clock, ChefHat, Volume2, VolumeX, Printer, X } from "lucide-react";
 
 function playKitchenChime() {
   try {
@@ -40,7 +40,7 @@ export default function KitchenPage() {
   const [kotModalTicket, setKotModalTicket] = useState<any | null>(null);
   const knownTicketIds = useRef<Set<string>>(new Set());
 
-  async function load() {
+  const load = useCallback(async () => {
     try {
       const j = await apiFetch("/api/kds").then((r) => r.json()).catch(() => []);
       if (Array.isArray(j)) {
@@ -52,13 +52,13 @@ export default function KitchenPage() {
         setTickets(j);
       }
     } catch {}
-  }
+  }, [soundEnabled]);
 
   useEffect(() => {
     load();
     const id = setInterval(load, 4000);
     return () => clearInterval(id);
-  }, [soundEnabled]);
+  }, [load]);
 
   async function update(id: string, status: string) {
     setLoading(true);
@@ -204,7 +204,7 @@ export default function KitchenPage() {
                           </div>
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span className="font-bold text-[#16845B] bg-[#E8F5EE] border border-[#16845B]/20 px-2 py-0.5 rounded-md text-[11px]">
-                              {tableNumber ? `Table ${tableNumber}` : t.order?.type || "Dine-in"}
+                              {isDineIn && tableNumber ? `Table ${tableNumber}` : t.order?.type || "Dine-in"}
                             </span>
                             {t.order?.customerName && (
                               <span className="text-[11px] text-[#718078] truncate max-w-[100px]">

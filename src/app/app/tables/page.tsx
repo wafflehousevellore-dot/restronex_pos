@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
-import { QrCode, Plus, ArrowRightLeft, Check, X, Printer, RefreshCw, LayoutGrid, Map, Users, UtensilsCrossed } from "lucide-react";
+import { QrCode, Plus, ArrowRightLeft, Check, X, Printer, RefreshCw, LayoutGrid, Map, UtensilsCrossed } from "lucide-react";
 
 export default function TablesFloorPlanPage() {
   const [tables, setTables] = useState<any[]>([]);

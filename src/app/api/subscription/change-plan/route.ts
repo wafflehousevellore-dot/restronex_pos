@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { calculatePlanChange } from "@/lib/subscription";
-import { calcCheckoutTotals } from "@/lib/checkout";
 import { createMockOrder, getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay";
 
 export async function POST(req: NextRequest) {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, use } from "react";
-import { Star, MessageSquare, ThumbsUp, Heart, ArrowRight, ExternalLink } from "lucide-react";
+import { Star, ExternalLink } from "lucide-react";
 
 export default function GuestOrderFeedbackPage({
   params,
@@ -13,7 +13,7 @@ export default function GuestOrderFeedbackPage({
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [googleReviewUrl, setGoogleReviewUrl] = useState("https://maps.google.com");
+  const [googleReviewUrl] = useState("https://maps.google.com");
 
   const RATING_LABELS: Record<number, string> = {
     1: "Terrible 😞",
@@ -116,7 +116,7 @@ export default function GuestOrderFeedbackPage({
                 <div>
                   <h2 className="text-lg font-black text-[#172B25]">Thank you for the love!</h2>
                   <p className="text-xs text-[#718078] mt-1 leading-relaxed">
-                    We're thrilled you enjoyed your meal! Would you take 15 seconds to share your review on Google? It means the world to our team.
+                    We&apos;re thrilled you enjoyed your meal! Would you take 15 seconds to share your review on Google? It means the world to our team.
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export default function GuestOrderFeedbackPage({
                 <div>
                   <h2 className="text-lg font-black text-[#172B25]">Thank you for your honesty</h2>
                   <p className="text-xs text-[#718078] mt-1 leading-relaxed">
-                    We apologize that your experience wasn't flawless today. Your remarks have been delivered directly to our restaurant manager to inspect and rectify.
+                    We apologize that your experience wasn&apos;t flawless today. Your remarks have been delivered directly to our restaurant manager to inspect and rectify.
                   </p>
                 </div>
               </div>

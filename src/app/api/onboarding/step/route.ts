@@ -344,7 +344,7 @@ export async function POST(req: NextRequest) {
   // STEP 8: Final Review & Confirmation
   if (step === 8) {
     // Validate mandatory criteria
-    const [tenant, outletCount, catCount, itemCount, tableCount] = await Promise.all([
+    const [tenant, outletCount, catCount, itemCount, _tableCount] = await Promise.all([
       prisma.tenant.findUnique({ where: { id: tenantId } }),
       prisma.outlet.count({ where: { tenantId } }),
       prisma.menuCategory.count({ where: { tenantId } }),

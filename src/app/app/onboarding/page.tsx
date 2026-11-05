@@ -11,16 +11,12 @@ import {
   UtensilsCrossed,
   Receipt,
   Users,
-  Grid3X3,
   Rocket,
   Printer,
   Check,
-  ChevronRight,
   ChevronLeft,
   ShieldCheck,
   Building2,
-  Phone,
-  Mail,
   Loader2,
   FileCheck,
 } from "lucide-react";
@@ -228,7 +224,6 @@ export default function OnboardingPage() {
       <div className="bg-white border border-[#E5EBE7] rounded-2xl p-4 shadow-xs overflow-x-auto">
         <div className="flex items-center justify-between min-w-[700px] gap-2">
           {ONBOARDING_STEPS.map((s) => {
-            const Icon = s.icon;
             const isCompleted = currentStep > s.id;
             const isCurrent = currentStep === s.id;
 

@@ -10,7 +10,6 @@ import {
   HelpCircle,
   Printer,
   MessageSquare,
-  QrCode,
   ChefHat,
   ShieldCheck,
   Layers,

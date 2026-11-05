@@ -57,7 +57,7 @@ const MENU_ITEMS = [
   { id: "e2b37ca9-4435-43ca-9b92-414e52418be4", name: "Butter Chicken" },
 ];
 
-export default function () {
+export default function runBenchmark() {
   const vuId = __VU;
   const iterId = __ITER;
   const roll = Math.random();

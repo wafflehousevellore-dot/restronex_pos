@@ -8,13 +8,10 @@ import { Button } from "@/components/ui/button";
 import {
   Star,
   MessageSquare,
-  ThumbsUp,
-  Share2,
   RefreshCw,
   ExternalLink,
   Sparkles,
   Award,
-  AlertCircle,
   Copy,
   Check,
 } from "lucide-react";
@@ -44,7 +41,7 @@ export default function FeedbackDashboardPage() {
   const avgRating = total ? (list.reduce((s, f) => s + f.rating, 0) / total).toFixed(1) : "5.0";
 
   const promoters = list.filter((f) => f.rating >= 4).length;
-  const passives = list.filter((f) => f.rating === 3).length;
+  const _passives = list.filter((f) => f.rating === 3).length;
   const detractors = list.filter((f) => f.rating <= 2).length;
   const npsScore = total ? Math.round(((promoters - detractors) / total) * 100) : 100;
 
@@ -196,7 +193,7 @@ export default function FeedbackDashboardPage() {
                 <Award className="h-4 w-4" /> 100% Negative Review Shield
               </div>
               <div className="text-[11px] text-[#172B25]/80">
-                Any rating below 4 stars is captured privately and never redirected to Google, protecting your restaurant's public reputation.
+                Any rating below 4 stars is captured privately and never redirected to Google, protecting your restaurant&apos;s public reputation.
               </div>
             </div>
           </CardContent>

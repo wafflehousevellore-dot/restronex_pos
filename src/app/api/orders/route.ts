@@ -104,7 +104,6 @@ export async function POST(req: NextRequest) {
   const invoiceNumber = `INV-${dateStr}-${randCode}`;
 
   const isOnlineGateway = d.paymentMethod === "RAZORPAY_ONLINE";
-  const isTakeawayOrDelivery = d.type === "TAKEAWAY" || d.type === "DELIVERY";
   const initialStatus = isOnlineGateway ? "PLACED" : "BILLED";
 
   const order = await prisma.$transaction(async (tx) => {
@@ -359,47 +358,30 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // 8. Deduct Inventory Stock via Recipe Ingredients
-    for (const it of d.items) {
-      const recipe = await tx.recipe.findUnique({
-        where: { menuItemId: it.menuItemId },
-        include: { ingredients: true },
-      });
-      if (recipe) {
-        for (const ing of recipe.ingredients) {
-          const inv = await tx.inventoryItem.findUnique({ where: { id: ing.inventoryItemId } });
-          if (inv) {
-            const deductedQty = (ing.quantity * it.quantity) / recipe.yieldQty;
-            const newStock = Math.max(0, inv.currentStock - deductedQty);
-            await tx.inventoryItem.update({ where: { id: inv.id }, data: { currentStock: newStock } });
-            await tx.stockMovement.create({
-              data: {
-                tenantId,
-                outletId: d.outletId,
-                inventoryItemId: inv.id,
-                type: "CONSUMPTION",
-                quantity: -deductedQty,
-                reference: orderNumber,
-              },
-            });
-          }
-        }
+    // 8. Update Table Status
+    if (d.tableId) {
+      if (o.isPaid) {
+        await tx.table.update({
+          where: { id: d.tableId },
+          data: {
+            status: "AVAILABLE",
+            currentOrderId: null,
+            orderTotalPaise: 0,
+          },
+        }).catch(() => {});
+      } else {
+        await tx.table.update({
+          where: { id: d.tableId },
+          data: {
+            status: "OCCUPIED",
+            currentOrderId: o.id,
+            orderTotalPaise: totals.total,
+          },
+        }).catch(() => {});
       }
     }
 
-    // 9. Update Table Status
-    if (d.tableId) {
-      await tx.table.update({
-        where: { id: d.tableId },
-        data: {
-          status: "AVAILABLE",
-          currentOrderId: null,
-          orderTotalPaise: 0,
-        },
-      }).catch(() => {});
-    }
-
-    // 10. Audit Log
+    // 9. Audit Log
     await tx.auditLog.create({
       data: {
         tenantId,

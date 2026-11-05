@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
-import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, Percent, UtensilsCrossed } from "lucide-react";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 
 type MenuItem = {
@@ -163,9 +163,7 @@ export default function POSClient({
               points: data.loyaltyPoints || 0,
               visitCount: data.visitCount || 0,
             });
-            if (!customerName || customerName === "Guest Customer") {
-              setCustomerName(data.name);
-            }
+            setCustomerName((prev) => (!prev || prev === "Guest Customer" ? data.name : prev));
           } else {
             setCustomerLoyalty(null);
           }

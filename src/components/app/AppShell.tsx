@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { UserButton, OrganizationSwitcher } from "@clerk/nextjs";
@@ -63,11 +63,12 @@ export default function AppShell({
   outlet?: any;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobile, setMobile] = useState(false);
 
   async function signOut() {
     await fetch("/api/auth/sign-out", { method: "POST", credentials: "same-origin" });
-    window.location.href = "/sign-in";
+    router.push("/sign-in");
   }
 
   return (

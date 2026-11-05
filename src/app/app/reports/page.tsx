@@ -7,20 +7,13 @@ import { Input, Label } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { formatINR } from "@/lib/money";
 import {
-  BarChart3,
-  Calendar,
   Printer,
   Receipt,
   RefreshCw,
   X,
-  Building2,
-  DollarSign,
-  TrendingUp,
   CreditCard,
   Banknote,
   QrCode,
-  AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
 
 export default function Reports() {

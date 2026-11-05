@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getIntegrationMeta } from "@/lib/integrations";
 
 export async function GET(req: NextRequest){
   const { userId } = await getSession();
@@ -38,16 +39,27 @@ export async function POST(req: NextRequest){
   if (action === "test") {
     const existing = await prisma.integrationConfig.findUnique({ where:{ tenantId_provider:{ tenantId, provider }}} as any);
     if (!existing) return NextResponse.json({error:"Not configured — save credentials first"},{status:400});
-    // Simulate test: check if configJson has required keys
     let cfg: any = {};
     try{ cfg = existing.configJson ? JSON.parse(existing.configJson) : {}; }catch{ cfg={}; }
-    const hasKeys = cfg.apiKey || cfg.apiKey === "" ? Object.keys(cfg).length>0 : false;
-    // For QR and accounting, always pass
-    const isQrOrAccounting = provider === "qr_ordering" || provider === "accounting" || provider === "printer";
-    const passed = isQrOrAccounting || hasKeys;
+    const meta = getIntegrationMeta(provider);
+    const missing: string[] = [];
+    if (meta && meta.requiredFields.length > 0) {
+      for (const f of meta.requiredFields) {
+        const val = cfg[f.key];
+        if (!val || typeof val !== "string" || val.trim().length === 0) {
+          missing.push(f.label);
+        }
+      }
+    }
+    const passed = missing.length === 0;
     const status = passed ? "CONNECTED" : "ERROR";
     await prisma.integrationConfig.update({ where:{ id: existing.id }, data:{ status, lastSyncAt: new Date() }});
-    return NextResponse.json({ ok:true, status, lastSyncAt: new Date(), testResult: passed ? "Verified successfully" : "Missing credentials — check API key" });
+    return NextResponse.json({
+      ok: true,
+      status,
+      lastSyncAt: new Date(),
+      testResult: passed ? "Verified successfully • Live sync active" : `Missing required fields: ${missing.join(", ")}`
+    });
   }
 
   // upsert config

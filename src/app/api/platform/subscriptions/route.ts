@@ -3,7 +3,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
 export async function GET(_req: NextRequest) {
-  const { userId, user } = await getSession();
+  const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
 
   // Only Platform Super Admins can view platform-wide SaaS subscription metrics

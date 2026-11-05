@@ -10,7 +10,6 @@ import {
   UserPlus,
   Shield,
   Trash2,
-  Check,
   X,
   Building2,
   ChefHat,

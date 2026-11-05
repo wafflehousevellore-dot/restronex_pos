@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
-import { UploadCloud, X, RefreshCw, CheckCircle2, AlertCircle, Image as ImageIcon } from "lucide-react";
+import { UploadCloud, X, RefreshCw, CheckCircle2, AlertCircle } from "lucide-react";
 import { validateImageFile, compressAndOptimizeImage } from "@/lib/image-utils";
 
 interface MenuImageUploadProps {

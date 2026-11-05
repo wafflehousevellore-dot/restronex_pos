@@ -13,7 +13,6 @@ import {
   Trash2,
   X,
   Search,
-  Check,
   Plus,
   AlertCircle,
   CheckCircle2,

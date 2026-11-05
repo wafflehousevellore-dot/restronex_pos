@@ -10,14 +10,11 @@ import {
   Boxes,
   Plus,
   AlertTriangle,
-  ArrowDownRight,
   ArrowUpRight,
   RefreshCw,
   Search,
   Trash2,
   X,
-  TrendingDown,
-  PackageCheck,
   History,
 } from "lucide-react";
 

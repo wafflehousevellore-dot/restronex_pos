@@ -1,19 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatINR } from "@/lib/money";
 import Link from "next/link";
 import {
-  ShieldCheck,
   Check,
-  Clock,
-  RotateCcw,
-  AlertTriangle,
-  ArrowRight,
   Zap,
-  CreditCard,
 } from "lucide-react";
 
 declare global {
@@ -23,6 +18,7 @@ declare global {
 }
 
 export default function SubscriptionClient() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [subData, setSubData] = useState<any>(null);
   const [plans, setPlans] = useState<any[]>([]);
@@ -117,7 +113,7 @@ export default function SubscriptionClient() {
         const rzp = new window.Razorpay(options);
         rzp.open();
       } else {
-        window.location.href = `/checkout?plan=${j.plan.slug}`;
+        router.push(`/checkout?plan=${j.plan.slug}`);
       }
     } catch (err: any) {
       setActionMsg({ type: "error", text: err.message });
@@ -179,6 +175,12 @@ export default function SubscriptionClient() {
           }`}
         >
           {actionMsg.text}
+        </div>
+      )}
+
+      {loading && !subData && (
+        <div className="p-8 text-center bg-white border border-[#E5EBE7] rounded-2xl text-xs text-[#718078]">
+          Loading subscription details...
         </div>
       )}
 
@@ -303,11 +305,15 @@ export default function SubscriptionClient() {
               >
                 <div>
                   <CardHeader>
-                    {isCurrentPlan && (
+                    {isCurrentPlan ? (
                       <span className="w-fit text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] border border-[#16845B]/20 px-2 py-0.5 rounded-full mb-2">
                         CURRENT ACTIVE PLAN
                       </span>
-                    )}
+                    ) : isFeatured ? (
+                      <span className="w-fit text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full mb-2">
+                        RECOMMENDED
+                      </span>
+                    ) : null}
                     <CardTitle className="text-lg text-[#172B25]">{p.name}</CardTitle>
                     <div className="mt-1 flex items-baseline gap-1">
                       <span className="text-2xl font-black text-[#172B25]">{formatINR(p.priceMonthlyPaise)}</span>

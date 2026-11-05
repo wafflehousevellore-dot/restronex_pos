@@ -13,10 +13,7 @@ import {
   RefreshCw,
   Search,
   Lock,
-  CheckCircle2,
-  AlertTriangle,
   RotateCcw,
-  ArrowUpRight,
 } from "lucide-react";
 
 export default function PaymentsClient() {
