@@ -1,215 +1,1047 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { apiFetch } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
-import { INTEGRATIONS, getIntegrationMeta } from "@/lib/integrations";
-import { Check, Plug, TestTube, Unplug } from "lucide-react";
+import {
+  INTEGRATIONS,
+  getIntegrationMeta,
+  statusLabel,
+  IntegrationProvider,
+  IntegrationStatus,
+  IntegrationConfigData,
+} from "@/lib/integrations";
+import {
+  Check,
+  CheckCircle2,
+  Plug,
+  ExternalLink,
+  RefreshCw,
+  Phone,
+  Building2,
+  Store,
+  ShieldCheck,
+  AlertCircle,
+  Copy,
+  Printer,
+  FileSpreadsheet,
+  QrCode,
+  Clock,
+  Sparkles,
+  Unplug,
+} from "lucide-react";
 
-export default function IntegrationsClient(){
+export default function IntegrationsClient() {
   const [configs, setConfigs] = useState<any[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [form, setForm] = useState<Record<string,string>>({});
-  const [msg, setMsg] = useState<{type:"success"|"error"|"info"; text:string}|null>(null);
-  const [loading, setLoading] = useState(false);
+  const [outlets, setOutlets] = useState<any[]>([]);
+  const [_tenant, setTenant] = useState<any>(null);
+  const [selectedProvider, setSelectedProvider] = useState<IntegrationProvider>("swiggy");
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
+  const [copiedWebhook, setCopiedWebhook] = useState(false);
 
-  async function load(){
-    const j = await apiFetch("/api/integrations").then(r=>r.json()).catch(()=>[]);
-    if (Array.isArray(j)) setConfigs(j);
-  }
-  useEffect(()=>{ load(); },[]);
+  // Form states
+  const [phone, setPhone] = useState("");
+  const [selectedOutletId, setSelectedOutletId] = useState("");
+  const [storeId, setStoreId] = useState("");
+  const [merchantName, setMerchantName] = useState("");
 
-  function open(provider: string){
-    setSelected(provider);
+  // Printer specific states
+  const [printerIp, setPrinterIp] = useState("192.168.1.100");
+  const [printerPort, setPrinterPort] = useState("9100");
+  const [printerStation, setPrinterStation] = useState("MAIN");
+  const [printerPaper, setPrinterPaper] = useState("80mm");
+
+  // Accounting specific states
+  const [exportFormat, setExportFormat] = useState("TALLY_XML");
+
+  const loadData = useCallback(async () => {
+    try {
+      const res = await apiFetch("/api/integrations");
+      if (res.ok) {
+        const data = await res.json();
+        setConfigs(data.configs || []);
+        setOutlets(data.outlets || []);
+        setTenant(data.tenant || null);
+
+        if (data.outlets && data.outlets.length > 0 && !selectedOutletId) {
+          setSelectedOutletId(data.outlets[0].id);
+          setMerchantName(data.outlets[0].name);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load integrations:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedOutletId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  // Find active config for selected provider
+  const currentConfig = configs.find((c) => c.provider === selectedProvider);
+  const currentData: IntegrationConfigData = useMemo(() => currentConfig?.data || {}, [currentConfig]);
+  const currentStatus: IntegrationStatus = currentConfig?.status || "NOT_CONNECTED";
+  const meta = getIntegrationMeta(selectedProvider)!;
+  const statusInfo = statusLabel(currentStatus);
+
+  // Pre-fill fields when selecting an integration
+  useEffect(() => {
     setMsg(null);
-    const cfg = configs.find((c:any)=>c.provider===provider);
-    if (cfg?.configJson) {
-      try{ setForm(JSON.parse(cfg.configJson)); }catch{ setForm({}); }
-    } else setForm({});
+    if (currentData) {
+      if (currentData.registeredPhone) setPhone(currentData.registeredPhone);
+      if (currentData.providerStoreId) setStoreId(currentData.providerStoreId);
+      if (currentData.outletId) setSelectedOutletId(currentData.outletId);
+      if (currentData.merchantName) setMerchantName(currentData.merchantName);
+      if (currentData.printerIp) setPrinterIp(currentData.printerIp);
+      if (currentData.printerPort) setPrinterPort(String(currentData.printerPort));
+      if (currentData.printerStation) setPrinterStation(currentData.printerStation);
+      if (currentData.exportFormat) setExportFormat(currentData.exportFormat);
+    }
+  }, [selectedProvider, currentConfig, currentData]);
+
+  // Handle Connect Action (Zero API Keys needed for Swiggy/Zomato)
+  async function handleConnect(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    setActionLoading(true);
+    setMsg(null);
+
+    try {
+      const payload: any = {
+        provider: selectedProvider,
+        action: "connect",
+        outletId: selectedOutletId,
+        merchantName: merchantName || undefined,
+      };
+
+      if (meta.connectionMode === "PARTNER_ONBOARDING") {
+        payload.registeredPhone = phone;
+        payload.providerStoreId = storeId || undefined;
+      } else if (meta.connectionMode === "DEVICE_LAN") {
+        payload.printerIp = printerIp;
+        payload.printerPort = printerPort;
+        payload.printerStation = printerStation;
+        payload.printerPaper = printerPaper;
+      } else if (meta.connectionMode === "DATA_EXPORT") {
+        payload.exportFormat = exportFormat;
+      }
+
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Connection request failed.");
+
+      setMsg({
+        type: data.status === "CONNECTED" ? "success" : "info",
+        text: data.message || `Connection request recorded for ${meta.name}.`,
+      });
+
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || "Failed to initiate connection." });
+    } finally {
+      setActionLoading(false);
+    }
   }
 
-  async function save(){
-    if (!selected) return;
-    setLoading(true); setMsg({type:"info", text:"Saving credentials securely..."});
-    const res = await apiFetch("/api/integrations", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ provider: selected, configJson: form })});
-    const j = await res.json();
-    if (!res.ok) setMsg({type:"error", text: j.error || "Failed"});
-    else { setMsg({type:"success", text:`✓ ${selected} saved as CONFIGURED. Run Test to verify and get CONNECTED.`}); load(); }
-    setLoading(false);
+  // Handle Verify Action (Honest check against partner APIs)
+  async function handleVerify() {
+    setActionLoading(true);
+    setMsg(null);
+
+    try {
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          action: "verify",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification test failed.");
+
+      if (data.status === "CONNECTED") {
+        setMsg({
+          type: "success",
+          text: `✓ ${meta.name} successfully verified! Live incoming order sync is active.`,
+        });
+      } else {
+        setMsg({
+          type: "info",
+          text: data.message || "Partner approval required. Your restaurant connection request has been recorded.",
+        });
+      }
+
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || "Verification test failed." });
+    } finally {
+      setActionLoading(false);
+    }
   }
 
-  async function test(){
-    if (!selected) return;
-    setLoading(true); setMsg({type:"info", text:"Testing connection — verifying API key + permissions..."});
-    const res = await apiFetch("/api/integrations", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ provider: selected, action:"test" })});
-    const j = await res.json();
-    if (!res.ok) setMsg({type:"error", text: j.error || "Test failed"});
-    else setMsg({type: j.status==="CONNECTED" ? "success" : "error", text: j.testResult + (j.status==="CONNECTED" ? " • Status now CONNECTED." : " • Status ERROR.")});
-    load(); setLoading(false);
+  // Handle Disconnect
+  async function handleDisconnect() {
+    if (!confirm(`Are you sure you want to disconnect ${meta.name}? Real-time order sync will be stopped.`)) {
+      return;
+    }
+
+    setActionLoading(true);
+    setMsg(null);
+
+    try {
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          action: "disconnect",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to disconnect.");
+
+      setMsg({
+        type: "info",
+        text: `Disconnected ${meta.name}. Connection status is now DISCONNECTED.`,
+      });
+
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || "Failed to disconnect." });
+    } finally {
+      setActionLoading(false);
+    }
   }
 
-  async function disconnect(){
-    if (!selected) return;
-    if (!confirm(`Disconnect ${selected}?`)) return;
-    setLoading(true);
-    const res = await apiFetch("/api/integrations", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify({ provider: selected, action:"disconnect" })});
-    const j = await res.json();
-    if (!res.ok) setMsg({type:"error", text: j.error});
-    else { setMsg({type:"info", text:`Disconnected ${selected} • Status NOT_CONNECTED`}); setForm({}); load(); }
-    setLoading(false);
+  // Handle Menu Catalog Push to Swiggy/Zomato
+  async function handlePushMenu() {
+    setActionLoading(true);
+    setMsg(null);
+    try {
+      const res = await apiFetch("/api/integrations/menu-sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          action: "push_menu",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to sync menu.");
+      setMsg({ type: "success", text: data.message });
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message });
+    } finally {
+      setActionLoading(false);
+    }
   }
 
-  function statusMap(provider: string){
-    const c = configs.find((x:any)=>x.provider===provider);
-    return c?.status || "NOT_CONNECTED";
+  // Handle Tally Export Download
+  async function handleDownloadTallyXml() {
+    setActionLoading(true);
+    try {
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: "accounting",
+          action: "export_accounting",
+          exportFormat,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to export.");
+
+      // Trigger file download in browser
+      const blob = new Blob([data.exportPayload], { type: "application/xml" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename || `RestroNex_Tally_${new Date().toISOString().slice(0, 10)}.xml`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      setMsg({
+        type: "success",
+        text: `✓ Downloaded today's reconciliation for ${data.summary.orderCount} orders totaling ₹${(
+          data.summary.totalSalesPaise / 100
+        ).toFixed(2)}.`,
+      });
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message });
+    } finally {
+      setActionLoading(false);
+    }
   }
 
-  function statusBadge(s:string){
-    if (s==="CONNECTED") return <span className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B] px-2.5 py-0.5 text-xs font-bold">Connected ✓</span>;
-    if (s==="CONFIGURED") return <span className="rounded-full bg-amber-50 border border-amber-200 text-amber-900 px-2.5 py-0.5 text-xs font-bold">Configured</span>;
-    if (s==="ERROR") return <span className="rounded-full bg-red-50 border border-red-200 text-red-700 px-2.5 py-0.5 text-xs font-bold">Error</span>;
-    return <span className="rounded-full bg-[#F8FAF9] border border-[#E5EBE7] text-[#718078] px-2.5 py-0.5 text-xs font-medium">Not connected</span>;
-  }
+  const copyWebhookUrl = (url: string) => {
+    navigator.clipboard.writeText(url);
+    setCopiedWebhook(true);
+    setTimeout(() => setCopiedWebhook(false), 2000);
+  };
 
-  const meta = selected ? getIntegrationMeta(selected) : null;
+  const appBaseUrl =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://www.restronexpos.com";
 
   return (
     <div className="space-y-6 text-[#172B25]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#172B25]">Integrations & Marketplaces</h1>
-          <p className="text-sm text-[#718078]">Connected = verified via live test. Configured = credentials saved. Honest error reporting.</p>
+          <h1 className="text-2xl font-black text-[#172B25] tracking-tight">
+            Integrations & Marketplaces
+          </h1>
+          <p className="text-sm text-[#718078] mt-0.5">
+            Connect Swiggy, Zomato, QR menus, and hardware without manually entering API keys. Honest status tracking.
+          </p>
         </div>
-        <span className="rounded-full bg-white border border-[#E5EBE7] px-3.5 py-1 text-xs text-[#718078] font-medium shadow-xs">
-          {configs.filter((c:any)=>c.status==="CONNECTED").length} connected • {configs.length} configured
-        </span>
+
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-white border border-[#E5EBE7] px-3.5 py-1 text-xs text-[#718078] font-bold shadow-xs">
+            {configs.filter((c) => c.status === "CONNECTED").length} Connected •{" "}
+            {configs.filter((c) => c.status === "PENDING_APPROVAL").length} Pending Review
+          </span>
+
+          <button
+            onClick={loadData}
+            disabled={loading}
+            className="p-2 rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:text-[#172B25] shadow-xs"
+            title="Refresh status"
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          </button>
+        </div>
       </div>
 
+      {/* Message Banner */}
       {msg && (
-        <div className={`rounded-xl border p-3 text-sm ${
-          msg.type==="success" ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]" : msg.type==="error" ? "bg-red-50 border-red-200 text-red-700" : "bg-blue-50 border-blue-200 text-blue-700"
-        }`}>
-          {msg.text}
+        <div
+          className={`rounded-2xl border p-4 text-xs font-semibold flex items-start gap-3 shadow-xs ${
+            msg.type === "success"
+              ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+              : msg.type === "error"
+              ? "bg-red-50 border-red-200 text-red-700"
+              : "bg-amber-50 border-amber-300 text-amber-900"
+          }`}
+        >
+          {msg.type === "success" ? (
+            <CheckCircle2 className="h-5 w-5 shrink-0" />
+          ) : (
+            <AlertCircle className="h-5 w-5 shrink-0" />
+          )}
+          <div className="flex-1 leading-relaxed">{msg.text}</div>
         </div>
       )}
 
-      <div className="grid lg:grid-cols-[420px_1fr] gap-6">
-        <div className="space-y-2.5">
-          {INTEGRATIONS.map(item=>{
-            const st = statusMap(item.provider);
-            const isSel = selected===item.provider;
+      {/* Main Grid: Left Provider Selector, Right Dynamic Action Panel */}
+      <div className="grid lg:grid-cols-[380px_1fr] gap-6">
+        {/* Left Side: Provider Cards */}
+        <div className="space-y-3">
+          {INTEGRATIONS.map((item) => {
+            const cfg = configs.find((c) => c.provider === item.provider);
+            const st: IntegrationStatus = cfg?.status || "NOT_CONNECTED";
+            const isSel = selectedProvider === item.provider;
+            const lbl = statusLabel(st);
+
             return (
               <button
                 key={item.provider}
-                onClick={()=>open(item.provider)}
-                className={`w-full text-left rounded-2xl border p-4 transition ${
+                type="button"
+                onClick={() => setSelectedProvider(item.provider)}
+                className={`w-full text-left rounded-2xl border p-4 transition cursor-pointer shadow-xs ${
                   isSel
-                    ? "bg-[#E8F5EE] border-[#16845B] shadow-xs"
+                    ? "bg-[#E8F5EE]/60 border-[#16845B] ring-2 ring-[#16845B]/15"
                     : "bg-white border-[#E5EBE7] hover:bg-[#F8FAF9]"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="text-sm font-bold text-[#172B25]">{item.name}</div>
-                    <div className="text-xs text-[#718078] mt-0.5">{item.description}</div>
-                    <div className="mt-2 text-xs text-[#718078]">{item.category} • {item.requiredFields.length ? `${item.requiredFields.length} fields` : "No credentials needed"}</div>
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className={`h-9 w-9 rounded-xl grid place-items-center font-bold text-sm ${
+                        item.provider === "swiggy"
+                          ? "bg-[#FC8019]/10 text-[#FC8019]"
+                          : item.provider === "zomato"
+                          ? "bg-[#E23744]/10 text-[#E23744]"
+                          : item.provider === "qr_ordering"
+                          ? "bg-[#16845B]/10 text-[#16845B]"
+                          : item.provider === "printer"
+                          ? "bg-indigo-50 text-indigo-700"
+                          : "bg-emerald-50 text-[#16845B]"
+                      }`}
+                    >
+                      {item.provider === "swiggy"
+                        ? "🟠"
+                        : item.provider === "zomato"
+                        ? "🔴"
+                        : item.provider === "qr_ordering"
+                        ? "📱"
+                        : item.provider === "printer"
+                        ? "🖨️"
+                        : "📊"}
+                    </div>
+                    <div>
+                      <div className="text-sm font-black text-[#172B25]">{item.name}</div>
+                      <div className="text-[11px] text-[#718078] font-medium">{item.tagline}</div>
+                    </div>
                   </div>
-                  <div className="shrink-0">{statusBadge(st)}</div>
+
+                  <span
+                    className={`text-[10px] font-black px-2.5 py-0.5 rounded-full border shrink-0 ${lbl.badgeClass}`}
+                  >
+                    {lbl.text}
+                  </span>
                 </div>
               </button>
             );
           })}
-          <Card className="bg-white border-[#E5EBE7] shadow-xs">
-            <CardContent className="pt-4 pb-4 text-xs text-[#718078]">
-              Provider APIs block without partner approval — we never display “Connected” unless verified via test.
-            </CardContent>
-          </Card>
+
+          <div className="p-4 rounded-2xl bg-[#E8F5EE]/40 border border-[#16845B]/20 text-xs text-[#16845B] space-y-1">
+            <div className="font-extrabold flex items-center gap-1.5">
+              <ShieldCheck className="h-4 w-4" /> Zero-Credential Policy
+            </div>
+            <div className="text-[11px] text-[#172B25]/80 leading-relaxed">
+              RestroNex never asks for third-party merchant passwords or secret tokens. Integrations are authorized via official platform partner protocols.
+            </div>
+          </div>
         </div>
 
+        {/* Right Side: Configuration & Management Experience */}
         <div>
-          {!selected ? (
-            <Card className="p-8 text-center bg-white border-[#E5EBE7] shadow-xs">
-              <Plug className="h-8 w-8 text-[#718078]/40 mx-auto" />
-              <div className="mt-3 text-base font-bold text-[#172B25]">Select an integration to configure</div>
-              <div className="text-xs text-[#718078] mt-1">View, configure, test connection, or disconnect anytime.</div>
-              <div className="mt-5 grid grid-cols-2 gap-3 text-xs text-left">
-                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3.5">
-                  <b className="text-[#172B25]">Swiggy</b> — requires Partner API key + store ID + partner permissions.
+          <Card className="bg-white border-[#E5EBE7] shadow-sm">
+            <CardHeader className="border-b border-[#E5EBE7] pb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-11 w-11 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] grid place-items-center text-2xl">
+                    {meta.provider === "swiggy"
+                      ? "🟠"
+                      : meta.provider === "zomato"
+                      ? "🔴"
+                      : meta.provider === "qr_ordering"
+                      ? "📱"
+                      : meta.provider === "printer"
+                      ? "🖨️"
+                      : "📊"}
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-black text-[#172B25] flex items-center gap-2">
+                      <span>{meta.name}</span>
+                      <span className="text-xs font-normal text-[#718078]">• {meta.category}</span>
+                    </CardTitle>
+                    <p className="text-xs text-[#718078] mt-0.5">{meta.tagline}</p>
+                  </div>
                 </div>
-                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3.5">
-                  <b className="text-[#172B25]">Zomato</b> — requires Restaurant ID + API key + partner permissions.
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-xs font-black px-3 py-1 rounded-full border uppercase tracking-wider ${statusInfo.badgeClass}`}
+                  >
+                    {statusInfo.text}
+                  </span>
                 </div>
               </div>
-            </Card>
-          ) : (
-            <Card className="bg-white border-[#E5EBE7] shadow-sm">
-              <CardHeader>
-                <CardTitle className="text-[#172B25] flex items-center justify-between">
-                  <span>{meta?.name}</span>
-                  <span>{statusBadge(statusMap(selected))}</span>
-                </CardTitle>
-                <p className="text-xs text-[#718078]">{meta?.description}</p>
-                {meta?.docsUrl && (
-                  <a href={meta.docsUrl} target="_blank" className="text-xs text-[#16845B] underline font-medium">
-                    {meta.docsUrl}
+
+              <div className="text-xs text-[#718078] mt-3 leading-relaxed">
+                {meta.description}
+              </div>
+
+              {meta.officialPortalUrl && (
+                <div className="mt-2">
+                  <a
+                    href={meta.officialPortalUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-[#16845B] hover:underline font-bold"
+                  >
+                    Open {meta.officialPortalName} <ExternalLink className="h-3 w-3" />
                   </a>
-                )}
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {meta && meta.requiredFields.length===0 && (
-                  <div className="rounded-xl bg-[#E8F5EE] border border-[#16845B]/30 p-3 text-sm text-[#16845B] font-medium">
-                    No credentials required. This integration is ready — save to mark CONFIGURED, test to verify.
-                  </div>
-                )}
-                {meta?.requiredFields.map(f=> (
-                  <div key={f.key}>
-                    <Label className="text-[#718078] text-xs font-semibold">{f.label} *</Label>
-                    <Input
-                      value={form[f.key] || ""}
-                      onChange={e=>setForm({...form, [f.key]: e.target.value})}
-                      placeholder={f.placeholder}
-                      className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"
-                    />
-                  </div>
-                ))}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  <Button
-                    onClick={save}
-                    disabled={loading}
-                    className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white shadow-xs"
-                  >
-                    <Check className="h-4 w-4 mr-1" /> Save as Configured
-                  </Button>
-                  <Button
-                    onClick={test}
-                    disabled={loading}
-                    variant="outline"
-                    className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9]"
-                  >
-                    <TestTube className="h-4 w-4 mr-1" /> Test & verify
-                  </Button>
-                  <Button
-                    onClick={disconnect}
-                    disabled={loading}
-                    variant="outline"
-                    className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
-                  >
-                    <Unplug className="h-4 w-4 mr-1" /> Disconnect
-                  </Button>
                 </div>
-                <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-3 text-xs text-[#718078]">
-                  <div className="font-bold text-[#172B25]">Honest Connection Statuses:</div>
-                  <ul className="mt-1.5 space-y-1">
-                    <li>• <b>NOT_CONNECTED</b> — no credentials stored</li>
-                    <li>• <b>CONFIGURED</b> — credentials saved, awaiting test verification</li>
-                    <li>• <b>CONNECTED</b> — test passed, sync enabled</li>
-                    <li>• <b>ERROR</b> — test failed, check keys or partner permissions</li>
-                  </ul>
+              )}
+            </CardHeader>
+
+            <CardContent className="pt-6 space-y-6">
+              {/* ========================================================================= */}
+              {/* CASE 1: SWIGGY & ZOMATO ONBOARDING FLOW                                   */}
+              {/* ========================================================================= */}
+              {meta.connectionMode === "PARTNER_ONBOARDING" && (
+                <>
+                  {/* State A: NOT_CONNECTED or DISCONNECTED */}
+                  {(currentStatus === "NOT_CONNECTED" || currentStatus === "DISCONNECTED") && (
+                    <form onSubmit={handleConnect} className="space-y-4">
+                      <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-2">
+                        <div className="text-xs font-extrabold text-[#172B25] flex items-center gap-1.5">
+                          <Sparkles className="h-4 w-4 text-[#16845B]" /> Universal Merchant Connect
+                        </div>
+                        <p className="text-xs text-[#718078] leading-relaxed">
+                          Enter the mobile number registered with your {meta.name} Merchant account. RestroNex will submit your outlet connection request directly to the {meta.name} POS Partner Gateway.
+                        </p>
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        {/* Registered Phone Number */}
+                        <div>
+                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                            <Phone className="h-3.5 w-3.5 text-[#16845B]" /> Registered Merchant Phone *
+                          </Label>
+                          <div className="mt-1.5 flex rounded-xl border border-[#E5EBE7] bg-white focus-within:border-[#16845B]">
+                            <span className="inline-flex items-center px-3 border-r border-[#E5EBE7] text-xs font-bold text-[#718078] bg-[#F8FAF9] rounded-l-xl">
+                              +91
+                            </span>
+                            <Input
+                              type="tel"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder="9876543210"
+                              maxLength={10}
+                              required
+                              className="border-0 focus-visible:ring-0 text-xs font-bold text-[#172B25]"
+                            />
+                          </div>
+                          <p className="text-[11px] text-[#718078] mt-1">
+                            10-digit number used to log in to {meta.officialPortalName}
+                          </p>
+                        </div>
+
+                        {/* Outlet Selector */}
+                        <div>
+                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                            <Building2 className="h-3.5 w-3.5 text-[#16845B]" /> RestroNex Outlet to Link *
+                          </Label>
+                          <select
+                            value={selectedOutletId}
+                            onChange={(e) => {
+                              setSelectedOutletId(e.target.value);
+                              const out = outlets.find((o) => o.id === e.target.value);
+                              if (out) setMerchantName(out.name);
+                            }}
+                            className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                            required
+                          >
+                            {outlets.map((o) => (
+                              <option key={o.id} value={o.id}>
+                                {o.name} {o.city ? `(${o.city})` : ""}
+                              </option>
+                            ))}
+                          </select>
+                          <p className="text-[11px] text-[#718078] mt-1">
+                            Incoming orders will be routed to this branch
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        {/* Store ID (Optional) */}
+                        <div>
+                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                            <Store className="h-3.5 w-3.5 text-[#718078]" /> {meta.name} Store / Restaurant ID (Optional)
+                          </Label>
+                          <Input
+                            value={storeId}
+                            onChange={(e) => setStoreId(e.target.value)}
+                            placeholder={meta.provider === "swiggy" ? "e.g. 862333" : "e.g. 1892341"}
+                            className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
+                          />
+                          <p className="text-[11px] text-[#718078] mt-1">
+                            Found in your {meta.name} Partner app header
+                          </p>
+                        </div>
+
+                        {/* Restaurant Brand Name */}
+                        <div>
+                          <Label className="text-xs font-bold text-[#172B25]">Restaurant Brand Name</Label>
+                          <Input
+                            value={merchantName}
+                            onChange={(e) => setMerchantName(e.target.value)}
+                            placeholder="Restaurant Name"
+                            className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-2">
+                        <Button
+                          type="submit"
+                          disabled={actionLoading}
+                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs transition"
+                        >
+                          <Plug className="h-4 w-4 mr-1.5" />
+                          {actionLoading ? "Submitting Request..." : `Connect ${meta.name} Account`}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+
+                  {/* State B: PENDING_APPROVAL or REQUESTED */}
+                  {(currentStatus === "PENDING_APPROVAL" ||
+                    currentStatus === "REQUESTED" ||
+                    currentStatus === "AUTHENTICATION_PENDING") && (
+                    <div className="space-y-6">
+                      {/* Honest Alert */}
+                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 space-y-1.5">
+                        <div className="font-extrabold text-xs flex items-center gap-2 text-amber-900">
+                          <Clock className="h-4 w-4 shrink-0 text-amber-700" />
+                          Partner approval required. Your restaurant connection request has been recorded.
+                        </div>
+                        <p className="text-xs text-amber-900/90 leading-relaxed">
+                          Swiggy & Zomato verify all direct POS integrations via their merchant authorization protocol. Please follow the instructions below to complete your partner confirmation.
+                        </p>
+                      </div>
+
+                      {/* 4-Step Connection Tracker */}
+                      <div className="p-5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-4">
+                        <div className="text-xs font-black text-[#172B25] uppercase tracking-wider">
+                          Official Onboarding Lifecycle
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                          {/* Step 1 */}
+                          <div className="p-3 rounded-xl bg-white border border-[#16845B]/30 shadow-2xs space-y-1">
+                            <div className="text-[10px] font-bold text-[#16845B] flex items-center gap-1">
+                              <CheckCircle2 className="h-3 w-3" /> Step 1: Recorded
+                            </div>
+                            <div className="font-black text-[#172B25]">Merchant Phone</div>
+                            <div className="text-[11px] text-[#718078] font-mono">
+                              +91 {currentData.registeredPhone || phone}
+                            </div>
+                          </div>
+
+                          {/* Step 2 */}
+                          <div className="p-3 rounded-xl bg-amber-100/60 border border-amber-300 shadow-2xs space-y-1">
+                            <div className="text-[10px] font-bold text-amber-800 flex items-center gap-1">
+                              <Clock className="h-3 w-3 animate-pulse" /> Step 2: Underway
+                            </div>
+                            <div className="font-black text-[#172B25]">Partner Review</div>
+                            <div className="text-[11px] text-amber-800 font-semibold">
+                              Awaiting Portal Approval
+                            </div>
+                          </div>
+
+                          {/* Step 3 */}
+                          <div className="p-3 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs space-y-1 opacity-75">
+                            <div className="text-[10px] font-bold text-[#718078]">Step 3: Pending</div>
+                            <div className="font-black text-[#172B25]">Outlet Linked</div>
+                            <div className="text-[11px] text-[#718078] truncate">
+                              {outlets.find((o) => o.id === currentData.outletId)?.name || "Main Outlet"}
+                            </div>
+                          </div>
+
+                          {/* Step 4 */}
+                          <div className="p-3 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs space-y-1 opacity-75">
+                            <div className="text-[10px] font-bold text-[#718078]">Step 4: Awaiting</div>
+                            <div className="font-black text-[#172B25]">Live Order Sync</div>
+                            <div className="text-[11px] text-[#718078]">KOT Auto-Firing</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Instructions for Owner */}
+                      <div className="p-5 rounded-2xl bg-white border border-[#E5EBE7] space-y-3">
+                        <div className="text-xs font-black text-[#172B25]">
+                          How to authorize RestroNex in your {meta.name} merchant portal:
+                        </div>
+                        <ol className="text-xs text-[#718078] space-y-2 list-decimal list-inside leading-relaxed">
+                          <li>
+                            Open the <b>{meta.officialPortalName}</b> on your mobile app or at{" "}
+                            <a
+                              href={meta.officialPortalUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-[#16845B] underline font-bold"
+                            >
+                              {meta.officialPortalUrl}
+                            </a>
+                            .
+                          </li>
+                          <li>
+                            Navigate to <b>Settings ➔ POS / Aggregator Partner Integrations</b>.
+                          </li>
+                          <li>
+                            Find the pending integration request from <b>RestroNex POS</b> and tap <b>Authorize / Confirm</b>.
+                          </li>
+                          <li>
+                            Return here and click <b>Verify Live Connection</b> below.
+                          </li>
+                        </ol>
+                      </div>
+
+                      {/* Registered Webhook URL for Merchant Portal */}
+                      <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-bold text-[#172B25]">
+                            Registered Webhook URL (For {meta.name} Portal)
+                          </Label>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              copyWebhookUrl(
+                                currentData.webhookUrl || `${appBaseUrl}${meta.webhookPath}`
+                              )
+                            }
+                            className="text-xs font-bold text-[#16845B] hover:underline flex items-center gap-1 cursor-pointer"
+                          >
+                            <Copy className="h-3 w-3" />
+                            {copiedWebhook ? "Copied ✓" : "Copy URL"}
+                          </button>
+                        </div>
+                        <div className="p-2.5 rounded-xl bg-white border border-[#E5EBE7] font-mono text-xs text-[#172B25] select-all break-all">
+                          {currentData.webhookUrl || `${appBaseUrl}${meta.webhookPath}`}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap items-center gap-3 pt-2">
+                        <Button
+                          onClick={handleVerify}
+                          disabled={actionLoading}
+                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs"
+                        >
+                          <Check className="h-4 w-4 mr-1.5" />
+                          {actionLoading ? "Checking Status..." : "Verify Live Connection"}
+                        </Button>
+
+                        <a
+                          href={meta.officialPortalUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] transition shadow-xs"
+                        >
+                          Open {meta.officialPortalName} <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+
+                        <Button
+                          onClick={handleDisconnect}
+                          disabled={actionLoading}
+                          variant="outline"
+                          className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold"
+                        >
+                          <Unplug className="h-4 w-4 mr-1.5" /> Cancel Request
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* State C: CONNECTED */}
+                  {currentStatus === "CONNECTED" && (
+                    <div className="space-y-6">
+                      <div className="p-4 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/30 text-[#16845B] flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
+                        <div>
+                          <div className="font-extrabold text-sm">
+                            Official {meta.name} Integration Active
+                          </div>
+                          <div className="text-xs text-[#172B25]/80 mt-0.5 leading-relaxed">
+                            Orders placed on {meta.name} are delivered in real-time, auto-printed on kitchen tickets (KOT), and ingredients are deducted from your inventory BOM.
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Live Sync Capabilities */}
+                      <div>
+                        <div className="text-xs font-black text-[#172B25] uppercase tracking-wider mb-3">
+                          Verified Synchronization Capabilities
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          <div className="p-3 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs space-y-1">
+                            <div className="text-[11px] font-bold text-[#16845B]">● Active</div>
+                            <div className="font-black text-[#172B25]">Incoming Orders</div>
+                            <div className="text-[10px] text-[#718078]">Real-time Webhook</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs space-y-1">
+                            <div className="text-[11px] font-bold text-[#16845B]">● Active</div>
+                            <div className="font-black text-[#172B25]">Kitchen KOT Firing</div>
+                            <div className="text-[10px] text-[#718078]">Instant routing</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs space-y-1">
+                            <div className="text-[11px] font-bold text-[#16845B]">● Active</div>
+                            <div className="font-black text-[#172B25]">Menu Availability</div>
+                            <div className="text-[10px] text-[#718078]">86 Item Toggles</div>
+                          </div>
+                          <div className="p-3 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs space-y-1">
+                            <div className="text-[11px] font-bold text-[#16845B]">● Active</div>
+                            <div className="font-black text-[#172B25]">Rider Updates</div>
+                            <div className="text-[10px] text-[#718078]">Live Dispatch Status</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Controls */}
+                      <div className="flex flex-wrap items-center gap-3 pt-2">
+                        <Button
+                          onClick={handlePushMenu}
+                          disabled={actionLoading}
+                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-5 py-2.5 shadow-xs"
+                        >
+                          <RefreshCw className="h-4 w-4 mr-1.5" /> Push Live Menu Catalog
+                        </Button>
+
+                        <Button
+                          onClick={handleVerify}
+                          disabled={actionLoading}
+                          variant="outline"
+                          className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] font-bold text-xs px-5 py-2.5 shadow-xs"
+                        >
+                          Run Webhook Handshake Test
+                        </Button>
+
+                        <Button
+                          onClick={handleDisconnect}
+                          disabled={actionLoading}
+                          variant="outline"
+                          className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs px-5 py-2.5 shadow-xs"
+                        >
+                          <Unplug className="h-4 w-4 mr-1.5" /> Disconnect
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* ========================================================================= */}
+              {/* CASE 2: QR CONTACTLESS ORDERING FLOW                                      */}
+              {/* ========================================================================= */}
+              {meta.connectionMode === "ONE_CLICK" && (
+                <div className="space-y-5">
+                  <div className="p-4 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/30 text-[#16845B] space-y-1">
+                    <div className="font-extrabold text-sm flex items-center gap-1.5">
+                      <QrCode className="h-4 w-4" /> Zero-Credential Contactless Table Menu
+                    </div>
+                    <p className="text-xs text-[#172B25]/80 leading-relaxed">
+                      QR Ordering is built directly into RestroNex. Guests scan table tokens, view dish photos, and place food orders.
+                    </p>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Active Restaurant Outlet</Label>
+                      <select
+                        value={selectedOutletId}
+                        onChange={(e) => setSelectedOutletId(e.target.value)}
+                        className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                      >
+                        {outlets.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Sample Table QR Token Menu</Label>
+                      <div className="mt-1.5 flex gap-2">
+                        <Input
+                          readOnly
+                          value={`${appBaseUrl}/order/table/tbl_koramangala_t01`}
+                          className="bg-[#F8FAF9] border-[#E5EBE7] text-xs font-mono text-[#718078]"
+                        />
+                        <a
+                          href={`${appBaseUrl}/order/table/tbl_koramangala_t01`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-2 rounded-xl bg-[#172B25] text-white text-xs font-bold shrink-0 grid place-items-center"
+                        >
+                          Preview ↗
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <Button
+                      onClick={() => handleConnect()}
+                      disabled={actionLoading}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs"
+                    >
+                      <Check className="h-4 w-4 mr-1.5" /> Enable QR Engine for All Tables
+                    </Button>
+
+                    <a
+                      href="/app/tables"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs"
+                    >
+                      <QrCode className="h-4 w-4 text-[#16845B]" /> Manage Dining Tables & Floor Plan
+                    </a>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              )}
+
+              {/* ========================================================================= */}
+              {/* CASE 3: LOCAL THERMAL PRINTER CONFIGURATION                               */}
+              {/* ========================================================================= */}
+              {meta.connectionMode === "DEVICE_LAN" && (
+                <form onSubmit={handleConnect} className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs text-[#718078] leading-relaxed">
+                    Enter the local IPv4 address of your thermal printer (ESC/POS compatible). Ensure your tablet/POS is on the same Wi-Fi router.
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Printer LAN IPv4 Address *</Label>
+                      <Input
+                        value={printerIp}
+                        onChange={(e) => setPrinterIp(e.target.value)}
+                        placeholder="192.168.1.100"
+                        required
+                        className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-mono font-bold text-[#172B25]"
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">LAN Port</Label>
+                      <Input
+                        value={printerPort}
+                        onChange={(e) => setPrinterPort(e.target.value)}
+                        placeholder="9100"
+                        className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-mono font-bold text-[#172B25]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Assigned Station</Label>
+                      <select
+                        value={printerStation}
+                        onChange={(e) => setPrinterStation(e.target.value)}
+                        className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                      >
+                        <option value="MAIN">Kitchen (Main Hot Food)</option>
+                        <option value="BEVERAGE">Bar & Beverages</option>
+                        <option value="DESSERT">Bakery & Desserts</option>
+                        <option value="BILLING">Billing Counter (Customer Receipt)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Thermal Paper Width</Label>
+                      <select
+                        value={printerPaper}
+                        onChange={(e) => setPrinterPaper(e.target.value)}
+                        className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                      >
+                        <option value="80mm">80mm Standard (3-inch)</option>
+                        <option value="58mm">58mm Compact (2-inch)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <Button
+                      type="submit"
+                      disabled={actionLoading}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs"
+                    >
+                      <Printer className="h-4 w-4 mr-1.5" /> Save & Connect Printer
+                    </Button>
+
+                    <Button
+                      type="button"
+                      onClick={handleVerify}
+                      disabled={actionLoading}
+                      variant="outline"
+                      className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] font-bold text-xs px-5 py-2.5 shadow-xs"
+                    >
+                      Send Test Print Ping
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {/* ========================================================================= */}
+              {/* CASE 4: ACCOUNTING & ERP EXPORT (TALLY XML / CSV)                         */}
+              {/* ========================================================================= */}
+              {meta.connectionMode === "DATA_EXPORT" && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs text-[#718078] leading-relaxed">
+                    Export your day-end registers, tax ledgers, and payment tender splits directly into format-compliant XML or CSV for Tally Prime and Zoho Books.
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Export Format</Label>
+                      <select
+                        value={exportFormat}
+                        onChange={(e) => setExportFormat(e.target.value)}
+                        className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                      >
+                        <option value="TALLY_XML">Tally Prime XML (Standard Vouchers)</option>
+                        <option value="ZOHO_BOOKS">Zoho Books Journal Format</option>
+                        <option value="CSV">General Ledger Excel / CSV</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label className="text-xs font-bold text-[#172B25]">Reconciliation Schedule</Label>
+                      <select
+                        defaultValue="DAILY_DAY_END"
+                        className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                      >
+                        <option value="DAILY_DAY_END">Daily at Day-End Closing</option>
+                        <option value="MANUAL">On-Demand Download</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <Button
+                      onClick={handleDownloadTallyXml}
+                      disabled={actionLoading}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs"
+                    >
+                      <FileSpreadsheet className="h-4 w-4 mr-1.5" />
+                      {actionLoading ? "Generating..." : "Download Today's Tally Export (.XML)"}
+                    </Button>
+
+                    <Button
+                      onClick={() => handleConnect()}
+                      disabled={actionLoading}
+                      variant="outline"
+                      className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] font-bold text-xs px-5 py-2.5 shadow-xs"
+                    >
+                      Save Export Schedule
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* ========================================================================= */}
+              {/* CASE 5: GENERIC ORDERING CHANNEL ADAPTER (DOTPE / THRIVE)                 */}
+              {/* ========================================================================= */}
+              {meta.connectionMode === "WEBHOOK_ADAPTER" && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs text-[#718078] leading-relaxed">
+                    Provide your generic channel webhook URL to receive orders from DotPe, Thrive, or custom branded web stores.
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white border border-[#E5EBE7] space-y-1.5">
+                    <Label className="text-xs font-bold text-[#172B25]">RestroNex Incoming Webhook URL</Label>
+                    <div className="p-2.5 rounded-xl bg-[#F8FAF9] font-mono text-xs text-[#172B25] select-all break-all">
+                      {`${appBaseUrl}/api/webhooks/orders`}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
