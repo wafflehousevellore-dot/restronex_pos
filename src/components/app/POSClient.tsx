@@ -516,7 +516,99 @@ export default function POSClient({
       )}
 
       <div className="grid lg:grid-cols-[1fr_390px] gap-6">
-        <Card className="bg-white border-[#E5EBE7] shadow-sm">
+        <Card className="bg-white border-[#E5EBE7] shadow-sm overflow-hidden">
+          {/* Top: Dine-in Table, Order Type & Customer Selection */}
+          <div className="p-4 border-b border-[#E5EBE7] bg-[#F8FAF9]/60">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-white border border-[#E5EBE7] shadow-2xs">
+              <div>
+                <Label className="text-[#718078] text-xs font-semibold uppercase tracking-wider">Order type</Label>
+                <select
+                  value={orderType}
+                  onChange={(e) => setOrderType(e.target.value as typeof orderType)}
+                  className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-white px-3 py-2 text-sm text-[#172B25] font-medium focus:border-[#16845B] focus:outline-none"
+                >
+                  <option value="DINE_IN">Dine-in</option>
+                  <option value="TAKEAWAY">Takeaway</option>
+                  <option value="DELIVERY">Delivery</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-[#718078] text-xs font-semibold uppercase tracking-wider">
+                  Table {orderType !== "DINE_IN" && <span className="text-amber-700 font-normal lowercase">(dine-in only)</span>}
+                </Label>
+                <select
+                  value={selectedTable}
+                  onChange={(e) => setSelectedTable(e.target.value)}
+                  disabled={orderType !== "DINE_IN"}
+                  className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-white px-3 py-2 text-sm text-[#172B25] font-medium focus:border-[#16845B] focus:outline-none disabled:opacity-40"
+                >
+                  <option value="">No table</option>
+                  {tables.map((t) => (
+                    <option key={t.id} value={t.id}>
+                      {t.number} — {t.area} ({t.status})
+                    </option>
+                  ))}
+                </select>
+                {orderType === "DINE_IN" && tables.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1 max-h-16 overflow-y-auto">
+                    {tables.map((t) => {
+                      const isOccupied = t.status === "OCCUPIED";
+                      const isSelected = selectedTable === t.id;
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => setSelectedTable(isSelected ? "" : t.id)}
+                          className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer ${
+                            isSelected
+                              ? "bg-[#16845B] text-white border-[#16845B] shadow-2xs"
+                              : isOccupied
+                              ? "bg-amber-50 border-amber-200 text-amber-900"
+                              : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
+                          }`}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              isSelected ? "bg-white" : isOccupied ? "bg-amber-500" : "bg-emerald-500"
+                            }`}
+                          />
+                          {t.number}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {selectedTableObj && selectedTableObj.status === "OCCUPIED" && selectedTableObj.currentOrderId && (
+                  <div className="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
+                    <div className="text-xs">
+                      <div className="font-extrabold text-amber-950">Active Table {selectedTableObj.number} Order</div>
+                      <div className="text-[11px] text-amber-800">
+                        Running bill: {formatINR(selectedTableObj.orderTotalPaise || 0)}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => loadActiveTableOrder(selectedTableObj.currentOrderId!)}
+                      disabled={loadingTableOrder}
+                      className="rounded-lg bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
+                    >
+                      {loadingTableOrder ? "Loading..." : "Load Cart →"}
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div>
+                <Label className="text-[#718078] text-xs font-semibold uppercase tracking-wider">Customer phone</Label>
+                <Input
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  placeholder="+91 98765 43210"
+                  className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm h-10 font-medium"
+                />
+              </div>
+            </div>
+          </div>
+
           <CardHeader>
             <CardTitle className="text-[#172B25]">
               Menu {filtered.length > 0 ? `• ${filtered.length} items` : ""}
@@ -637,95 +729,6 @@ export default function POSClient({
                 ))}
               </div>
             )}
-
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7]">
-              <div>
-                <Label className="text-[#718078] text-xs font-semibold">Order type</Label>
-                <select
-                  value={orderType}
-                  onChange={(e) => setOrderType(e.target.value as typeof orderType)}
-                  className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-white px-3 py-2 text-sm text-[#172B25] focus:border-[#16845B] focus:outline-none"
-                >
-                  <option value="DINE_IN">Dine-in</option>
-                  <option value="TAKEAWAY">Takeaway</option>
-                  <option value="DELIVERY">Delivery</option>
-                </select>
-              </div>
-              <div>
-                <Label className="text-[#718078] text-xs font-semibold">
-                  Table {orderType !== "DINE_IN" && <span className="text-amber-700">(Dine-in only)</span>}
-                </Label>
-                <select
-                  value={selectedTable}
-                  onChange={(e) => setSelectedTable(e.target.value)}
-                  disabled={orderType !== "DINE_IN"}
-                  className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-white px-3 py-2 text-sm text-[#172B25] focus:border-[#16845B] focus:outline-none disabled:opacity-40"
-                >
-                  <option value="">No table</option>
-                  {tables.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.number} — {t.area} ({t.status})
-                    </option>
-                  ))}
-                </select>
-                {orderType === "DINE_IN" && tables.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1 max-h-16 overflow-y-auto">
-                    {tables.map((t) => {
-                      const isOccupied = t.status === "OCCUPIED";
-                      const isSelected = selectedTable === t.id;
-                      return (
-                        <button
-                          key={t.id}
-                          type="button"
-                          onClick={() => setSelectedTable(isSelected ? "" : t.id)}
-                          className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer ${
-                            isSelected
-                              ? "bg-[#16845B] text-white border-[#16845B] shadow-2xs"
-                              : isOccupied
-                              ? "bg-amber-50 border-amber-200 text-amber-900"
-                              : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
-                          }`}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              isSelected ? "bg-white" : isOccupied ? "bg-amber-500" : "bg-emerald-500"
-                            }`}
-                          />
-                          {t.number}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-                {selectedTableObj && selectedTableObj.status === "OCCUPIED" && selectedTableObj.currentOrderId && (
-                  <div className="mt-2.5 p-2.5 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
-                    <div className="text-xs">
-                      <div className="font-extrabold text-amber-950">Active Table {selectedTableObj.number} Order</div>
-                      <div className="text-[11px] text-amber-800">
-                        Running bill: {formatINR(selectedTableObj.orderTotalPaise || 0)}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => loadActiveTableOrder(selectedTableObj.currentOrderId!)}
-                      disabled={loadingTableOrder}
-                      className="rounded-lg bg-amber-600 hover:bg-amber-700 text-white px-2.5 py-1 text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1"
-                    >
-                      {loadingTableOrder ? "Loading..." : "Load Cart →"}
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div>
-                <Label className="text-[#718078] text-xs font-semibold">Customer phone</Label>
-                <Input
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm h-10"
-                />
-              </div>
-            </div>
           </CardContent>
         </Card>
 
