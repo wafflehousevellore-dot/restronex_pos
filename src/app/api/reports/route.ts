@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       if (outletId) orderWhere.outletId = outletId;
 
       // 1. High-speed database-level aggregations
-      const [grossAgg, netAgg, customers, lowStockCount] = await Promise.all([
+      const [grossAgg, netAgg, taxAgg, customers, lowStockCount] = await Promise.all([
         prisma.order.aggregate({
           where: orderWhere,
           _sum: { totalPaise: true },
@@ -40,6 +40,10 @@ export async function GET(req: NextRequest) {
           where: { ...orderWhere, status: { not: "CANCELLED" } },
           _sum: { totalPaise: true },
           _count: true,
+        }),
+        prisma.order.aggregate({
+          where: orderWhere,
+          _sum: { taxPaise: true },
         }),
         prisma.customer.count({ where: { tenantId } }),
         prisma.inventoryItem.count({
@@ -52,8 +56,29 @@ export async function GET(req: NextRequest) {
 
       const totalSales = grossAgg._sum.totalPaise || 0;
       const netSales = netAgg._sum.totalPaise || 0;
+      const totalTaxPaise = taxAgg._sum.taxPaise || 0;
       const orderCount = grossAgg._count || 0;
       const avgOrder = orderCount > 0 ? Math.round(totalSales / orderCount) : 0;
+
+      // 2. Fetch payments for tender breakdown
+      const payments = await prisma.payment.findMany({
+        where: {
+          tenantId,
+          status: "SUCCESS",
+          createdAt: { gte: startDate },
+        },
+        select: { method: true, amountPaise: true },
+      });
+
+      const methodTotals: Record<string, number> = {};
+      for (const p of payments) {
+        const m = p.method || "CASH";
+        methodTotals[m] = (methodTotals[m] || 0) + p.amountPaise;
+      }
+      const salesByMethod = Object.entries(methodTotals).map(([method, revenue]) => ({
+        method,
+        revenue,
+      }));
 
       // 2. Sample recent orders for daily breakdown and top items (capped at 500 for bounded memory)
       const recentOrders = await prisma.order.findMany({
@@ -92,17 +117,21 @@ export async function GET(req: NextRequest) {
         kpis: {
           totalSalesPaise: totalSales,
           netSalesPaise: netSales,
+          totalOrders: orderCount,
           orderCount,
           avgOrderPaise: avgOrder,
+          totalTaxPaise,
           customers,
           lowStock: lowStockCount,
         },
         salesByDay: Object.entries(byDay).map(([date, paise]) => ({ date, paise })),
+        salesByMethod,
         topItems: topSorted.map(([name, v]) => ({ name, ...v })),
         definitions: {
           grossSales: "Sum of orders totalPaise within period",
           netSales: "Gross excluding CANCELLED orders",
           avgOrderValue: "totalSales / orderCount",
+          totalTaxPaise: "Total GST collected",
         },
       };
     },

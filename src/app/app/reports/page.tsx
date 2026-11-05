@@ -139,8 +139,8 @@ export default function Reports() {
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Gross Sales</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{formatINR(data.kpis.totalSalesPaise)}</div>
-            <div className="text-xs text-[#718078] mt-1">{data.definitions.grossSales}</div>
+            <div className="text-2xl font-black text-[#172B25]">{formatINR(data.kpis?.totalSalesPaise || 0)}</div>
+            <div className="text-xs text-[#718078] mt-1">{data.definitions?.grossSales || "Gross sales"}</div>
           </CardContent>
         </Card>
 
@@ -149,8 +149,8 @@ export default function Reports() {
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Net Sales</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#16845B]">{formatINR(data.kpis.netSalesPaise)}</div>
-            <div className="text-xs text-[#718078] mt-1">{data.definitions.netSales}</div>
+            <div className="text-2xl font-black text-[#16845B]">{formatINR(data.kpis?.netSalesPaise || 0)}</div>
+            <div className="text-xs text-[#718078] mt-1">{data.definitions?.netSales || "Net sales"}</div>
           </CardContent>
         </Card>
 
@@ -159,8 +159,8 @@ export default function Reports() {
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Billed Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{data.kpis.totalOrders}</div>
-            <div className="text-xs text-[#718078] mt-1">Average bill: {formatINR(data.kpis.avgOrderPaise)}</div>
+            <div className="text-2xl font-black text-[#172B25]">{data.kpis?.totalOrders ?? data.kpis?.orderCount ?? 0}</div>
+            <div className="text-xs text-[#718078] mt-1">Average bill: {formatINR(data.kpis?.avgOrderPaise || 0)}</div>
           </CardContent>
         </Card>
 
@@ -169,7 +169,7 @@ export default function Reports() {
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Total Taxes (GST)</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{formatINR(data.kpis.totalTaxPaise)}</div>
+            <div className="text-2xl font-black text-[#172B25]">{formatINR(data.kpis?.totalTaxPaise || 0)}</div>
             <div className="text-xs text-[#718078] mt-1">CGST + SGST collected</div>
           </CardContent>
         </Card>
@@ -182,14 +182,14 @@ export default function Reports() {
             <CardTitle className="text-[#172B25]">Sales by Payment Tender</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {data.salesByMethod.length ? (
+            {data.salesByMethod && data.salesByMethod.length > 0 ? (
               data.salesByMethod.map((m: any) => (
                 <div key={m.method} className="flex justify-between items-center text-sm border-b border-[#E5EBE7] pb-2.5">
                   <span className="font-bold text-[#172B25] flex items-center gap-2">
                     {m.method === "CASH" ? <Banknote className="h-4 w-4 text-emerald-600" /> : m.method === "UPI" ? <QrCode className="h-4 w-4 text-indigo-600" /> : <CreditCard className="h-4 w-4 text-blue-600" />}
                     {m.method}
                   </span>
-                  <span className="font-black text-[#16845B]">{formatINR(m.revenue)}</span>
+                  <span className="font-black text-[#16845B]">{formatINR(m.revenue || 0)}</span>
                 </div>
               ))
             ) : (
@@ -203,11 +203,11 @@ export default function Reports() {
             <CardTitle className="text-[#172B25]">Top Selling Menu Items</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {data.topItems.length ? (
+            {data.topItems && data.topItems.length > 0 ? (
               data.topItems.map((it: any) => (
                 <div key={it.name} className="flex justify-between items-center text-sm border-b border-[#E5EBE7] pb-2.5">
                   <span className="text-[#172B25] font-medium">{it.name} • {it.qty} sold</span>
-                  <span className="font-black text-[#16845B]">{formatINR(it.revenue)}</span>
+                  <span className="font-black text-[#16845B]">{formatINR(it.revenue || 0)}</span>
                 </div>
               ))
             ) : (
