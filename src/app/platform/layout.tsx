@@ -5,8 +5,9 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
 export default async function PlatformLayout({ children }: { children: React.ReactNode }){
-  const { userId } = await getSession();
-  if(!userId) redirect("/sign-in");
+  const { user, userId } = await getSession();
+  if(!userId) redirect("/sign-in?next=/platform");
+  if(!user?.isPlatformAdmin) redirect("/app/dashboard");
 
   return (
     <div className="min-h-screen bg-[#F8FAF9] text-[#172B25]">

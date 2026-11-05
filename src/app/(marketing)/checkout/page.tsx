@@ -21,7 +21,8 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
 
   // If not authed, preserve selection and redirect to sign-up (as per journey: explore → pricing → sign-up → checkout)
   if (!userId) {
-    const url = new URL("/sign-up", process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000");
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://restronex.vercel.app");
+    const url = new URL("/sign-up", baseUrl);
     url.searchParams.set("plan", planSlug);
     url.searchParams.set("cycle", billingCycle);
     url.searchParams.set("next", `/checkout?plan=${planSlug}&cycle=${billingCycle}`);

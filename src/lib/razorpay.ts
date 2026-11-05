@@ -10,6 +10,11 @@ export function isRazorpayConfigured(): boolean {
   return true;
 }
 
+export function isRazorpayLiveMode(): boolean {
+  const id = process.env.RAZORPAY_KEY_ID || "";
+  return id.startsWith("rzp_live_");
+}
+
 export function getRazorpayKeyId(): string {
   return process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "";
 }
@@ -56,12 +61,14 @@ export function verifyPaymentSignature(opts: {
   razorpay_payment_id: string;
   razorpay_signature: string;
 }): boolean {
-  if (
-    opts.razorpay_signature === "mock_verified" ||
-    opts.razorpay_payment_id?.startsWith("pay_mock_") ||
-    opts.razorpay_payment_id?.startsWith("pay_qr_")
-  ) {
-    return true;
+  // In production, mock bypass is forbidden: real Razorpay HMAC-SHA256 signature is mandatory
+  if (process.env.NODE_ENV !== "production" && process.env.ALLOW_MOCK_PAYMENTS === "true") {
+    if (
+      opts.razorpay_signature === "mock_verified" ||
+      opts.razorpay_payment_id?.startsWith("pay_mock_")
+    ) {
+      return true;
+    }
   }
 
   const secret = getRazorpayKeySecret();

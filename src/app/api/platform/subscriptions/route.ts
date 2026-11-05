@@ -6,9 +6,9 @@ export async function GET(_req: NextRequest) {
   const { userId, user } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
 
-  // Only Platform Admins or Owners can view platform-wide SaaS subscription metrics
+  // Only Platform Super Admins can view platform-wide SaaS subscription metrics
   const dbUser = await prisma.user.findUnique({ where: { id: userId } });
-  if (!dbUser?.isPlatformAdmin && dbUser?.role !== "OWNER") {
+  if (!dbUser?.isPlatformAdmin) {
     return NextResponse.json({ error: "Platform Admin access required" }, { status: 403 });
   }
 
