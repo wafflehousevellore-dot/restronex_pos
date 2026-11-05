@@ -81,7 +81,8 @@
 }
 
 /* Ensure no dark-mode overrides revert to dark backgrounds */
-.dark, :root {
+.dark,
+:root {
   color-scheme: light;
 }
 
@@ -105,13 +106,16 @@ html {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F8FAF9;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #D1DDD6;
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #B4C5BC;
 }
@@ -129,13 +133,21 @@ html {
   body * {
     visibility: hidden !important;
   }
-  #thermal-receipt-printable, #thermal-receipt-printable *,
-  #z-report-printable, #z-report-printable *,
-  #kot-printable, #kot-printable *,
-  #qr-badge-printable, #qr-badge-printable * {
+
+  #thermal-receipt-printable,
+  #thermal-receipt-printable *,
+  #z-report-printable,
+  #z-report-printable *,
+  #kot-printable,
+  #kot-printable *,
+  #qr-badge-printable,
+  #qr-badge-printable * {
     visibility: visible !important;
   }
-  #thermal-receipt-printable, #z-report-printable, #kot-printable {
+
+  #thermal-receipt-printable,
+  #z-report-printable,
+  #kot-printable {
     position: fixed !important;
     left: 0 !important;
     top: 0 !important;
@@ -152,6 +164,7 @@ html {
     border: none !important;
     z-index: 999999 !important;
   }
+
   #qr-badge-printable {
     position: fixed !important;
     left: 50% !important;
@@ -167,6 +180,7 @@ html {
     border-radius: 16px !important;
     z-index: 999999 !important;
   }
+
   @page {
     size: auto;
     margin: 0;

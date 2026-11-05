@@ -121,3 +121,4 @@ export async function compressAndOptimizeImage(
     img.src = objectUrl;
   });
 }
+
