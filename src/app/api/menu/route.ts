@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { appCache, getOrSetCache } from "@/lib/cache";
+import { deleteTenantFile, STORAGE_BUCKETS } from "@/lib/supabase-storage";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -23,9 +26,10 @@ export async function GET(req: NextRequest) {
         prisma.menuItem.findMany({
           where: { tenantId },
           include: { variants: true, modifiers: true, category: true },
+          orderBy: { name: "asc" },
         }),
       ]);
-      return { categories, items };
+      return { categories, items, cats: categories };
     },
     30
   );
@@ -70,11 +74,127 @@ export async function POST(req: NextRequest) {
         name: body.name,
         pricePaise: body.pricePaise,
         isVeg: body.isVeg ?? true,
-        description: body.description,
+        description: body.description || null,
+        imageUrl: body.imageUrl || null,
+        isSoldOut: body.isSoldOut ?? false,
       },
+      include: { category: true, variants: true, modifiers: true },
     });
     return NextResponse.json(item);
   }
 
   return NextResponse.json({ error: "Invalid type" }, { status: 400 });
+}
+
+export async function PUT(req: NextRequest) {
+  const { userId } = await getSession();
+  if (!userId) return NextResponse.json({ error: "Unauth" }, { status: 401 });
+  const body = await req.json();
+  const tenantId = await resolveTenantId(userId, body.tenantId);
+  if (!tenantId) return NextResponse.json({ error: "tenantId required" }, { status: 400 });
+  const mem = await prisma.membership.findFirst({ where: { userId, tenantId } });
+  if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  if (!body.id) {
+    return NextResponse.json({ error: "Item ID required" }, { status: 400 });
+  }
+
+  const existingItem = await prisma.menuItem.findFirst({
+    where: { id: body.id, tenantId },
+  });
+  if (!existingItem) {
+    return NextResponse.json({ error: "Menu item not found" }, { status: 404 });
+  }
+
+  // If image changed or was removed, cleanup old image from storage
+  if (
+    existingItem.imageUrl &&
+    body.imageUrl !== undefined &&
+    existingItem.imageUrl !== body.imageUrl
+  ) {
+    try {
+      await deleteTenantFile(tenantId, existingItem.imageUrl, STORAGE_BUCKETS.PUBLIC_ASSETS);
+    } catch (err: any) {
+      console.warn("Notice: Old image cleanup during item update:", err?.message);
+    }
+  }
+
+  const updatedItem = await prisma.menuItem.update({
+    where: { id: body.id },
+    data: {
+      name: body.name !== undefined ? body.name : existingItem.name,
+      pricePaise: body.pricePaise !== undefined ? body.pricePaise : existingItem.pricePaise,
+      categoryId: body.categoryId !== undefined ? body.categoryId : existingItem.categoryId,
+      isVeg: body.isVeg !== undefined ? body.isVeg : existingItem.isVeg,
+      description: body.description !== undefined ? body.description : existingItem.description,
+      imageUrl: body.imageUrl !== undefined ? body.imageUrl : existingItem.imageUrl,
+      isSoldOut: body.isSoldOut !== undefined ? body.isSoldOut : existingItem.isSoldOut,
+      isActive: body.isActive !== undefined ? body.isActive : existingItem.isActive,
+    },
+    include: { category: true, variants: true, modifiers: true },
+  });
+
+  // Invalidate caches
+  appCache.del(`menu_api_${tenantId}`);
+  appCache.del(`qr_menu_${tenantId}`);
+
+  return NextResponse.json(updatedItem);
+}
+
+export async function DELETE(req: NextRequest) {
+  const { userId } = await getSession();
+  if (!userId) return NextResponse.json({ error: "Unauth" }, { status: 401 });
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+  const type = searchParams.get("type") || "item";
+  const tenantId = await resolveTenantId(userId, searchParams.get("tenantId"));
+  if (!tenantId) return NextResponse.json({ error: "tenantId required" }, { status: 400 });
+  const mem = await prisma.membership.findFirst({ where: { userId, tenantId } });
+  if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  if (!id) {
+    return NextResponse.json({ error: "ID required" }, { status: 400 });
+  }
+
+  // Invalidate caches
+  appCache.del(`menu_api_${tenantId}`);
+  appCache.del(`qr_menu_${tenantId}`);
+
+  if (type === "category") {
+    // Delete all items' images in category first
+    const categoryItems = await prisma.menuItem.findMany({
+      where: { categoryId: id, tenantId },
+    });
+    for (const it of categoryItems) {
+      if (it.imageUrl) {
+        try {
+          await deleteTenantFile(tenantId, it.imageUrl, STORAGE_BUCKETS.PUBLIC_ASSETS);
+        } catch (e: any) {
+          console.warn("Image cleanup error:", e?.message);
+        }
+      }
+    }
+    await prisma.menuItem.deleteMany({ where: { categoryId: id, tenantId } });
+    await prisma.menuCategory.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  }
+
+  // Delete single item
+  const existingItem = await prisma.menuItem.findFirst({
+    where: { id, tenantId },
+  });
+  if (!existingItem) {
+    return NextResponse.json({ error: "Item not found" }, { status: 404 });
+  }
+
+  if (existingItem.imageUrl) {
+    try {
+      await deleteTenantFile(tenantId, existingItem.imageUrl, STORAGE_BUCKETS.PUBLIC_ASSETS);
+    } catch (err: any) {
+      console.warn("Notice: Old image cleanup during item deletion:", err?.message);
+    }
+  }
+
+  await prisma.menuItem.delete({ where: { id } });
+  return NextResponse.json({ success: true });
 }

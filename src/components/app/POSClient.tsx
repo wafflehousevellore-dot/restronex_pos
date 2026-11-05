@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
-import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, Percent } from "lucide-react";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, Percent, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 
 type MenuItem = {
@@ -14,6 +14,9 @@ type MenuItem = {
   pricePaise: number;
   categoryId: string;
   isVeg: boolean;
+  imageUrl?: string | null;
+  description?: string | null;
+  isSoldOut?: boolean;
   category?: { name: string };
 };
 type Table = {
@@ -546,28 +549,89 @@ export default function POSClient({
             ) : filtered.length === 0 ? (
               <div className="text-sm text-[#718078] py-8 text-center">No items in {categoryFilter}</div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
                 {filtered.map((it) => (
                   <button
                     key={it.id}
-                    onClick={() => addToCart(it)}
-                    className="rounded-2xl border border-[#E5EBE7] bg-[#F8FAF9] p-3 text-left hover:border-[#16845B] hover:bg-white hover:shadow-xs transition group focus:outline-none focus:ring-2 focus:ring-[#16845B]/30"
+                    onClick={() => !it.isSoldOut && addToCart(it)}
+                    disabled={it.isSoldOut}
+                    className={`rounded-2xl border border-[#E5EBE7] bg-white text-left transition group overflow-hidden flex flex-col justify-between ${
+                      it.isSoldOut
+                        ? "opacity-60 cursor-not-allowed bg-gray-50"
+                        : "hover:border-[#16845B] hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-[#16845B]/30"
+                    }`}
                   >
-                    <div
-                      className={`h-12 rounded-xl flex items-center justify-center text-xs font-bold transition ${
-                        it.isVeg
-                          ? "bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B]"
-                          : "bg-red-50 border border-red-100 text-red-600"
-                      }`}
-                    >
-                      {it.isVeg ? "● VEG" : "● NON-VEG"}
+                    {/* Consistent Aspect Ratio Image Container */}
+                    <div className="relative aspect-[4/3] w-full bg-[#F8FAF9] overflow-hidden border-b border-[#E5EBE7]">
+                      {it.imageUrl ? (
+                        <img
+                          src={it.imageUrl}
+                          alt={it.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-[#F8FAF9] text-[#718078]">
+                          <UtensilsCrossed className="w-6 h-6 text-[#16845B]/40 mb-1" />
+                          <span className="text-[10px] font-bold text-[#718078]/70 uppercase tracking-wider">
+                            RestroNex
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Veg / Non-Veg Indicator Badge */}
+                      <div className="absolute top-2 left-2">
+                        <span
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-black shadow-2xs backdrop-blur-xs ${
+                            it.isVeg
+                              ? "bg-white/95 text-emerald-700 border border-emerald-300"
+                              : "bg-white/95 text-red-700 border border-red-300"
+                          }`}
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              it.isVeg ? "bg-emerald-600" : "bg-red-600"
+                            }`}
+                          />
+                          {it.isVeg ? "VEG" : "NON-VEG"}
+                        </span>
+                      </div>
+
+                      {/* Selling Price Badge */}
+                      <div className="absolute bottom-2 right-2">
+                        <span className="rounded-full bg-white/95 border border-[#E5EBE7] px-2 py-0.5 text-xs font-black text-[#16845B] shadow-2xs">
+                          {formatINR(it.pricePaise)}
+                        </span>
+                      </div>
+
+                      {/* Available / Sold Out Status Overlay */}
+                      {it.isSoldOut && (
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center">
+                          <span className="px-2.5 py-1 rounded-full bg-red-600 text-white font-extrabold text-[10px] tracking-wider">
+                            SOLD OUT
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className="mt-2 text-sm font-bold text-[#172B25] truncate" title={it.name}>
-                      {it.name}
-                    </div>
-                    <div className="text-xs font-semibold text-[#16845B]">{formatINR(it.pricePaise)}</div>
-                    <div className="mt-1 text-[11px] text-[#16845B] opacity-0 group-hover:opacity-100 transition font-medium">
-                      Tap to add →
+
+                    {/* Product Name & Quick Action */}
+                    <div className="p-2.5 flex-1 flex flex-col justify-between">
+                      <div
+                        className="text-xs font-bold text-[#172B25] line-clamp-2 leading-snug group-hover:text-[#16845B] transition-colors"
+                        title={it.name}
+                      >
+                        {it.name}
+                      </div>
+                      <div className="mt-1 flex items-center justify-between text-[10px]">
+                        <span className="text-[#718078] truncate max-w-[80px]">
+                          {it.category?.name || "Menu"}
+                        </span>
+                        {!it.isSoldOut && (
+                          <span className="text-[#16845B] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                            + Add
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </button>
                 ))}

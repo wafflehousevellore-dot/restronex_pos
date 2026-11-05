@@ -77,14 +77,37 @@ export async function uploadTenantFile(
 }
 
 /**
+ * Safely extracts relative bucket path from either a full Supabase storage URL or a raw path.
+ */
+export function extractStoragePath(urlOrPath: string, bucket: string = STORAGE_BUCKETS.PUBLIC_ASSETS): string | null {
+  if (!urlOrPath) return null;
+  // If it's a full URL containing the bucket name
+  const marker = `/${bucket}/`;
+  const idx = urlOrPath.indexOf(marker);
+  if (idx !== -1) {
+    const raw = urlOrPath.substring(idx + marker.length);
+    // Strip query parameters if any
+    return raw.split("?")[0];
+  }
+  // If it's already a clean relative path
+  if (!urlOrPath.startsWith("http://") && !urlOrPath.startsWith("https://")) {
+    return urlOrPath.split("?")[0];
+  }
+  return null;
+}
+
+/**
  * Delete a tenant file ensuring the path belongs to the tenant.
+ * Accepts either a storage path or a full Supabase public/signed URL.
  */
 export async function deleteTenantFile(
   tenantId: string,
-  filePath: string,
+  urlOrPath: string,
   bucket: string = STORAGE_BUCKETS.PUBLIC_ASSETS,
   clerkToken?: string | null
 ) {
+  const filePath = extractStoragePath(urlOrPath, bucket) || urlOrPath;
+
   if (!filePath.startsWith(`${tenantId}/`)) {
     throw new Error("Security violation: Cannot delete a file belonging to another tenant.");
   }
@@ -96,7 +119,7 @@ export async function deleteTenantFile(
     throw new Error(`Supabase Storage deletion failed: ${error.message}`);
   }
 
-  return { success: true };
+  return { success: true, path: filePath };
 }
 
 /**

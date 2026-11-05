@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, use } from "react";
 import { formatINR } from "@/lib/money";
-import { Check, ShoppingBag, X, Plus, Minus, ArrowRight } from "lucide-react";
+import { Check, ShoppingBag, X, Plus, Minus, ArrowRight, UtensilsCrossed } from "lucide-react";
 
 export default function GuestQRTableOrderPage({
   params,
@@ -228,9 +228,9 @@ export default function GuestQRTableOrderPage({
           return (
             <div
               key={item.id}
-              className="rounded-2xl border border-[#E5EBE7] bg-white p-4 shadow-xs flex items-center justify-between gap-3"
+              className="rounded-2xl border border-[#E5EBE7] bg-white p-3.5 shadow-xs flex items-center justify-between gap-3 hover:border-[#16845B]/40 transition"
             >
-              <div className="space-y-1 pr-2 flex-1">
+              <div className="space-y-1 pr-2 flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span
                     className={`h-2.5 w-2.5 rounded-full shrink-0 ${
@@ -247,30 +247,46 @@ export default function GuestQRTableOrderPage({
                 </div>
               </div>
 
-              {/* Add / Qty Control */}
-              <div className="shrink-0">
+              {/* Food Image Thumbnail + Add Control */}
+              <div className="shrink-0 flex flex-col items-center gap-2">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#E5EBE7] bg-[#F8FAF9] relative">
+                  {item.imageUrl ? (
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-[#718078]/50 bg-[#F8FAF9]">
+                      <UtensilsCrossed className="w-5 h-5 text-[#16845B]/40" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Add / Qty Control */}
                 {inCart ? (
-                  <div className="flex items-center gap-2 bg-[#E8F5EE] border border-[#16845B]/30 rounded-full px-2 py-1">
+                  <div className="flex items-center gap-1.5 bg-[#E8F5EE] border border-[#16845B]/30 rounded-full px-2 py-0.5">
                     <button
                       onClick={() => decrementItem(item.id)}
-                      className="h-6 w-6 rounded-full bg-white text-[#16845B] font-black text-sm flex items-center justify-center shadow-2xs"
+                      className="h-5 w-5 rounded-full bg-white text-[#16845B] font-black text-xs flex items-center justify-center shadow-2xs"
                     >
-                      <Minus className="h-3 w-3" />
+                      <Minus className="h-2.5 w-2.5" />
                     </button>
-                    <span className="font-extrabold text-xs text-[#16845B] min-w-[16px] text-center">
+                    <span className="font-extrabold text-xs text-[#16845B] min-w-[12px] text-center">
                       {inCart.quantity}
                     </span>
                     <button
                       onClick={() => addToCart(item)}
-                      className="h-6 w-6 rounded-full bg-[#16845B] text-white font-black text-sm flex items-center justify-center shadow-2xs"
+                      className="h-5 w-5 rounded-full bg-[#16845B] text-white font-black text-xs flex items-center justify-center shadow-2xs"
                     >
-                      <Plus className="h-3 w-3" />
+                      <Plus className="h-2.5 w-2.5" />
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={() => addToCart(item)}
-                    className="rounded-full bg-white border border-[#16845B] text-[#16845B] hover:bg-[#16845B] hover:text-white px-4 py-1.5 text-xs font-bold transition shadow-2xs"
+                    className="rounded-full bg-white border border-[#16845B] text-[#16845B] hover:bg-[#16845B] hover:text-white px-3 py-1 text-xs font-bold transition shadow-2xs w-full text-center"
                   >
                     + Add
                   </button>

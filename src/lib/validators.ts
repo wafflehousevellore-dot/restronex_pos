@@ -66,8 +66,10 @@ export const orderCreateSchema = z.object({
 export const menuItemSchema = z.object({
   name: z.string().min(2).max(100),
   categoryId: z.string(),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
+  imageUrl: z.string().url().optional().nullable(),
   pricePaise: z.number().int().min(0),
   isVeg: z.boolean().default(true),
-  sku: z.string().optional(),
+  isSoldOut: z.boolean().default(false),
+  sku: z.string().optional().nullable(),
 });

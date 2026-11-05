@@ -26,7 +26,14 @@ export default async function POSPage(){
     prisma.menuItem.findMany({ where:{ tenantId, isActive:true }, include:{ category:true }, orderBy:{ name:"asc" }}),
   ]);
   const items = menuItems.map(m=> ({
-    id: m.id, name: m.name, pricePaise: m.pricePaise, categoryId: m.categoryId, isVeg: m.isVeg,
+    id: m.id,
+    name: m.name,
+    pricePaise: m.pricePaise,
+    categoryId: m.categoryId,
+    isVeg: m.isVeg,
+    imageUrl: m.imageUrl,
+    description: m.description,
+    isSoldOut: m.isSoldOut,
     category: m.category ? { name: m.category.name } : undefined,
   }));
   const tableData = tables.map(t=> ({
