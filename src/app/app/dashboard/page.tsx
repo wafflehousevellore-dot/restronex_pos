@@ -45,13 +45,19 @@ export default async function Dashboard(){
   const tenant = await prisma.tenant.findUnique({ where:{ id: tenantId }, include:{ outlets:true }});
   if (!tenant) redirect("/app/organization");
   const ent = await getEntitlements(tenantId);
-  if (!ent.hasActiveSubscription) {
-    redirect("/checkout?reason=subscription_required");
-  }
+
   if (!tenant.onboardingComplete) {
     const stepNames = ["Business","Outlet","Tables","Menu","Tax","Staff","Plan","Launch"];
     return (
       <div className="max-w-3xl mx-auto space-y-4">
+        {!ent.hasActiveSubscription && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 flex items-center justify-between gap-3">
+            <span><b>Restaurant in Setup Mode:</b> Complete 8-Step Onboarding and select your plan to activate full POS billing.</span>
+            <Link href="/checkout?plan=growth&cycle=MONTHLY" className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] shrink-0">
+              Select Plan →
+            </Link>
+          </div>
+        )}
         <Card className="p-6 bg-white border-[#E5EBE7] shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -69,6 +75,10 @@ export default async function Dashboard(){
         </Card>
       </div>
     );
+  }
+
+  if (!ent.hasActiveSubscription) {
+    redirect("/checkout?reason=subscription_required");
   }
 
   const orders = await prisma.order.findMany({ where:{ tenantId }});

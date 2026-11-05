@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import { getSession, resolveTenantId } from "@/lib/auth";
 import { PageShell } from "@/components/marketing/PageShell";
 import CheckoutClient from "./CheckoutClient";
-import { calcCheckoutTotals } from "@/lib/checkout";
+import { calcCheckoutTotals, getPlanBySlug } from "@/lib/checkout";
 import { isRazorpayConfigured, isWebhookConfigured } from "@/lib/razorpay";
 import { redirect } from "next/navigation";
 
@@ -14,56 +14,54 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   const { userId } = await getSession();
   const c = await cookies();
   const persisted = c.get("restronex_checkout")?.value ? (()=>{ try{return JSON.parse(decodeURIComponent(c.get("restronex_checkout")!.value))}catch{return null} })() : null;
-  const cookiePlan = c.get("restronex_plan")?.value ? decodeURIComponent(c.get("restronex_plan")!.value) : null;
-  const planSlug = sp.plan || persisted?.planSlug || cookiePlan || "growth";
-  const billingCycle = (sp.cycle as "MONTHLY"|"ANNUAL") || persisted?.billingCycle || (c.get("restronex_cycle")?.value as any) || "MONTHLY";
+  const rawCookiePlan = c.get("restronex_plan")?.value ? (()=>{ try{return decodeURIComponent(c.get("restronex_plan")!.value)}catch{return null} })() : null;
+  const cookiePlan = rawCookiePlan && rawCookiePlan !== "undefined" && rawCookiePlan !== "null" ? rawCookiePlan : null;
+  
+  let candidatePlan = sp.plan || persisted?.planSlug || cookiePlan || "growth";
+  if (!getPlanBySlug(candidatePlan)) {
+    candidatePlan = "growth";
+  }
+  const planSlug = candidatePlan;
+  const billingCycle = (sp.cycle === "ANNUAL" || sp.cycle === "MONTHLY" ? sp.cycle : null) || (persisted?.billingCycle === "ANNUAL" || persisted?.billingCycle === "MONTHLY" ? persisted.billingCycle : null) || "MONTHLY";
   const outletCount = parseInt(sp.outlets || persisted?.outletCount || "1", 10) || 1;
 
-  // If not authed, preserve selection and redirect to sign-up (as per journey: explore → pricing → sign-up → checkout)
-  if (!userId) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://restronex.vercel.app");
-    const url = new URL("/sign-up", baseUrl);
-    url.searchParams.set("plan", planSlug);
-    url.searchParams.set("cycle", billingCycle);
-    url.searchParams.set("next", `/checkout?plan=${planSlug}&cycle=${billingCycle}`);
-    // Instead of server redirect, show interstitial that preserves plan (better UX + keeps SEO)
-    // But we still enforce auth — client will redirect after showing preview
-  }
-
   let totals;
-  try { totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount }); } catch (e:any) {
-    return (
-      <PageShell title="Checkout" subtitle={e.message} badge="Checkout">
-        <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-6 text-white">Invalid plan: {planSlug}. <a href="/pricing" className="underline">Choose a plan</a></div>
-      </PageShell>
-    );
+  try {
+    totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+  } catch {
+    totals = calcCheckoutTotals({ planSlug: "growth", billingCycle: "MONTHLY", outletCount: 1 });
   }
 
   const razorConfigured = isRazorpayConfigured();
   const webhookConfigured = isWebhookConfigured();
 
-  // If already paid and subscription is active, do not prompt payment again
+  // If already paid and subscription is active on CURRENT ACTIVE TENANT, do not prompt payment again
   let tenantId: string | null = null;
   let hasTenant = false;
   if (userId) {
-    const mem = await prisma.membership.findFirst({
-      where: { userId },
-      include: {
-        tenant: {
-          include: {
-            subscriptions: {
-              where: { status: "ACTIVE", currentPeriodEnd: { gte: new Date() } },
-              include: { plan: true },
-            },
+    tenantId = await resolveTenantId(userId);
+    let activeSub: any = null;
+    let tenantOnboardingComplete = false;
+
+    if (tenantId) {
+      const activeTenant = await prisma.tenant.findUnique({
+        where: { id: tenantId },
+        include: {
+          subscriptions: {
+            where: { status: "ACTIVE", currentPeriodEnd: { gte: new Date() } },
+            include: { plan: true },
           },
         },
-      },
-    });
-    tenantId = mem?.tenantId || null;
+      });
+      activeSub = activeTenant?.subscriptions?.[0] || null;
+      tenantOnboardingComplete = !!activeTenant?.onboardingComplete;
+    }
+
     hasTenant = !!tenantId;
-    const activeSub = mem?.tenant?.subscriptions?.[0];
-    if (activeSub && sp.renew !== "true" && sp.change !== "true") {
-      if (mem?.tenant?.onboardingComplete) {
+
+    // Never auto-redirect to /app/pos if the user specifically arrived due to subscription_required
+    if (activeSub && sp.renew !== "true" && sp.change !== "true" && sp.reason !== "subscription_required") {
+      if (tenantOnboardingComplete) {
         redirect("/app/pos");
       } else {
         redirect("/app/onboarding");
