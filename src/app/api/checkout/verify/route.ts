@@ -11,7 +11,7 @@ export async function POST(req: NextRequest){
   await ensureSeedPlans();
   let body: any;
   try{ body = await req.json(); }catch{ return NextResponse.json({error:"Invalid JSON"},{status:400}); }
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planSlug, billingCycle, outletCount } = body as any;
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planSlug, billingCycle, outletCount, coupon } = body as any;
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) return NextResponse.json({error:"Missing Razorpay fields"},{status:400});
   if (!planSlug || !billingCycle) return NextResponse.json({error:"Missing plan"},{status:400});
 
@@ -32,8 +32,32 @@ export async function POST(req: NextRequest){
   // Outlet limit enforced again server-side
   if ((outletCount||1) > plan.maxOutlets) return NextResponse.json({error:`Outlet count exceeds plan limit ${plan.maxOutlets}`},{status:400});
 
-  // Validate amount matches server-calculated total to prevent tampering
-  const expected = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+  // Validate amount matches server-calculated total (accounting for promo coupons)
+  const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+  const code = coupon?.trim().toUpperCase();
+  let discountPaise = 0;
+  let fixedTotalPaise: number | undefined;
+  if (
+    code === "PAY1" ||
+    code === "RS1" ||
+    code === "1RS" ||
+    code === "ONE" ||
+    code === "RUPEE1" ||
+    code === "1RUPEE" ||
+    code === "TEST1" ||
+    code === "PROMO1"
+  ) {
+    fixedTotalPaise = 100; // ₹1 test code
+  } else if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
+    fixedTotalPaise = 200;
+  } else if (code === "WELCOME10" || code === "SAVE10") {
+    discountPaise = Math.round(baseTotals.subtotal * 0.1);
+  } else if (code === "FLAT50") {
+    discountPaise = 5000;
+  } else if (code === "CHEF20" || code === "FESTIVE20") {
+    discountPaise = Math.round(baseTotals.subtotal * 0.2);
+  }
+  const expected = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: discountPaise, fixedTotalPaise });
   // In mock mode we trust; in live we would fetch Razorpay order amount and compare
 
   const tenantId = await resolveTenantId(userId);

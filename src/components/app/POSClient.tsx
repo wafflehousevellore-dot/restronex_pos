@@ -52,6 +52,18 @@ export type ReceiptData = {
 function calculateCouponDiscount(code: string, subtotalPaise: number): number {
   const c = code.trim().toUpperCase();
   if (
+    c === "PAY1" ||
+    c === "RS1" ||
+    c === "1RS" ||
+    c === "ONE" ||
+    c === "RUPEE1" ||
+    c === "1RUPEE" ||
+    c === "TEST1" ||
+    c === "PROMO1"
+  ) {
+    return Math.max(0, subtotalPaise - 85);
+  }
+  if (
     c === "PAY2" ||
     c === "TEST2" ||
     c === "RS2" ||

@@ -25,6 +25,18 @@ declare global { interface Window { Razorpay?: any; } }
 
 function computeCouponDiscount(code: string, subtotal: number): { discountPaise: number; fixedTotalPaise?: number; label: string } {
   const c = code.trim().toUpperCase();
+  if (
+    c === "PAY1" ||
+    c === "RS1" ||
+    c === "1RS" ||
+    c === "ONE" ||
+    c === "RUPEE1" ||
+    c === "1RUPEE" ||
+    c === "TEST1" ||
+    c === "PROMO1"
+  ) {
+    return { discountPaise: 0, fixedTotalPaise: 100, label: "VIP Special (Pay ₹1 for testing)" };
+  }
   if (c === "PAY2" || c === "TEST2" || c === "RS2" || c === "100OFF" || c === "TEST100" || c === "TESTPAY" || c === "2RS" || c === "100%" || c === "FREE" || c === "2RUPEES") {
     return { discountPaise: 0, fixedTotalPaise: 200, label: "100% OFF (Pay ₹2 for testing)" };
   }
@@ -207,6 +219,7 @@ export default function CheckoutClient({
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
             planSlug: plan, billingCycle: cycle, outletCount: outlets,
+            coupon: coupon || undefined,
           }),
         });
         const vj = await v.json();
@@ -459,7 +472,7 @@ export default function CheckoutClient({
                     <Input
                       value={couponInput}
                       onChange={e => { setCouponInput(e.target.value); setCouponStatus(null); }}
-                      placeholder="Enter promo code (e.g. PAY2, WELCOME10)"
+                      placeholder="Enter promo code (e.g. PAY1, WELCOME10)"
                       className="flex-1 bg-white border-[#E5EBE7] text-[#172B25] text-xs h-9"
                     />
                     <Button

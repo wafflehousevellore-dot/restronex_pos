@@ -19,7 +19,18 @@ export async function POST(req: NextRequest){
     const code = coupon?.trim().toUpperCase();
     let discountPaise = 0;
     let fixedTotalPaise: number | undefined;
-    if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
+    if (
+      code === "PAY1" ||
+      code === "RS1" ||
+      code === "1RS" ||
+      code === "ONE" ||
+      code === "RUPEE1" ||
+      code === "1RUPEE" ||
+      code === "TEST1" ||
+      code === "PROMO1"
+    ) {
+      fixedTotalPaise = 100; // Pay exactly ₹1 for testing!
+    } else if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
       fixedTotalPaise = 200; // Pay exactly ₹2 for testing!
     } else if (code === "WELCOME10" || code === "SAVE10") {
       discountPaise = Math.round(baseTotals.subtotal * 0.1);
