@@ -7,7 +7,66 @@ export async function POST(req: NextRequest) {
   const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
   const body = await req.json();
-  const { orderId, phone: rawPhone, templateName = "order_invoice_utility" } = body;
+  const { orderId, phone: rawPhone, templateName = "order_invoice_utility", isTest, testPhone } = body;
+
+  // 1. Support Admin Test Message Ping
+  if (isTest || testPhone) {
+    const tenantId = await resolveTenantId(userId, body.tenantId);
+    if (!tenantId) return NextResponse.json({ error: "Tenant required" }, { status: 400 });
+
+    const mem = await prisma.membership.findFirst({ where: { userId, tenantId } });
+    if (!mem || mem.role !== "OWNER") return NextResponse.json({ error: "Only owners can send test messages" }, { status: 403 });
+
+    const targetPhone = (testPhone || rawPhone || "").replace(/[^0-9]/g, "");
+    if (targetPhone.length < 10) return NextResponse.json({ error: "Valid 10+ digit test phone number required" }, { status: 400 });
+    const recipientPhone = targetPhone.length === 10 ? `91${targetPhone}` : targetPhone;
+
+    const setting = await prisma.restaurantSetting.findUnique({ where: { tenantId } });
+    const phoneNumberId = setting?.whatsappPhoneNumberId;
+    const accessToken = setting?.whatsappAccessToken;
+
+    if (!phoneNumberId || !accessToken) {
+      return NextResponse.json({
+        error: "Cannot send test: WhatsApp Phone Number ID and Access Token must be configured first.",
+      }, { status: 400 });
+    }
+
+    try {
+      const metaRes = await fetch(`https://graph.facebook.com/v21.0/${phoneNumberId}/messages`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: recipientPhone,
+          type: "text",
+          text: {
+            preview_url: true,
+            body: `🍽️ *RestroNex WhatsApp Integration Test*\n\nThis is a verified test message confirming your Meta WhatsApp Cloud API credentials are configured correctly.\n\nTime: ${new Date().toLocaleString("en-IN")}\nPowered by *RestroNex – Restaurant OS*`,
+          },
+        }),
+      });
+
+      const metaJson = await metaRes.json();
+      if (!metaRes.ok) {
+        return NextResponse.json({
+          ok: false,
+          error: metaJson.error?.message || "Meta API returned an error.",
+          details: metaJson,
+        }, { status: 400 });
+      }
+
+      return NextResponse.json({
+        ok: true,
+        message: "Test message successfully dispatched via Meta WhatsApp Cloud API!",
+        messageId: metaJson.messages?.[0]?.id,
+      });
+    } catch (err: any) {
+      return NextResponse.json({ error: err.message || "Failed to contact Meta WhatsApp endpoint" }, { status: 500 });
+    }
+  }
 
   if (!orderId) return NextResponse.json({ error: "orderId required" }, { status: 400 });
 

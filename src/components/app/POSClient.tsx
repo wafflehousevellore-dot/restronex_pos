@@ -45,6 +45,8 @@ export type ReceiptData = {
   cgstPaise: number;
   sgstPaise: number;
   totalPaise: number;
+  orderId?: string;
+  whatsappStatus?: string;
 };
 
 function calculateCouponDiscount(code: string, subtotalPaise: number): number {
@@ -89,6 +91,9 @@ export default function POSClient({
   >([]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [whatsappConsent, setWhatsappConsent] = useState(true);
+  const [whatsappDeliveryStatus, setWhatsappDeliveryStatus] = useState<string | null>(null);
+  const [retryingWhatsApp, setRetryingWhatsApp] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"CASH" | "UPI" | "CARD">("UPI");
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountPaise: number } | null>(
@@ -340,6 +345,7 @@ export default function POSClient({
           tableId: selectedTable || undefined,
           customerName: customerName?.trim() || undefined,
           customerPhone: customerPhone?.trim() || undefined,
+          whatsappConsent: !!(customerPhone?.trim() && whatsappConsent),
           items: cart.map((c) => ({
             menuItemId: c.menuItemId,
             name: c.name,
@@ -401,7 +407,28 @@ export default function POSClient({
         cgstPaise: cgst,
         sgstPaise: sgst,
         totalPaise: billedTotal,
+        orderId: j.orderId as string,
+        whatsappStatus: (j.whatsapp as any)?.status || "QUEUED",
       };
+
+      if (customerPhone.trim()) {
+        const initialStatus = (j.whatsapp as any)?.status || "QUEUED";
+        setWhatsappDeliveryStatus(initialStatus);
+        if (j.orderId) {
+          setTimeout(() => {
+            apiFetch(`/api/whatsapp/status?orderId=${j.orderId}`)
+              .then((r) => r.json())
+              .then((st) => {
+                if (st?.status && st.status !== "NONE") {
+                  setWhatsappDeliveryStatus(st.status);
+                }
+              })
+              .catch(() => {});
+          }, 2500);
+        }
+      } else {
+        setWhatsappDeliveryStatus(null);
+      }
 
       setActiveReceipt(receipt);
       setShowReceipt(true);
@@ -422,6 +449,28 @@ export default function POSClient({
       setMsg({ type: "error", text: m });
     } finally {
       setPosting(false);
+    }
+  }
+
+  async function handleRetryWhatsApp() {
+    if (!activeReceipt?.orderId) return;
+    setRetryingWhatsApp(true);
+    try {
+      const res = await apiFetch("/api/whatsapp/retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: activeReceipt.orderId }),
+      });
+      const json = await res.json();
+      if (res.ok && json.result?.status) {
+        setWhatsappDeliveryStatus(json.result.status);
+      } else {
+        setMsg({ type: "error", text: json.error || "WhatsApp retry failed" });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Network error during WhatsApp retry" });
+    } finally {
+      setRetryingWhatsApp(false);
     }
   }
 
@@ -603,6 +652,17 @@ export default function POSClient({
                   placeholder="+91 98765 43210"
                   className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm h-10 font-medium"
                 />
+                <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={whatsappConsent}
+                    onChange={(e) => setWhatsappConsent(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded text-[#16845B] accent-[#16845B] cursor-pointer"
+                  />
+                  <span className="text-[11px] text-[#718078] font-medium">
+                    Send my bill and order updates to my WhatsApp number
+                  </span>
+                </label>
               </div>
             </div>
           </div>
@@ -1261,10 +1321,59 @@ export default function POSClient({
                   </div>
                 </div>
 
+                {/* WhatsApp Auto-Delivery Status Banner */}
+                {activeReceipt.customerPhone && (
+                  <div className="mt-4 p-3.5 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <MessageSquare className="h-4 w-4 text-[#16845B]" />
+                        <span className="text-xs font-bold text-[#172B25]">WhatsApp Delivery</span>
+                      </div>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          whatsappDeliveryStatus === "DELIVERED" || whatsappDeliveryStatus === "READ"
+                            ? "bg-[#16845B] text-white"
+                            : whatsappDeliveryStatus === "SENT"
+                            ? "bg-blue-600 text-white"
+                            : whatsappDeliveryStatus === "FAILED"
+                            ? "bg-red-600 text-white"
+                            : "bg-amber-100 text-amber-900 border border-amber-300"
+                        }`}
+                      >
+                        {whatsappDeliveryStatus || "QUEUED"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-[#718078]">
+                      <span>
+                        Recipient:{" "}
+                        <strong className="text-[#172B25]">
+                          {(() => {
+                            const p = activeReceipt.customerPhone.replace(/\D/g, "");
+                            return p.length >= 10
+                              ? `+91 ${p.slice(-10, -8)}*** **${p.slice(-3)}`
+                              : activeReceipt.customerPhone;
+                          })()}
+                        </strong>
+                      </span>
+                      {whatsappDeliveryStatus === "FAILED" && (
+                        <button
+                          type="button"
+                          onClick={handleRetryWhatsApp}
+                          disabled={retryingWhatsApp}
+                          className="text-xs font-bold text-[#16845B] hover:underline"
+                        >
+                          {retryingWhatsApp ? "Retrying..." : "Retry Delivery →"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 {/* Footer */}
-                <div className="text-center pt-1 text-[10px] text-[#718078]">
+                <div className="text-center pt-3 text-[10px] text-[#718078]">
                   <div>Thank you for dining with us!</div>
-                  <div>Please visit again • FSSAI Registered</div>
+                  <div>Please visit again • Official Tax Invoice</div>
                 </div>
               </div>
             </div>
@@ -1272,50 +1381,24 @@ export default function POSClient({
             {/* Actions Bar */}
             <div className="p-4 border-t border-[#E5EBE7] bg-white flex flex-col sm:flex-row gap-2">
               <button
+                type="button"
                 onClick={() => window.print()}
                 className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Printer className="h-4 w-4" /> Print Thermal Receipt (80mm)
+                <Printer className="h-4 w-4" /> Print Receipt (80mm)
               </button>
-              {activeReceipt.customerPhone ? (
-                <a
-                  href={`https://wa.me/${activeReceipt.customerPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                    `🧾 *Tax Invoice from ${activeReceipt.outletName}*\n` +
-                      `Invoice: ${activeReceipt.invoiceNumber}\n` +
-                      `Order: ${activeReceipt.orderNumber}\n` +
-                      `Date: ${activeReceipt.date}\n` +
-                      `Total: ${formatINR(activeReceipt.totalPaise)} (${activeReceipt.paymentMethod})\n\n` +
-                      `Thank you for dining with us! Please visit again.`
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <MessageSquare className="h-4 w-4" /> WhatsApp
-                </a>
-              ) : (
-                <button
-                  onClick={() => {
-                    const phone = prompt("Enter customer WhatsApp number (+91):");
-                    if (phone) {
-                      window.open(
-                        `https://wa.me/${phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                          `🧾 *Tax Invoice from ${activeReceipt.outletName}*\n` +
-                            `Invoice: ${activeReceipt.invoiceNumber}\n` +
-                            `Order: ${activeReceipt.orderNumber}\n` +
-                            `Total: ${formatINR(activeReceipt.totalPaise)}\n\n` +
-                            `Thank you for dining with us!`
-                        )}`,
-                        "_blank"
-                      );
-                    }
-                  }}
-                  className="rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-white py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <Share2 className="h-4 w-4 text-[#718078]" /> Share
-                </button>
-              )}
+
+              <a
+                href={`/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Share2 className="h-4 w-4 text-[#718078]" /> Download Invoice (PDF)
+              </a>
+
               <button
+                type="button"
                 onClick={() => setShowReceipt(false)}
                 className="rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:bg-[#F8FAF9] py-2.5 px-4 text-xs font-semibold cursor-pointer"
               >

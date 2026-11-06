@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { orderCreateSchema } from "@/lib/validators";
 import { calcOrderTotals } from "@/lib/money";
+import { queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -399,12 +400,23 @@ export async function POST(req: NextRequest) {
     timeout: 20000, // 20s transaction execution timeout
   });
 
+  // Automatically queue & send WhatsApp invoice (Non-blocking background delivery)
+  let whatsappResult: any = null;
+  if (order.customerPhone) {
+    try {
+      whatsappResult = await queueAndSendWhatsAppInvoice(order.id);
+    } catch (wErr) {
+      console.error("[Orders] Auto WhatsApp invoice trigger error:", wErr);
+    }
+  }
+
   return NextResponse.json({
     ok: true,
     orderId: order.id,
     orderNumber: order.orderNumber,
     invoiceNumber,
     totals,
+    whatsapp: whatsappResult,
   });
 }
 
@@ -528,6 +540,18 @@ export async function PATCH(req: NextRequest) {
     maxWait: 15000, // 15s connection queue acquisition timeout
     timeout: 20000, // 20s transaction execution timeout
   });
+
+  if ((nextStatus === "BILLED" || nextStatus === "PAID") && order.customerPhone) {
+    queueAndSendWhatsAppInvoice(order.id).catch((err) => {
+      console.error("[Orders PATCH] Failed to dispatch WhatsApp invoice:", err);
+    });
+  } else if (nextStatus === "CANCELLED") {
+    // If order cancelled, cancel pending WhatsApp deliveries
+    prisma.whatsAppMessageQueue.updateMany({
+      where: { orderId: order.id, status: { in: ["QUEUED", "SENDING"] } },
+      data: { status: "CANCELLED", lastError: "Order cancelled before delivery" },
+    }).catch(() => {});
+  }
 
   return NextResponse.json({ ok: true, order: updated });
 }

@@ -68,6 +68,7 @@ model Tenant {
   printJobs     PrintJob[]
   customerConsents CustomerConsent[]
   whatsAppLogs  WhatsAppDeliveryLog[]
+  whatsAppQueue WhatsAppMessageQueue[]
   invoices      InvoiceRecord[]
   featureUsages FeatureUsage[]
   qrSessions    QrOrderingSession[]
@@ -137,6 +138,8 @@ model RestaurantSetting {
   autoSendWhatsAppInvoice  Boolean @default(false)
   whatsappPhoneNumberId    String?
   whatsappAccessToken      String?
+  whatsappWabaId           String?
+  whatsappTemplateName     String? @default("order_invoice_utility")
   tenant            Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
@@ -275,6 +278,7 @@ model Order {
   invoice     InvoiceRecord?
   printJobs   PrintJob[]
   whatsAppLogs WhatsAppDeliveryLog[]
+  whatsAppQueue WhatsAppMessageQueue[]
   @@unique([tenantId, orderNumber])
   @@index([tenantId, outletId])
   @@index([status])
@@ -914,4 +918,37 @@ model FeatureUsage {
   tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   @@unique([tenantId, featureKey, periodMonth])
   @@index([tenantId])
+}
+
+model WhatsAppMessageQueue {
+  id             String    @id @default(cuid())
+  tenantId       String
+  outletId       String?
+  orderId        String
+  invoiceId      String?
+  invoiceNumber  String?
+  recipientPhone String
+  customerName   String?
+  messageType    String    @default("INVOICE_BILL") // INVOICE_BILL, ORDER_UPDATE, REFUND
+  idempotencyKey String
+  status         String    @default("QUEUED") // QUEUED, SENDING, SENT, DELIVERED, READ, FAILED, OPTED_OUT
+  retryCount     Int       @default(0)
+  maxRetries     Int       @default(3)
+  nextRetryAt    DateTime?
+  pdfUrl         String?
+  messageText    String?
+  wamid          String?   // Meta WhatsApp Message ID
+  lastError      String?
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, idempotencyKey])
+  @@index([tenantId, status])
+  @@index([recipientPhone])
+  @@index([status, nextRetryAt])
 }

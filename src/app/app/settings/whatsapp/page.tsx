@@ -15,9 +15,57 @@ export default function WhatsAppSettingsPage() {
     templateName: "order_invoice_utility",
   });
   const [tokenInput, setTokenInput] = useState("");
+  const [testPhone, setTestPhone] = useState("");
+  const [sendingTest, setSendingTest] = useState(false);
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  async function handleSendTest() {
+    if (!testPhone || testPhone.trim().length < 10) {
+      return setMsg({ type: "error", text: "Please enter a valid 10-digit mobile number for the test." });
+    }
+    setSendingTest(true);
+    setMsg(null);
+    try {
+      const res = await apiFetch("/api/whatsapp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isTest: true, testPhone }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setMsg({ type: "error", text: j.error || "Failed to send test message." });
+      } else {
+        setMsg({ type: "success", text: "✓ Test message sent successfully via WhatsApp Cloud API!" });
+        loadData();
+      }
+    } catch {
+      setMsg({ type: "error", text: "Network error sending test message." });
+    } finally {
+      setSendingTest(false);
+    }
+  }
+
+  async function handleRetryLog(orderId: string) {
+    if (!orderId) return;
+    try {
+      const res = await apiFetch("/api/whatsapp/retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+      const j = await res.json();
+      if (res.ok) {
+        setMsg({ type: "success", text: `Retry dispatched! Current status: ${j.result?.status || "QUEUED"}` });
+        loadData();
+      } else {
+        setMsg({ type: "error", text: j.error || "Retry failed." });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Network error retrying delivery." });
+    }
+  }
 
   async function loadData() {
     try {
@@ -217,6 +265,62 @@ export default function WhatsAppSettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Test Message & Webhook Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Send Test Message */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-3 border-b border-[#E5EBE7]">
+            <CardTitle className="text-sm font-bold text-[#172B25]">Send Test WhatsApp Message</CardTitle>
+            <CardDescription className="text-xs text-[#718078]">
+              Verify your WhatsApp Cloud API credentials before going live
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4 space-y-3">
+            <div>
+              <Label className="text-xs font-semibold text-[#718078]">Test Mobile Number</Label>
+              <Input
+                value={testPhone}
+                onChange={(e) => setTestPhone(e.target.value)}
+                placeholder="+91 98765 43210"
+                className="mt-1 bg-white border-[#E5EBE7] text-xs font-mono"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleSendTest}
+              disabled={sendingTest}
+              className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2 text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5"
+            >
+              {sendingTest ? "Sending Test Ping..." : "Send Test Ping →"}
+            </button>
+          </CardContent>
+        </Card>
+
+        {/* Webhook Configuration Details */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-3 border-b border-[#E5EBE7]">
+            <CardTitle className="text-sm font-bold text-[#172B25]">Meta Webhook Configuration</CardTitle>
+            <CardDescription className="text-xs text-[#718078]">
+              Configure in Meta for Developers dashboard for real-time delivery tracking
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4 space-y-2.5 text-xs text-[#172B25]">
+            <div>
+              <div className="font-semibold text-[#718078] text-[11px]">Callback URL:</div>
+              <div className="font-mono bg-[#F8FAF9] p-2 rounded-lg border border-[#E5EBE7] select-all mt-0.5">
+                https://www.restronexpos.com/api/webhooks/whatsapp
+              </div>
+            </div>
+            <div>
+              <div className="font-semibold text-[#718078] text-[11px]">Verify Token:</div>
+              <div className="font-mono bg-[#F8FAF9] p-2 rounded-lg border border-[#E5EBE7] select-all mt-0.5">
+                restronex_whatsapp_verify_token_2026
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* WhatsApp Delivery Ledger */}
       <Card className="bg-white border-[#E5EBE7] shadow-xs">
         <CardHeader className="pb-3 border-b border-[#E5EBE7]">
@@ -232,6 +336,7 @@ export default function WhatsAppSettingsPage() {
                   <th>Template</th>
                   <th>Delivery Status</th>
                   <th>Meta Message ID</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E5EBE7]/60">
@@ -243,18 +348,37 @@ export default function WhatsAppSettingsPage() {
                     <td className="font-bold text-[#172B25]">{l.recipientPhone}</td>
                     <td className="text-[#718078] font-mono">{l.templateName}</td>
                     <td>
-                      <span className="rounded-full bg-[#E8F5EE] border border-[#16845B]/30 px-2 py-0.5 font-bold text-[#16845B] text-[10px]">
+                      <span
+                        className={`rounded-full border px-2 py-0.5 font-bold text-[10px] ${
+                          l.status === "DELIVERED" || l.status === "READ"
+                            ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+                            : l.status === "FAILED"
+                            ? "bg-red-50 border-red-200 text-red-700"
+                            : "bg-blue-50 border-blue-200 text-blue-700"
+                        }`}
+                      >
                         {l.status}
                       </span>
                     </td>
                     <td className="font-mono text-[#718078] text-[11px]">
-                      {l.messageId?.slice(0, 16) || "Direct Web Link"}
+                      {l.messageId?.slice(0, 16) || "Direct Cloud Link"}
+                    </td>
+                    <td>
+                      {l.status === "FAILED" && l.orderId && (
+                        <button
+                          type="button"
+                          onClick={() => handleRetryLog(l.orderId)}
+                          className="text-[#16845B] hover:underline font-bold text-[11px]"
+                        >
+                          Retry
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="py-6 text-center text-[#718078]">
+                    <td colSpan={6} className="py-6 text-center text-[#718078]">
                       No WhatsApp delivery attempts recorded yet. Place and settle a bill with customer phone.
                     </td>
                   </tr>

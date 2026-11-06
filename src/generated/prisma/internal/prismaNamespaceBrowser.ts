@@ -101,7 +101,8 @@ export const ModelName = {
   CustomerConsent: 'CustomerConsent',
   WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
   InvoiceRecord: 'InvoiceRecord',
-  FeatureUsage: 'FeatureUsage'
+  FeatureUsage: 'FeatureUsage',
+  WhatsAppMessageQueue: 'WhatsAppMessageQueue'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -206,7 +207,9 @@ export const RestaurantSettingScalarFieldEnum = {
   autoPrintBill: 'autoPrintBill',
   autoSendWhatsAppInvoice: 'autoSendWhatsAppInvoice',
   whatsappPhoneNumberId: 'whatsappPhoneNumberId',
-  whatsappAccessToken: 'whatsappAccessToken'
+  whatsappAccessToken: 'whatsappAccessToken',
+  whatsappWabaId: 'whatsappWabaId',
+  whatsappTemplateName: 'whatsappTemplateName'
 } as const
 
 export type RestaurantSettingScalarFieldEnum = (typeof RestaurantSettingScalarFieldEnum)[keyof typeof RestaurantSettingScalarFieldEnum]
@@ -936,6 +939,35 @@ export const FeatureUsageScalarFieldEnum = {
 } as const
 
 export type FeatureUsageScalarFieldEnum = (typeof FeatureUsageScalarFieldEnum)[keyof typeof FeatureUsageScalarFieldEnum]
+
+
+export const WhatsAppMessageQueueScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  invoiceId: 'invoiceId',
+  invoiceNumber: 'invoiceNumber',
+  recipientPhone: 'recipientPhone',
+  customerName: 'customerName',
+  messageType: 'messageType',
+  idempotencyKey: 'idempotencyKey',
+  status: 'status',
+  retryCount: 'retryCount',
+  maxRetries: 'maxRetries',
+  nextRetryAt: 'nextRetryAt',
+  pdfUrl: 'pdfUrl',
+  messageText: 'messageText',
+  wamid: 'wamid',
+  lastError: 'lastError',
+  sentAt: 'sentAt',
+  deliveredAt: 'deliveredAt',
+  readAt: 'readAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WhatsAppMessageQueueScalarFieldEnum = (typeof WhatsAppMessageQueueScalarFieldEnum)[keyof typeof WhatsAppMessageQueueScalarFieldEnum]
 
 
 export const SortOrder = {

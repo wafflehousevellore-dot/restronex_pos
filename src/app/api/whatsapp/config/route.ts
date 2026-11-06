@@ -47,11 +47,15 @@ export async function POST(req: NextRequest) {
       autoSendWhatsAppInvoice: !!enabled,
       whatsappPhoneNumberId: phoneNumberId?.trim() || null,
       whatsappAccessToken: accessToken?.trim() || null,
+      whatsappWabaId: wabaId?.trim() || null,
+      whatsappTemplateName: templateName?.trim() || "order_invoice_utility",
     },
     update: {
       autoSendWhatsAppInvoice: !!enabled,
       ...(phoneNumberId !== undefined ? { whatsappPhoneNumberId: phoneNumberId.trim() || null } : {}),
       ...(accessToken ? { whatsappAccessToken: accessToken.trim() } : {}),
+      ...(wabaId !== undefined ? { whatsappWabaId: wabaId.trim() || null } : {}),
+      ...(templateName !== undefined ? { whatsappTemplateName: templateName.trim() || "order_invoice_utility" } : {}),
     },
   });
 

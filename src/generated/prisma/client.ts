@@ -296,3 +296,8 @@ export type InvoiceRecord = Prisma.InvoiceRecordModel
  * 
  */
 export type FeatureUsage = Prisma.FeatureUsageModel
+/**
+ * Model WhatsAppMessageQueue
+ * 
+ */
+export type WhatsAppMessageQueue = Prisma.WhatsAppMessageQueueModel

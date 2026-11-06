@@ -36,3 +36,4 @@ export async function POST(req: NextRequest) {
   const result = await processSubscriptionRenewalReminders();
   return NextResponse.json({ ok: true, result });
 }
+
