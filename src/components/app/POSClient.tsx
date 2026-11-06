@@ -1400,6 +1400,28 @@ export default function POSClient({
                 <Printer className="h-4 w-4" /> Print Receipt (80mm)
               </button>
 
+              {activeReceipt.customerPhone && (
+                <a
+                  href={`https://api.whatsapp.com/send?phone=${encodeURIComponent(
+                    activeReceipt.customerPhone.replace(/\D/g, "").length === 10
+                      ? `91${activeReceipt.customerPhone.replace(/\D/g, "")}`
+                      : activeReceipt.customerPhone.replace(/\D/g, "")
+                  )}&text=${encodeURIComponent(
+                    `🍽️ *${activeReceipt.outletName}* - TAX INVOICE\n` +
+                    `Bill No: ${activeReceipt.invoiceNumber}\n` +
+                    `Total: ${formatINR(activeReceipt.totalPaise)}\n` +
+                    `Payment: ${activeReceipt.paymentMethod} (PAID)\n\n` +
+                    `📥 Download Official PDF Tax Invoice:\n${typeof window !== "undefined" ? window.location.origin : "https://www.restronexpos.com"}/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf\n\n` +
+                    `Thank you for dining with us! ❤️\nPowered by RestroNex`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-[#25D366] hover:bg-[#1DA851] text-white py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <MessageSquare className="h-4 w-4" /> Send WhatsApp
+                </a>
+              )}
+
               <a
                 href={`/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf`}
                 target="_blank"
