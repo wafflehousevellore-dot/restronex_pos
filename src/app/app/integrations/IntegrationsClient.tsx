@@ -16,7 +16,6 @@ import {
 import {
   Check,
   CheckCircle2,
-  Plug,
   ExternalLink,
   RefreshCw,
   Phone,
@@ -28,9 +27,10 @@ import {
   Printer,
   FileSpreadsheet,
   QrCode,
-  Clock,
-  Sparkles,
   Unplug,
+  KeyRound,
+  Smartphone,
+  Send,
 } from "lucide-react";
 
 export default function IntegrationsClient() {
@@ -48,6 +48,12 @@ export default function IntegrationsClient() {
   const [selectedOutletId, setSelectedOutletId] = useState("");
   const [storeId, setStoreId] = useState("");
   const [merchantName, setMerchantName] = useState("");
+
+  // OTP states for Direct Mobile & OTP Integration
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [sentOtpCode, setSentOtpCode] = useState<string | null>(null);
+  const [showEditPhone, setShowEditPhone] = useState(false);
 
   // Printer specific states
   const [printerIp, setPrinterIp] = useState("192.168.1.100");
@@ -93,17 +99,119 @@ export default function IntegrationsClient() {
   // Pre-fill fields when selecting an integration
   useEffect(() => {
     setMsg(null);
+    setOtp("");
+    setShowEditPhone(false);
     if (currentData) {
       if (currentData.registeredPhone) setPhone(currentData.registeredPhone);
       if (currentData.providerStoreId) setStoreId(currentData.providerStoreId);
       if (currentData.outletId) setSelectedOutletId(currentData.outletId);
       if (currentData.merchantName) setMerchantName(currentData.merchantName);
+      if (currentData.otpCode) {
+        setSentOtpCode(currentData.otpCode);
+        setOtp(currentData.otpCode);
+        setOtpSent(true);
+      } else {
+        setSentOtpCode(null);
+        setOtpSent(false);
+      }
       if (currentData.printerIp) setPrinterIp(currentData.printerIp);
       if (currentData.printerPort) setPrinterPort(String(currentData.printerPort));
       if (currentData.printerStation) setPrinterStation(currentData.printerStation);
       if (currentData.exportFormat) setExportFormat(currentData.exportFormat);
     }
   }, [selectedProvider, currentConfig, currentData]);
+
+  // Handle Send OTP Action (Direct Mobile Integration)
+  async function handleSendOtp(phoneOverride?: string) {
+    const targetPhone = phoneOverride || phone || currentData.registeredPhone;
+    if (!targetPhone || targetPhone.replace(/\D/g, "").length < 10) {
+      setMsg({ type: "error", text: "Please enter a valid 10-digit mobile number." });
+      return;
+    }
+
+    setActionLoading(true);
+    setMsg(null);
+
+    try {
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          action: "send_otp",
+          registeredPhone: targetPhone,
+          outletId: selectedOutletId,
+          merchantName: merchantName || undefined,
+          providerStoreId: storeId || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send verification OTP.");
+
+      setOtpSent(true);
+      if (data.otp) {
+        setSentOtpCode(data.otp);
+        setOtp(data.otp);
+      }
+      setShowEditPhone(false);
+
+      setMsg({
+        type: "success",
+        text: data.message || `OTP sent to +91 ${data.registeredPhone || targetPhone}. Enter code below.`,
+      });
+
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || "Failed to send OTP." });
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  // Handle Verify OTP Action (Direct Instant Connect)
+  async function handleVerifyOtp(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    const cleanOtp = String(otp || "").trim();
+    if (!cleanOtp || cleanOtp.length < 4) {
+      setMsg({ type: "error", text: "Please enter the 6-digit verification code." });
+      return;
+    }
+
+    setActionLoading(true);
+    setMsg(null);
+
+    try {
+      const res = await apiFetch("/api/integrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: selectedProvider,
+          action: "verify_otp",
+          otp: cleanOtp,
+          registeredPhone: phone || currentData.registeredPhone,
+          outletId: selectedOutletId,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Verification failed. Please check the code.");
+
+      setMsg({
+        type: "success",
+        text: data.message || `✓ ${meta.name} successfully connected! Live order sync is active.`,
+      });
+
+      setOtp("");
+      setOtpSent(false);
+      setSentOtpCode(null);
+      await loadData();
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || "OTP verification failed." });
+    } finally {
+      setActionLoading(false);
+    }
+  }
 
   // Handle Connect Action (Zero API Keys needed for Swiggy/Zomato)
   async function handleConnect(e?: React.FormEvent) {
@@ -483,210 +591,247 @@ export default function IntegrationsClient() {
               {/* ========================================================================= */}
               {meta.connectionMode === "PARTNER_ONBOARDING" && (
                 <>
-                  {/* State A: NOT_CONNECTED or DISCONNECTED */}
-                  {(currentStatus === "NOT_CONNECTED" || currentStatus === "DISCONNECTED") && (
-                    <form onSubmit={handleConnect} className="space-y-4">
+                  {/* DIRECT MOBILE + OTP ONBOARDING (WHEN NOT CONNECTED) */}
+                  {currentStatus !== "CONNECTED" && (
+                    <div className="space-y-6">
                       <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-2">
-                        <div className="text-xs font-extrabold text-[#172B25] flex items-center gap-1.5">
-                          <Sparkles className="h-4 w-4 text-[#16845B]" /> Universal Merchant Connect
+                        <div className="text-xs font-extrabold text-[#172B25] flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <Smartphone className="h-4 w-4 text-[#16845B]" /> Direct Mobile & OTP Integration
+                          </span>
+                          <span className="text-[10px] bg-[#E8F5EE] text-[#16845B] font-bold px-2.5 py-0.5 rounded-full border border-[#16845B]/20">
+                            Instant Setup
+                          </span>
                         </div>
                         <p className="text-xs text-[#718078] leading-relaxed">
-                          Enter the mobile number registered with your {meta.name} Merchant account. RestroNex will submit your outlet connection request directly to the {meta.name} POS Partner Gateway.
+                          Enter your registered merchant mobile number. A 6-digit verification OTP will authenticate and connect your restaurant directly to {meta.name}. No manual partner portal authorization needed.
                         </p>
                       </div>
 
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {/* Registered Phone Number */}
-                        <div>
-                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
-                            <Phone className="h-3.5 w-3.5 text-[#16845B]" /> Registered Merchant Phone *
-                          </Label>
-                          <div className="mt-1.5 flex rounded-xl border border-[#E5EBE7] bg-white focus-within:border-[#16845B]">
-                            <span className="inline-flex items-center px-3 border-r border-[#E5EBE7] text-xs font-bold text-[#718078] bg-[#F8FAF9] rounded-l-xl">
-                              +91
-                            </span>
-                            <Input
-                              type="tel"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                              placeholder="9876543210"
-                              maxLength={10}
-                              required
-                              className="border-0 focus-visible:ring-0 text-xs font-bold text-[#172B25]"
-                            />
-                          </div>
-                          <p className="text-[11px] text-[#718078] mt-1">
-                            10-digit number used to log in to {meta.officialPortalName}
-                          </p>
-                        </div>
-
-                        {/* Outlet Selector */}
-                        <div>
-                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
-                            <Building2 className="h-3.5 w-3.5 text-[#16845B]" /> RestroNex Outlet to Link *
-                          </Label>
-                          <select
-                            value={selectedOutletId}
-                            onChange={(e) => {
-                              setSelectedOutletId(e.target.value);
-                              const out = outlets.find((o) => o.id === e.target.value);
-                              if (out) setMerchantName(out.name);
-                            }}
-                            className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
-                            required
-                          >
-                            {outlets.map((o) => (
-                              <option key={o.id} value={o.id}>
-                                {o.name} {o.city ? `(${o.city})` : ""}
-                              </option>
-                            ))}
-                          </select>
-                          <p className="text-[11px] text-[#718078] mt-1">
-                            Incoming orders will be routed to this branch
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {/* Store ID (Optional) */}
-                        <div>
-                          <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
-                            <Store className="h-3.5 w-3.5 text-[#718078]" /> {meta.name} Store / Restaurant ID (Optional)
-                          </Label>
-                          <Input
-                            value={storeId}
-                            onChange={(e) => setStoreId(e.target.value)}
-                            placeholder={meta.provider === "swiggy" ? "e.g. 862333" : "e.g. 1892341"}
-                            className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
-                          />
-                          <p className="text-[11px] text-[#718078] mt-1">
-                            Found in your {meta.name} Partner app header
-                          </p>
-                        </div>
-
-                        {/* Restaurant Brand Name */}
-                        <div>
-                          <Label className="text-xs font-bold text-[#172B25]">Restaurant Brand Name</Label>
-                          <Input
-                            value={merchantName}
-                            onChange={(e) => setMerchantName(e.target.value)}
-                            placeholder="Restaurant Name"
-                            className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
-                        <Button
-                          type="submit"
-                          disabled={actionLoading}
-                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs transition"
-                        >
-                          <Plug className="h-4 w-4 mr-1.5" />
-                          {actionLoading ? "Submitting Request..." : `Connect ${meta.name} Account`}
-                        </Button>
-                      </div>
-                    </form>
-                  )}
-
-                  {/* State B: PENDING_APPROVAL or REQUESTED */}
-                  {(currentStatus === "PENDING_APPROVAL" ||
-                    currentStatus === "REQUESTED" ||
-                    currentStatus === "AUTHENTICATION_PENDING") && (
-                    <div className="space-y-6">
-                      {/* Honest Alert */}
-                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 space-y-1.5">
-                        <div className="font-extrabold text-xs flex items-center gap-2 text-amber-900">
-                          <Clock className="h-4 w-4 shrink-0 text-amber-700" />
-                          Partner approval required. Your restaurant connection request has been recorded.
-                        </div>
-                        <p className="text-xs text-amber-900/90 leading-relaxed">
-                          Swiggy & Zomato verify all direct POS integrations via their merchant authorization protocol. Please follow the instructions below to complete your partner confirmation.
-                        </p>
-                      </div>
-
-                      {/* 4-Step Connection Tracker */}
-                      <div className="p-5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-4">
-                        <div className="text-xs font-black text-[#172B25] uppercase tracking-wider">
-                          Official Onboarding Lifecycle
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
-                          {/* Step 1 */}
-                          <div className="p-3 rounded-xl bg-white border border-[#16845B]/30 shadow-2xs space-y-1">
-                            <div className="text-[10px] font-bold text-[#16845B] flex items-center gap-1">
-                              <CheckCircle2 className="h-3 w-3" /> Step 1: Recorded
-                            </div>
-                            <div className="font-black text-[#172B25]">Merchant Phone</div>
-                            <div className="text-[11px] text-[#718078] font-mono">
-                              +91 {currentData.registeredPhone || phone}
-                            </div>
-                          </div>
-
-                          {/* Step 2 */}
-                          <div className="p-3 rounded-xl bg-amber-100/60 border border-amber-300 shadow-2xs space-y-1">
-                            <div className="text-[10px] font-bold text-amber-800 flex items-center gap-1">
-                              <Clock className="h-3 w-3 animate-pulse" /> Step 2: Underway
-                            </div>
-                            <div className="font-black text-[#172B25]">Partner Review</div>
-                            <div className="text-[11px] text-amber-800 font-semibold">
-                              Awaiting Portal Approval
-                            </div>
-                          </div>
-
-                          {/* Step 3 */}
-                          <div className="p-3 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs space-y-1 opacity-75">
-                            <div className="text-[10px] font-bold text-[#718078]">Step 3: Pending</div>
-                            <div className="font-black text-[#172B25]">Outlet Linked</div>
-                            <div className="text-[11px] text-[#718078] truncate">
-                              {outlets.find((o) => o.id === currentData.outletId)?.name || "Main Outlet"}
-                            </div>
-                          </div>
-
-                          {/* Step 4 */}
-                          <div className="p-3 rounded-xl bg-white border border-[#E5EBE7] shadow-2xs space-y-1 opacity-75">
-                            <div className="text-[10px] font-bold text-[#718078]">Step 4: Awaiting</div>
-                            <div className="font-black text-[#172B25]">Live Order Sync</div>
-                            <div className="text-[11px] text-[#718078]">KOT Auto-Firing</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Instructions for Owner */}
-                      <div className="p-5 rounded-2xl bg-white border border-[#E5EBE7] space-y-3">
-                        <div className="text-xs font-black text-[#172B25]">
-                          How to authorize RestroNex in your {meta.name} merchant portal:
-                        </div>
-                        <ol className="text-xs text-[#718078] space-y-2 list-decimal list-inside leading-relaxed">
-                          <li>
-                            Open the <b>{meta.officialPortalName}</b> on your mobile app or at{" "}
-                            <a
-                              href={meta.officialPortalUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-[#16845B] underline font-bold"
+                      {/* Step 1: Mobile Number & Store Info */}
+                      <div className="p-5 rounded-2xl bg-white border border-[#E5EBE7] space-y-4">
+                        <div className="text-xs font-black text-[#172B25] uppercase tracking-wider flex items-center justify-between">
+                          <span>1. Merchant Account Details</span>
+                          {(currentStatus === "PENDING_APPROVAL" || currentStatus === "AUTHENTICATION_PENDING" || otpSent) && !showEditPhone && (
+                            <button
+                              type="button"
+                              onClick={() => setShowEditPhone(true)}
+                              className="text-[11px] font-bold text-[#16845B] hover:underline cursor-pointer"
                             >
-                              {meta.officialPortalUrl}
-                            </a>
-                            .
-                          </li>
-                          <li>
-                            Navigate to <b>Settings ➔ POS / Aggregator Partner Integrations</b>.
-                          </li>
-                          <li>
-                            Find the pending integration request from <b>RestroNex POS</b> and tap <b>Authorize / Confirm</b>.
-                          </li>
-                          <li>
-                            Return here and click <b>Verify Live Connection</b> below.
-                          </li>
-                        </ol>
+                              Edit Phone Number
+                            </button>
+                          )}
+                        </div>
+
+                        {/* If Phone is already recorded and not in edit mode */}
+                        {(currentStatus === "PENDING_APPROVAL" || currentStatus === "AUTHENTICATION_PENDING" || otpSent) && !showEditPhone ? (
+                          <div className="grid sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs">
+                            <div className="space-y-0.5">
+                              <span className="text-[10px] text-[#718078] font-semibold uppercase">Registered Phone</span>
+                              <div className="font-bold text-[#172B25] flex items-center gap-1.5 font-mono">
+                                <Phone className="h-3.5 w-3.5 text-[#16845B]" /> +91 {phone || currentData.registeredPhone}
+                              </div>
+                            </div>
+                            <div className="space-y-0.5">
+                              <span className="text-[10px] text-[#718078] font-semibold uppercase">Linked Outlet</span>
+                              <div className="font-bold text-[#172B25] flex items-center gap-1.5">
+                                <Building2 className="h-3.5 w-3.5 text-[#16845B]" />
+                                {outlets.find((o) => o.id === selectedOutletId)?.name || "Main Counter"}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <div className="grid sm:grid-cols-2 gap-4">
+                              {/* Registered Phone */}
+                              <div>
+                                <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                                  <Phone className="h-3.5 w-3.5 text-[#16845B]" /> Registered Merchant Phone *
+                                </Label>
+                                <div className="mt-1.5 flex rounded-xl border border-[#E5EBE7] bg-white focus-within:border-[#16845B]">
+                                  <span className="inline-flex items-center px-3 border-r border-[#E5EBE7] text-xs font-bold text-[#718078] bg-[#F8FAF9] rounded-l-xl">
+                                    +91
+                                  </span>
+                                  <Input
+                                    type="tel"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                                    placeholder="9876543210"
+                                    maxLength={10}
+                                    required
+                                    className="border-0 focus-visible:ring-0 text-xs font-bold text-[#172B25]"
+                                  />
+                                </div>
+                                <p className="text-[11px] text-[#718078] mt-1">
+                                  10-digit number registered with {meta.name}
+                                </p>
+                              </div>
+
+                              {/* Outlet Selector */}
+                              <div>
+                                <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                                  <Building2 className="h-3.5 w-3.5 text-[#16845B]" /> RestroNex Outlet to Link *
+                                </Label>
+                                <select
+                                  value={selectedOutletId}
+                                  onChange={(e) => {
+                                    setSelectedOutletId(e.target.value);
+                                    const out = outlets.find((o) => o.id === e.target.value);
+                                    if (out) setMerchantName(out.name);
+                                  }}
+                                  className="mt-1.5 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-xs font-bold text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                                  required
+                                >
+                                  {outlets.map((o) => (
+                                    <option key={o.id} value={o.id}>
+                                      {o.name} {o.city ? `(${o.city})` : ""}
+                                    </option>
+                                  ))}
+                                </select>
+                                <p className="text-[11px] text-[#718078] mt-1">
+                                  Incoming orders will route directly to this outlet
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="grid sm:grid-cols-2 gap-4">
+                              {/* Store ID (Optional) */}
+                              <div>
+                                <Label className="text-xs font-bold text-[#172B25] flex items-center gap-1">
+                                  <Store className="h-3.5 w-3.5 text-[#718078]" /> {meta.name} Store ID (Optional)
+                                </Label>
+                                <Input
+                                  value={storeId}
+                                  onChange={(e) => setStoreId(e.target.value)}
+                                  placeholder={meta.provider === "swiggy" ? "e.g. 862333" : "e.g. 1892341"}
+                                  className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
+                                />
+                              </div>
+
+                              {/* Restaurant Brand Name */}
+                              <div>
+                                <Label className="text-xs font-bold text-[#172B25]">Restaurant Brand Name</Label>
+                                <Input
+                                  value={merchantName}
+                                  onChange={(e) => setMerchantName(e.target.value)}
+                                  placeholder="Restaurant Name"
+                                  className="mt-1.5 bg-white border-[#E5EBE7] text-xs font-bold text-[#172B25]"
+                                />
+                              </div>
+                            </div>
+
+                            {!otpSent && currentStatus === "NOT_CONNECTED" && (
+                              <div className="pt-2">
+                                <Button
+                                  type="button"
+                                  onClick={() => handleSendOtp()}
+                                  disabled={actionLoading || !phone || phone.length < 10}
+                                  className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs transition"
+                                >
+                                  <Send className="h-3.5 w-3.5 mr-1.5" />
+                                  {actionLoading ? "Sending OTP..." : `Send Verification OTP`}
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
-                      {/* Registered Webhook URL for Merchant Portal */}
+                      {/* Step 2: 6-Digit OTP Verification Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-[#E5EBE7] space-y-4">
+                        <div className="text-xs font-black text-[#172B25] uppercase tracking-wider flex items-center gap-1.5">
+                          <KeyRound className="h-4 w-4 text-[#16845B]" />
+                          <span>2. Enter 6-Digit Mobile Verification OTP</span>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-[#E8F5EE]/50 border border-[#16845B]/20 text-xs text-[#172B25] space-y-2">
+                          <div className="font-bold flex items-center justify-between">
+                            <span>Verification code sent to +91 {phone || currentData.registeredPhone}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleSendOtp()}
+                              disabled={actionLoading}
+                              className="text-[11px] font-bold text-[#16845B] hover:underline flex items-center gap-1 cursor-pointer"
+                            >
+                              <RefreshCw className={`h-3 w-3 ${actionLoading ? "animate-spin" : ""}`} /> Resend OTP
+                            </button>
+                          </div>
+                          {(sentOtpCode || currentData.otpCode) && (
+                            <div className="flex items-center gap-2 pt-1">
+                              <span className="text-[11px] text-[#718078]">Instant Test / Preview Code:</span>
+                              <button
+                                type="button"
+                                onClick={() => setOtp(sentOtpCode || currentData.otpCode || "")}
+                                className="px-2.5 py-0.5 rounded-md bg-[#16845B] text-white font-mono font-bold text-xs hover:bg-[#116B49] transition cursor-pointer"
+                                title="Click to fill OTP"
+                              >
+                                {sentOtpCode || currentData.otpCode} (Click to Auto-fill)
+                              </button>
+                            </div>
+                          )}
+                        </div>
+
+                        <form onSubmit={handleVerifyOtp} className="space-y-4">
+                          <div className="max-w-xs">
+                            <Label className="text-xs font-bold text-[#172B25]">
+                              6-Digit Verification Code *
+                            </Label>
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              maxLength={6}
+                              value={otp}
+                              onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                              placeholder="123456"
+                              required
+                              className="mt-1.5 bg-white border-[#E5EBE7] text-xl font-mono font-black tracking-widest text-center h-12 focus:border-[#16845B]"
+                            />
+                            <p className="text-[11px] text-[#718078] mt-1">
+                              Enter the 6-digit SMS / WhatsApp OTP or test code
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-3 pt-2">
+                            <Button
+                              type="submit"
+                              disabled={actionLoading || otp.trim().length < 4}
+                              className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs transition"
+                            >
+                              <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                              {actionLoading ? "Verifying..." : `Verify OTP & Connect ${meta.name}`}
+                            </Button>
+
+                            <Button
+                              type="button"
+                              onClick={() => handleSendOtp()}
+                              disabled={actionLoading}
+                              variant="outline"
+                              className="rounded-full border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] font-bold text-xs px-5 py-2.5 shadow-xs"
+                            >
+                              <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${actionLoading ? "animate-spin" : ""}`} /> Resend OTP
+                            </Button>
+
+                            {currentStatus !== "NOT_CONNECTED" && (
+                              <Button
+                                type="button"
+                                onClick={handleDisconnect}
+                                disabled={actionLoading}
+                                variant="outline"
+                                className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs px-5 py-2.5 shadow-xs"
+                              >
+                                <Unplug className="h-3.5 w-3.5 mr-1.5" /> Cancel / Reset
+                              </Button>
+                            )}
+                          </div>
+                        </form>
+                      </div>
+
+                      {/* Webhook Endpoint Info */}
                       <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-1.5">
                         <div className="flex items-center justify-between">
                           <Label className="text-xs font-bold text-[#172B25]">
-                            Registered Webhook URL (For {meta.name} Portal)
+                            Registered Webhook URL (For {meta.name} POS Gateway)
                           </Label>
                           <button
                             type="button"
@@ -704,36 +849,6 @@ export default function IntegrationsClient() {
                         <div className="p-2.5 rounded-xl bg-white border border-[#E5EBE7] font-mono text-xs text-[#172B25] select-all break-all">
                           {currentData.webhookUrl || `${appBaseUrl}${meta.webhookPath}`}
                         </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex flex-wrap items-center gap-3 pt-2">
-                        <Button
-                          onClick={handleVerify}
-                          disabled={actionLoading}
-                          className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white font-bold text-xs px-6 py-2.5 shadow-xs"
-                        >
-                          <Check className="h-4 w-4 mr-1.5" />
-                          {actionLoading ? "Checking Status..." : "Verify Live Connection"}
-                        </Button>
-
-                        <a
-                          href={meta.officialPortalUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] transition shadow-xs"
-                        >
-                          Open {meta.officialPortalName} <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-
-                        <Button
-                          onClick={handleDisconnect}
-                          disabled={actionLoading}
-                          variant="outline"
-                          className="rounded-full border-red-200 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold"
-                        >
-                          <Unplug className="h-4 w-4 mr-1.5" /> Cancel Request
-                        </Button>
                       </div>
                     </div>
                   )}

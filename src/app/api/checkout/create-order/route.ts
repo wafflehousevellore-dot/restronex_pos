@@ -5,14 +5,14 @@ import { calcCheckoutTotals } from "@/lib/checkout";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay";
 import { ensureSeedPlans } from "@/lib/seed";
 
-export async function POST(req: NextRequest){
+export async function POST(req: NextRequest) {
   const { userId } = await getSession();
-  if (!userId) return NextResponse.json({ error:"Sign in required — preserve plan and retry"},{status:401});
+  if (!userId) return NextResponse.json({ error: "Sign in required — preserve plan and retry" }, { status: 401 });
   await ensureSeedPlans();
   let body: any;
-  try{ body = await req.json(); }catch{ return NextResponse.json({error:"Invalid JSON"},{status:400}); }
-  const { planSlug, billingCycle, outletCount, coupon } = body as { planSlug:string; billingCycle:"MONTHLY"|"ANNUAL"; outletCount?:number; coupon?:string };
-  if (!planSlug || !billingCycle) return NextResponse.json({error:"planSlug and billingCycle required"},{status:400});
+  try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
+  const { planSlug, billingCycle, outletCount, coupon } = body as { planSlug: string; billingCycle: "MONTHLY" | "ANNUAL"; outletCount?: number; coupon?: string };
+  if (!planSlug || !billingCycle) return NextResponse.json({ error: "planSlug and billingCycle required" }, { status: 400 });
   let totals;
   try {
     const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
@@ -40,20 +40,20 @@ export async function POST(req: NextRequest){
       discountPaise = Math.round(baseTotals.subtotal * 0.2);
     }
     totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: discountPaise, fixedTotalPaise });
-  }catch(e:any){ return NextResponse.json({error:e.message},{status:400}); }
+  } catch (e: any) { return NextResponse.json({ error: e.message }, { status: 400 }); }
 
   // Do not multiply outletCount for DB plan's outlet limit? we already validated in totals
-  const plan = await prisma.subscriptionPlan.findUnique({ where:{ slug: planSlug }});
-  if (!plan) return NextResponse.json({error:"Plan not found in DB"},{status:404});
+  const plan = await prisma.subscriptionPlan.findUnique({ where: { slug: planSlug } });
+  if (!plan) return NextResponse.json({ error: "Plan not found in DB" }, { status: 404 });
 
   // Enforce outlet limit server-side
-  if ((outletCount||1) > plan.maxOutlets) {
-    return NextResponse.json({error:`Outlet count ${outletCount} exceeds plan limit ${plan.maxOutlets} for ${plan.name}. Choose Growth/Scale or reduce outlets.`},{status:400});
+  if ((outletCount || 1) > plan.maxOutlets) {
+    return NextResponse.json({ error: `Outlet count ${outletCount} exceeds plan limit ${plan.maxOutlets} for ${plan.name}. Choose Growth/Scale or reduce outlets.` }, { status: 400 });
   }
 
   const tenantId = await resolveTenantId(userId);
-  const receipt = `rcpt_${userId.slice(0,8)}_${planSlug}_${Date.now().toString(36)}`;
-  
+  const receipt = `rcpt_${userId.slice(0, 8)}_${planSlug}_${Date.now().toString(36)}`;
+
   if (!isRazorpayConfigured()) {
     return NextResponse.json(
       { error: "Razorpay payment gateway credentials are not configured on the server. Please contact system administrator." },
@@ -88,16 +88,16 @@ export async function POST(req: NextRequest){
 
   // Persist pending payment record if tenant exists
   if (tenantId) {
-    const existingSub = await prisma.subscription.findFirst({ where:{ tenantId, planId: plan.id, status:{ in:["PENDING","TRIALING","ACTIVE"] }}});
+    const existingSub = await prisma.subscription.findFirst({ where: { tenantId, planId: plan.id, status: { in: ["PENDING", "TRIALING", "ACTIVE"] } } });
     const subId = existingSub?.id || (await prisma.subscription.create({
-      data:{
-        tenantId, planId: plan.id, status:"PENDING", billingCycle,
+      data: {
+        tenantId, planId: plan.id, status: "PENDING", billingCycle,
         currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now()+ (billingCycle==="ANNUAL" ? 365:30)*24*60*60*1000),
+        currentPeriodEnd: new Date(Date.now() + (billingCycle === "ANNUAL" ? 365 : 30) * 24 * 60 * 60 * 1000),
       }
     })).id;
     await prisma.subscriptionPayment.create({
-      data:{
+      data: {
         subscriptionId: subId,
         amountPaise: totals.totalPaise,
         status: "PENDING",

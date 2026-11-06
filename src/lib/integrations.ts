@@ -74,6 +74,11 @@ export interface IntegrationConfigData {
   webhookSecret?: string;
   // Encrypted provider token if issued via OAuth
   encryptedToken?: string;
+  // OTP Verification Fields
+  otpCode?: string;
+  otpExpiresAt?: string;
+  otpSentAt?: string;
+  partnerToken?: string;
 }
 
 export interface IntegrationMeta {
@@ -237,10 +242,10 @@ export function statusLabel(s: IntegrationStatus | string): {
       };
     case "AUTHENTICATION_PENDING":
       return {
-        text: "Auth Confirmation Pending",
+        text: "OTP Verification Required",
         color: "#D97706",
         badgeClass: "bg-amber-50 text-amber-900 border-amber-300",
-        description: "Please confirm POS partner authorization in your provider merchant app.",
+        description: "Enter the OTP sent to your registered mobile number to complete direct integration.",
       };
     case "OUTLET_MAPPING_PENDING":
       return {
