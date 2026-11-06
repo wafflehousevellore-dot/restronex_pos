@@ -427,16 +427,20 @@ export default function POSClient({
         const initialStatus = (j.whatsapp as any)?.status || "QUEUED";
         setWhatsappDeliveryStatus(initialStatus);
         if (j.orderId) {
-          setTimeout(() => {
+          const pollInterval = setInterval(() => {
             apiFetch(`/api/whatsapp/status?orderId=${j.orderId}`)
               .then((r) => r.json())
               .then((st) => {
                 if (st?.status && st.status !== "NONE") {
                   setWhatsappDeliveryStatus(st.status);
+                  if (st.status === "SENT" || st.status === "DELIVERED" || st.status === "FAILED") {
+                    clearInterval(pollInterval);
+                  }
                 }
               })
               .catch(() => {});
-          }, 2500);
+          }, 1200);
+          setTimeout(() => clearInterval(pollInterval), 10000);
         }
       } else {
         setWhatsappDeliveryStatus(null);
@@ -444,6 +448,39 @@ export default function POSClient({
 
       setActiveReceipt(receipt);
       setShowReceipt(true);
+
+      // 1. AUTOMATIC PRINT: Automatically trigger printer when closing/finalizing bill
+      setTimeout(() => {
+        try {
+          window.print();
+        } catch {}
+      }, 350);
+
+      // 2. AUTOMATIC WHATSAPP: Auto-dispatch e-bill to customer mobile
+      if (receipt.customerPhone && whatsappConsent) {
+        const raw = receipt.customerPhone.replace(/\D/g, "");
+        const intlPhone = raw.length === 10 ? `91${raw}` : raw;
+        const originUrl = typeof window !== "undefined" ? window.location.origin : "https://www.restronexpos.com";
+        const pdfUrl = `${originUrl}/api/invoices/${encodeURIComponent(receipt.invoiceNumber)}/pdf`;
+        const waMsg =
+          `🍽️ *${receipt.outletName}* - TAX INVOICE\n\n` +
+          `Hi ${receipt.customerName || "Customer"}! 👋\n` +
+          `Thank you for dining with us.\n\n` +
+          `🧾 *TAX INVOICE*\n` +
+          `Bill No: ${receipt.invoiceNumber}\n` +
+          `Date: ${receipt.date}\n` +
+          `Total Amount: ${formatINR(receipt.totalPaise)}\n` +
+          `Payment Mode: ${receipt.paymentMethod} (PAID)\n\n` +
+          `📥 *Download Official Tax Invoice PDF:*\n${pdfUrl}\n\n` +
+          `Thank you for choosing us! ❤️\nPowered by RestroNex`;
+
+        const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent(intlPhone)}&text=${encodeURIComponent(waMsg)}`;
+        setTimeout(() => {
+          try {
+            window.open(waUrl, "_blank", "noopener,noreferrer");
+          } catch {}
+        }, 750);
+      }
       setLastOrder({ orderNumber, total: billedTotal });
       setMsg({
         type: "success",
