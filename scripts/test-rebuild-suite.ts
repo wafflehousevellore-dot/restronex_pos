@@ -7,7 +7,7 @@
 import { prisma } from "../src/lib/db";
 import { getEntitlements } from "../src/lib/entitlements";
 import { processSubscriptionRenewalReminders } from "../src/lib/renewal-reminders";
-import { verifyRazorpayWebhookSignature } from "../src/lib/razorpay";
+import { verifyWebhookSignature } from "../src/lib/razorpay";
 import fs from "fs";
 import path from "path";
 
