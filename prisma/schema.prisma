@@ -74,6 +74,7 @@ model Tenant {
   paymentGatewayConfig TenantPaymentGatewayConfig?
   paymentAttempts PaymentAttempt[]
   paymentRefunds PaymentRefund[]
+  subscriptionNotifications SubscriptionNotification[]
 }
 
 model Membership {
@@ -506,8 +507,29 @@ model Subscription {
   tenant                  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   plan                    SubscriptionPlan @relation(fields: [planId], references: [id])
   payments                SubscriptionPayment[]
+  notifications           SubscriptionNotification[]
   @@index([tenantId, status])
   @@index([razorpaySubscriptionId])
+}
+
+model SubscriptionNotification {
+  id              String   @id @default(cuid())
+  subscriptionId  String
+  tenantId        String
+  daysBefore      Int      // 7, 3, 1, 0
+  channel         String   @default("IN_APP") // IN_APP | EMAIL
+  title           String
+  message         String
+  status          String   @default("SENT") // SENT | PENDING | FAILED
+  sentAt          DateTime @default(now())
+  metadataJson    String?
+  createdAt       DateTime @default(now())
+
+  subscription    Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  tenant          Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, daysBefore, channel])
+  @@index([tenantId])
 }
 
 model SubscriptionPayment {

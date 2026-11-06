@@ -158,7 +158,22 @@ export async function POST(req: NextRequest){
     await prisma.webhookEvent.create({ data:{ provider:"RAZORPAY_VERIFY", eventId, payloadJson: JSON.stringify({ razorpay_order_id, razorpay_payment_id, planSlug, billingCycle }), processed:true }});
   }catch{}
 
-  await prisma.auditLog.create({ data:{ tenantId: activeTenantId!, userId, action:"SUBSCRIPTION_ACTIVATED", entity:"Subscription", entityId: subscription.id, metadataJson: JSON.stringify({ planSlug, billingCycle, amountPaise: expected.totalPaise, paymentId: razorpay_payment_id, isMock: !isRazorpayConfigured() }) }});
+  await prisma.auditLog.create({
+    data: {
+      tenantId: activeTenantId!,
+      userId,
+      action: "SUBSCRIPTION_ACTIVATED",
+      entity: "Subscription",
+      entityId: subscription.id,
+      metadataJson: JSON.stringify({
+        planSlug,
+        billingCycle,
+        amountPaise: expected.totalPaise,
+        paymentId: razorpay_payment_id,
+        verifiedAt: new Date().toISOString(),
+      }),
+    },
+  });
 
   return NextResponse.json({
     ok:true,

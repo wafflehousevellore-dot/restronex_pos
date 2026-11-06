@@ -21,6 +21,29 @@ export default function SubscriptionsAdminClient() {
   const [activeTab, setActiveTab] = useState<"SUBSCRIPTIONS" | "PAYMENTS" | "WEBHOOKS">("SUBSCRIPTIONS");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [runningReminders, setRunningReminders] = useState(false);
+  const [reminderStatus, setReminderStatus] = useState<string | null>(null);
+
+  async function handleRunReminders() {
+    setRunningReminders(true);
+    setReminderStatus(null);
+    try {
+      const res = await fetch("/api/subscription/reminders", { method: "POST" });
+      const json = await res.json();
+      if (res.ok) {
+        const sentCount = json.result?.remindersSent?.length ?? 0;
+        const statusCount = json.result?.statusUpdates?.length ?? 0;
+        setReminderStatus(`Completed: ${sentCount} reminders dispatched, ${statusCount} status updates applied.`);
+        loadData();
+      } else {
+        setReminderStatus(`Failed: ${json.error || "Unable to dispatch reminders"}`);
+      }
+    } catch {
+      setReminderStatus("Network error triggering reminders");
+    } finally {
+      setRunningReminders(false);
+    }
+  }
 
   async function loadData() {
     setLoading(true);
@@ -72,15 +95,31 @@ export default function SubscriptionsAdminClient() {
             Platform-wide tenant subscription entitlements, recurring revenue metrics, and webhook audit log.
           </p>
         </div>
-        <Button
-          variant="outline"
-          onClick={loadData}
-          disabled={loading}
-          className="rounded-xl border-[#E5EBE7] bg-white text-xs font-semibold hover:bg-[#F8FAF9]"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-          Refresh Metrics
-        </Button>
+        <div className="flex items-center gap-2">
+          {reminderStatus && (
+            <span className="text-xs font-medium text-[#16845B] bg-[#E8F5EE] px-3 py-1.5 rounded-lg border border-[#16845B]/20">
+              {reminderStatus}
+            </span>
+          )}
+          <Button
+            variant="outline"
+            onClick={handleRunReminders}
+            disabled={runningReminders}
+            className="rounded-xl border-[#16845B]/30 bg-[#E8F5EE] text-[#16845B] hover:bg-[#16845B] hover:text-white text-xs font-semibold"
+          >
+            <Activity className={`h-3.5 w-3.5 mr-1.5 ${runningReminders ? "animate-spin" : ""}`} />
+            Run Renewal Reminders
+          </Button>
+          <Button
+            variant="outline"
+            onClick={loadData}
+            disabled={loading}
+            className="rounded-xl border-[#E5EBE7] bg-white text-xs font-semibold hover:bg-[#F8FAF9]"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
+            Refresh Metrics
+          </Button>
+        </div>
       </div>
 
       {/* Metrics Row */}
@@ -107,11 +146,11 @@ export default function SubscriptionsAdminClient() {
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardContent className="p-4">
             <div className="text-[11px] font-bold text-[#718078] uppercase flex items-center justify-between">
-              <span>Trialing</span>
-              <Clock className="h-3.5 w-3.5 text-blue-600" />
+              <span>Past Due</span>
+              <Clock className="h-3.5 w-3.5 text-amber-500" />
             </div>
-            <div className="text-xl font-black text-[#172B25] mt-1">{metrics.trialingSubscriptions}</div>
-            <div className="text-[10px] text-[#718078] mt-0.5">14-day free trials</div>
+            <div className="text-xl font-black text-amber-600 mt-1">{metrics.pastDueSubscriptions || 0}</div>
+            <div className="text-[10px] text-[#718078] mt-0.5">3-day grace period</div>
           </CardContent>
         </Card>
 
@@ -129,22 +168,22 @@ export default function SubscriptionsAdminClient() {
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardContent className="p-4">
             <div className="text-[11px] font-bold text-[#718078] uppercase flex items-center justify-between">
-              <span>Pending</span>
-              <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+              <span>Reminders</span>
+              <Activity className="h-3.5 w-3.5 text-[#16845B]" />
             </div>
-            <div className="text-xl font-black text-[#172B25] mt-1">{metrics.pendingSubscriptions}</div>
-            <div className="text-[10px] text-[#718078] mt-0.5">Awaiting checkout</div>
+            <div className="text-xl font-black text-[#172B25] mt-1">{metrics.totalNotificationsSent || 0}</div>
+            <div className="text-[10px] text-[#16845B] mt-0.5">Sent notifications</div>
           </CardContent>
         </Card>
 
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardContent className="p-4">
             <div className="text-[11px] font-bold text-[#718078] uppercase flex items-center justify-between">
-              <span>Cancelled</span>
+              <span>Expired</span>
               <AlertCircle className="h-3.5 w-3.5 text-red-500" />
             </div>
-            <div className="text-xl font-black text-red-600 mt-1">{metrics.cancelledSubscriptions}</div>
-            <div className="text-[10px] text-[#718078] mt-0.5">Terminated accounts</div>
+            <div className="text-xl font-black text-red-600 mt-1">{(metrics.cancelledSubscriptions || 0) + (metrics.expiredSubscriptions || 0)}</div>
+            <div className="text-[10px] text-[#718078] mt-0.5">Terminated / Expired</div>
           </CardContent>
         </Card>
       </div>

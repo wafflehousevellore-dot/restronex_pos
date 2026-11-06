@@ -10,8 +10,8 @@ export async function GET() {
 export async function PUT(req: NextRequest) {
   try {
     const { user } = await getSession();
-    // Allow platform admins (or demo mode owner) to update plans
-    if (!user?.isPlatformAdmin && user?.email !== "admin@restronex.app" && user?.email !== "owner@demo.in") {
+    // Allow platform admins to update plans
+    if (!user?.isPlatformAdmin && user?.email !== "admin@restronex.app") {
       return NextResponse.json({ error: "FORBIDDEN: Platform admin access required" }, { status: 403 });
     }
 

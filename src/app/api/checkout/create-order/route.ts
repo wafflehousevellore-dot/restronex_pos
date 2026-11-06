@@ -41,30 +41,38 @@ export async function POST(req: NextRequest){
   }
 
   const tenantId = await resolveTenantId(userId);
-  // We do NOT create tenant yet — onboarding does that. But we need to store tenantId in order notes if exists, else userId
   const receipt = `rcpt_${userId.slice(0,8)}_${planSlug}_${Date.now().toString(36)}`;
-  const isMock = !isRazorpayConfigured();
-  let order;
-  if (isMock) {
-    order = createMockOrder({ amountPaise: totals.totalPaise, receipt });
-  } else {
-    // Real Razorpay: call Razorpay Orders API (honest fallback — if fails, return mock)
-    try{
-      const auth = Buffer.from(`${process.env.RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`).toString("base64");
-      const r = await fetch("https://api.razorpay.com/v1/orders", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":`Basic ${auth}` },
-        body: JSON.stringify({ amount: totals.totalPaise, currency:"INR", receipt, notes:{ tenantId: tenantId || "", userId, planSlug, billingCycle, outletCount: String(outletCount||1) }}),
-      });
-      const j = await r.json();
-      if (!r.ok) throw new Error(j.error?.description || `Razorpay ${r.status}`);
-      order = { id: j.id, amount: j.amount, currency: j.currency, receipt: j.receipt, status:"created", isMock:false };
-    }catch(e:any){
-      // Honest: report real Razorpay failure and fallback to mock for demo continuity
-      order = createMockOrder({ amountPaise: totals.totalPaise, receipt });
-      (order as any).razorpayError = e.message;
-      (order as any).fallbackMock = true;
+  
+  if (!isRazorpayConfigured()) {
+    return NextResponse.json(
+      { error: "Razorpay payment gateway credentials are not configured on the server. Please contact system administrator." },
+      { status: 503 }
+    );
+  }
+
+  let order: { id: string; amount: number; currency: string; receipt: string; status: string };
+  try {
+    const auth = Buffer.from(`${process.env.RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`).toString("base64");
+    const r = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Basic ${auth}` },
+      body: JSON.stringify({
+        amount: totals.totalPaise,
+        currency: "INR",
+        receipt,
+        notes: { tenantId: tenantId || "", userId, planSlug, billingCycle, outletCount: String(outletCount || 1) },
+      }),
+    });
+    const j = await r.json();
+    if (!r.ok) {
+      throw new Error(j.error?.description || `Razorpay order creation returned HTTP ${r.status}`);
     }
+    order = { id: j.id, amount: j.amount, currency: j.currency, receipt: j.receipt, status: "created" };
+  } catch (e: any) {
+    return NextResponse.json(
+      { error: `Payment gateway error: ${e.message || "Failed to create Razorpay order"}` },
+      { status: 502 }
+    );
   }
 
   // Persist pending payment record if tenant exists
@@ -93,10 +101,9 @@ export async function POST(req: NextRequest){
     amountPaise: totals.totalPaise,
     currency: "INR",
     receipt: order.receipt,
-    isMock: (order as any).isMock || isMock,
     keyId: getRazorpayKeyId(),
-    planSlug, billingCycle,
+    planSlug,
+    billingCycle,
     totals: { subtotal: totals.subtotal, gst: totals.gstPaise, total: totals.totalPaise },
-    ...( (order as any).razorpayError ? { warning: `Razorpay live failed (${(order as any).razorpayError}) — using mock order for demo. Add valid live keys for production.` } : {}),
   });
 }

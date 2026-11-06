@@ -78,6 +78,7 @@ export const ModelName = {
   LoyaltyTxn: 'LoyaltyTxn',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
+  SubscriptionNotification: 'SubscriptionNotification',
   SubscriptionPayment: 'SubscriptionPayment',
   WebhookEvent: 'WebhookEvent',
   TenantPaymentGatewayConfig: 'TenantPaymentGatewayConfig',
@@ -547,6 +548,23 @@ export const SubscriptionScalarFieldEnum = {
 } as const
 
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const SubscriptionNotificationScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  tenantId: 'tenantId',
+  daysBefore: 'daysBefore',
+  channel: 'channel',
+  title: 'title',
+  message: 'message',
+  status: 'status',
+  sentAt: 'sentAt',
+  metadataJson: 'metadataJson',
+  createdAt: 'createdAt'
+} as const
+
+export type SubscriptionNotificationScalarFieldEnum = (typeof SubscriptionNotificationScalarFieldEnum)[keyof typeof SubscriptionNotificationScalarFieldEnum]
 
 
 export const SubscriptionPaymentScalarFieldEnum = {

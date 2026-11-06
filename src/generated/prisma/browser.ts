@@ -153,6 +153,11 @@ export type SubscriptionPlan = Prisma.SubscriptionPlanModel
  */
 export type Subscription = Prisma.SubscriptionModel
 /**
+ * Model SubscriptionNotification
+ * 
+ */
+export type SubscriptionNotification = Prisma.SubscriptionNotificationModel
+/**
  * Model SubscriptionPayment
  * 
  */

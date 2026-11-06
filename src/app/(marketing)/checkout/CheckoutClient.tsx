@@ -171,9 +171,8 @@ export default function CheckoutClient({
 
       setMsg({type:"info", text: `Order ${j.orderId} created — amount ${formatINR(j.amountPaise)}. Opening Razorpay...`});
 
-      if (j.isMock) {
-        await simulateMockPayment(j.orderId, j.amountPaise);
-        return;
+      if (!j.keyId) {
+        throw new Error("Payment gateway is temporarily unavailable. Please retry or contact support.");
       }
 
       await openRazorpay(j.orderId, j.amountPaise, j.keyId);
@@ -226,33 +225,6 @@ export default function CheckoutClient({
       setMsg({type:"error", text: `Payment failed: ${r.error?.description || "Gateway error"}`});
     });
     rzp.open();
-  }
-
-  async function simulateMockPayment(orderId: string, _amountPaise: number){
-    setStep("processing");
-    setMsg({type:"info", text: "Processing simulated payment..."});
-    try{
-      const mockPaymentId = `pay_mock_${Math.random().toString(36).slice(2,8)}`;
-      const v = await fetch("/api/checkout/verify", {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({
-          razorpay_order_id: orderId,
-          razorpay_payment_id: mockPaymentId,
-          razorpay_signature: "mock_verified",
-          planSlug: plan, billingCycle: cycle, outletCount: outlets,
-        }),
-      });
-      const vj = await v.json();
-      if (!v.ok) throw new Error(vj.error || "Mock verification failed");
-      setPaymentId(vj.subscriptionPaymentId || mockPaymentId);
-      setMsg({type:"success", text: `✓ Test payment verified. Subscription ${vj.subscriptionId} ACTIVE.`});
-      setStep("success");
-      setTimeout(()=> router.push(vj.next || "/app/onboarding"), 1200);
-    }catch(e:any){
-      setMsg({type:"error", text: e.message});
-      setStep("summary");
-    }
   }
 
   if (step==="success" && paymentId) {

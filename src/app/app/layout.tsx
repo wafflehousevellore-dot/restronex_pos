@@ -43,7 +43,21 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     if(t){ tenant = t; outlet = (t as unknown as { outlets: unknown[] }).outlets[0] || null; }
   }
   if(!tenant){
-    const mem = await prisma.membership.findFirst({ where:{ userId }, include:{ tenant:{ include:{ outlets:true } } }});
+    // Prioritize active paid organization so returning customers always land on their working workspace
+    const mem = await prisma.membership.findFirst({
+      where:{
+        userId,
+        tenant: {
+          subscriptions: {
+            some: { status: "ACTIVE", currentPeriodEnd: { gte: new Date() } }
+          }
+        }
+      },
+      include:{ tenant:{ include:{ outlets:true } } }
+    }) || await prisma.membership.findFirst({
+      where:{ userId },
+      include:{ tenant:{ include:{ outlets:true } } }
+    });
     if(mem){ tenant = mem.tenant; outlet = (mem.tenant as unknown as { outlets: unknown[] }).outlets[0]||null; }
   }
   return <AppShell user={user as unknown as never} tenant={tenant as never} outlet={outlet as never}>{children}</AppShell>;

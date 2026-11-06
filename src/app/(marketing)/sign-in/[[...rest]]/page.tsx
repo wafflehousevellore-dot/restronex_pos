@@ -48,20 +48,6 @@ export default function SignInPage() {
           fallbackRedirectUrl="/app/auth-callback"
         />
       </div>
-
-      {/* 1-Click Demo Login */}
-      <div className="max-w-md mx-auto mt-6 rounded-2xl border border-[#E5EBE7] bg-white p-4 text-xs text-[#718078] flex justify-between items-center shadow-xs">
-        <div>
-          <div className="font-bold text-[#172B25]">Instant Demo Access</div>
-          <div className="text-[#718078] text-[11px]">Spice Route Demo Owner (`owner@demo.in`)</div>
-        </div>
-        <a
-          href="/api/auth/sign-in?email=owner@demo.in&password=demo1234&redirect=/app/pos"
-          className="rounded-full bg-[#16845B] px-4 py-1.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs"
-        >
-          1-Click Demo Login →
-        </a>
-      </div>
     </PageShell>
   );
 }

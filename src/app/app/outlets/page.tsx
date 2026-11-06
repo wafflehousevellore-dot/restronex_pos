@@ -22,7 +22,12 @@ export default function OutletsPage(){
     if(!tenantId && outlets[0]) tenantId = outlets[0].tenantId;
     if(!tenantId) alert("Create business first in Onboarding");
     else {
-      await apiFetch("/api/outlets",{method:"POST", headers:{ "Content-Type":"application/json"}, body: JSON.stringify({ tenantId, name: form.name, address: form.address, city: form.city, phone: form.phone })});
+      const res = await apiFetch("/api/outlets",{method:"POST", headers:{ "Content-Type":"application/json"}, body: JSON.stringify({ tenantId, name: form.name, address: form.address, city: form.city, phone: form.phone })});
+      const data = await res.json().catch(()=>({}));
+      if (!res.ok) {
+        alert(data.error || "Failed to create outlet: Limit reached for your current plan.");
+        return;
+      }
       setForm({name:"", address:"", city:"", phone:""});
       load();
     }

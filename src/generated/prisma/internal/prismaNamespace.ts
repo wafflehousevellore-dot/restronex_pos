@@ -424,6 +424,7 @@ export const ModelName = {
   LoyaltyTxn: 'LoyaltyTxn',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
+  SubscriptionNotification: 'SubscriptionNotification',
   SubscriptionPayment: 'SubscriptionPayment',
   WebhookEvent: 'WebhookEvent',
   TenantPaymentGatewayConfig: 'TenantPaymentGatewayConfig',
@@ -462,7 +463,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage"
+    modelProps: "user" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2461,6 +2462,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SubscriptionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
+    SubscriptionNotification: {
+      payload: Prisma.$SubscriptionNotificationPayload<ExtArgs>
+      fields: Prisma.SubscriptionNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SubscriptionNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SubscriptionNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.SubscriptionNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SubscriptionNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.SubscriptionNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.SubscriptionNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.SubscriptionNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SubscriptionNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.SubscriptionNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        update: {
+          args: Prisma.SubscriptionNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.SubscriptionNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SubscriptionNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SubscriptionNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.SubscriptionNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubscriptionNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.SubscriptionNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSubscriptionNotification>
+        }
+        groupBy: {
+          args: Prisma.SubscriptionNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubscriptionNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SubscriptionNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SubscriptionNotificationCountAggregateOutputType> | number
         }
       }
     }
@@ -4635,6 +4710,23 @@ export const SubscriptionScalarFieldEnum = {
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
+export const SubscriptionNotificationScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  tenantId: 'tenantId',
+  daysBefore: 'daysBefore',
+  channel: 'channel',
+  title: 'title',
+  message: 'message',
+  status: 'status',
+  sentAt: 'sentAt',
+  metadataJson: 'metadataJson',
+  createdAt: 'createdAt'
+} as const
+
+export type SubscriptionNotificationScalarFieldEnum = (typeof SubscriptionNotificationScalarFieldEnum)[keyof typeof SubscriptionNotificationScalarFieldEnum]
+
+
 export const SubscriptionPaymentScalarFieldEnum = {
   id: 'id',
   subscriptionId: 'subscriptionId',
@@ -5276,6 +5368,7 @@ export type GlobalOmitConfig = {
   loyaltyTxn?: Prisma.LoyaltyTxnOmit
   subscriptionPlan?: Prisma.SubscriptionPlanOmit
   subscription?: Prisma.SubscriptionOmit
+  subscriptionNotification?: Prisma.SubscriptionNotificationOmit
   subscriptionPayment?: Prisma.SubscriptionPaymentOmit
   webhookEvent?: Prisma.WebhookEventOmit
   tenantPaymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigOmit

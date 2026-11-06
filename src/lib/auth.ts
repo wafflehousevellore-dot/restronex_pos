@@ -73,38 +73,77 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
       }
       // If orgId present but no Tenant mapping, try to find tenant by clerkOrgId or create shadow mapping on demand (lazy)
       if (orgId) {
-        const tenantByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: orgId } }).catch(()=>null);
+        let tenantByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: orgId } }).catch(() => null);
         if (!tenantByClerk) {
-          // Try to find Clerk org details for name
-          try {
-            const { clerkClient } = await import("@clerk/nextjs/server");
-            const client = await clerkClient();
-            const org = await client.organizations.getOrganization({ organizationId: orgId });
-            // Create Tenant from Clerk Org if not exists, link membership
-            const slugBase = org.slug || org.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,30);
-            const slug = slugBase + "-" + Math.random().toString(36).slice(2,6);
-            const tenant = await prisma.tenant.create({ data: {
-              clerkOrgId: orgId,
-              name: org.name || "My Restaurant",
-              slug,
-              businessType: "Restaurant",
-              email: email || "owner@restronex.local",
-              phone: "+91 90000 00000",
-            }});
-            await prisma.membership.create({ data: { userId: dbUser.id, tenantId: tenant.id, role: "OWNER" }});
-            await prisma.restaurantSetting.create({ data: { tenantId: tenant.id, receiptHeader: tenant.name }});
-            await prisma.taxConfig.createMany({ data: [{ tenantId: tenant.id, name:"CGST", rateBps:900},{ tenantId: tenant.id, name:"SGST", rateBps:900}]});
-            await prisma.auditLog.create({ data: { tenantId: tenant.id, userId: dbUser.id, action:"TENANT_CREATED_FROM_CLERK_ORG", entity:"Tenant", entityId: tenant.id, metadataJson: JSON.stringify({ orgId, orgName: org.name })}});
-          } catch (e) {
-            // Clerk org fetch failed - leave for webhook; don't block auth
-            console.warn("[getSession] Clerk org lazy create failed", orgId, e);
+          // Check if this owner already has an existing tenant (prevent duplicate organization creation)
+          const existingOwnedTenant = await prisma.tenant.findFirst({
+            where: { memberships: { some: { userId: dbUser.id, role: "OWNER" } } },
+            orderBy: { createdAt: "asc" },
+          });
+
+          if (existingOwnedTenant && !existingOwnedTenant.clerkOrgId) {
+            // Securely associate existing organization with this Clerk Org ID
+            tenantByClerk = await prisma.tenant.update({
+              where: { id: existingOwnedTenant.id },
+              data: { clerkOrgId: orgId },
+            });
+          } else if (!existingOwnedTenant) {
+            // User genuinely has no organization yet: create their single primary organization
+            try {
+              const { clerkClient } = await import("@clerk/nextjs/server");
+              const client = await clerkClient();
+              const org = await client.organizations.getOrganization({ organizationId: orgId });
+              const slugBase = org.slug || org.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 30);
+              const slug = slugBase + "-" + Math.random().toString(36).slice(2, 6);
+              const tenant = await prisma.tenant.create({
+                data: {
+                  clerkOrgId: orgId,
+                  name: org.name || "My Restaurant",
+                  slug,
+                  businessType: "Restaurant",
+                  email: email || "owner@restronex.local",
+                  phone: "+91 90000 00000",
+                },
+              });
+              await prisma.membership.create({ data: { userId: dbUser.id, tenantId: tenant.id, role: "OWNER" } });
+              await prisma.restaurantSetting.create({ data: { tenantId: tenant.id, receiptHeader: tenant.name } });
+              await prisma.taxConfig.createMany({
+                data: [
+                  { tenantId: tenant.id, name: "CGST", rateBps: 900 },
+                  { tenantId: tenant.id, name: "SGST", rateBps: 900 },
+                ],
+              });
+              await prisma.auditLog.create({
+                data: {
+                  tenantId: tenant.id,
+                  userId: dbUser.id,
+                  action: "TENANT_CREATED_FROM_CLERK_ORG",
+                  entity: "Tenant",
+                  entityId: tenant.id,
+                  metadataJson: JSON.stringify({ orgId, orgName: org.name }),
+                },
+              });
+              tenantByClerk = tenant;
+            } catch (e) {
+              console.warn("[getSession] Clerk org lazy create failed", orgId, e);
+            }
           }
-        } else {
+        }
+
+        if (tenantByClerk) {
           // ensure membership
-          const mem = await prisma.membership.findUnique({ where: { userId_tenantId: { userId: dbUser.id, tenantId: tenantByClerk.id }}}).catch(()=>null) as any;
+          const mem = await prisma.membership
+            .findUnique({ where: { userId_tenantId: { userId: dbUser.id, tenantId: tenantByClerk.id } } })
+            .catch(() => null) as any;
           if (!mem) {
-            const existing = await prisma.membership.findFirst({ where: { userId: dbUser.id, tenantId: tenantByClerk.id }});
-            if (!existing) await prisma.membership.create({ data: { userId: dbUser.id, tenantId: tenantByClerk.id, role: "OWNER" }});
+            const existing = await prisma.membership.findFirst({
+              where: { userId: dbUser.id, tenantId: tenantByClerk.id },
+            });
+            if (!existing) {
+              await prisma.membership.create({
+                data: { userId: dbUser.id, tenantId: tenantByClerk.id, role: "OWNER" },
+              });
+            }
           }
 
           // Auto-sync organization name from Clerk if it differs
@@ -199,6 +238,21 @@ export async function resolveTenantId(userId: string, explicit?: string | null):
     if (t2) return t2.id;
     return active;
   }
+
+  // Prioritize active paid tenant for returning customers so they go straight to their paid restaurant
+  const paidMem = await prisma.membership.findFirst({
+    where: {
+      userId,
+      tenant: {
+        subscriptions: {
+          some: { status: "ACTIVE", currentPeriodEnd: { gte: new Date() } },
+        },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+  if (paidMem) return paidMem.tenantId;
+
   const mem = await prisma.membership.findFirst({ where: { userId }, orderBy: { createdAt: "asc" } });
   return mem?.tenantId || null;
 }

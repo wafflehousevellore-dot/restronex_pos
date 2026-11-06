@@ -61,7 +61,11 @@ export async function resolveUserCustomerJourney(
 
   // If user has at least one tenant
   if (memberships.length > 0) {
-    const mem = memberships[0];
+    // Prioritize active paid tenant for returning customers so they are never prompted for payment
+    const paidMembership = memberships.find((m) =>
+      m.tenant.subscriptions?.some((s) => (s.status === "ACTIVE" || s.status === "PAST_DUE") && s.plan)
+    );
+    const mem = paidMembership || memberships[0];
     const tenant = mem.tenant;
     const subscriptions = tenant.subscriptions || [];
 

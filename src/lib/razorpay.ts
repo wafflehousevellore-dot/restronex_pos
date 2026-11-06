@@ -61,16 +61,6 @@ export function verifyPaymentSignature(opts: {
   razorpay_payment_id: string;
   razorpay_signature: string;
 }): boolean {
-  // In production, mock bypass is forbidden: real Razorpay HMAC-SHA256 signature is mandatory
-  if (process.env.NODE_ENV !== "production" && process.env.ALLOW_MOCK_PAYMENTS === "true") {
-    if (
-      opts.razorpay_signature === "mock_verified" ||
-      opts.razorpay_payment_id?.startsWith("pay_mock_")
-    ) {
-      return true;
-    }
-  }
-
   const secret = getRazorpayKeySecret();
   if (!secret || !opts.razorpay_order_id || !opts.razorpay_payment_id || !opts.razorpay_signature) {
     return false;
