@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId, setActiveOrgId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { verifyPaymentSignature, isRazorpayConfigured } from "@/lib/razorpay";
+import { verifyPaymentSignature } from "@/lib/razorpay";
 import { calcCheckoutTotals } from "@/lib/checkout";
 import { ensureSeedPlans } from "@/lib/seed";
 

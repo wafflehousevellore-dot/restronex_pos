@@ -6,7 +6,7 @@ import { processSubscriptionRenewalReminders } from "@/lib/renewal-reminders";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const { userId, user } = await getSession();
+  const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const tenantId = await resolveTenantId(userId);

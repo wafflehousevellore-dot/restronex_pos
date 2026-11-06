@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { getSession, resolveTenantId } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
