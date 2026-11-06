@@ -54,6 +54,8 @@ export async function GET(_req: NextRequest) {
   let activeCount = 0;
   let trialingCount = 0;
   let pendingCount = 0;
+  let pastDueCount = 0;
+  let expiredCount = 0;
   let cancelledCount = 0;
   let mrrPaise = 0;
 
@@ -81,10 +83,16 @@ export async function GET(_req: NextRequest) {
       trialingCount++;
     } else if (s.status === "PENDING") {
       pendingCount++;
-    } else if (s.status === "CANCELLED" || s.status === "EXPIRED") {
+    } else if (s.status === "PAST_DUE") {
+      pastDueCount++;
+    } else if (s.status === "EXPIRED") {
+      expiredCount++;
+    } else if (s.status === "CANCELLED") {
       cancelledCount++;
     }
   }
+
+  const notificationsCount = await prisma.subscriptionNotification.count();
 
   return NextResponse.json({
     metrics: {
@@ -92,7 +100,10 @@ export async function GET(_req: NextRequest) {
       activeSubscriptions: activeCount,
       trialingSubscriptions: trialingCount,
       pendingSubscriptions: pendingCount,
+      pastDueSubscriptions: pastDueCount,
+      expiredSubscriptions: expiredCount,
       cancelledSubscriptions: cancelledCount,
+      totalNotificationsSent: notificationsCount,
       mrrPaise,
       planDistribution: planDist,
     },
