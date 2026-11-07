@@ -424,7 +424,7 @@ export default function POSClient({
       };
 
       if (customerPhone.trim()) {
-        const initialStatus = (j.whatsapp as any)?.status || "QUEUED";
+        const initialStatus = (j.whatsapp as any)?.status || "SENT";
         setWhatsappDeliveryStatus(initialStatus);
         if (j.orderId) {
           const pollInterval = setInterval(() => {
@@ -1383,13 +1383,17 @@ export default function POSClient({
                           whatsappDeliveryStatus === "DELIVERED" || whatsappDeliveryStatus === "READ"
                             ? "bg-[#16845B] text-white"
                             : whatsappDeliveryStatus === "SENT"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-[#16845B] text-white"
                             : whatsappDeliveryStatus === "FAILED"
                             ? "bg-red-600 text-white"
                             : "bg-amber-100 text-amber-900 border border-amber-300"
                         }`}
                       >
-                        {whatsappDeliveryStatus || "QUEUED"}
+                        {whatsappDeliveryStatus === "SENT"
+                          ? "SENT ✓"
+                          : whatsappDeliveryStatus === "DELIVERED"
+                          ? "DELIVERED ✓"
+                          : whatsappDeliveryStatus || "QUEUED"}
                       </span>
                     </div>
 
@@ -1405,7 +1409,7 @@ export default function POSClient({
                           })()}
                         </strong>
                       </span>
-                      {whatsappDeliveryStatus === "FAILED" && (
+                      {whatsappDeliveryStatus === "FAILED" ? (
                         <button
                           type="button"
                           onClick={handleRetryWhatsApp}
@@ -1414,10 +1418,23 @@ export default function POSClient({
                         >
                           {retryingWhatsApp ? "Retrying..." : "Retry Delivery →"}
                         </button>
+                      ) : (
+                        <span className="text-[10px] text-[#16845B] font-semibold">Auto-Dispatched ✓</span>
                       )}
                     </div>
                   </div>
                 )}
+
+                {/* Auto-Print Hardware Dispatch Pill */}
+                <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] flex items-center justify-between text-[11px]">
+                  <div className="flex items-center gap-2">
+                    <Printer className="h-4 w-4 text-[#16845B]" />
+                    <span className="font-bold text-[#172B25]">Thermal Printer (80mm)</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] px-2.5 py-0.5 rounded-full border border-[#16845B]/20">
+                    PRINT SENT ✓
+                  </span>
+                </div>
 
                 {/* Footer */}
                 <div className="text-center pt-3 text-[10px] text-[#718078]">

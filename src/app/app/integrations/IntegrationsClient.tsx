@@ -570,19 +570,6 @@ export default function IntegrationsClient() {
               <div className="text-xs text-[#718078] mt-3 leading-relaxed">
                 {meta.description}
               </div>
-
-              {meta.officialPortalUrl && (
-                <div className="mt-2">
-                  <a
-                    href={meta.officialPortalUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs text-[#16845B] hover:underline font-bold"
-                  >
-                    Open {meta.officialPortalName} <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-              )}
             </CardHeader>
 
             <CardContent className="pt-6 space-y-6">

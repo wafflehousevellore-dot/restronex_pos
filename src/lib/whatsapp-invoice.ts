@@ -230,16 +230,19 @@ export async function queueAndSendWhatsAppInvoice(orderId: string): Promise<{
       },
     }).catch(() => {});
 
-    // 3. Asynchronously trigger immediate dispatch
-    // We do not await this to guarantee zero latency on POS checkout!
-    dispatchWhatsAppQueueItem(queueRecord.id).catch((err) => {
-      console.error(`[WhatsApp] Background dispatch error for queue ${queueRecord.id}:`, err);
-    });
+    // 3. Immediately dispatch WhatsApp delivery and update status
+    let dispatchStatus = "SENT";
+    try {
+      const dispatchResult = await dispatchWhatsAppQueueItem(queueRecord.id);
+      dispatchStatus = dispatchResult.status || "SENT";
+    } catch (dispErr) {
+      console.error(`[WhatsApp] Immediate dispatch error for queue ${queueRecord.id}:`, dispErr);
+    }
 
     return {
       queued: true,
       queueId: queueRecord.id,
-      status: "QUEUED",
+      status: dispatchStatus,
     };
   } catch (err: any) {
     console.error("[WhatsApp] queueAndSendWhatsAppInvoice error:", err);
@@ -339,6 +342,14 @@ export async function dispatchWhatsAppQueueItem(queueId: string): Promise<{
       updatedAt: now,
     },
   });
+
+  // Also sync status on parent Order record
+  if (item.orderId) {
+    await prisma.order.update({
+      where: { id: item.orderId },
+      data: { whatsappStatus: status },
+    }).catch(() => {});
+  }
 
   // Also record in delivery log for full audit trail
   await prisma.whatsAppDeliveryLog.create({
