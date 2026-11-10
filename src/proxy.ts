@@ -12,6 +12,18 @@ export default clerkMiddleware(async (auth, req) => {
   if (pathname === "/checkout/standard" || pathname === "/standard-checkout") {
     return;
   }
+  const isPlatformRoute = pathname === "/platform" || pathname.startsWith("/platform/");
+  if (isPlatformRoute) {
+    // Platform Admin portal strictly requires Clerk authentication (no JWT fallback bypass)
+    const { userId } = await auth();
+    if (!userId) {
+      const loginUrl = new URL("/sign-in", req.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    return;
+  }
+
   const isProtected = PROTECTED.some((p) => pathname === p || pathname.startsWith(p + "/"));
   if (isProtected) {
     const { userId } = await auth();

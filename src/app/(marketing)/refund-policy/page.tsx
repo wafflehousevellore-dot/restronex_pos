@@ -21,7 +21,10 @@ export default function RefundPolicyPage() {
               App ➔ Subscription Settings
             </Link>{" "}
             or by emailing our support team at{" "}
-            <span className="text-[#172B25] font-semibold">{brand.contact.supportEmail}</span>.
+            <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-semibold hover:underline">
+              {brand.contact.supportEmail}
+            </a>
+            .
           </p>
           <p>
             Upon cancellation, your subscription will remain active until the end of your current paid billing period
@@ -38,7 +41,10 @@ export default function RefundPolicyPage() {
             subscription activation, you are entitled to a full 100% refund of your subscription fee.
           </p>
           <p>
-            To initiate a refund request, contact <span className="text-[#172B25] font-semibold">{brand.contact.supportEmail}</span>{" "}
+            To initiate a refund request, contact{" "}
+            <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-semibold hover:underline">
+              {brand.contact.supportEmail}
+            </a>{" "}
             with your registered business email and payment reference ID. Refunds are credited back to the original payment
             method (UPI, Netbanking, or Card) within <b>5 to 7 business days</b> as processed by our payment partner Razorpay.
           </p>
@@ -64,8 +70,24 @@ export default function RefundPolicyPage() {
             For any billing inquiries, invoice reconciliations, or refund assistance:
           </p>
           <div className="text-[#718078] text-xs space-y-1.5 pt-1">
-            <div>Email: <span className="text-[#172B25] font-semibold">{brand.contact.supportEmail}</span></div>
-            <div>Phone: <span className="text-[#172B25] font-semibold">{brand.contact.phone}</span></div>
+            <div>
+              Email:{" "}
+              <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-semibold hover:underline">
+                {brand.contact.supportEmail}
+              </a>
+            </div>
+            <div>
+              Mobile:{" "}
+              <a href={brand.contact.telUrl} className="text-[#172B25] font-semibold hover:text-[#16845B] hover:underline">
+                {brand.contact.phone}
+              </a>
+            </div>
+            <div>
+              WhatsApp:{" "}
+              <a href={brand.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#16845B] font-semibold hover:underline">
+                {brand.contact.whatsapp} (Chat on WhatsApp →)
+              </a>
+            </div>
             <div>Registered Address: <span className="text-[#172B25]">{brand.contact.address}</span></div>
           </div>
         </div>

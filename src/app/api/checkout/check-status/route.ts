@@ -191,7 +191,7 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  const totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+  const totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, planPricingOverride: plan });
   await prisma.subscriptionPayment.create({
     data: {
       subscriptionId: subscription.id,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { calcCheckoutTotals } from "@/lib/checkout";
+import { calcCheckoutTotals, resolveCouponDiscount } from "@/lib/checkout";
 import { getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay";
 import { ensureSeedPlans } from "@/lib/seed";
 
@@ -13,43 +13,28 @@ export async function POST(req: NextRequest) {
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
   const { planSlug, billingCycle, outletCount, coupon } = body as { planSlug: string; billingCycle: "MONTHLY" | "ANNUAL"; outletCount?: number; coupon?: string };
   if (!planSlug || !billingCycle) return NextResponse.json({ error: "planSlug and billingCycle required" }, { status: 400 });
-  let totals;
-  try {
-    const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
-    const code = coupon?.trim().toUpperCase();
-    let discountPaise = 0;
-    let fixedTotalPaise: number | undefined;
-    if (
-      code === "PAY1" ||
-      code === "RS1" ||
-      code === "1RS" ||
-      code === "ONE" ||
-      code === "RUPEE1" ||
-      code === "1RUPEE" ||
-      code === "TEST1" ||
-      code === "PROMO1"
-    ) {
-      fixedTotalPaise = 100; // Pay exactly ₹1 for testing!
-    } else if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
-      fixedTotalPaise = 200; // Pay exactly ₹2 for testing!
-    } else if (code === "WELCOME10" || code === "SAVE10") {
-      discountPaise = Math.round(baseTotals.subtotal * 0.1);
-    } else if (code === "FLAT50") {
-      discountPaise = 5000;
-    } else if (code === "CHEF20" || code === "FESTIVE20") {
-      discountPaise = Math.round(baseTotals.subtotal * 0.2);
-    }
-    totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: discountPaise, fixedTotalPaise });
-  } catch (e: any) { return NextResponse.json({ error: e.message }, { status: 400 }); }
 
-  // Do not multiply outletCount for DB plan's outlet limit? we already validated in totals
   const plan = await prisma.subscriptionPlan.findUnique({ where: { slug: planSlug } });
   if (!plan) return NextResponse.json({ error: "Plan not found in DB" }, { status: 404 });
 
   // Enforce outlet limit server-side
   if ((outletCount || 1) > plan.maxOutlets) {
-    return NextResponse.json({ error: `Outlet count ${outletCount} exceeds plan limit ${plan.maxOutlets} for ${plan.name}. Choose Growth/Scale or reduce outlets.` }, { status: 400 });
+    return NextResponse.json({ error: `Outlet count ${outletCount} exceeds plan limit ${plan.maxOutlets} for ${plan.name}. Choose Growth/Business or reduce outlets.` }, { status: 400 });
   }
+
+  let totals;
+  try {
+    const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, planPricingOverride: plan });
+    const cRes = resolveCouponDiscount(coupon, baseTotals.subtotal);
+    totals = calcCheckoutTotals({
+      planSlug,
+      billingCycle,
+      outletCount,
+      couponDiscountPaise: cRes.discountPaise,
+      fixedTotalPaise: cRes.fixedTotalPaise,
+      planPricingOverride: plan,
+    });
+  } catch (e: any) { return NextResponse.json({ error: e.message }, { status: 400 }); }
 
   const tenantId = await resolveTenantId(userId);
   const receipt = `rcpt_${userId.slice(0, 8)}_${planSlug}_${Date.now().toString(36)}`;

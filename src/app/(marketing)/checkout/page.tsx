@@ -3,8 +3,9 @@ import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { PageShell } from "@/components/marketing/PageShell";
 import CheckoutClient from "./CheckoutClient";
-import { calcCheckoutTotals, getPlanBySlug } from "@/lib/checkout";
+import { calcCheckoutTotals, getPlanBySlug, PlanPricingOverride } from "@/lib/checkout";
 import { isRazorpayConfigured, isWebhookConfigured } from "@/lib/razorpay";
+import { ensureSeedPlans } from "@/lib/seed";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +13,19 @@ export const dynamic = "force-dynamic";
 export default async function CheckoutPage({ searchParams }: { searchParams: Promise<Record<string,string>> }) {
   const sp = await searchParams;
   const { userId } = await getSession();
+  await ensureSeedPlans();
+  const dbPlans = await prisma.subscriptionPlan.findMany({ orderBy: { sortOrder: "asc" } });
+  const planPricingMap: Record<string, PlanPricingOverride> = {};
+  for (const dp of dbPlans) {
+    planPricingMap[dp.slug] = {
+      name: dp.name,
+      priceMonthlyPaise: dp.priceMonthlyPaise,
+      priceAnnualPaise: dp.priceAnnualPaise,
+      maxOutlets: dp.maxOutlets,
+      maxUsers: dp.maxUsers,
+    };
+  }
+
   const c = await cookies();
   const persisted = c.get("restronex_checkout")?.value ? (()=>{ try{return JSON.parse(decodeURIComponent(c.get("restronex_checkout")!.value))}catch{return null} })() : null;
   const rawCookiePlan = c.get("restronex_plan")?.value ? (()=>{ try{return decodeURIComponent(c.get("restronex_plan")!.value)}catch{return null} })() : null;
@@ -23,13 +37,25 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   }
   const planSlug = candidatePlan;
   const billingCycle = (sp.cycle === "ANNUAL" || sp.cycle === "MONTHLY" ? sp.cycle : null) || (persisted?.billingCycle === "ANNUAL" || persisted?.billingCycle === "MONTHLY" ? persisted.billingCycle : null) || "MONTHLY";
-  const outletCount = parseInt(sp.outlets || persisted?.outletCount || "1", 10) || 1;
+  const selectedMaxOutlets = planPricingMap[planSlug]?.maxOutlets ?? getPlanBySlug(planSlug)?.maxOutlets ?? 1;
+  const rawOutlets = parseInt(sp.outlets || persisted?.outletCount || "1", 10) || 1;
+  const outletCount = Math.min(Math.max(1, rawOutlets), selectedMaxOutlets);
 
   let totals;
   try {
-    totals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
+    totals = calcCheckoutTotals({
+      planSlug,
+      billingCycle,
+      outletCount,
+      planPricingOverride: planPricingMap[planSlug],
+    });
   } catch {
-    totals = calcCheckoutTotals({ planSlug: "growth", billingCycle: "MONTHLY", outletCount: 1 });
+    totals = calcCheckoutTotals({
+      planSlug: "growth",
+      billingCycle: "MONTHLY",
+      outletCount: 1,
+      planPricingOverride: planPricingMap["growth"],
+    });
   }
 
   const razorConfigured = isRazorpayConfigured();
@@ -80,6 +106,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
         initialCycle={billingCycle}
         initialOutletCount={outletCount}
         totals={totals as any}
+        planPricingMap={planPricingMap}
         isAuthenticated={!!userId}
         tenantId={tenantId}
         hasTenant={hasTenant}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { processSubscriptionRenewalReminders } from "@/lib/renewal-reminders";
+import { logPlatformAdminAction, requirePlatformOwnerApi } from "@/lib/platform-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -22,18 +23,31 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { user } = await getSession();
-  // Allow super admin or authorized webhook/cron key
+  // Allow verified Platform Owner via Clerk or authorized Cron secret
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET || "restronex-cron-secret-2026";
   const isCron = authHeader === `Bearer ${cronSecret}`;
-  const isAdmin = user?.isPlatformAdmin === true;
 
-  if (!isCron && !isAdmin) {
-    return NextResponse.json({ error: "Forbidden: Admin or Cron key required" }, { status: 403 });
+  let adminUserId: string | null = null;
+  if (!isCron) {
+    const guard = await requirePlatformOwnerApi();
+    if (!guard.ok) return guard.response;
+    adminUserId = guard.auth.user.id;
   }
 
   const result = await processSubscriptionRenewalReminders();
+  if (adminUserId) {
+    await logPlatformAdminAction({
+      userId: adminUserId,
+      action: "PLATFORM_RENEWAL_REMINDERS_TRIGGERED",
+      entity: "Subscription",
+      metadata: {
+        processedCount: result.processedCount,
+        remindersSentCount: result.remindersSent.length,
+        statusUpdatesCount: result.statusUpdates.length,
+      },
+    });
+  }
   return NextResponse.json({ ok: true, result });
 }
 

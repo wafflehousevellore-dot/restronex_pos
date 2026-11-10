@@ -68,7 +68,16 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
         }
       }
       if (!dbUser) {
-        dbUser = await prisma.user.create({ data: { clerkId: clerkUserId, email: email || `${clerkUserId}@clerk.local`, name, avatarUrl, role: "OWNER" }});
+        dbUser = await prisma.user.create({
+          data: {
+            clerkId: clerkUserId,
+            email: email || `${clerkUserId}@clerk.local`,
+            name,
+            avatarUrl,
+            role: "OWNER",
+            isPlatformAdmin: false,
+          },
+        });
         await prisma.auditLog.create({ data: { userId: dbUser.id, action: "USER_CREATED_VIA_CLERK", entity: "User", entityId: dbUser.id, metadataJson: JSON.stringify({ clerkUserId, email })} });
       }
       // If orgId present but no Tenant mapping, try to find tenant by clerkOrgId or create shadow mapping on demand (lazy)
@@ -168,14 +177,35 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
         }
       }
 
-      return { user: { id: dbUser.id, email: dbUser.email, name: dbUser.name, avatarUrl: dbUser.avatarUrl, isPlatformAdmin: dbUser.isPlatformAdmin }, userId: dbUser.id, clerkUserId, orgId };
+      const primaryEmailObj =
+        clerkUser?.emailAddresses?.find((e) => e.id === clerkUser.primaryEmailAddressId) ||
+        clerkUser?.emailAddresses?.[0];
+      const verifiedPlatformOwner =
+        dbUser.isPlatformAdmin &&
+        dbUser.role === "PLATFORM_OWNER" &&
+        dbUser.email.toLowerCase() === "wafflehousevellore@gmail.com" &&
+        primaryEmailObj?.verification?.status === "verified" &&
+        primaryEmailObj?.emailAddress?.toLowerCase() === "wafflehousevellore@gmail.com";
+
+      return {
+        user: {
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name,
+          avatarUrl: dbUser.avatarUrl,
+          isPlatformAdmin: Boolean(verifiedPlatformOwner),
+        },
+        userId: dbUser.id,
+        clerkUserId,
+        orgId,
+      };
     }
   } catch {
     // Clerk not configured or not authenticated - fall through to JWT
     // console.debug("[getSession] Clerk miss, falling to JWT", e)
   }
 
-  // 2) Fallback: JWT cookie
+  // 2) Fallback: JWT cookie (never grants Platform Admin privileges)
   try {
     const c = await cookies();
     const token = c.get(COOKIE_NAME)?.value;
@@ -183,7 +213,16 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
     const decoded = jwt.verify(token, JWT_SECRET) as unknown as { sub: string };
     const dbUser = await prisma.user.findUnique({ where: { id: decoded.sub }});
     if (!dbUser) return { user: null, userId: null };
-    return { user: { id: dbUser.id, email: dbUser.email, name: dbUser.name, avatarUrl: dbUser.avatarUrl, isPlatformAdmin: dbUser.isPlatformAdmin }, userId: dbUser.id };
+    return {
+      user: {
+        id: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        avatarUrl: dbUser.avatarUrl,
+        isPlatformAdmin: false,
+      },
+      userId: dbUser.id,
+    };
   } catch { return { user: null, userId: null }; }
 }
 

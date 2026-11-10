@@ -23,6 +23,27 @@ export default function SubscriptionsAdminClient() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [runningReminders, setRunningReminders] = useState(false);
   const [reminderStatus, setReminderStatus] = useState<string | null>(null);
+  const [updatingSubId, setUpdatingSubId] = useState<string | null>(null);
+
+  async function updateSubscription(subscriptionId: string, payload: Record<string, unknown>) {
+    setUpdatingSubId(subscriptionId);
+    setReminderStatus(null);
+    try {
+      const res = await fetch("/api/platform/subscriptions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subscriptionId, ...payload }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Update failed");
+      setReminderStatus("✓ Subscription updated & audit logged.");
+      await loadData();
+    } catch (e: any) {
+      setReminderStatus(`Failed: ${e.message}`);
+    } finally {
+      setUpdatingSubId(null);
+    }
+  }
 
   async function handleRunReminders() {
     setRunningReminders(true);
@@ -265,12 +286,13 @@ export default function SubscriptionsAdminClient() {
                     <th className="py-3 px-4">Period End</th>
                     <th className="py-3 px-4">Outlets / Staff</th>
                     <th className="py-3 px-4">Grace Status</th>
+                    <th className="py-3 px-4">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5EBE7]">
                   {filteredSubs.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-[#718078]">
+                      <td colSpan={8} className="py-8 text-center text-[#718078]">
                         No subscriptions found.
                       </td>
                     </tr>
@@ -320,6 +342,31 @@ export default function SubscriptionsAdminClient() {
                           ) : (
                             <span className="text-[#718078] text-[10px]">Standard grace</span>
                           )}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-1.5">
+                            <select
+                              value={s.status}
+                              disabled={updatingSubId === s.id}
+                              onChange={(e) => updateSubscription(s.id, { status: e.target.value })}
+                              className="rounded-lg border border-[#E5EBE7] bg-white px-2 py-1 text-[10px] font-semibold text-[#172B25]"
+                            >
+                              {["ACTIVE", "PAST_DUE", "PENDING", "CANCELLED", "EXPIRED"].map((st) => (
+                                <option key={st} value={st}>
+                                  {st}
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              type="button"
+                              disabled={updatingSubId === s.id}
+                              onClick={() => updateSubscription(s.id, { status: "ACTIVE", extendDays: 30 })}
+                              className="rounded-lg bg-[#E8F5EE] border border-[#16845B]/20 text-[#16845B] px-2 py-1 text-[10px] font-bold hover:bg-[#16845B] hover:text-white transition cursor-pointer"
+                              title="Extend validity by 30 days"
+                            >
+                              +30d
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))

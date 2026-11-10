@@ -1,20 +1,26 @@
-import { Card, CardContent } from "@/components/ui/card";
+export const dynamic = "force-dynamic";
+import { redirect } from "next/navigation";
+import { GST_BPS } from "@/lib/checkout";
+import { getPlatformOwnerSession } from "@/lib/platform-auth";
+import { isRazorpayConfigured, isRazorpayLiveMode, isWebhookConfigured } from "@/lib/razorpay";
+import SettingsAdminClient from "./SettingsAdminClient";
 
-export default function PlatformSettings() {
+export default async function PlatformSettings() {
+  const authResult = await getPlatformOwnerSession();
+  if (!authResult.authorized || !("user" in authResult)) {
+    redirect("/platform");
+  }
+
   return (
-    <div className="space-y-6 text-[#172B25]">
-      <div>
-        <h1 className="text-2xl font-black text-[#172B25]">Platform Settings</h1>
-        <p className="text-sm text-[#718078]">
-          Global server configurations, environment status, and system health.
-        </p>
-      </div>
-      <Card className="bg-white border-[#E5EBE7] shadow-xs">
-        <CardContent className="pt-6 pb-6 text-sm text-[#718078] leading-relaxed">
-          System health, integration registry, and automated backups are configured via server
-          environment variables. Zero client-side sensitive keys.
-        </CardContent>
-      </Card>
-    </div>
+    <SettingsAdminClient
+      primaryOwnerEmail={authResult.user.email}
+      mfaEnrolled={authResult.mfaEnrolled}
+      mfaVerifiedInSession={authResult.mfaVerifiedInSession}
+      gstBps={GST_BPS}
+      razorpayConfigured={isRazorpayConfigured()}
+      razorpayLiveMode={isRazorpayLiveMode()}
+      webhookConfigured={isWebhookConfigured()}
+      clerkConfigured={Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)}
+    />
   );
 }

@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { logPlatformAdminAction, requirePlatformOwnerApi } from "@/lib/platform-auth";
+import { GRACE_PERIOD_DAYS } from "@/lib/subscription";
 
 export async function GET(_req: NextRequest) {
-  const { userId } = await getSession();
-  if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
-
-  // Only Platform Super Admins can view platform-wide SaaS subscription metrics
-  const dbUser = await prisma.user.findUnique({ where: { id: userId } });
-  if (!dbUser?.isPlatformAdmin) {
-    return NextResponse.json({ error: "Platform Admin access required" }, { status: 403 });
-  }
+  const guard = await requirePlatformOwnerApi();
+  if (!guard.ok) return guard.response;
 
   const [subscriptions, plans, subscriptionPayments, webhookEvents] = await Promise.all([
     prisma.subscription.findMany({
@@ -112,5 +107,87 @@ export async function GET(_req: NextRequest) {
     subscriptionPayments,
     webhookEvents,
   });
+}
+
+export async function PATCH(req: NextRequest) {
+  const guard = await requirePlatformOwnerApi();
+  if (!guard.ok) return guard.response;
+
+  try {
+    const body = await req.json();
+    const { subscriptionId, status, planId, billingCycle, extendDays } = body as {
+      subscriptionId?: string;
+      status?: "ACTIVE" | "PAST_DUE" | "CANCELLED" | "EXPIRED" | "PENDING";
+      planId?: string;
+      billingCycle?: "MONTHLY" | "ANNUAL";
+      extendDays?: number;
+    };
+
+    if (!subscriptionId) {
+      return NextResponse.json({ error: "subscriptionId required" }, { status: 400 });
+    }
+
+    const existing = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      include: { plan: true, tenant: true },
+    });
+    if (!existing) {
+      return NextResponse.json({ error: "Subscription not found" }, { status: 404 });
+    }
+
+    const allowedStatuses = ["ACTIVE", "PAST_DUE", "CANCELLED", "EXPIRED", "PENDING"];
+    if (status && !allowedStatuses.includes(status)) {
+      return NextResponse.json({ error: "Invalid subscription status" }, { status: 400 });
+    }
+
+    const updateData: Record<string, unknown> = {};
+    if (status) {
+      updateData.status = status;
+      if (status === "CANCELLED") updateData.cancelledAt = new Date();
+      if (status === "ACTIVE") {
+        updateData.cancelledAt = null;
+        updateData.cancelAtPeriodEnd = false;
+      }
+    }
+    if (planId) {
+      const targetPlan = await prisma.subscriptionPlan.findUnique({ where: { id: planId } });
+      if (!targetPlan) return NextResponse.json({ error: "Target plan not found" }, { status: 404 });
+      updateData.planId = planId;
+    }
+    if (billingCycle === "MONTHLY" || billingCycle === "ANNUAL") {
+      updateData.billingCycle = billingCycle;
+    }
+    if (typeof extendDays === "number" && extendDays > 0 && extendDays <= 730) {
+      const baseDate = existing.currentPeriodEnd > new Date() ? existing.currentPeriodEnd : new Date();
+      const newEnd = new Date(baseDate.getTime() + extendDays * 24 * 60 * 60 * 1000);
+      updateData.currentPeriodEnd = newEnd;
+      updateData.gracePeriodEndsAt = new Date(newEnd.getTime() + GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000);
+    }
+
+    const updated = await prisma.subscription.update({
+      where: { id: subscriptionId },
+      data: updateData,
+      include: { plan: true, tenant: { select: { id: true, name: true } } },
+    });
+
+    await logPlatformAdminAction({
+      userId: guard.auth.user.id,
+      tenantId: existing.tenantId,
+      action: "PLATFORM_SUBSCRIPTION_UPDATED",
+      entity: "Subscription",
+      entityId: subscriptionId,
+      metadata: {
+        previousStatus: existing.status,
+        newStatus: updated.status,
+        previousPlanId: existing.planId,
+        newPlanId: updated.planId,
+        extendDays: extendDays || 0,
+      },
+    });
+
+    return NextResponse.json({ ok: true, subscription: updated });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || "Failed to update subscription" }, { status: 500 });
+  }
 }
 

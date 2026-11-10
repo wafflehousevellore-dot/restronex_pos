@@ -9,15 +9,15 @@ async function seed() {
   await client.connect();
 
   try {
-    // 1. Seed Subscription Plans (Starter ₹200, Growth ₹300, Business ₹500)
+    // 1. Seed Subscription Plans (Starter ₹99, Growth ₹199, Business ₹299)
     console.log("Seeding subscription plans...");
     const plans = [
       {
         id: "plan_starter",
         name: "Starter",
         slug: "starter",
-        priceMonthlyPaise: 20000,
-        priceAnnualPaise: 200000,
+        priceMonthlyPaise: 9900,
+        priceAnnualPaise: 99000,
         maxOutlets: 1,
         maxUsers: 5,
         featuresJson: JSON.stringify(["1 Outlet", "5 Staff", "Core POS billing", "Menu & category management", "Basic order operations", "Essential reports", "Basic restaurant settings"]),
@@ -27,8 +27,8 @@ async function seed() {
         id: "plan_growth",
         name: "Growth",
         slug: "growth",
-        priceMonthlyPaise: 30000,
-        priceAnnualPaise: 300000,
+        priceMonthlyPaise: 19900,
+        priceAnnualPaise: 199000,
         maxOutlets: 5,
         maxUsers: 25,
         featuresJson: JSON.stringify(["Up to 5 Outlets", "25 Staff", "Core POS billing", "Menu & category management", "Outlet management", "Inventory functionality", "Advanced reports", "Staff & outlet permissions"]),
@@ -38,8 +38,8 @@ async function seed() {
         id: "plan_business",
         name: "Business",
         slug: "business",
-        priceMonthlyPaise: 50000,
-        priceAnnualPaise: 500000,
+        priceMonthlyPaise: 29900,
+        priceAnnualPaise: 299000,
         maxOutlets: 50,
         maxUsers: 200,
         featuresJson: JSON.stringify(["Multi-outlet restaurant operations", "Centralized management", "Consolidated reports", "Advanced inventory capabilities", "Outlet-specific settings & permissions", "Unlimited staff accounts", "Priority 24×7 support"]),

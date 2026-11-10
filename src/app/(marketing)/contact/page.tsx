@@ -42,7 +42,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <Label className="text-xs font-semibold text-[#718078] mb-1.5 block">Phone Number</Label>
-                <Input name="phone" required placeholder="+91 98765 43210" className="bg-white border-[#E5EBE7] text-[#172B25] placeholder:text-[#718078]/50" />
+                <Input name="phone" required placeholder="+91 9XXXXXXXXX" className="bg-white border-[#E5EBE7] text-[#172B25] placeholder:text-[#718078]/50" />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -80,15 +80,40 @@ export default function ContactPage() {
                 <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] text-[#16845B] flex items-center justify-center text-sm font-bold shrink-0">✉</div>
                 <div>
                   <div className="font-semibold text-xs text-[#718078] uppercase tracking-wider">Email</div>
-                  <div className="font-medium text-[#172B25]">{brand.contact.email}</div>
+                  <a
+                    href={brand.contact.mailtoUrl}
+                    className="font-semibold text-[#16845B] hover:underline break-all"
+                  >
+                    {brand.contact.email}
+                  </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
                 <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] text-[#16845B] flex items-center justify-center text-sm font-bold shrink-0">☎</div>
                 <div>
-                  <div className="font-semibold text-xs text-[#718078] uppercase tracking-wider">Phone</div>
-                  <div className="font-medium text-[#172B25]">{brand.contact.phone}</div>
+                  <div className="font-semibold text-xs text-[#718078] uppercase tracking-wider">Mobile / Call</div>
+                  <a
+                    href={brand.contact.telUrl}
+                    className="font-semibold text-[#172B25] hover:text-[#16845B] hover:underline"
+                  >
+                    {brand.contact.phone}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="h-8 w-8 rounded-lg bg-[#E8F5EE] text-[#16845B] flex items-center justify-center text-sm font-bold shrink-0">💬</div>
+                <div>
+                  <div className="font-semibold text-xs text-[#718078] uppercase tracking-wider">WhatsApp Support</div>
+                  <a
+                    href={brand.contact.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-[#16845B] hover:underline inline-flex items-center gap-1"
+                  >
+                    {brand.contact.whatsapp} • Chat on WhatsApp →
+                  </a>
                 </div>
               </div>
 

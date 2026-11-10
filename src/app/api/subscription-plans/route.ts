@@ -1,25 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import { ensureSeedPlans } from "@/lib/seed";
+import { logPlatformAdminAction, requirePlatformOwnerApi } from "@/lib/platform-auth";
 
 export async function GET() {
+  await ensureSeedPlans();
   const plans = await prisma.subscriptionPlan.findMany({ orderBy: { sortOrder: "asc" } });
   return NextResponse.json(plans);
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const { user } = await getSession();
-    // Allow platform admins to update plans
-    if (!user?.isPlatformAdmin && user?.email !== "admin@restronex.app") {
-      return NextResponse.json({ error: "FORBIDDEN: Platform admin access required" }, { status: 403 });
-    }
+    const guard = await requirePlatformOwnerApi();
+    if (!guard.ok) return guard.response;
 
     const body = await req.json();
     const { id, priceMonthlyPaise, priceAnnualPaise, maxOutlets, maxUsers } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Plan ID is required" }, { status: 400 });
+    }
+
+    const existing = await prisma.subscriptionPlan.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Plan not found" }, { status: 404 });
     }
 
     const updated = await prisma.subscriptionPlan.update({
@@ -32,12 +36,19 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    await prisma.auditLog.create({
-      data: {
-        action: "PLAN_UPDATED_BY_ADMIN",
-        entity: "SubscriptionPlan",
-        entityId: id,
-        metadataJson: JSON.stringify({ priceMonthlyPaise, maxOutlets, maxUsers }),
+    await logPlatformAdminAction({
+      userId: guard.auth.user.id,
+      action: "PLATFORM_PLAN_UPDATED",
+      entity: "SubscriptionPlan",
+      entityId: id,
+      metadata: {
+        slug: existing.slug,
+        previousMonthlyPaise: existing.priceMonthlyPaise,
+        newMonthlyPaise: updated.priceMonthlyPaise,
+        previousAnnualPaise: existing.priceAnnualPaise,
+        newAnnualPaise: updated.priceAnnualPaise,
+        maxOutlets: updated.maxOutlets,
+        maxUsers: updated.maxUsers,
       },
     });
 

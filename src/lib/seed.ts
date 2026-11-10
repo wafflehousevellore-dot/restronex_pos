@@ -1,18 +1,48 @@
 import { prisma } from "./db";
+import { pricingPlans } from "./brand";
+
+const LEGACY_MONTHLY_PAISE: Record<string, number> = {
+  starter: 20000,
+  growth: 30000,
+  business: 50000,
+};
 
 export async function ensureSeedPlans() {
-  const plansData = [
-    { name: "Starter", slug: "starter", priceMonthlyPaise: 20000, priceAnnualPaise: 200000, maxOutlets: 1, maxUsers: 5, featuresJson: JSON.stringify(["1 Outlet", "5 Staff", "Core POS billing", "Menu & category management", "Basic order operations", "Essential reports", "Basic restaurant settings"]), sortOrder: 1 },
-    { name: "Growth", slug: "growth", priceMonthlyPaise: 30000, priceAnnualPaise: 300000, maxOutlets: 5, maxUsers: 25, featuresJson: JSON.stringify(["Up to 5 Outlets", "25 Staff", "Core POS billing", "Menu & category management", "Outlet management", "Inventory functionality", "Advanced reports", "Staff & outlet permissions"]), sortOrder: 2 },
-    { name: "Business", slug: "business", priceMonthlyPaise: 50000, priceAnnualPaise: 500000, maxOutlets: 50, maxUsers: 200, featuresJson: JSON.stringify(["Multi-outlet restaurant operations", "Centralized management", "Consolidated reports", "Advanced inventory capabilities", "Outlet-specific settings & permissions", "Unlimited staff accounts", "Priority 24×7 support"]), sortOrder: 3 },
-  ];
+  for (let idx = 0; idx < pricingPlans.length; idx++) {
+    const bp = pricingPlans[idx];
+    const targetMonthlyPaise = bp.priceMonthly * 100;
+    const targetAnnualPaise = bp.priceAnnual * 100;
+    const featuresJson = JSON.stringify(bp.features);
 
-  for (const p of plansData) {
-    await prisma.subscriptionPlan.upsert({
-      where: { slug: p.slug },
-      update: { name: p.name, priceMonthlyPaise: p.priceMonthlyPaise, priceAnnualPaise: p.priceAnnualPaise, maxOutlets: p.maxOutlets, maxUsers: p.maxUsers, featuresJson: p.featuresJson, sortOrder: p.sortOrder },
-      create: p,
-    });
+    const existing = await prisma.subscriptionPlan.findUnique({ where: { slug: bp.slug } });
+    if (!existing) {
+      await prisma.subscriptionPlan.create({
+        data: {
+          name: bp.name,
+          slug: bp.slug,
+          priceMonthlyPaise: targetMonthlyPaise,
+          priceAnnualPaise: targetAnnualPaise,
+          maxOutlets: bp.maxOutlets,
+          maxUsers: bp.maxUsers,
+          featuresJson,
+          sortOrder: idx + 1,
+        },
+      });
+    } else if (existing.priceMonthlyPaise === LEGACY_MONTHLY_PAISE[bp.slug]) {
+      // Automatically migrate legacy ₹200/₹300/₹500 catalog plans to updated ₹99/₹199/₹299 without touching existing Subscriptions
+      await prisma.subscriptionPlan.update({
+        where: { id: existing.id },
+        data: {
+          name: bp.name,
+          priceMonthlyPaise: targetMonthlyPaise,
+          priceAnnualPaise: targetAnnualPaise,
+          maxOutlets: bp.maxOutlets,
+          maxUsers: bp.maxUsers,
+          featuresJson,
+          sortOrder: idx + 1,
+        },
+      });
+    }
   }
 
   await prisma.subscriptionPlan.deleteMany({ where: { slug: "enterprise" } }).catch(() => {});

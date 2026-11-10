@@ -50,7 +50,7 @@ export async function POST(req: NextRequest){
       return NextResponse.json({error:"Invalid credentials"},{status:401});
     }
     const isHttps = isHttpsFromRequest(req);
-    const token = await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: user.isPlatformAdmin }, { secure: isHttps });
+    const token = await createSession({ id:user.id, email:user.email, name:user.name, isPlatformAdmin: false }, { secure: isHttps });
     const mem = await prisma.membership.findFirst({ where: { userId: user.id } });
 
     const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/app/dashboard";
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest){
     }
     const jsonRes = NextResponse.json({
       ok: true,
-      user: { id: user.id, email: user.email, name: user.name, isPlatformAdmin: user.isPlatformAdmin },
+      user: { id: user.id, email: user.email, name: user.name, isPlatformAdmin: false },
       token,
       tenantId: mem?.tenantId || null,
       next: nextUrl,

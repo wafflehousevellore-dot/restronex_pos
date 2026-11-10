@@ -78,12 +78,27 @@ export default async function PlatformOverview() {
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7] mb-2">
           <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
-          <span>Platform Super Admin • Live Infrastructure Metrics</span>
+          <span>Platform Owner • Live Infrastructure Metrics</span>
         </div>
-        <h1 className="text-2xl font-black text-[#172B25]">Platform Operations & Tenancy Overview</h1>
-        <p className="text-sm text-[#718078]">
-          Real-time metrics derived directly from persistent database records • Strict tenant isolation
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-black text-[#172B25]">Platform Operations &amp; Tenancy Overview</h1>
+            <p className="text-sm text-[#718078]">
+              Real-time metrics derived directly from persistent database records • Strict tenant isolation
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <Link href="/platform/subscriptions" className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] transition">
+              Subscriptions &amp; Payments →
+            </Link>
+            <Link href="/platform/users" className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]">
+              Platform Users
+            </Link>
+            <Link href="/platform/settings" className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]">
+              System Settings
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Primary KPI Grid */}

@@ -4,12 +4,13 @@ import React, { useState } from "react";
 import { RazorpayCheckoutButton } from "@/components/RazorpayCheckoutButton";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { brand } from "@/lib/brand";
 
 export default function StandardCheckoutPage() {
-  const [amountRupees, setAmountRupees] = useState("200");
-  const [name, setName] = useState("RestroNEX Demo Customer");
-  const [email, setEmail] = useState("owner@restronex.app");
-  const [contact, setContact] = useState("+919876543210");
+  const [amountRupees, setAmountRupees] = useState("99");
+  const [name, setName] = useState("RestroNEX Customer");
+  const [email, setEmail] = useState<string>(brand.contact.email);
+  const [contact, setContact] = useState("+919513008467");
   const [logs, setLogs] = useState<string[]>([]);
 
   const addLog = (msg: string) => {

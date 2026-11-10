@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
-import { pricingPlans } from "@/lib/brand";
+import { pricingPlans as fallbackPlans } from "@/lib/brand";
 import { Check, ArrowRight, Store, User, Mail, Phone, Sparkles, ShieldCheck } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -20,6 +20,7 @@ function GetStartedContent() {
   const searchParams = useSearchParams();
 
   const [step, setStep] = useState<1 | 2>(1);
+  const [plans, setPlans] = useState<any[]>(fallbackPlans as any);
   const [selectedPlan, setSelectedPlan] = useState<string>("starter");
   const [billingCycle, setBillingCycle] = useState<"MONTHLY" | "ANNUAL">("MONTHLY");
 
@@ -43,9 +44,29 @@ function GetStartedContent() {
     if (cycleParam && ["MONTHLY", "ANNUAL"].includes(cycleParam.toUpperCase())) {
       setBillingCycle(cycleParam.toUpperCase() as "MONTHLY" | "ANNUAL");
     }
+
+    fetch("/api/subscription-plans")
+      .then((r) => r.json())
+      .then((dbPlans) => {
+        if (Array.isArray(dbPlans) && dbPlans.length) {
+          const mapped = fallbackPlans.map((brandPlan) => {
+            const db = dbPlans.find((p: any) => p.slug === brandPlan.slug);
+            if (!db) return brandPlan;
+            return {
+              ...brandPlan,
+              priceMonthly: Math.round(db.priceMonthlyPaise / 100),
+              priceAnnual: Math.round(db.priceAnnualPaise / 100),
+              maxOutlets: db.maxOutlets,
+              maxUsers: db.maxUsers,
+            };
+          });
+          setPlans(mapped);
+        }
+      })
+      .catch(() => {});
   }, [searchParams]);
 
-  const activePlan = pricingPlans.find((p) => p.slug === selectedPlan) || pricingPlans[0];
+  const activePlan = plans.find((p) => p.slug === selectedPlan) || plans[0];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -123,9 +144,10 @@ function GetStartedContent() {
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
-                {pricingPlans.map((plan) => {
+                {plans.map((plan) => {
                   const isSelected = selectedPlan === plan.slug;
-                  const price = billingCycle === "ANNUAL" ? Math.round(plan.priceAnnual / 12) : plan.priceMonthly;
+                  const price = billingCycle === "ANNUAL" ? plan.priceAnnual : plan.priceMonthly;
+                  const unit = billingCycle === "ANNUAL" ? "/ yr" : "/ mo";
 
                   return (
                     <div
@@ -150,11 +172,11 @@ function GetStartedContent() {
 
                         <div className="mt-4 flex items-baseline gap-1">
                           <span className="text-3xl font-black text-[#172B25]">₹{price}</span>
-                          <span className="text-xs text-[#718078]">/ mo + GST</span>
+                          <span className="text-xs text-[#718078]">{unit} + 18% GST</span>
                         </div>
 
                         <div className="mt-5 space-y-2.5 border-t border-[#E5EBE7] pt-4">
-                          {plan.features.map((f) => (
+                          {plan.features.map((f: string) => (
                             <div key={f} className="flex items-start gap-2 text-xs text-[#172B25]">
                               <Check className="h-3.5 w-3.5 text-[#16845B] shrink-0 mt-0.5" />
                               <span>{f}</span>

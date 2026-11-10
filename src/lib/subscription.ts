@@ -129,12 +129,16 @@ export async function getTenantSubscriptionEntitlements(tenantId: string): Promi
 export function calculatePlanChange({
   currentPlanPriceMonthlyPaise,
   newPlanPriceMonthlyPaise,
+  currentPlanPriceAnnualPaise,
+  newPlanPriceAnnualPaise,
   billingCycle,
   daysRemainingInPeriod,
   totalDaysInPeriod,
 }: {
   currentPlanPriceMonthlyPaise: number;
   newPlanPriceMonthlyPaise: number;
+  currentPlanPriceAnnualPaise?: number;
+  newPlanPriceAnnualPaise?: number;
   billingCycle: "MONTHLY" | "ANNUAL";
   daysRemainingInPeriod: number;
   totalDaysInPeriod: number;
@@ -145,9 +149,13 @@ export function calculatePlanChange({
   payablePaise: number;
 } {
   const currentTotal =
-    billingCycle === "ANNUAL" ? currentPlanPriceMonthlyPaise * 10 : currentPlanPriceMonthlyPaise;
+    billingCycle === "ANNUAL"
+      ? (currentPlanPriceAnnualPaise ?? currentPlanPriceMonthlyPaise * 10)
+      : currentPlanPriceMonthlyPaise;
   const newTotal =
-    billingCycle === "ANNUAL" ? newPlanPriceMonthlyPaise * 10 : newPlanPriceMonthlyPaise;
+    billingCycle === "ANNUAL"
+      ? (newPlanPriceAnnualPaise ?? newPlanPriceMonthlyPaise * 10)
+      : newPlanPriceMonthlyPaise;
 
   const fractionRemaining = Math.max(0, Math.min(1, daysRemainingInPeriod / Math.max(1, totalDaysInPeriod)));
   const proratedCreditPaise = Math.round(currentTotal * fractionRemaining);

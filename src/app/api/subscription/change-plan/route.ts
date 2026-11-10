@@ -69,6 +69,8 @@ export async function POST(req: NextRequest) {
   const changeCalc = calculatePlanChange({
     currentPlanPriceMonthlyPaise: currentSub.plan.priceMonthlyPaise,
     newPlanPriceMonthlyPaise: newPlan.priceMonthlyPaise,
+    currentPlanPriceAnnualPaise: currentSub.plan.priceAnnualPaise,
+    newPlanPriceAnnualPaise: newPlan.priceAnnualPaise,
     billingCycle: (billingCycle as "MONTHLY" | "ANNUAL") || "MONTHLY",
     daysRemainingInPeriod: daysRemaining,
     totalDaysInPeriod: totalDays,

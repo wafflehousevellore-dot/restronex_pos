@@ -1,4 +1,5 @@
 import { PageShell } from "@/components/marketing/PageShell";
+import { brand } from "@/lib/brand";
 
 export default function Privacy() {
   return (
@@ -13,7 +14,11 @@ export default function Privacy() {
             RestroNex respects your privacy. We collect only data needed to provide restaurant management services: business info, user accounts, orders, inventory, and support enquiries.
           </p>
           <p>
-            Tenant data is isolated. We do not sell personal data. Customer CRM data is access-controlled and requires consent for marketing. You can request export or deletion via support@restronex.app.
+            Tenant data is isolated. We do not sell personal data. Customer CRM data is access-controlled and requires consent for marketing. You can request export or deletion via{" "}
+            <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-semibold hover:underline">
+              {brand.contact.email}
+            </a>
+            .
           </p>
           <p>
             Payments are processed via Razorpay; we store only references and entitlement state, never card numbers. Webhook signatures are verified.

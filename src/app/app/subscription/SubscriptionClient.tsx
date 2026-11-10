@@ -317,10 +317,10 @@ export default function SubscriptionClient() {
                     <CardTitle className="text-lg text-[#172B25]">{p.name}</CardTitle>
                     <div className="mt-1 flex items-baseline gap-1">
                       <span className="text-2xl font-black text-[#172B25]">{formatINR(p.priceMonthlyPaise)}</span>
-                      <span className="text-xs text-[#718078]">/month</span>
+                      <span className="text-xs text-[#718078]">/month + 18% GST</span>
                     </div>
                     <div className="text-[11px] text-[#718078] mt-0.5">
-                      {p.maxOutlets} outlet{p.maxOutlets > 1 ? "s" : ""} • {p.maxUsers} staff accounts
+                      {formatINR(p.priceAnnualPaise)}/year (+ GST) • {p.maxOutlets} outlet{p.maxOutlets > 1 ? "s" : ""} • {p.maxUsers} staff
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-2 text-xs">

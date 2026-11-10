@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId, setActiveOrgId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { verifyPaymentSignature } from "@/lib/razorpay";
-import { calcCheckoutTotals } from "@/lib/checkout";
+import { calcCheckoutTotals, resolveCouponDiscount } from "@/lib/checkout";
 import { ensureSeedPlans } from "@/lib/seed";
+import { brand } from "@/lib/brand";
 
 export async function POST(req: NextRequest){
   const { userId } = await getSession();
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest){
 
   // Verify signature server-side — never trust browser
   const valid = verifyPaymentSignature({ razorpay_order_id, razorpay_payment_id, razorpay_signature });
-  if (!valid) return NextResponse.json({error:"Payment verification failed — signature mismatch. Subscription not activated. Contact support@restronex.app if charged."},{status:400});
+  if (!valid) return NextResponse.json({error:`Payment verification failed — signature mismatch. Subscription not activated. Contact ${brand.contact.supportEmail} if charged.`},{status:400});
 
   // Idempotency: dedupe by payment_id via WebhookEvent / SubscriptionPayment
   const existingPayment = await prisma.subscriptionPayment.findFirst({ where:{ providerPaymentId: razorpay_payment_id }});
@@ -32,32 +33,17 @@ export async function POST(req: NextRequest){
   // Outlet limit enforced again server-side
   if ((outletCount||1) > plan.maxOutlets) return NextResponse.json({error:`Outlet count exceeds plan limit ${plan.maxOutlets}`},{status:400});
 
-  // Validate amount matches server-calculated total (accounting for promo coupons)
-  const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount });
-  const code = coupon?.trim().toUpperCase();
-  let discountPaise = 0;
-  let fixedTotalPaise: number | undefined;
-  if (
-    code === "PAY1" ||
-    code === "RS1" ||
-    code === "1RS" ||
-    code === "ONE" ||
-    code === "RUPEE1" ||
-    code === "1RUPEE" ||
-    code === "TEST1" ||
-    code === "PROMO1"
-  ) {
-    fixedTotalPaise = 100; // ₹1 test code
-  } else if (code === "PAY2" || code === "TEST2" || code === "RS2" || code === "100OFF" || code === "TEST100" || code === "TESTPAY" || code === "2RS" || code === "100%" || code === "FREE" || code === "2RUPEES") {
-    fixedTotalPaise = 200;
-  } else if (code === "WELCOME10" || code === "SAVE10") {
-    discountPaise = Math.round(baseTotals.subtotal * 0.1);
-  } else if (code === "FLAT50") {
-    discountPaise = 5000;
-  } else if (code === "CHEF20" || code === "FESTIVE20") {
-    discountPaise = Math.round(baseTotals.subtotal * 0.2);
-  }
-  const expected = calcCheckoutTotals({ planSlug, billingCycle, outletCount, couponDiscountPaise: discountPaise, fixedTotalPaise });
+  // Validate amount matches server-calculated total (accounting for promo coupons and DB plan pricing)
+  const baseTotals = calcCheckoutTotals({ planSlug, billingCycle, outletCount, planPricingOverride: plan });
+  const cRes = resolveCouponDiscount(coupon, baseTotals.subtotal);
+  const expected = calcCheckoutTotals({
+    planSlug,
+    billingCycle,
+    outletCount,
+    couponDiscountPaise: cRes.discountPaise,
+    fixedTotalPaise: cRes.fixedTotalPaise,
+    planPricingOverride: plan,
+  });
   // In mock mode we trust; in live we would fetch Razorpay order amount and compare
 
   const tenantId = await resolveTenantId(userId);

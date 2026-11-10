@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { brand } from "@/lib/brand";
 
 declare global {
   interface Window {
@@ -9,7 +10,7 @@ declare global {
 }
 
 interface RazorpayCheckoutButtonProps {
-  amountPaise?: number; // In paise: e.g., 50000 = ₹500
+  amountPaise?: number; // In paise: e.g., 9900 = ₹99
   currency?: string;
   name?: string;
   description?: string;
@@ -26,14 +27,14 @@ interface RazorpayCheckoutButtonProps {
 }
 
 export function RazorpayCheckoutButton({
-  amountPaise = 20000, // ₹200 default Starter
+  amountPaise = 9900, // ₹99 default Starter
   currency = "INR",
   name = "RestroNEX",
   description = "Standard Subscription / Order",
   prefill = {
     name: "Restaurant Owner",
-    email: "owner@restronex.app",
-    contact: "+919999999999",
+    email: brand.contact.email,
+    contact: "+919513008467",
   },
   onSuccess,
   onError,

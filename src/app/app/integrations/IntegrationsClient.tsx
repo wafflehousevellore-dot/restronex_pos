@@ -16,7 +16,6 @@ import {
 import {
   Check,
   CheckCircle2,
-  ExternalLink,
   RefreshCw,
   Phone,
   Building2,

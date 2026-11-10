@@ -4,6 +4,8 @@ import { getSession, resolveTenantId } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import POSClient from "@/components/app/POSClient";
 import { getEntitlements } from "@/lib/entitlements";
+import { pricingPlans } from "@/lib/brand";
+import { ensureSeedPlans } from "@/lib/seed";
 import Link from "next/link";
 
 export default async function POSPage(){
@@ -18,6 +20,17 @@ export default async function POSPage(){
 
   // If no active subscription on this tenant, render an informative In-App Card instead of an abrupt redirect
   if (!ent.hasActiveSubscription) {
+    await ensureSeedPlans();
+    const dbPlans = await prisma.subscriptionPlan.findMany({ orderBy: { sortOrder: "asc" } });
+    const starterPlan = dbPlans.find((p) => p.slug === "starter");
+    const growthPlan = dbPlans.find((p) => p.slug === "growth");
+    const starterRupees = starterPlan
+      ? Math.round(starterPlan.priceMonthlyPaise / 100)
+      : pricingPlans[0].priceMonthly;
+    const growthRupees = growthPlan
+      ? Math.round(growthPlan.priceMonthlyPaise / 100)
+      : pricingPlans[1].priceMonthly;
+
     const otherActiveMemberships = await prisma.membership.findMany({
       where: {
         userId,
@@ -78,7 +91,7 @@ export default async function POSPage(){
                 RECOMMENDED
               </span>
               <div className="text-xs font-bold uppercase tracking-wider text-[#718078]">Growth Plan</div>
-              <div className="text-2xl font-black text-[#172B25] mt-1">₹300 <span className="text-xs font-normal text-[#718078]">/ month</span></div>
+              <div className="text-2xl font-black text-[#172B25] mt-1">₹{growthRupees} <span className="text-xs font-normal text-[#718078]">/ month + GST</span></div>
               <p className="text-xs text-[#718078] mt-2">Up to 5 outlets • 25 staff accounts • Inventory • Advanced reports</p>
               <Link
                 href="/checkout?plan=growth&cycle=MONTHLY"
@@ -90,7 +103,7 @@ export default async function POSPage(){
 
             <div className="rounded-2xl border border-[#E5EBE7] bg-[#F8FAF9] p-5 shadow-2xs">
               <div className="text-xs font-bold uppercase tracking-wider text-[#718078]">Starter Plan</div>
-              <div className="text-2xl font-black text-[#172B25] mt-1">₹200 <span className="text-xs font-normal text-[#718078]">/ month</span></div>
+              <div className="text-2xl font-black text-[#172B25] mt-1">₹{starterRupees} <span className="text-xs font-normal text-[#718078]">/ month + GST</span></div>
               <p className="text-xs text-[#718078] mt-2">1 outlet • 5 staff • Core POS billing • Essential reports</p>
               <Link
                 href="/checkout?plan=starter&cycle=MONTHLY"

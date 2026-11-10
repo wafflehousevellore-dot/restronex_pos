@@ -19,12 +19,17 @@ import {
   CreditCard,
   Receipt,
   CheckCircle2,
+  Phone,
+  Mail,
 } from "lucide-react";
-import { pricingPlans, pricingComparison } from "@/lib/brand";
+import { brand, pricingPlans, pricingComparison } from "@/lib/brand";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default function HomePage() {
+  const starterPlan = pricingPlans.find((p) => p.slug === "starter") || pricingPlans[0];
+  const growthPlan = pricingPlans.find((p) => p.slug === "growth") || pricingPlans[1];
+  const businessPlan = pricingPlans.find((p) => p.slug === "business") || pricingPlans[2];
 
   const faqs = [
     {
@@ -53,7 +58,7 @@ export default function HomePage() {
     },
     {
       q: "What subscription plans are available?",
-      a: "We offer three simple plans: Starter at ₹200/month (1 outlet, 5 staff), Growth at ₹300/month (up to 5 outlets, 25 staff, full inventory and QR ordering), and Business at ₹500/month (up to 50 outlets, 200 staff, multi-chain features).",
+      a: `We offer three simple plans: Starter at ₹${starterPlan.priceMonthly}/month (1 outlet, 5 staff), Growth at ₹${growthPlan.priceMonthly}/month (up to 5 outlets, 25 staff, full inventory and QR ordering), and Business at ₹${businessPlan.priceMonthly}/month (up to 50 outlets, 200 staff, multi-chain features). Applicable 18% GST is displayed separately at checkout.`,
     },
   ];
 
@@ -138,7 +143,7 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <Link href="/get-started">
                     <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs flex items-center gap-2">
-                      <span>Start Now from ₹200/mo</span>
+                      <span>Start Now from ₹{starterPlan.priceMonthly}/mo</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
@@ -625,7 +630,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 16: PRICING (HONEST ₹200 / ₹300 / ₹500)          */}
+        {/* SECTION 16: PRICING (₹99 / ₹199 / ₹299)                   */}
         {/* ========================================================= */}
         <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]" id="pricing">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -704,9 +709,9 @@ export default function HomePage() {
                   <thead>
                     <tr className="border-b border-[#E5EBE7] bg-[#F8FAF9]/50">
                       <th className="p-3.5 font-bold text-[#718078]">Capability</th>
-                      <th className="p-3.5 font-bold text-[#172B25] text-center">Starter (₹200)</th>
-                      <th className="p-3.5 font-bold text-[#16845B] text-center">Growth (₹300)</th>
-                      <th className="p-3.5 font-bold text-[#172B25] text-center">Business (₹500)</th>
+                      <th className="p-3.5 font-bold text-[#172B25] text-center">{starterPlan.name} (₹{starterPlan.priceMonthly})</th>
+                      <th className="p-3.5 font-bold text-[#16845B] text-center">{growthPlan.name} (₹{growthPlan.priceMonthly})</th>
+                      <th className="p-3.5 font-bold text-[#172B25] text-center">{businessPlan.name} (₹{businessPlan.priceMonthly})</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#E5EBE7]">
@@ -794,19 +799,51 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CTA Banner */}
-        <section className="py-16 bg-[#16845B] text-white">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center space-y-4">
+        {/* CTA & Public Contact Banner */}
+        <section className="py-16 bg-[#16845B] text-white" id="contact">
+          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8 text-center space-y-5">
             <h2 className="text-2xl sm:text-3xl font-black">Ready to Modernize Your Restaurant Operations?</h2>
-            <p className="max-w-xl mx-auto text-xs sm:text-sm text-white/80 leading-relaxed">
+            <p className="max-w-xl mx-auto text-xs sm:text-sm text-white/85 leading-relaxed">
               Join modern restaurants, cafes, and QSRs running high-speed billing, tableside QR ordering, and paperless WhatsApp invoices.
             </p>
-            <div className="pt-2 flex justify-center gap-3">
+            <div className="pt-1 flex flex-wrap justify-center gap-3">
               <Link href="/get-started">
-                <button className="rounded-full bg-white text-[#16845B] px-8 py-3 text-xs font-black hover:bg-[#F8FAF9] shadow-sm transition">
+                <button className="rounded-full bg-white text-[#16845B] px-8 py-3 text-xs font-black hover:bg-[#F8FAF9] shadow-sm transition cursor-pointer">
                   Create Restaurant Workspace →
                 </button>
               </Link>
+              <Link href="/contact">
+                <button className="rounded-full border border-white/30 bg-white/10 text-white px-7 py-3 text-xs font-bold hover:bg-white/20 transition cursor-pointer">
+                  Contact Sales
+                </button>
+              </Link>
+            </div>
+            <div className="pt-4 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-white/95">
+              <a
+                href={brand.contact.telUrl}
+                className="inline-flex items-center gap-1.5 hover:underline font-semibold"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                <span>{brand.contact.phone}</span>
+              </a>
+              <span className="text-white/40">•</span>
+              <a
+                href={brand.contact.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 hover:underline font-semibold"
+              >
+                <MessageSquare className="h-3.5 w-3.5" />
+                <span>WhatsApp: {brand.contact.whatsapp}</span>
+              </a>
+              <span className="text-white/40">•</span>
+              <a
+                href={brand.contact.mailtoUrl}
+                className="inline-flex items-center gap-1.5 hover:underline font-semibold"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>{brand.contact.email}</span>
+              </a>
             </div>
           </div>
         </section>

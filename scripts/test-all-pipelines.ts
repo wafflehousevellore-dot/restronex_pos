@@ -66,9 +66,9 @@ async function main() {
     const growth = plans.find((p: any) => p.slug === "growth");
     const business = plans.find((p: any) => p.slug === "business");
 
-    assert(!!starter && starter.priceMonthlyPaise === 20000, "Starter must be ₹200/mo (20000 paise)");
-    assert(!!growth && growth.priceMonthlyPaise === 30000, "Growth must be ₹300/mo (30000 paise)");
-    assert(!!business && business.priceMonthlyPaise === 50000, "Business must be ₹500/mo (50000 paise)");
+    assert(!!starter && starter.priceMonthlyPaise === 9900, "Starter must be ₹99/mo (9900 paise)");
+    assert(!!growth && growth.priceMonthlyPaise === 19900, "Growth must be ₹199/mo (19900 paise)");
+    assert(!!business && business.priceMonthlyPaise === 29900, "Business must be ₹299/mo (29900 paise)");
   });
 
   // 3. Customer Acquisition & Pending Registration Pipeline

@@ -20,12 +20,12 @@ async function run15ScenarioVerification() {
 
   try {
     // -------------------------------------------------------------
-    // Scenario 1: Plan selection calculations (Starter ₹200 + 18% GST = ₹236)
+    // Scenario 1: Plan selection calculations (Starter ₹99 + 18% GST = ₹116.82)
     // -------------------------------------------------------------
-    console.log("▶ Scenario 1: Validate Starter plan (₹200) pricing & tax math");
+    console.log("▶ Scenario 1: Validate Starter plan (₹99) pricing & tax math");
     const totals = calcCheckoutTotals({ planSlug: "starter", billingCycle: "MONTHLY", outletCount: 1 });
-    if (totals.subtotal === 20000 && totals.totalPaise === 23600 && totals.gstPaise === 3600) {
-      console.log("  ✓ PASS: Starter ₹200 subtotal, ₹36 GST (18%), total ₹236.00 (23600 paise)");
+    if (totals.subtotal === 9900 && totals.totalPaise === 11682 && totals.gstPaise === 1782) {
+      console.log("  ✓ PASS: Starter ₹99 subtotal, ₹17.82 GST (18%), total ₹116.82 (11682 paise)");
       passed++;
     } else {
       throw new Error(`Starter plan pricing mismatch: got total ${totals.totalPaise}`);
@@ -63,8 +63,8 @@ async function run15ScenarioVerification() {
     // -------------------------------------------------------------
     console.log("▶ Scenario 4: Verify Razorpay order amount strictly in paise (>= 100 paise)");
     const orderAmountPaise = totals.totalPaise;
-    if (orderAmountPaise >= 100 && orderAmountPaise === 23600) {
-      console.log(`  ✓ PASS: Verified order amount ${orderAmountPaise} paise (₹236.00)`);
+    if (orderAmountPaise >= 100 && orderAmountPaise === 11682) {
+      console.log(`  ✓ PASS: Verified order amount ${orderAmountPaise} paise (₹116.82)`);
       passed++;
     } else {
       throw new Error(`Invalid order amount: ${orderAmountPaise}`);

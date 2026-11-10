@@ -3,6 +3,7 @@ import { PageShell } from "@/components/marketing/PageShell";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { useState } from "react";
+import { brand } from "@/lib/brand";
 
 export default function BookDemo(){
   const [status,setStatus]=useState<string|null>(null);
@@ -27,7 +28,7 @@ export default function BookDemo(){
             </div>
             <div>
               <Label className="text-[#718078] text-xs font-semibold">Phone</Label>
-              <Input name="phone" required placeholder="+91 98765 43210" className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"/>
+              <Input name="phone" required placeholder="+91 9XXXXXXXXX" className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm"/>
             </div>
           </div>
           <div>
@@ -57,6 +58,14 @@ export default function BookDemo(){
             </div>
           )}
         </form>
+        <div className="mt-6 pt-5 border-t border-[#E5EBE7] text-xs text-[#718078] flex flex-wrap gap-3">
+          <span>Prefer direct contact?</span>
+          <a href={brand.contact.telUrl} className="text-[#16845B] font-semibold hover:underline">{brand.contact.phone}</a>
+          <span>•</span>
+          <a href={brand.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#16845B] font-semibold hover:underline">WhatsApp</a>
+          <span>•</span>
+          <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-semibold hover:underline">{brand.contact.email}</a>
+        </div>
       </div>
     </PageShell>
   );

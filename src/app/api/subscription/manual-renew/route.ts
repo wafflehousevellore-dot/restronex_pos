@@ -3,10 +3,12 @@ import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { calcCheckoutTotals } from "@/lib/checkout";
 import { createMockOrder, getRazorpayKeyId, isRazorpayConfigured } from "@/lib/razorpay";
+import { ensureSeedPlans } from "@/lib/seed";
 
 export async function POST(req: NextRequest) {
   const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
+  await ensureSeedPlans();
 
   let body: any;
   try {
@@ -41,6 +43,7 @@ export async function POST(req: NextRequest) {
     planSlug: currentSub.plan.slug,
     billingCycle,
     outletCount: Math.max(1, outletsCount),
+    planPricingOverride: currentSub.plan,
   });
 
   const receipt = `rnw_${tenantId.slice(0, 8)}_${Date.now().toString(36)}`;

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
-import { calcCheckoutTotals } from "@/lib/checkout";
+import { calcCheckoutTotals, PlanPricingOverride, resolveCouponDiscount } from "@/lib/checkout";
+import { brand } from "@/lib/brand";
 import { Check, Loader2, CreditCard, Tag, X, ShieldCheck, Zap, Lock } from "lucide-react";
 import Link from "next/link";
 
@@ -14,6 +15,7 @@ type Props = {
   initialCycle: "MONTHLY" | "ANNUAL";
   initialOutletCount: number;
   totals: ReturnType<typeof calcCheckoutTotals>;
+  planPricingMap?: Record<string, PlanPricingOverride>;
   isAuthenticated: boolean;
   tenantId: string | null;
   hasTenant: boolean;
@@ -23,34 +25,12 @@ type Props = {
 
 declare global { interface Window { Razorpay?: any; } }
 
-function computeCouponDiscount(code: string, subtotal: number): { discountPaise: number; fixedTotalPaise?: number; label: string } {
-  const c = code.trim().toUpperCase();
-  if (
-    c === "PAY1" ||
-    c === "RS1" ||
-    c === "1RS" ||
-    c === "ONE" ||
-    c === "RUPEE1" ||
-    c === "1RUPEE" ||
-    c === "TEST1" ||
-    c === "PROMO1"
-  ) {
-    return { discountPaise: 0, fixedTotalPaise: 100, label: "VIP Special (Pay ₹1 for testing)" };
-  }
-  if (c === "PAY2" || c === "TEST2" || c === "RS2" || c === "100OFF" || c === "TEST100" || c === "TESTPAY" || c === "2RS" || c === "100%" || c === "FREE" || c === "2RUPEES") {
-    return { discountPaise: 0, fixedTotalPaise: 200, label: "100% OFF (Pay ₹2 for testing)" };
-  }
-  if (c === "WELCOME10" || c === "SAVE10") return { discountPaise: Math.round(subtotal * 0.1), label: "10% OFF" };
-  if (c === "FLAT50") return { discountPaise: 5000, label: "₹50 FLAT OFF" };
-  if (c === "CHEF20" || c === "FESTIVE20") return { discountPaise: Math.round(subtotal * 0.2), label: "20% OFF" };
-  return { discountPaise: 0, label: "" };
-}
-
 export default function CheckoutClient({
   initialPlan,
   initialCycle,
   initialOutletCount,
   totals: initialTotals,
+  planPricingMap,
   isAuthenticated,
   tenantId,
   hasTenant,
@@ -84,17 +64,25 @@ export default function CheckoutClient({
 
   useEffect(()=>{
     try {
-      const base = calcCheckoutTotals({ planSlug: plan, billingCycle: cycle, outletCount: outlets });
-      const cRes = coupon ? computeCouponDiscount(coupon, base.subtotal) : { discountPaise: 0, fixedTotalPaise: undefined, label: "" };
+      const override = planPricingMap?.[plan];
+      const maxOutlets = override?.maxOutlets ?? 50;
+      const boundedOutlets = Math.min(Math.max(1, outlets), maxOutlets);
+      if (boundedOutlets !== outlets) {
+        setOutlets(boundedOutlets);
+        return;
+      }
+      const base = calcCheckoutTotals({ planSlug: plan, billingCycle: cycle, outletCount: boundedOutlets, planPricingOverride: override });
+      const cRes = coupon ? resolveCouponDiscount(coupon, base.subtotal) : { discountPaise: 0, fixedTotalPaise: undefined, label: "" };
       const t = calcCheckoutTotals({
         planSlug: plan,
         billingCycle: cycle,
-        outletCount: outlets,
+        outletCount: boundedOutlets,
         couponDiscountPaise: cRes.discountPaise,
         fixedTotalPaise: cRes.fixedTotalPaise,
+        planPricingOverride: override,
       });
       setTotals(t);
-      const payload = JSON.stringify({ planSlug: plan, billingCycle: cycle, outletCount: outlets });
+      const payload = JSON.stringify({ planSlug: plan, billingCycle: cycle, outletCount: boundedOutlets });
       try{
         document.cookie = `restronex_checkout=${encodeURIComponent(payload)}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
         document.cookie = `restronex_plan=${encodeURIComponent(plan)}; Path=/; Max-Age=${60*60*24*30}; SameSite=Lax`;
@@ -102,7 +90,7 @@ export default function CheckoutClient({
       }catch{}
       localStorage.setItem("restronex_checkout", payload);
     } catch(e:any){ setMsg({type:"error", text: e.message }); }
-  }, [plan, cycle, outlets, coupon]);
+  }, [plan, cycle, outlets, coupon, planPricingMap]);
 
   const ensureOrder = useCallback(async (): Promise<string | null> => {
     if (activeOrderId) return activeOrderId;
@@ -150,7 +138,7 @@ export default function CheckoutClient({
   function applyCouponCode() {
     const raw = couponInput.trim();
     if (!raw) return;
-    const res = computeCouponDiscount(raw, totals.subtotal);
+    const res = resolveCouponDiscount(raw, totals.subtotal);
     if (res.discountPaise > 0 || res.fixedTotalPaise !== undefined) {
       setCoupon(raw);
       setCouponStatus(`✓ Code applied: ${res.label}`);
@@ -299,10 +287,24 @@ export default function CheckoutClient({
           </button>
         ))}
         <div className="ml-auto flex items-center gap-2 text-xs text-[#718078]">
-          Outlets:
-          <button onClick={()=>setOutlets(Math.max(1, outlets-1))} className="h-7 w-7 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-[#E8F5EE]">−</button>
+          Outlets (max {totals.plan.maxOutlets}):
+          <button
+            type="button"
+            onClick={() => setOutlets(Math.max(1, outlets - 1))}
+            disabled={outlets <= 1}
+            className="h-7 w-7 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-[#E8F5EE] disabled:opacity-40"
+          >
+            −
+          </button>
           <span className="w-6 text-center font-bold text-[#172B25]">{outlets}</span>
-          <button onClick={()=>setOutlets(outlets+1)} className="h-7 w-7 rounded-full bg-[#16845B] text-white">+</button>
+          <button
+            type="button"
+            onClick={() => setOutlets(Math.min(totals.plan.maxOutlets, outlets + 1))}
+            disabled={outlets >= totals.plan.maxOutlets}
+            className="h-7 w-7 rounded-full bg-[#16845B] text-white disabled:opacity-40"
+          >
+            +
+          </button>
         </div>
       </div>
 
@@ -571,7 +573,16 @@ export default function CheckoutClient({
       </div>
 
       <div className="rounded-2xl border border-[#E5EBE7] bg-white p-4 text-xs text-[#718078] flex flex-wrap gap-3 justify-between shadow-xs">
-        <span>Need help? <Link href="/contact" className="text-[#16845B] font-medium">Contact sales</Link> • <Link href="/book-demo" className="text-[#16845B] font-medium">Book demo</Link> • <Link href="/faq" className="text-[#16845B] font-medium">FAQ</Link></span>
+        <span className="flex flex-wrap items-center gap-1.5">
+          Need help?{" "}
+          <Link href="/contact" className="text-[#16845B] font-medium hover:underline">Contact sales</Link>
+          <span>•</span>
+          <a href={brand.contact.telUrl} className="text-[#16845B] font-medium hover:underline">{brand.contact.phone}</a>
+          <span>•</span>
+          <a href={brand.contact.whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#16845B] font-medium hover:underline">WhatsApp</a>
+          <span>•</span>
+          <a href={brand.contact.mailtoUrl} className="text-[#16845B] font-medium hover:underline">{brand.contact.email}</a>
+        </span>
         <span>Trusted by 2,400+ restaurants • Offline-ready</span>
       </div>
     </div>

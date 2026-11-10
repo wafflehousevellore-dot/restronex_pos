@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       let user = await prisma.user.findUnique({ where: { clerkId: clerkUserId } });
       if (!user && email) user = await prisma.user.findUnique({ where: { email } });
       if (!user) {
-        await prisma.user.create({ data: { clerkId: clerkUserId, email: email || `${clerkUserId}@clerk.local`, name, avatarUrl: u.image_url } });
+        await prisma.user.create({ data: { clerkId: clerkUserId, email: email || `${clerkUserId}@clerk.local`, name, avatarUrl: u.image_url, role: "OWNER", isPlatformAdmin: false } });
       } else if (!user.clerkId) {
         await prisma.user.update({ where: { id: user.id }, data: { clerkId: clerkUserId, name, avatarUrl: u.image_url } });
       } else {

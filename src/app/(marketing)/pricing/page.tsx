@@ -1,10 +1,14 @@
 import { PageShell } from "@/components/marketing/PageShell";
 import PricingSelector from "@/components/marketing/PricingSelector";
-import { pricingComparison, marketplaceServices } from "@/lib/brand";
+import { pricingComparison, pricingPlans, marketplaceServices } from "@/lib/brand";
 import Link from "next/link";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 
 export default function Pricing() {
+  const starter = pricingPlans.find((p) => p.slug === "starter") || pricingPlans[0];
+  const growth = pricingPlans.find((p) => p.slug === "growth") || pricingPlans[1];
+  const business = pricingPlans.find((p) => p.slug === "business") || pricingPlans[2];
+
   return (
     <PageShell
       title="Transparent SaaS Pricing for Modern Restaurants"
@@ -19,7 +23,9 @@ export default function Pricing() {
         <div className="bg-[#16845B] px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-base font-black text-white">Full Feature & Entitlements Comparison</h2>
-            <p className="text-xs text-white/90">Compare Starter (₹200) vs Growth (₹300) vs Business (₹500)</p>
+            <p className="text-xs text-white/90">
+              Compare {starter.name} (₹{starter.priceMonthly}) vs {growth.name} (₹{growth.priceMonthly}) vs {business.name} (₹{business.priceMonthly})
+            </p>
           </div>
           <Link
             href="/get-started"

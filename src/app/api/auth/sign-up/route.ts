@@ -24,7 +24,7 @@ export async function POST(req: NextRequest){
       return NextResponse.json({ error: "Email already registered. Please sign in." }, { status:400 });
     }
     const hash = await bcrypt.hash(parsed.data.password, 10);
-    const user = await prisma.user.create({ data: { email: parsed.data.email, name: parsed.data.name, role: "OWNER", clerkId: hash.slice(0,20) }});
+    const user = await prisma.user.create({ data: { email: parsed.data.email, name: parsed.data.name, role: "OWNER", isPlatformAdmin: false, clerkId: hash.slice(0,20) }});
     await prisma.auditLog.create({ data: { userId: user.id, action: "USER_SIGNUP", entity:"User", entityId: user.id, metadataJson: JSON.stringify({ email:user.email, pwHash: hash }) }});
     await createSession({ id: user.id, email: user.email, name: user.name }, { secure: isHttpsFromRequest(req) });
     const nextUrl = (data.next as string) || req.nextUrl.searchParams.get("next") || "/app/organization";
