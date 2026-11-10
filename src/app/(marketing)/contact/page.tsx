@@ -18,7 +18,7 @@ export default function ContactPage() {
       body: JSON.stringify({
         ...body,
         restaurantName: (body as Record<string, string>).restaurantName || body.name,
-        city: (body as Record<string, string>).city || "Bengaluru",
+        city: (body as Record<string, string>).city || "Vellore",
       }),
     });
     const j = await res.json();
@@ -52,7 +52,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <Label className="text-xs font-semibold text-[#718078] mb-1.5 block">City</Label>
-                <Input name="city" required placeholder="Bengaluru" className="bg-white border-[#E5EBE7] text-[#172B25] placeholder:text-[#718078]/50" />
+                <Input name="city" required placeholder="Vellore" className="bg-white border-[#E5EBE7] text-[#172B25] placeholder:text-[#718078]/50" />
               </div>
             </div>
             <div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
           </div>
 
           <div className="mt-8 pt-4 border-t border-[#E5EBE7] text-xs text-[#718078] leading-relaxed">
-            RestroNex operations and support engineers are based in Bengaluru, serving high-volume dining, cafe, and QSR venues across India.
+            RestroNex operations and support engineers are based in Virupachipuram, Vellore, Tamil Nadu, serving high-volume dining, cafe, and QSR venues across India.
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function PossPage() {
@@ -91,25 +92,33 @@ export default function PossPage() {
                   title: "A quick 3-click restaurant billing software",
                   desc: "Take orders, punch bills and fire KOT in seconds. Split bills, merge tables, apply discounts and coupons, accept UPI/card/cash/wallet — all without leaving the billing screen.",
                   bullets: ["Split bill by item / person", "Merge tables • Table transfer", "Discounts, coupons, happy hours", "UPI / Card / Cash / Wallet split"],
-                  link: "/features/pos"
+                  link: "/features/pos",
+                  image: "/images/pos-billing-terminal.jpg",
+                  alt: "RestroNex touch POS billing terminal and 80mm thermal printer",
                 },
                 {
                   title: "Restaurant inventory management made easier",
                   desc: "Recipe-based auto-deduction, low-stock alerts, and purchase management. Know your food cost before the day ends.",
                   bullets: ["Recipe → auto deduction", "Purchase orders + price compare", "Low-stock + expiry alerts", "Central kitchen push"],
-                  link: "/features/inventory"
+                  link: "/features/inventory",
+                  image: "/images/analytics-inventory-dashboard.jpg",
+                  alt: "RestroNex inventory and recipe analytics dashboard",
                 },
                 {
                   title: "Get real-time restaurant reports",
                   desc: "Your POS tracks everything automatically — day-end sales, online orders, staff actions, inventory consumption, and 94+ operational reports without paper.",
                   bullets: ["94 reports + dynamic builder", "Day-End Summary in <5 min", "Sales by time-slot, outlet, payment", "Staff, voids, discounts, CRM"],
-                  link: "/features/reports"
+                  link: "/features/reports",
+                  image: "/images/kitchen-kds-display.jpg",
+                  alt: "RestroNex live Kitchen Display System monitoring active preparation tickets",
                 },
                 {
                   title: "One online ordering system for all channels",
                   desc: "Accept Swiggy/Zomato orders, QR orders, and website orders in one dashboard. Auto-accept, KDS routing, and revenue tracking without tab-switching.",
                   bullets: ["Auto-accept delivery orders", "KDS stations with bump", "QR / website ordering", "70+ integrations → one view"],
-                  link: "/solutions"
+                  link: "/solutions",
+                  image: "/images/qr-whatsapp-billing.jpg",
+                  alt: "RestroNex contactless table QR ordering menu and WhatsApp PDF invoice delivery",
                 },
               ].map((f, i) => (
                 <div key={f.title} className={`rounded-[24px] border border-[#E5EBE7] bg-white p-6 flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-6 items-center shadow-xs`}>
@@ -127,12 +136,14 @@ export default function PossPage() {
                       Explore →
                     </Link>
                   </div>
-                  <div className="flex-1 rounded-2xl overflow-hidden border border-[#E5EBE7] bg-gradient-to-br from-[#E8F5EE]/50 to-[#F8FAF9] p-6 w-full h-[200px] flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-4xl">🍽️</div>
-                      <div className="mt-2 text-xs font-bold text-[#172B25]">POS Feature Preview</div>
-                      <div className="text-[11px] text-[#718078]">{f.title.slice(0,28)}</div>
-                    </div>
+                  <div className="flex-1 relative rounded-2xl overflow-hidden border border-[#E5EBE7] bg-[#F8FAF9] w-full aspect-[16/10] shadow-xs">
+                    <Image
+                      src={f.image}
+                      alt={f.alt}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover"
+                    />
                   </div>
                 </div>
               ))}

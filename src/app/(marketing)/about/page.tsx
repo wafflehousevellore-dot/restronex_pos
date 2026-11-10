@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { PageShell } from "@/components/marketing/PageShell";
+import { brand } from "@/lib/brand";
 
 export default function About() {
   return (
@@ -19,6 +21,10 @@ export default function About() {
             <p>
               Platform admin and restaurant roles are separate. Tenant isolation is enforced server-side and verified via cross-tenant security probes.
             </p>
+            <div className="pt-3 border-t border-[#E5EBE7] text-xs space-y-1">
+              <div className="font-bold text-[#172B25]">Headquarters</div>
+              <div>{brand.contact.address}</div>
+            </div>
           </div>
         </div>
 
@@ -56,6 +62,39 @@ export default function About() {
               <div className="text-2xl font-black text-[#172B25]">500k+</div>
               <div className="text-xs font-medium text-[#718078] mt-1">Orders / month</div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid md:grid-cols-2 gap-6">
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white overflow-hidden shadow-xs">
+          <div className="relative aspect-[16/10] w-full bg-[#F8FAF9] border-b border-[#E5EBE7]">
+            <Image
+              src="/images/pos-billing-terminal.jpg"
+              alt="RestroNex POS touch counter terminal and thermal receipt printer"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="p-4 text-xs">
+            <div className="font-bold text-[#172B25]">Touch Counter Billing &amp; Thermal Printing</div>
+            <div className="text-[#718078] mt-1">Built for speed, 80mm/58mm ESC/POS hardware, and instant WhatsApp receipts.</div>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white overflow-hidden shadow-xs">
+          <div className="relative aspect-[16/10] w-full bg-[#F8FAF9] border-b border-[#E5EBE7]">
+            <Image
+              src="/images/analytics-inventory-dashboard.jpg"
+              alt="RestroNex Multi-Outlet Analytics and Inventory Dashboard"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="p-4 text-xs">
+            <div className="font-bold text-[#172B25]">Real-Time Multi-Outlet Visibility</div>
+            <div className="text-[#718078] mt-1">Live sales telemetry, low-stock recipe alerts, and consolidated owner reporting.</div>
           </div>
         </div>
       </div>

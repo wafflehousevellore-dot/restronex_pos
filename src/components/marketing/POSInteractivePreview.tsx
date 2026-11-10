@@ -223,7 +223,7 @@ export default function POSInteractivePreview() {
               <span>Official Meta WhatsApp Cloud API Delivery</span>
             </div>
             <div className="bg-white p-3 rounded-xl border border-[#E5EBE7] space-y-1 text-xs shadow-2xs font-sans">
-              <div className="font-bold text-[#172B25]">RestroNex Dining • Koramangala</div>
+              <div className="font-bold text-[#172B25]">RestroNex Dining • Vellore</div>
               <div className="text-[#718078] text-[11px]">
                 Hi Rahul, thank you for dining with us! Here is your itemized digital tax invoice for Order #1084.
               </div>

@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import POSInteractivePreview from "@/components/marketing/POSInteractivePreview";
+import SoftwareShowcaseSection from "@/components/marketing/SoftwareShowcaseSection";
 import Link from "next/link";
 import {
   Check,
@@ -278,6 +279,11 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ========================================================= */}
+        {/* SOFTWARE VISUAL GALLERY                                   */}
+        {/* ========================================================= */}
+        <SoftwareShowcaseSection />
 
         {/* ========================================================= */}
         {/* SECTION 5: RESTAURANT OPERATIONS WORKFLOW                 */}

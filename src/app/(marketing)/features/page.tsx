@@ -1,4 +1,5 @@
 import { PageShell } from "@/components/marketing/PageShell";
+import SoftwareShowcaseSection from "@/components/marketing/SoftwareShowcaseSection";
 import Link from "next/link";
 import { Store, ChefHat, BarChart3, Truck, Layers, ShieldCheck, LayoutGrid, Users, QrCode, Globe, Building2, Plug, ArrowRight } from "lucide-react";
 
@@ -51,6 +52,7 @@ export default function FeaturesIndex() {
       <div className="mt-8 rounded-2xl border border-[#E5EBE7] bg-white p-5 text-sm text-[#718078] shadow-xs">
         All suites share one authoritative menu, inventory, and order data model — no disconnected duplicate systems. Multi-tenant, outlet-aware, and audit-logged from day one.
       </div>
+      <SoftwareShowcaseSection embedded />
     </PageShell>
   );
 }

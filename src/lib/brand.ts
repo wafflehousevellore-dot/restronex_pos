@@ -22,7 +22,7 @@ export const brand = {
     telUrl: "tel:+919513008467",
     whatsappUrl: "https://wa.me/919513008467",
     mailtoUrl: "mailto:restronexpos@gmail.com",
-    address: "Koramangala, Bengaluru, Karnataka 560034",
+    address: "Virupachipuram, Vellore, Tamil Nadu 632002",
     supportEmail: "restronexpos@gmail.com",
   },
   social: {
@@ -161,3 +161,38 @@ export const marketplaceServices = {
   service: ["Table Floor Plan", "QR Ordering", "Kitchen Display (KDS)", "Token Queue Display", "Cashier Shifts"],
   operations: ["Recipe Stock Deduction", "Purchase Orders", "Supplier Price Comparison", "Thermal Printing", "Centralized Push"],
 } as const;
+
+export const softwareScreenshots = [
+  {
+    title: "Fast Touch POS & 80mm Thermal Printing",
+    badge: "Billing Terminal",
+    desc: "3-click counter & table billing with modifier selection, CGST/SGST paise precision, and instant 80mm thermal receipt printing.",
+    image: "/images/pos-billing-terminal.jpg",
+    alt: "RestroNex POS tablet billing terminal alongside an 80mm thermal receipt printer on a cafe counter",
+    href: "/features/pos",
+  },
+  {
+    title: "Live Kitchen Display (KDS) & KOT Routing",
+    badge: "Kitchen Operations",
+    desc: "Color-coded KOT cards, station-wise prep timers, one-tap Mark Ready bump controls, and direct LAN thermal KOT printing.",
+    image: "/images/kitchen-kds-display.jpg",
+    alt: "RestroNex Kitchen Display System monitor showing active KOT order cards in a restaurant kitchen",
+    href: "/features/kitchen-display",
+  },
+  {
+    title: "Table QR Ordering & WhatsApp PDF Bills",
+    badge: "Guest Experience",
+    desc: "Scan-to-order contactless table QR standees paired with automatic Meta WhatsApp Cloud API PDF tax invoice delivery.",
+    image: "/images/qr-whatsapp-billing.jpg",
+    alt: "Tabletop QR ordering standee, mobile digital menu, and instant WhatsApp PDF tax invoice receipt",
+    href: "/features/qr-ordering",
+  },
+  {
+    title: "Multi-Outlet Analytics & BOM Inventory",
+    badge: "Owner Dashboard",
+    desc: "Live branch sales comparisons, hourly revenue charts, recipe-level ingredient depletion, and low-stock reorder alerts.",
+    image: "/images/analytics-inventory-dashboard.jpg",
+    alt: "RestroNex Multi-Outlet Analytics and Recipe Inventory dashboard across laptop and tablet screens",
+    href: "/features/reports",
+  },
+] as const;
