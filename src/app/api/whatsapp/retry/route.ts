@@ -16,32 +16,42 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "queueId or orderId required" }, { status: 400 });
   }
 
+  const tenantId = await resolveTenantId(userId, body.tenantId);
+  if (!tenantId) return NextResponse.json({ error: "Tenant context required" }, { status: 400 });
+
+  const mem = await prisma.membership.findFirst({ where: { userId, tenantId } });
+  if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   let item = null;
   if (queueId) {
-    item = await prisma.whatsAppMessageQueue.findUnique({ where: { id: queueId } });
+    item = await prisma.whatsAppMessageQueue.findFirst({ where: { id: queueId, tenantId } });
   } else if (orderId) {
     item = await prisma.whatsAppMessageQueue.findFirst({
-      where: { orderId },
+      where: { orderId, tenantId },
       orderBy: { createdAt: "desc" },
     });
   }
 
   if (!item) {
-    // If not in queue yet, attempt to queue now
     if (orderId) {
-      const qRes = await queueAndSendWhatsAppInvoice(orderId);
-      return NextResponse.json({ ok: true, result: qRes });
+      const order = await prisma.order.findFirst({ where: { id: orderId, tenantId } });
+      if (!order) return NextResponse.json({ error: "Order not found in active tenant" }, { status: 404 });
+      const qRes = await queueAndSendWhatsAppInvoice(order.id);
+      return NextResponse.json({ ok: qRes.status !== "FAILED", result: qRes });
     }
     return NextResponse.json({ error: "WhatsApp queue record not found" }, { status: 404 });
   }
 
-  const tenantId = await resolveTenantId(userId, item.tenantId);
-  if (!tenantId) return NextResponse.json({ error: "Tenant context required" }, { status: 400 });
+  // Prevent duplicate delivery if already succeeded
+  if (["SENT", "DELIVERED", "READ"].includes(item.status)) {
+    return NextResponse.json({
+      ok: true,
+      queueId: item.id,
+      replayed: true,
+      result: { success: true, status: item.status, wamid: item.wamid },
+    });
+  }
 
-  const mem = await prisma.membership.findFirst({ where: { userId, tenantId: item.tenantId } });
-  if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-  // Reset status to QUEUED and trigger dispatch
   await prisma.whatsAppMessageQueue.update({
     where: { id: item.id },
     data: {

@@ -67,6 +67,7 @@ export type OrderMinAggregateOutputType = {
   billClosedAt: Date | null
   whatsappConsent: boolean | null
   whatsappStatus: string | null
+  printStatus: string | null
   qrSessionId: string | null
   idempotencyKey: string | null
   createdAt: Date | null
@@ -98,6 +99,7 @@ export type OrderMaxAggregateOutputType = {
   billClosedAt: Date | null
   whatsappConsent: boolean | null
   whatsappStatus: string | null
+  printStatus: string | null
   qrSessionId: string | null
   idempotencyKey: string | null
   createdAt: Date | null
@@ -129,6 +131,7 @@ export type OrderCountAggregateOutputType = {
   billClosedAt: number
   whatsappConsent: number
   whatsappStatus: number
+  printStatus: number
   qrSessionId: number
   idempotencyKey: number
   createdAt: number
@@ -178,6 +181,7 @@ export type OrderMinAggregateInputType = {
   billClosedAt?: true
   whatsappConsent?: true
   whatsappStatus?: true
+  printStatus?: true
   qrSessionId?: true
   idempotencyKey?: true
   createdAt?: true
@@ -209,6 +213,7 @@ export type OrderMaxAggregateInputType = {
   billClosedAt?: true
   whatsappConsent?: true
   whatsappStatus?: true
+  printStatus?: true
   qrSessionId?: true
   idempotencyKey?: true
   createdAt?: true
@@ -240,6 +245,7 @@ export type OrderCountAggregateInputType = {
   billClosedAt?: true
   whatsappConsent?: true
   whatsappStatus?: true
+  printStatus?: true
   qrSessionId?: true
   idempotencyKey?: true
   createdAt?: true
@@ -358,6 +364,7 @@ export type OrderGroupByOutputType = {
   billClosedAt: Date | null
   whatsappConsent: boolean
   whatsappStatus: string | null
+  printStatus: string | null
   qrSessionId: string | null
   idempotencyKey: string | null
   createdAt: Date
@@ -412,6 +419,7 @@ export type OrderWhereInput = {
   billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
   whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  printStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -455,6 +463,7 @@ export type OrderOrderByWithRelationInput = {
   billClosedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConsent?: Prisma.SortOrder
   whatsappStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  printStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   qrSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -476,6 +485,7 @@ export type OrderOrderByWithRelationInput = {
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   tenantId_orderNumber?: Prisma.OrderTenantIdOrderNumberCompoundUniqueInput
+  tenantId_idempotencyKey?: Prisma.OrderTenantIdIdempotencyKeyCompoundUniqueInput
   AND?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
   OR?: Prisma.OrderWhereInput[]
   NOT?: Prisma.OrderWhereInput | Prisma.OrderWhereInput[]
@@ -502,6 +512,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
   whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  printStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -518,7 +529,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   printJobs?: Prisma.PrintJobListRelationFilter
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
   whatsAppQueue?: Prisma.WhatsAppMessageQueueListRelationFilter
-}, "id" | "tenantId_orderNumber">
+}, "id" | "tenantId_orderNumber" | "tenantId_idempotencyKey">
 
 export type OrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -545,6 +556,7 @@ export type OrderOrderByWithAggregationInput = {
   billClosedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConsent?: Prisma.SortOrder
   whatsappStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  printStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   qrSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -584,6 +596,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   billClosedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   whatsappConsent?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   whatsappStatus?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
+  printStatus?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   qrSessionId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -612,6 +625,7 @@ export type OrderCreateInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -654,6 +668,7 @@ export type OrderUncheckedCreateInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -690,6 +705,7 @@ export type OrderUpdateInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -732,6 +748,7 @@ export type OrderUncheckedUpdateInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -771,6 +788,7 @@ export type OrderCreateManyInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -799,6 +817,7 @@ export type OrderUpdateManyMutationInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -829,6 +848,7 @@ export type OrderUncheckedUpdateManyInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -848,6 +868,11 @@ export type OrderOrderByRelationAggregateInput = {
 export type OrderTenantIdOrderNumberCompoundUniqueInput = {
   tenantId: string
   orderNumber: string
+}
+
+export type OrderTenantIdIdempotencyKeyCompoundUniqueInput = {
+  tenantId: string
+  idempotencyKey: string
 }
 
 export type OrderCountOrderByAggregateInput = {
@@ -875,6 +900,7 @@ export type OrderCountOrderByAggregateInput = {
   billClosedAt?: Prisma.SortOrder
   whatsappConsent?: Prisma.SortOrder
   whatsappStatus?: Prisma.SortOrder
+  printStatus?: Prisma.SortOrder
   qrSessionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -914,6 +940,7 @@ export type OrderMaxOrderByAggregateInput = {
   billClosedAt?: Prisma.SortOrder
   whatsappConsent?: Prisma.SortOrder
   whatsappStatus?: Prisma.SortOrder
+  printStatus?: Prisma.SortOrder
   qrSessionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -945,6 +972,7 @@ export type OrderMinOrderByAggregateInput = {
   billClosedAt?: Prisma.SortOrder
   whatsappConsent?: Prisma.SortOrder
   whatsappStatus?: Prisma.SortOrder
+  printStatus?: Prisma.SortOrder
   qrSessionId?: Prisma.SortOrder
   idempotencyKey?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -1275,6 +1303,7 @@ export type OrderCreateWithoutTenantInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1315,6 +1344,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -1383,6 +1413,7 @@ export type OrderScalarWhereInput = {
   billClosedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   whatsappConsent?: Prisma.BoolFilter<"Order"> | boolean
   whatsappStatus?: Prisma.StringNullableFilter<"Order"> | string | null
+  printStatus?: Prisma.StringNullableFilter<"Order"> | string | null
   qrSessionId?: Prisma.StringNullableFilter<"Order"> | string | null
   idempotencyKey?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
@@ -1411,6 +1442,7 @@ export type OrderCreateWithoutOutletInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1451,6 +1483,7 @@ export type OrderUncheckedCreateWithoutOutletInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -1513,6 +1546,7 @@ export type OrderCreateWithoutTableInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1553,6 +1587,7 @@ export type OrderUncheckedCreateWithoutTableInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -1615,6 +1650,7 @@ export type OrderCreateWithoutItemsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1656,6 +1692,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -1707,6 +1744,7 @@ export type OrderUpdateWithoutItemsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1748,6 +1786,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1783,6 +1822,7 @@ export type OrderCreateWithoutKotTicketsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1824,6 +1864,7 @@ export type OrderUncheckedCreateWithoutKotTicketsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -1875,6 +1916,7 @@ export type OrderUpdateWithoutKotTicketsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1916,6 +1958,7 @@ export type OrderUncheckedUpdateWithoutKotTicketsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1951,6 +1994,7 @@ export type OrderCreateWithoutPaymentsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1992,6 +2036,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2043,6 +2088,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2084,6 +2130,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2119,6 +2166,7 @@ export type OrderCreateWithoutPaymentAttemptsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2160,6 +2208,7 @@ export type OrderUncheckedCreateWithoutPaymentAttemptsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2211,6 +2260,7 @@ export type OrderUpdateWithoutPaymentAttemptsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2252,6 +2302,7 @@ export type OrderUncheckedUpdateWithoutPaymentAttemptsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2287,6 +2338,7 @@ export type OrderCreateWithoutQrSessionInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2328,6 +2380,7 @@ export type OrderUncheckedCreateWithoutQrSessionInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2389,6 +2442,7 @@ export type OrderCreateWithoutPrintJobsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2430,6 +2484,7 @@ export type OrderUncheckedCreateWithoutPrintJobsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2481,6 +2536,7 @@ export type OrderUpdateWithoutPrintJobsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2522,6 +2578,7 @@ export type OrderUncheckedUpdateWithoutPrintJobsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2557,6 +2614,7 @@ export type OrderCreateWithoutWhatsAppLogsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2598,6 +2656,7 @@ export type OrderUncheckedCreateWithoutWhatsAppLogsInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2649,6 +2708,7 @@ export type OrderUpdateWithoutWhatsAppLogsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2690,6 +2750,7 @@ export type OrderUncheckedUpdateWithoutWhatsAppLogsInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2725,6 +2786,7 @@ export type OrderCreateWithoutInvoiceInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2766,6 +2828,7 @@ export type OrderUncheckedCreateWithoutInvoiceInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2817,6 +2880,7 @@ export type OrderUpdateWithoutInvoiceInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2858,6 +2922,7 @@ export type OrderUncheckedUpdateWithoutInvoiceInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2893,6 +2958,7 @@ export type OrderCreateWithoutWhatsAppQueueInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2934,6 +3000,7 @@ export type OrderUncheckedCreateWithoutWhatsAppQueueInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -2985,6 +3052,7 @@ export type OrderUpdateWithoutWhatsAppQueueInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3026,6 +3094,7 @@ export type OrderUncheckedUpdateWithoutWhatsAppQueueInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3063,6 +3132,7 @@ export type OrderCreateManyTenantInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -3091,6 +3161,7 @@ export type OrderUpdateWithoutTenantInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3131,6 +3202,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3169,6 +3241,7 @@ export type OrderUncheckedUpdateManyWithoutTenantInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3199,6 +3272,7 @@ export type OrderCreateManyOutletInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -3227,6 +3301,7 @@ export type OrderUpdateWithoutOutletInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3267,6 +3342,7 @@ export type OrderUncheckedUpdateWithoutOutletInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3305,6 +3381,7 @@ export type OrderUncheckedUpdateManyWithoutOutletInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3335,6 +3412,7 @@ export type OrderCreateManyTableInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   qrSessionId?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
@@ -3363,6 +3441,7 @@ export type OrderUpdateWithoutTableInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3403,6 +3482,7 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3441,6 +3521,7 @@ export type OrderUncheckedUpdateManyWithoutTableInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3472,6 +3553,7 @@ export type OrderCreateManyQrSessionInput = {
   billClosedAt?: Date | string | null
   whatsappConsent?: boolean
   whatsappStatus?: string | null
+  printStatus?: string | null
   idempotencyKey?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3499,6 +3581,7 @@ export type OrderUpdateWithoutQrSessionInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3540,6 +3623,7 @@ export type OrderUncheckedUpdateWithoutQrSessionInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3578,6 +3662,7 @@ export type OrderUncheckedUpdateManyWithoutQrSessionInput = {
   billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
   whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3693,6 +3778,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   billClosedAt?: boolean
   whatsappConsent?: boolean
   whatsappStatus?: boolean
+  printStatus?: boolean
   qrSessionId?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
@@ -3737,6 +3823,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   billClosedAt?: boolean
   whatsappConsent?: boolean
   whatsappStatus?: boolean
+  printStatus?: boolean
   qrSessionId?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
@@ -3772,6 +3859,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   billClosedAt?: boolean
   whatsappConsent?: boolean
   whatsappStatus?: boolean
+  printStatus?: boolean
   qrSessionId?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
@@ -3807,13 +3895,14 @@ export type OrderSelectScalar = {
   billClosedAt?: boolean
   whatsappConsent?: boolean
   whatsappStatus?: boolean
+  printStatus?: boolean
   qrSessionId?: boolean
   idempotencyKey?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderNumber" | "type" | "status" | "serviceMode" | "tableId" | "customerId" | "customerName" | "customerPhone" | "subtotalPaise" | "taxPaise" | "discountPaise" | "serviceChargePaise" | "totalPaise" | "notes" | "kotStatus" | "createdById" | "isPaid" | "paidAt" | "billClosedAt" | "whatsappConsent" | "whatsappStatus" | "qrSessionId" | "idempotencyKey" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderNumber" | "type" | "status" | "serviceMode" | "tableId" | "customerId" | "customerName" | "customerPhone" | "subtotalPaise" | "taxPaise" | "discountPaise" | "serviceChargePaise" | "totalPaise" | "notes" | "kotStatus" | "createdById" | "isPaid" | "paidAt" | "billClosedAt" | "whatsappConsent" | "whatsappStatus" | "printStatus" | "qrSessionId" | "idempotencyKey" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
@@ -3883,6 +3972,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     billClosedAt: Date | null
     whatsappConsent: boolean
     whatsappStatus: string | null
+    printStatus: string | null
     qrSessionId: string | null
     idempotencyKey: string | null
     createdAt: Date
@@ -4346,6 +4436,7 @@ export interface OrderFieldRefs {
   readonly billClosedAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly whatsappConsent: Prisma.FieldRef<"Order", 'Boolean'>
   readonly whatsappStatus: Prisma.FieldRef<"Order", 'String'>
+  readonly printStatus: Prisma.FieldRef<"Order", 'String'>
   readonly qrSessionId: Prisma.FieldRef<"Order", 'String'>
   readonly idempotencyKey: Prisma.FieldRef<"Order", 'String'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>

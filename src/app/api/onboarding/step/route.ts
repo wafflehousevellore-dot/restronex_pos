@@ -3,6 +3,9 @@ import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/utils";
 
+import { encryptAccessToken } from "@/lib/whatsapp-invoice";
+import { getPrinterCompatibility } from "@/lib/thermal-printer";
+
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
@@ -19,8 +22,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { step } = body as { step: number };
-  if (!step || step < 1 || step > 8) {
-    return NextResponse.json({ error: "Invalid step number (1-8)" }, { status: 400 });
+  if (!step || step < 1 || step > 10) {
+    return NextResponse.json({ error: "Invalid step number (1-10)" }, { status: 400 });
   }
 
   let tenantId = await resolveTenantId(userId);
@@ -284,32 +287,205 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, step: 6, nextStep: 7 });
   }
 
-  // STEP 7: Hardware and Operational Settings
+  // STEP 7: Connect WhatsApp Business (Optional)
   if (step === 7) {
-    const { printerName, paperWidth = 80, enableKOT = true, tableCount = 10, areaName = "Main Hall" } = body;
-    const outlet = await prisma.outlet.findFirst({ where: { tenantId } });
+    const {
+      skip = false,
+      displayPhone,
+      phoneNumberId,
+      wabaId,
+      accessToken,
+      templateName = "order_invoice_utility",
+      autoSendWhatsAppInvoice = true,
+      connectionMode = "META_CLOUD_API",
+    } = body;
 
-    if (printerName && outlet) {
-      const pWidthStr = typeof paperWidth === "string" ? paperWidth : `${Number(paperWidth) || 80}mm`;
-      await prisma.printerDevice.upsert({
-        where: { id: `prn_${tenantId}_main` },
+    if (skip) {
+      await prisma.restaurantSetting.upsert({
+        where: { tenantId },
         create: {
-          id: `prn_${tenantId}_main`,
           tenantId,
-          outletId: outlet.id,
-          name: printerName,
-          type: "USB_THERMAL",
-          paperWidth: pWidthStr,
-          isDefaultBilling: true,
+          whatsappOnboardingSkipped: true,
+          whatsappConnectionStatus: "NOT_CONFIGURED",
+          autoSendWhatsAppInvoice: false,
         },
         update: {
-          name: printerName,
-          paperWidth: pWidthStr,
+          whatsappOnboardingSkipped: true,
+        },
+      });
+    } else {
+      const existing = await prisma.restaurantSetting.findUnique({ where: { tenantId } });
+      const encryptedToken = accessToken ? encryptAccessToken(String(accessToken)) : undefined;
+      const finalPhoneId = phoneNumberId?.trim() || existing?.whatsappPhoneNumberId || null;
+      const finalHasToken = Boolean(encryptedToken || existing?.whatsappAccessToken);
+      const nextStatus = finalPhoneId && finalHasToken ? "CONNECTED" : "NOT_CONFIGURED";
+
+      await prisma.restaurantSetting.upsert({
+        where: { tenantId },
+        create: {
+          tenantId,
+          whatsappDisplayPhone: displayPhone?.trim() || null,
+          whatsappPhoneNumberId: finalPhoneId,
+          whatsappWabaId: wabaId?.trim() || null,
+          ...(encryptedToken ? { whatsappAccessToken: encryptedToken } : {}),
+          whatsappTemplateName: templateName?.trim() || "order_invoice_utility",
+          autoSendWhatsAppInvoice: Boolean(autoSendWhatsAppInvoice),
+          whatsappConnectionMode: connectionMode,
+          whatsappConnectionStatus: nextStatus,
+          whatsappOnboardingSkipped: false,
+        },
+        update: {
+          ...(displayPhone !== undefined ? { whatsappDisplayPhone: displayPhone?.trim() || null } : {}),
+          ...(phoneNumberId !== undefined ? { whatsappPhoneNumberId: phoneNumberId?.trim() || null } : {}),
+          ...(wabaId !== undefined ? { whatsappWabaId: wabaId?.trim() || null } : {}),
+          ...(encryptedToken ? { whatsappAccessToken: encryptedToken } : {}),
+          ...(templateName !== undefined ? { whatsappTemplateName: templateName?.trim() || "order_invoice_utility" } : {}),
+          autoSendWhatsAppInvoice: Boolean(autoSendWhatsAppInvoice),
+          whatsappConnectionMode: connectionMode,
+          whatsappConnectionStatus: nextStatus,
+          whatsappOnboardingSkipped: false,
+        },
+      });
+
+      await prisma.integrationConfig.upsert({
+        where: { tenantId_provider: { tenantId, provider: "whatsapp_cloud" } },
+        create: {
+          tenantId,
+          provider: "whatsapp_cloud",
+          status: nextStatus,
+          configJson: JSON.stringify({
+            displayPhone: displayPhone?.trim() || null,
+            phoneNumberId: finalPhoneId,
+            wabaId: wabaId?.trim() || null,
+            templateName: templateName?.trim() || "order_invoice_utility",
+            tokenEncrypted: true,
+          }),
+          lastSyncAt: new Date(),
+        },
+        update: {
+          status: nextStatus,
+          lastSyncAt: new Date(),
         },
       });
     }
 
-    // Seed tables if none exist
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { onboardingStep: Math.max(7, body.currentStep || 7) },
+    });
+
+    return NextResponse.json({ ok: true, step: 7, skipped: Boolean(skip), nextStep: 8 });
+  }
+
+  // STEP 8: Connect Your Receipt Printer (Optional — supports confirmLaunch legacy alias cleanly)
+  if (step === 8 && !body.confirmLaunch) {
+    const {
+      skip = false,
+      outletId: explicitOutletId,
+      printerName,
+      printerType = "USB_THERMAL",
+      paperWidth = "80mm",
+      connectionString,
+      bridgeUrl,
+      isDefaultBilling = true,
+      autoPrintBill = true,
+    } = body;
+
+    if (skip) {
+      await prisma.restaurantSetting.upsert({
+        where: { tenantId },
+        create: { tenantId, printerOnboardingSkipped: true },
+        update: { printerOnboardingSkipped: true },
+      });
+    } else {
+      const targetOutlet = explicitOutletId
+        ? await prisma.outlet.findFirst({ where: { id: explicitOutletId, tenantId } })
+        : await prisma.outlet.findFirst({ where: { tenantId }, orderBy: { createdAt: "asc" } });
+
+      if (targetOutlet && printerName) {
+        const pWidthStr = String(paperWidth) === "58mm" || Number(paperWidth) === 58 ? "58mm" : "80mm";
+        const compat = getPrinterCompatibility(printerType);
+
+        if (isDefaultBilling) {
+          await prisma.printerDevice.updateMany({
+            where: { tenantId, outletId: targetOutlet.id, isDefaultBilling: true },
+            data: { isDefaultBilling: false },
+          });
+        }
+
+        const prn = await prisma.printerDevice.upsert({
+          where: { id: `prn_${targetOutlet.id}_billing` },
+          create: {
+            id: `prn_${targetOutlet.id}_billing`,
+            tenantId,
+            outletId: targetOutlet.id,
+            name: String(printerName).trim(),
+            type: printerType,
+            paperWidth: pWidthStr,
+            connectionString: connectionString?.trim() || null,
+            bridgeUrl: bridgeUrl?.trim() || null,
+            station: "BILLING",
+            isDefaultBilling: Boolean(isDefaultBilling),
+            autoPrintEnabled: Boolean(autoPrintBill),
+            compatibilityNote: compat.limitationNote,
+            status: "CONNECTED",
+            lastActiveAt: new Date(),
+          },
+          update: {
+            name: String(printerName).trim(),
+            type: printerType,
+            paperWidth: pWidthStr,
+            connectionString: connectionString?.trim() || null,
+            bridgeUrl: bridgeUrl?.trim() || null,
+            isDefaultBilling: Boolean(isDefaultBilling),
+            autoPrintEnabled: Boolean(autoPrintBill),
+            compatibilityNote: compat.limitationNote,
+            status: "CONNECTED",
+            lastActiveAt: new Date(),
+          },
+        });
+
+        await prisma.restaurantSetting.upsert({
+          where: { tenantId },
+          create: {
+            tenantId,
+            autoPrintBill: Boolean(autoPrintBill),
+            printerOnboardingSkipped: false,
+          },
+          update: {
+            autoPrintBill: Boolean(autoPrintBill),
+            printerOnboardingSkipped: false,
+          },
+        });
+
+        await prisma.tenant.update({
+          where: { id: tenantId },
+          data: { onboardingStep: Math.max(8, body.currentStep || 8) },
+        });
+
+        return NextResponse.json({
+          ok: true,
+          step: 8,
+          skipped: false,
+          printerId: prn.id,
+          nextStep: 9,
+        });
+      }
+    }
+
+    await prisma.tenant.update({
+      where: { id: tenantId },
+      data: { onboardingStep: Math.max(8, body.currentStep || 8) },
+    });
+
+    return NextResponse.json({ ok: true, step: 8, skipped: Boolean(skip), nextStep: 9 });
+  }
+
+  // STEP 9: Tables & Kitchen Setup
+  if (step === 9) {
+    const { enableKOT = true, tableCount = 10, areaName = "Main Hall" } = body;
+    const outlet = await prisma.outlet.findFirst({ where: { tenantId } });
+
     const count = Math.max(1, Math.min(50, Number(tableCount) || 10));
     const existingTables = await prisma.table.count({ where: { tenantId } });
     if (existingTables === 0 && outlet) {
@@ -335,21 +511,19 @@ export async function POST(req: NextRequest) {
 
     await prisma.tenant.update({
       where: { id: tenantId },
-      data: { onboardingStep: Math.max(7, body.currentStep || 7) },
+      data: { onboardingStep: Math.max(9, body.currentStep || 9) },
     });
 
-    return NextResponse.json({ ok: true, step: 7, nextStep: 8 });
+    return NextResponse.json({ ok: true, step: 9, nextStep: 10 });
   }
 
-  // STEP 8: Final Review & Confirmation
-  if (step === 8) {
-    // Validate mandatory criteria
-    const [tenant, outletCount, catCount, itemCount, _tableCount] = await Promise.all([
+  // STEP 10 (or legacy step 8 confirmLaunch): Final Review & Confirmation
+  if (step === 10 || (step === 8 && body.confirmLaunch)) {
+    const [tenant, outletCount, catCount, itemCount] = await Promise.all([
       prisma.tenant.findUnique({ where: { id: tenantId } }),
       prisma.outlet.count({ where: { tenantId } }),
       prisma.menuCategory.count({ where: { tenantId } }),
       prisma.menuItem.count({ where: { tenantId } }),
-      prisma.table.count({ where: { tenantId } }),
     ]);
 
     if (!tenant?.name) {
@@ -362,11 +536,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Please add at least one menu category and item in Step 5" }, { status: 400 });
     }
 
-    // Mark onboarding complete!
     const updated = await prisma.tenant.update({
       where: { id: tenantId },
       data: {
-        onboardingStep: 7,
+        onboardingStep: 9,
         onboardingComplete: true,
       },
     });
@@ -384,7 +557,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      step: 8,
+      step: 10,
       onboardingComplete: true,
       redirectTo: "/app/pos",
       message: `Congratulations! ${updated.name} is now live and ready for POS service.`,

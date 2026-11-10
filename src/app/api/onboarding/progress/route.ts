@@ -22,7 +22,7 @@ export async function POST(req: NextRequest){
   const mem = await prisma.membership.findFirst({ where:{ tenantId, userId }});
   if (!mem) return NextResponse.json({error:"Forbidden"},{status:403});
   const data:any = {};
-  if (typeof step === "number") data.onboardingStep = Math.max(0, Math.min(7, step));
+  if (typeof step === "number") data.onboardingStep = Math.max(0, Math.min(9, step));
   if (typeof complete === "boolean") data.onboardingComplete = complete;
   const updated = await prisma.tenant.update({ where:{ id: tenantId }, data });
   await prisma.auditLog.create({ data:{ tenantId, userId, action:"ONBOARDING_PROGRESS", entity:"Tenant", entityId: tenantId, metadataJson: JSON.stringify({ step: updated.onboardingStep, complete: updated.onboardingComplete }) }});

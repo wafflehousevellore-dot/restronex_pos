@@ -3,7 +3,9 @@ import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { orderCreateSchema } from "@/lib/validators";
 import { calcOrderTotals } from "@/lib/money";
-import { queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
+import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
+import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
+import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -38,6 +40,7 @@ export async function GET(req: NextRequest) {
       invoice: true,
       table: { select: { id: true, number: true, area: true } },
       whatsAppLogs: { orderBy: { createdAt: "desc" }, take: 2 },
+      printJobs: { orderBy: { createdAt: "desc" }, take: 2 },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -59,24 +62,39 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   const d = parsed.data;
 
-  // Idempotency check: prevent duplicate charges / duplicate order insertions
+  // Idempotency check: prevent duplicate bills/invoices/notifications on double-clicks or refreshes
   const idempotencyKey = (body as any).idempotencyKey ? String((body as any).idempotencyKey).trim() : null;
   if (idempotencyKey) {
-    const existing = await prisma.order.findFirst({
-      where: { idempotencyKey },
+    const existing = await prisma.order.findUnique({
+      where: {
+        tenantId_idempotencyKey: {
+          tenantId,
+          idempotencyKey,
+        },
+      },
       include: {
         items: true,
         payments: true,
         invoice: true,
         table: { select: { id: true, number: true, area: true } },
+        whatsAppQueue: { orderBy: { createdAt: "desc" }, take: 1 },
+        printJobs: { where: { jobType: "BILL" }, orderBy: { createdAt: "desc" }, take: 1 },
       },
     });
     if (existing) {
       return NextResponse.json({
         ...existing,
+        ok: true,
         orderId: existing.id,
         orderNumber: existing.orderNumber,
         invoiceNumber: existing.invoice?.invoiceNumber,
+        invoicePdfUrl: existing.invoice?.fileUrl || null,
+        whatsapp: existing.whatsAppQueue?.[0]
+          ? { queued: true, queueId: existing.whatsAppQueue[0].id, status: existing.whatsAppQueue[0].status }
+          : { queued: false, status: existing.whatsappStatus || "NOT_CONFIGURED" },
+        printJob: existing.printJobs?.[0]
+          ? { jobId: existing.printJobs[0].id, status: existing.printJobs[0].status, requiresClientDispatch: false }
+          : { jobId: null, status: existing.printStatus || "NOT_CONFIGURED", requiresClientDispatch: false },
         replayed: true,
       });
     }
@@ -100,42 +118,47 @@ export async function POST(req: NextRequest) {
 
   const now = new Date();
   const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
-  const randCode = Math.random().toString(36).slice(2, 6).toUpperCase();
+  const randCode =
+    now.getTime().toString(36).slice(-2).toUpperCase() +
+    Math.random().toString(36).slice(2, 6).toUpperCase();
   const orderNumber = `ORD-${dateStr}-${randCode}`;
   const invoiceNumber = `INV-${dateStr}-${randCode}`;
 
   const isOnlineGateway = d.paymentMethod === "RAZORPAY_ONLINE";
   const initialStatus = isOnlineGateway ? "PLACED" : "BILLED";
 
-  const order = await prisma.$transaction(async (tx) => {
-    // 1. Create primary Order record
-    const o = await tx.order.create({
-      data: {
-        tenantId,
-        outletId: d.outletId,
-        orderNumber,
-        type: d.type,
-        serviceMode: d.serviceMode || (d.type === "QR" ? "DINE_IN" : d.type),
-        status: initialStatus,
-        tableId: d.tableId || undefined,
-        customerName: d.customerName?.trim() || undefined,
-        customerPhone: d.customerPhone?.trim() || undefined,
-        notes: d.notes,
-        subtotalPaise: totals.subtotal,
-        taxPaise: totals.tax,
-        discountPaise: totals.afterDiscount !== totals.subtotal ? d.discountPaise : 0,
-        serviceChargePaise: totals.service,
-        totalPaise: totals.total,
-        createdById: userId,
-        kotStatus: "SENT",
-        isPaid: !isOnlineGateway,
-        paidAt: !isOnlineGateway ? now : null,
-        billClosedAt: !isOnlineGateway ? now : null,
-        whatsappConsent: d.whatsappConsent || false,
-        whatsappStatus: d.whatsappConsent && d.customerPhone ? "QUEUED" : null,
-        idempotencyKey: idempotencyKey || null,
-      },
-    });
+  let order;
+  try {
+    order = await prisma.$transaction(async (tx) => {
+      // 1. Create primary Order record
+      const o = await tx.order.create({
+        data: {
+          tenantId,
+          outletId: d.outletId,
+          orderNumber,
+          type: d.type,
+          serviceMode: d.serviceMode || (d.type === "QR" ? "DINE_IN" : d.type),
+          status: initialStatus,
+          tableId: d.tableId || undefined,
+          customerName: d.customerName?.trim() || undefined,
+          customerPhone: d.customerPhone?.trim() || undefined,
+          notes: d.notes,
+          subtotalPaise: totals.subtotal,
+          taxPaise: totals.tax,
+          discountPaise: totals.afterDiscount !== totals.subtotal ? d.discountPaise : 0,
+          serviceChargePaise: totals.service,
+          totalPaise: totals.total,
+          createdById: userId,
+          kotStatus: "SENT",
+          isPaid: !isOnlineGateway,
+          paidAt: !isOnlineGateway ? now : null,
+          billClosedAt: !isOnlineGateway ? now : null,
+          whatsappConsent: d.whatsappConsent || false,
+          whatsappStatus: null,
+          printStatus: null,
+          idempotencyKey: idempotencyKey || null,
+        },
+      });
 
     // 2. High-performance batch create of all order items in single SQL query
     const orderItemsData = d.items.map((it) => {
@@ -276,23 +299,30 @@ export async function POST(req: NextRequest) {
       }
 
       if (d.whatsappConsent) {
-        await tx.customerConsent.upsert({
-          where: { tenantId_phone_channel: { tenantId, phone: cleanPhone, channel: "WHATSAPP" } },
-          create: { tenantId, phone: cleanPhone, channel: "WHATSAPP", optIn: true, optInSource: "POS_BILLING" },
-          update: { optIn: true, recordedAt: now },
+        const normPhone = normalizeWhatsAppPhone(cleanPhone);
+        const existingConsent = await tx.customerConsent.findUnique({
+          where: { tenantId_phone_channel: { tenantId, phone: normPhone, channel: "WHATSAPP" } },
         });
-
-        await tx.whatsAppDeliveryLog.create({
-          data: {
-            tenantId,
-            outletId: d.outletId,
-            orderId: o.id,
-            recipientPhone: cleanPhone,
-            templateName: "order_invoice_utility",
-            status: "QUEUED",
-            metadataJson: JSON.stringify({ orderNumber, totalPaise: totals.total, invoiceNumber }),
-          },
-        });
+        // Respect prior opt-outs unless explicit re-consent, and NEVER auto-enable promotional marketingOptIn
+        if (!existingConsent || existingConsent.optIn) {
+          await tx.customerConsent.upsert({
+            where: { tenantId_phone_channel: { tenantId, phone: normPhone, channel: "WHATSAPP" } },
+            create: {
+              tenantId,
+              customerId: customerId || null,
+              phone: normPhone,
+              channel: "WHATSAPP",
+              optIn: true,
+              marketingOptIn: false,
+              optInSource: "POS_BILLING",
+            },
+            update: {
+              customerId: customerId || undefined,
+              optIn: true,
+              recordedAt: now,
+            },
+          });
+        }
       }
     }
 
@@ -324,40 +354,35 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 7. Auto-Queue Print Jobs (KOT & Billing Receipt)
-    await tx.printJob.create({
-      data: {
+    // 7. Queue KOT only if outlet has a dedicated KOT printer configured
+    const kotPrinter = await tx.printerDevice.findFirst({
+      where: {
         tenantId,
         outletId: d.outletId,
-        orderId: o.id,
-        jobType: "KOT",
-        contentJson: JSON.stringify({
-          orderNumber,
-          table: d.tableId,
-          type: d.type,
-          items: d.items.map((i) => ({ name: i.name, quantity: i.quantity, notes: (i as any).notes })),
-        }),
-        status: "PENDING",
+        OR: [{ isDefaultKOT: true }, { station: "MAIN" }],
       },
+      orderBy: { isDefaultKOT: "desc" },
     });
-
-    await tx.printJob.create({
-      data: {
-        tenantId,
-        outletId: d.outletId,
-        orderId: o.id,
-        jobType: "BILL",
-        contentJson: JSON.stringify({
-          invoiceNumber,
-          orderNumber,
-          customerName: d.customerName,
-          items: d.items,
-          totals,
-          date: now.toISOString(),
-        }),
-        status: "PENDING",
-      },
-    });
+    if (kotPrinter) {
+      await tx.printJob.create({
+        data: {
+          tenantId,
+          outletId: d.outletId,
+          printerId: kotPrinter.id,
+          orderId: o.id,
+          idempotencyKey: `kot_${o.id}`,
+          jobType: "KOT",
+          paperWidth: kotPrinter.paperWidth === "58mm" ? "58mm" : "80mm",
+          contentJson: JSON.stringify({
+            orderNumber,
+            table: d.tableId,
+            type: d.type,
+            items: d.items.map((i) => ({ name: i.name, quantity: i.quantity, notes: (i as any).notes })),
+          }),
+          status: "QUEUED",
+        },
+      });
+    }
 
     // 8. Update Table Status
     if (d.tableId) {
@@ -399,24 +424,79 @@ export async function POST(req: NextRequest) {
     maxWait: 15000, // 15s connection queue acquisition timeout
     timeout: 20000, // 20s transaction execution timeout
   });
-
-  // Automatically queue & send WhatsApp invoice (Non-blocking background delivery)
-  let whatsappResult: any = null;
-  if (order.customerPhone) {
-    try {
-      whatsappResult = await queueAndSendWhatsAppInvoice(order.id);
-    } catch (wErr) {
-      console.error("[Orders] Auto WhatsApp invoice trigger error:", wErr);
+  } catch (txErr: any) {
+    if (txErr?.code === "P2002" && idempotencyKey) {
+      const raced = await prisma.order.findUnique({
+        where: { tenantId_idempotencyKey: { tenantId, idempotencyKey } },
+        include: {
+          items: true,
+          payments: true,
+          invoice: true,
+          whatsAppQueue: { orderBy: { createdAt: "desc" }, take: 1 },
+          printJobs: { where: { jobType: "BILL" }, orderBy: { createdAt: "desc" }, take: 1 },
+        },
+      });
+      if (raced) {
+        return NextResponse.json({
+          ...raced,
+          ok: true,
+          orderId: raced.id,
+          orderNumber: raced.orderNumber,
+          invoiceNumber: raced.invoice?.invoiceNumber,
+          invoicePdfUrl: raced.invoice?.fileUrl || null,
+          whatsapp: raced.whatsAppQueue?.[0]
+            ? { queued: true, queueId: raced.whatsAppQueue[0].id, status: raced.whatsAppQueue[0].status }
+            : { queued: false, status: raced.whatsappStatus || "NOT_CONFIGURED" },
+          printJob: raced.printJobs?.[0]
+            ? { jobId: raced.printJobs[0].id, status: raced.printJobs[0].status, requiresClientDispatch: false }
+            : { jobId: null, status: raced.printStatus || "NOT_CONFIGURED", requiresClientDispatch: false },
+          replayed: true,
+        });
+      }
     }
+    throw txErr;
   }
+
+  // Non-blocking independent workflows after atomic DB finalization:
+  // 1) Persist private Invoice PDF to Supabase Storage
+  // 2) Independently dispatch WhatsApp invoice + Thermal bill printing via Promise.allSettled
+  const origin = req.nextUrl.origin;
+  let invoicePdfUrl: string | null = null;
+  try {
+    const persisted = await generateAndPersistInvoicePdf(order.id, origin);
+    if (persisted?.signedPdfUrl) {
+      invoicePdfUrl = persisted.signedPdfUrl;
+    }
+  } catch (pdfErr) {
+    console.error("[Orders] Non-fatal PDF storage error:", pdfErr);
+  }
+
+  const [waSettled, printSettled] = await Promise.allSettled([
+    order.customerPhone
+      ? queueAndSendWhatsAppInvoice(order.id, { baseUrl: origin })
+      : Promise.resolve({ queued: false, status: "NOT_CONFIGURED", reason: "No customer mobile number entered" }),
+    queueAndDispatchBillPrintJob(order.id, { baseUrl: origin }),
+  ]);
+
+  const whatsappResult =
+    waSettled.status === "fulfilled"
+      ? waSettled.value
+      : { queued: false, status: "FAILED", reason: "WhatsApp dispatch failure" };
+
+  const printResult =
+    printSettled.status === "fulfilled"
+      ? printSettled.value
+      : { jobId: null, status: "FAILED", requiresClientDispatch: false, error: "Print dispatch failure" };
 
   return NextResponse.json({
     ok: true,
     orderId: order.id,
     orderNumber: order.orderNumber,
     invoiceNumber,
+    invoicePdfUrl,
     totals,
     whatsapp: whatsappResult,
+    printJob: printResult,
   });
 }
 
@@ -541,9 +621,14 @@ export async function PATCH(req: NextRequest) {
     timeout: 20000, // 20s transaction execution timeout
   });
 
-  if ((nextStatus === "BILLED" || nextStatus === "PAID") && order.customerPhone) {
-    queueAndSendWhatsAppInvoice(order.id).catch((err) => {
-      console.error("[Orders PATCH] Failed to dispatch WhatsApp invoice:", err);
+  if (nextStatus === "BILLED" || nextStatus === "PAID") {
+    const origin = req.nextUrl.origin;
+    Promise.allSettled([
+      generateAndPersistInvoicePdf(order.id, origin),
+      order.customerPhone ? queueAndSendWhatsAppInvoice(order.id, { baseUrl: origin }) : Promise.resolve(null),
+      queueAndDispatchBillPrintJob(order.id, { baseUrl: origin }),
+    ]).catch((err) => {
+      console.error("[Orders PATCH] Failed non-blocking automation:", err);
     });
   } else if (nextStatus === "CANCELLED") {
     // If order cancelled, cancel pending WhatsApp deliveries

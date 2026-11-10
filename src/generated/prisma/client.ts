@@ -72,6 +72,11 @@ export type Outlet = Prisma.OutletModel
  */
 export type RestaurantSetting = Prisma.RestaurantSettingModel
 /**
+ * Model OutletWhatsAppConfig
+ * 
+ */
+export type OutletWhatsAppConfig = Prisma.OutletWhatsAppConfigModel
+/**
  * Model TaxConfig
  * 
  */

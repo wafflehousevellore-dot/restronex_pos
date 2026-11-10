@@ -47,12 +47,23 @@ export default async function Dashboard(){
   const ent = await getEntitlements(tenantId);
 
   if (!tenant.onboardingComplete) {
-    const stepNames = ["Business","Outlet","Tables","Menu","Tax","Staff","Plan","Launch"];
+    const stepNames = [
+      "Business",
+      "Address",
+      "Outlet",
+      "Tax & Billing",
+      "Menu",
+      "Staff",
+      "WhatsApp",
+      "Printer",
+      "Tables & KOT",
+      "Launch",
+    ];
     return (
       <div className="max-w-3xl mx-auto space-y-4">
         {!ent.hasActiveSubscription && (
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 flex items-center justify-between gap-3">
-            <span><b>Restaurant in Setup Mode:</b> Complete 8-Step Onboarding and select your plan to activate full POS billing.</span>
+            <span><b>Restaurant in Setup Mode:</b> Complete Restaurant Onboarding and select your plan to activate full POS billing.</span>
             <Link href="/checkout?plan=growth&cycle=MONTHLY" className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] shrink-0">
               Select Plan →
             </Link>
@@ -62,16 +73,16 @@ export default async function Dashboard(){
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-base font-bold text-[#172B25]">Onboarding in progress</div>
-              <div className="text-xs text-[#718078] mt-0.5">Step {tenant.onboardingStep+1} of 8 - {stepNames[tenant.onboardingStep]} • Progress is saved</div>
+              <div className="text-xs text-[#718078] mt-0.5">Step {Math.min(tenant.onboardingStep + 1, 10)} of 10 - {stepNames[Math.min(tenant.onboardingStep, 9)]} • Progress is saved</div>
             </div>
             <Link href="/app/onboarding" className="rounded-full bg-[#16845B] px-5 py-2 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs">Continue onboarding →</Link>
           </div>
-          <div className="mt-5 grid grid-cols-8 gap-1.5">
-            {Array.from({length:8}).map((_,i)=> (
+          <div className="mt-5 grid grid-cols-10 gap-1.5">
+            {Array.from({length:10}).map((_,i)=> (
               <div key={i} className={`h-2 rounded-full ${i<tenant.onboardingStep ? "bg-[#16845B]" : i===tenant.onboardingStep ? "bg-[#16845B]/60" : "bg-[#E5EBE7]"}`} />
             ))}
           </div>
-          <div className="mt-3 text-xs text-[#718078]">Complete all 8 steps to launch your full restaurant workspace.</div>
+          <div className="mt-3 text-xs text-[#718078]">Complete onboarding steps (WhatsApp &amp; Printer can be skipped cleanly) to launch your POS workspace.</div>
         </Card>
       </div>
     );

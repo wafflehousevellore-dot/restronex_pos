@@ -48,6 +48,7 @@ const nav = [
   { label: "Feedback", href: "/app/feedback", icon: Users },
   { label: "Expenses", href: "/app/expenses", icon: CreditCard },
   { label: "Settings", href: "/app/settings", icon: Settings },
+  { label: "WhatsApp & Printing", href: "/app/settings/integrations", icon: Plug },
   { label: "Audit Logs", href: "/app/audit-logs", icon: FileText },
 ];
 

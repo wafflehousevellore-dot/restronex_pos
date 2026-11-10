@@ -115,7 +115,7 @@ export async function resolveUserCustomerJourney(
             planSlug: activeSub.plan.slug,
             planName: activeSub.plan.name,
             isPaid: true,
-            onboardingStep: Math.min(Math.max(0, tenant.onboardingStep), 7),
+            onboardingStep: Math.min(Math.max(0, tenant.onboardingStep), 9),
             onboardingComplete: false,
             message: `Continuing onboarding for ${tenant.name} at Step ${tenant.onboardingStep + 1}.`,
           };

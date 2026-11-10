@@ -73,3 +73,4 @@ export default function SoftwareShowcaseSection({ embedded = false }: { embedded
     </section>
   );
 }
+

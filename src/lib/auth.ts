@@ -33,9 +33,9 @@ export async function createSession(user: SessionUser, opts?: { secure?: boolean
   let isHttps = opts?.secure;
   if (isHttps === undefined) isHttps = await isHttpsFromHeaders();
   if (isHttps) {
-    c.set(COOKIE_NAME, token, { httpOnly: true, secure: true, sameSite: "none", partitioned: true, path: "/", maxAge: 60*60*24*7 } as unknown as Record<string, unknown>);
+    c.set(COOKIE_NAME, token, { httpOnly: true, secure: true, sameSite: "none", partitioned: true, path: "/", maxAge: 60 * 60 * 24 * 7 } as unknown as Record<string, unknown>);
   } else {
-    c.set(COOKIE_NAME, token, { httpOnly: true, secure: false, sameSite: "lax", path: "/", maxAge: 60*60*24*7 });
+    c.set(COOKIE_NAME, token, { httpOnly: true, secure: false, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7 });
   }
   return token;
 }
@@ -80,7 +80,7 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
             isPlatformAdmin: false,
           },
         });
-        await prisma.auditLog.create({ data: { userId: dbUser.id, action: "USER_CREATED_VIA_CLERK", entity: "User", entityId: dbUser.id, metadataJson: JSON.stringify({ clerkUserId, email })} });
+        await prisma.auditLog.create({ data: { userId: dbUser.id, action: "USER_CREATED_VIA_CLERK", entity: "User", entityId: dbUser.id, metadataJson: JSON.stringify({ clerkUserId, email }) } });
       }
       // If orgId present but no Tenant mapping, try to find tenant by clerkOrgId or create shadow mapping on demand (lazy)
       if (orgId) {
@@ -213,7 +213,7 @@ export async function getSession(): Promise<{ user: SessionUser | null, userId: 
     const token = c.get(COOKIE_NAME)?.value;
     if (!token) return { user: null, userId: null };
     const decoded = jwt.verify(token, JWT_SECRET) as unknown as { sub: string };
-    const dbUser = await prisma.user.findUnique({ where: { id: decoded.sub }});
+    const dbUser = await prisma.user.findUnique({ where: { id: decoded.sub } });
     if (!dbUser) return { user: null, userId: null };
     return {
       user: {
@@ -239,7 +239,7 @@ export async function getActiveOrgId(): Promise<string | null> {
       if (t) return t.id;
       return orgId; // fallback raw clerk id (resolveTenantId will handle)
     }
-  } catch {}
+  } catch { }
   const c = await cookies();
   return c.get(ORG_COOKIE)?.value ?? null;
 }
@@ -249,11 +249,11 @@ export async function setActiveOrgId(orgId: string) {
   try {
     const isHttps = await isHttpsFromHeaders();
     if (isHttps) {
-      c.set(ORG_COOKIE, orgId, { httpOnly: true, secure: true, sameSite: "none", partitioned: true, path: "/", maxAge: 60*60*24*7 } as unknown as Record<string, unknown>);
+      c.set(ORG_COOKIE, orgId, { httpOnly: true, secure: true, sameSite: "none", partitioned: true, path: "/", maxAge: 60 * 60 * 24 * 7 } as unknown as Record<string, unknown>);
       return;
     }
-  } catch {}
-  c.set(ORG_COOKIE, orgId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60*60*24*7 });
+  } catch { }
+  c.set(ORG_COOKIE, orgId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7 });
 }
 
 export async function resolveTenantId(userId: string, explicit?: string | null): Promise<string | null> {
@@ -269,7 +269,7 @@ export async function resolveTenantId(userId: string, explicit?: string | null):
       const t2 = await prisma.tenant.findUnique({ where: { id: orgId } });
       if (t2) return t2.id;
     }
-  } catch {}
+  } catch { }
   const active = await getActiveOrgId();
   if (active) {
     // active may be clerkOrgId - map
@@ -307,18 +307,18 @@ export async function requireAuth(): Promise<SessionUser> {
 export async function getTenantContext(tenantId: string, userId: string) {
   // tenantId may be clerkOrgId - resolve
   let tid = tenantId;
-  const tByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: tenantId } }).catch(()=>null);
+  const tByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: tenantId } }).catch(() => null);
   if (tByClerk) tid = tByClerk.id;
-  const membership = await prisma.membership.findFirst({ where: { tenantId: tid, userId }, include: { tenant: true }});
+  const membership = await prisma.membership.findFirst({ where: { tenantId: tid, userId }, include: { tenant: true } });
   if (!membership) throw new Error("FORBIDDEN: Not a member of this organization");
   return { membership, tenant: membership.tenant };
 }
 
 export async function assertCan(userId: string, tenantId: string, allowedRoles: string[]) {
   let tid = tenantId;
-  const tByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: tenantId } }).catch(()=>null);
+  const tByClerk = await prisma.tenant.findUnique({ where: { clerkOrgId: tenantId } }).catch(() => null);
   if (tByClerk) tid = tByClerk.id;
-  const m = await prisma.membership.findFirst({ where: { tenantId: tid, userId }});
+  const m = await prisma.membership.findFirst({ where: { tenantId: tid, userId } });
   if (!m) throw new Error("FORBIDDEN");
   if (allowedRoles.length && !allowedRoles.includes(m.role) && !allowedRoles.includes("*")) {
     if (m.role !== "OWNER") throw new Error("FORBIDDEN: insufficient role");

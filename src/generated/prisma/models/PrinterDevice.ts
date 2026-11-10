@@ -32,9 +32,13 @@ export type PrinterDeviceMinAggregateOutputType = {
   type: string | null
   paperWidth: string | null
   connectionString: string | null
+  bridgeUrl: string | null
   status: string | null
   isDefaultBilling: boolean | null
   isDefaultKOT: boolean | null
+  autoPrintEnabled: boolean | null
+  qrEnabled: boolean | null
+  compatibilityNote: string | null
   station: string | null
   lastActiveAt: Date | null
   createdAt: Date | null
@@ -49,9 +53,13 @@ export type PrinterDeviceMaxAggregateOutputType = {
   type: string | null
   paperWidth: string | null
   connectionString: string | null
+  bridgeUrl: string | null
   status: string | null
   isDefaultBilling: boolean | null
   isDefaultKOT: boolean | null
+  autoPrintEnabled: boolean | null
+  qrEnabled: boolean | null
+  compatibilityNote: string | null
   station: string | null
   lastActiveAt: Date | null
   createdAt: Date | null
@@ -66,9 +74,13 @@ export type PrinterDeviceCountAggregateOutputType = {
   type: number
   paperWidth: number
   connectionString: number
+  bridgeUrl: number
   status: number
   isDefaultBilling: number
   isDefaultKOT: number
+  autoPrintEnabled: number
+  qrEnabled: number
+  compatibilityNote: number
   station: number
   lastActiveAt: number
   createdAt: number
@@ -85,9 +97,13 @@ export type PrinterDeviceMinAggregateInputType = {
   type?: true
   paperWidth?: true
   connectionString?: true
+  bridgeUrl?: true
   status?: true
   isDefaultBilling?: true
   isDefaultKOT?: true
+  autoPrintEnabled?: true
+  qrEnabled?: true
+  compatibilityNote?: true
   station?: true
   lastActiveAt?: true
   createdAt?: true
@@ -102,9 +118,13 @@ export type PrinterDeviceMaxAggregateInputType = {
   type?: true
   paperWidth?: true
   connectionString?: true
+  bridgeUrl?: true
   status?: true
   isDefaultBilling?: true
   isDefaultKOT?: true
+  autoPrintEnabled?: true
+  qrEnabled?: true
+  compatibilityNote?: true
   station?: true
   lastActiveAt?: true
   createdAt?: true
@@ -119,9 +139,13 @@ export type PrinterDeviceCountAggregateInputType = {
   type?: true
   paperWidth?: true
   connectionString?: true
+  bridgeUrl?: true
   status?: true
   isDefaultBilling?: true
   isDefaultKOT?: true
+  autoPrintEnabled?: true
+  qrEnabled?: true
+  compatibilityNote?: true
   station?: true
   lastActiveAt?: true
   createdAt?: true
@@ -209,9 +233,13 @@ export type PrinterDeviceGroupByOutputType = {
   type: string
   paperWidth: string
   connectionString: string | null
+  bridgeUrl: string | null
   status: string
   isDefaultBilling: boolean
   isDefaultKOT: boolean
+  autoPrintEnabled: boolean
+  qrEnabled: boolean
+  compatibilityNote: string | null
   station: string | null
   lastActiveAt: Date | null
   createdAt: Date
@@ -247,9 +275,13 @@ export type PrinterDeviceWhereInput = {
   type?: Prisma.StringFilter<"PrinterDevice"> | string
   paperWidth?: Prisma.StringFilter<"PrinterDevice"> | string
   connectionString?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
+  bridgeUrl?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   status?: Prisma.StringFilter<"PrinterDevice"> | string
   isDefaultBilling?: Prisma.BoolFilter<"PrinterDevice"> | boolean
   isDefaultKOT?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  autoPrintEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  qrEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  compatibilityNote?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   station?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   lastActiveAt?: Prisma.DateTimeNullableFilter<"PrinterDevice"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrinterDevice"> | Date | string
@@ -268,9 +300,13 @@ export type PrinterDeviceOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   paperWidth?: Prisma.SortOrder
   connectionString?: Prisma.SortOrderInput | Prisma.SortOrder
+  bridgeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isDefaultBilling?: Prisma.SortOrder
   isDefaultKOT?: Prisma.SortOrder
+  autoPrintEnabled?: Prisma.SortOrder
+  qrEnabled?: Prisma.SortOrder
+  compatibilityNote?: Prisma.SortOrderInput | Prisma.SortOrder
   station?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -292,9 +328,13 @@ export type PrinterDeviceWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"PrinterDevice"> | string
   paperWidth?: Prisma.StringFilter<"PrinterDevice"> | string
   connectionString?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
+  bridgeUrl?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   status?: Prisma.StringFilter<"PrinterDevice"> | string
   isDefaultBilling?: Prisma.BoolFilter<"PrinterDevice"> | boolean
   isDefaultKOT?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  autoPrintEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  qrEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  compatibilityNote?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   station?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   lastActiveAt?: Prisma.DateTimeNullableFilter<"PrinterDevice"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrinterDevice"> | Date | string
@@ -313,9 +353,13 @@ export type PrinterDeviceOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   paperWidth?: Prisma.SortOrder
   connectionString?: Prisma.SortOrderInput | Prisma.SortOrder
+  bridgeUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   isDefaultBilling?: Prisma.SortOrder
   isDefaultKOT?: Prisma.SortOrder
+  autoPrintEnabled?: Prisma.SortOrder
+  qrEnabled?: Prisma.SortOrder
+  compatibilityNote?: Prisma.SortOrderInput | Prisma.SortOrder
   station?: Prisma.SortOrderInput | Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -336,9 +380,13 @@ export type PrinterDeviceScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"PrinterDevice"> | string
   paperWidth?: Prisma.StringWithAggregatesFilter<"PrinterDevice"> | string
   connectionString?: Prisma.StringNullableWithAggregatesFilter<"PrinterDevice"> | string | null
+  bridgeUrl?: Prisma.StringNullableWithAggregatesFilter<"PrinterDevice"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"PrinterDevice"> | string
   isDefaultBilling?: Prisma.BoolWithAggregatesFilter<"PrinterDevice"> | boolean
   isDefaultKOT?: Prisma.BoolWithAggregatesFilter<"PrinterDevice"> | boolean
+  autoPrintEnabled?: Prisma.BoolWithAggregatesFilter<"PrinterDevice"> | boolean
+  qrEnabled?: Prisma.BoolWithAggregatesFilter<"PrinterDevice"> | boolean
+  compatibilityNote?: Prisma.StringNullableWithAggregatesFilter<"PrinterDevice"> | string | null
   station?: Prisma.StringNullableWithAggregatesFilter<"PrinterDevice"> | string | null
   lastActiveAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PrinterDevice"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PrinterDevice"> | Date | string
@@ -351,9 +399,13 @@ export type PrinterDeviceCreateInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -372,9 +424,13 @@ export type PrinterDeviceUncheckedCreateInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -389,9 +445,13 @@ export type PrinterDeviceUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -410,9 +470,13 @@ export type PrinterDeviceUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -429,9 +493,13 @@ export type PrinterDeviceCreateManyInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -444,9 +512,13 @@ export type PrinterDeviceUpdateManyMutationInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -461,9 +533,13 @@ export type PrinterDeviceUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,9 +564,13 @@ export type PrinterDeviceCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   paperWidth?: Prisma.SortOrder
   connectionString?: Prisma.SortOrder
+  bridgeUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDefaultBilling?: Prisma.SortOrder
   isDefaultKOT?: Prisma.SortOrder
+  autoPrintEnabled?: Prisma.SortOrder
+  qrEnabled?: Prisma.SortOrder
+  compatibilityNote?: Prisma.SortOrder
   station?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -505,9 +585,13 @@ export type PrinterDeviceMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   paperWidth?: Prisma.SortOrder
   connectionString?: Prisma.SortOrder
+  bridgeUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDefaultBilling?: Prisma.SortOrder
   isDefaultKOT?: Prisma.SortOrder
+  autoPrintEnabled?: Prisma.SortOrder
+  qrEnabled?: Prisma.SortOrder
+  compatibilityNote?: Prisma.SortOrder
   station?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -522,9 +606,13 @@ export type PrinterDeviceMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   paperWidth?: Prisma.SortOrder
   connectionString?: Prisma.SortOrder
+  bridgeUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   isDefaultBilling?: Prisma.SortOrder
   isDefaultKOT?: Prisma.SortOrder
+  autoPrintEnabled?: Prisma.SortOrder
+  qrEnabled?: Prisma.SortOrder
+  compatibilityNote?: Prisma.SortOrder
   station?: Prisma.SortOrder
   lastActiveAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -661,9 +749,13 @@ export type PrinterDeviceCreateWithoutTenantInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -680,9 +772,13 @@ export type PrinterDeviceUncheckedCreateWithoutTenantInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -728,9 +824,13 @@ export type PrinterDeviceScalarWhereInput = {
   type?: Prisma.StringFilter<"PrinterDevice"> | string
   paperWidth?: Prisma.StringFilter<"PrinterDevice"> | string
   connectionString?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
+  bridgeUrl?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   status?: Prisma.StringFilter<"PrinterDevice"> | string
   isDefaultBilling?: Prisma.BoolFilter<"PrinterDevice"> | boolean
   isDefaultKOT?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  autoPrintEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  qrEnabled?: Prisma.BoolFilter<"PrinterDevice"> | boolean
+  compatibilityNote?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   station?: Prisma.StringNullableFilter<"PrinterDevice"> | string | null
   lastActiveAt?: Prisma.DateTimeNullableFilter<"PrinterDevice"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrinterDevice"> | Date | string
@@ -743,9 +843,13 @@ export type PrinterDeviceCreateWithoutOutletInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -762,9 +866,13 @@ export type PrinterDeviceUncheckedCreateWithoutOutletInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -805,9 +913,13 @@ export type PrinterDeviceCreateWithoutRoutingRulesInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -825,9 +937,13 @@ export type PrinterDeviceUncheckedCreateWithoutRoutingRulesInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -857,9 +973,13 @@ export type PrinterDeviceUpdateWithoutRoutingRulesInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -877,9 +997,13 @@ export type PrinterDeviceUncheckedUpdateWithoutRoutingRulesInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -893,9 +1017,13 @@ export type PrinterDeviceCreateWithoutPrintJobsInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -913,9 +1041,13 @@ export type PrinterDeviceUncheckedCreateWithoutPrintJobsInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -945,9 +1077,13 @@ export type PrinterDeviceUpdateWithoutPrintJobsInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -965,9 +1101,13 @@ export type PrinterDeviceUncheckedUpdateWithoutPrintJobsInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -982,9 +1122,13 @@ export type PrinterDeviceCreateManyTenantInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -997,9 +1141,13 @@ export type PrinterDeviceUpdateWithoutTenantInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1016,9 +1164,13 @@ export type PrinterDeviceUncheckedUpdateWithoutTenantInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1034,9 +1186,13 @@ export type PrinterDeviceUncheckedUpdateManyWithoutTenantInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1050,9 +1206,13 @@ export type PrinterDeviceCreateManyOutletInput = {
   type: string
   paperWidth?: string
   connectionString?: string | null
+  bridgeUrl?: string | null
   status?: string
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: string | null
   station?: string | null
   lastActiveAt?: Date | string | null
   createdAt?: Date | string
@@ -1065,9 +1225,13 @@ export type PrinterDeviceUpdateWithoutOutletInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1084,9 +1248,13 @@ export type PrinterDeviceUncheckedUpdateWithoutOutletInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1102,9 +1270,13 @@ export type PrinterDeviceUncheckedUpdateManyWithoutOutletInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   connectionString?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bridgeUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   isDefaultBilling?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDefaultKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  autoPrintEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  compatibilityNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   station?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1159,9 +1331,13 @@ export type PrinterDeviceSelect<ExtArgs extends runtime.Types.Extensions.Interna
   type?: boolean
   paperWidth?: boolean
   connectionString?: boolean
+  bridgeUrl?: boolean
   status?: boolean
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: boolean
   station?: boolean
   lastActiveAt?: boolean
   createdAt?: boolean
@@ -1181,9 +1357,13 @@ export type PrinterDeviceSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   type?: boolean
   paperWidth?: boolean
   connectionString?: boolean
+  bridgeUrl?: boolean
   status?: boolean
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: boolean
   station?: boolean
   lastActiveAt?: boolean
   createdAt?: boolean
@@ -1200,9 +1380,13 @@ export type PrinterDeviceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   type?: boolean
   paperWidth?: boolean
   connectionString?: boolean
+  bridgeUrl?: boolean
   status?: boolean
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: boolean
   station?: boolean
   lastActiveAt?: boolean
   createdAt?: boolean
@@ -1219,16 +1403,20 @@ export type PrinterDeviceSelectScalar = {
   type?: boolean
   paperWidth?: boolean
   connectionString?: boolean
+  bridgeUrl?: boolean
   status?: boolean
   isDefaultBilling?: boolean
   isDefaultKOT?: boolean
+  autoPrintEnabled?: boolean
+  qrEnabled?: boolean
+  compatibilityNote?: boolean
   station?: boolean
   lastActiveAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PrinterDeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "name" | "type" | "paperWidth" | "connectionString" | "status" | "isDefaultBilling" | "isDefaultKOT" | "station" | "lastActiveAt" | "createdAt" | "updatedAt", ExtArgs["result"]["printerDevice"]>
+export type PrinterDeviceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "name" | "type" | "paperWidth" | "connectionString" | "bridgeUrl" | "status" | "isDefaultBilling" | "isDefaultKOT" | "autoPrintEnabled" | "qrEnabled" | "compatibilityNote" | "station" | "lastActiveAt" | "createdAt" | "updatedAt", ExtArgs["result"]["printerDevice"]>
 export type PrinterDeviceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -1261,9 +1449,13 @@ export type $PrinterDevicePayload<ExtArgs extends runtime.Types.Extensions.Inter
     type: string
     paperWidth: string
     connectionString: string | null
+    bridgeUrl: string | null
     status: string
     isDefaultBilling: boolean
     isDefaultKOT: boolean
+    autoPrintEnabled: boolean
+    qrEnabled: boolean
+    compatibilityNote: string | null
     station: string | null
     lastActiveAt: Date | null
     createdAt: Date
@@ -1702,9 +1894,13 @@ export interface PrinterDeviceFieldRefs {
   readonly type: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly paperWidth: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly connectionString: Prisma.FieldRef<"PrinterDevice", 'String'>
+  readonly bridgeUrl: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly status: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly isDefaultBilling: Prisma.FieldRef<"PrinterDevice", 'Boolean'>
   readonly isDefaultKOT: Prisma.FieldRef<"PrinterDevice", 'Boolean'>
+  readonly autoPrintEnabled: Prisma.FieldRef<"PrinterDevice", 'Boolean'>
+  readonly qrEnabled: Prisma.FieldRef<"PrinterDevice", 'Boolean'>
+  readonly compatibilityNote: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly station: Prisma.FieldRef<"PrinterDevice", 'String'>
   readonly lastActiveAt: Prisma.FieldRef<"PrinterDevice", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PrinterDevice", 'DateTime'>

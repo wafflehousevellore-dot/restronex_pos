@@ -88,6 +88,7 @@ model Tenant {
   customerConsents CustomerConsent[]
   whatsAppLogs  WhatsAppDeliveryLog[]
   whatsAppQueue WhatsAppMessageQueue[]
+  outletWhatsAppConfigs OutletWhatsAppConfig[]
   invoices      InvoiceRecord[]
   featureUsages FeatureUsage[]
   qrSessions    QrOrderingSession[]
@@ -137,6 +138,7 @@ model Outlet {
   printers    PrinterDevice[]
   printJobs   PrintJob[]
   qrSessions  QrOrderingSession[]
+  whatsAppConfig OutletWhatsAppConfig?
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -144,6 +146,7 @@ model Outlet {
 model RestaurantSetting {
   id                String @id @default(cuid())
   tenantId          String @unique
+  logoUrl           String?
   receiptHeader     String?
   receiptFooter     String?
   gstNumber         String?
@@ -158,8 +161,34 @@ model RestaurantSetting {
   whatsappPhoneNumberId    String?
   whatsappAccessToken      String?
   whatsappWabaId           String?
+  whatsappDisplayPhone     String?
   whatsappTemplateName     String? @default("order_invoice_utility")
+  whatsappConnectionMode   String? @default("META_CLOUD_API")
+  whatsappConnectionStatus String @default("NOT_CONFIGURED")
+  whatsappOnboardingSkipped Boolean @default(false)
+  printerOnboardingSkipped Boolean @default(false)
+  qrFooterEnabled          Boolean @default(true)
   tenant            Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model OutletWhatsAppConfig {
+  id             String    @id @default(cuid())
+  tenantId       String
+  outletId       String    @unique
+  enabled        Boolean   @default(true)
+  phoneNumberId  String?
+  wabaId         String?
+  displayPhone   String?
+  accessTokenEnc String?
+  templateName   String?   @default("order_invoice_utility")
+  connectionMode String?   @default("META_CLOUD_API")
+  status         String    @default("NOT_CONFIGURED")
+  lastVerifiedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  outlet         Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@index([tenantId])
 }
 
 model TaxConfig {
@@ -282,6 +311,7 @@ model Order {
   billClosedAt DateTime?
   whatsappConsent Boolean @default(false)
   whatsappStatus String?
+  printStatus    String?
   qrSessionId String?
   idempotencyKey String?
   createdAt   DateTime @default(now())
@@ -299,13 +329,13 @@ model Order {
   whatsAppLogs WhatsAppDeliveryLog[]
   whatsAppQueue WhatsAppMessageQueue[]
   @@unique([tenantId, orderNumber])
+  @@unique([tenantId, idempotencyKey])
   @@index([tenantId, outletId])
   @@index([status])
   @@index([tenantId, createdAt])
   @@index([outletId, createdAt])
   @@index([tenantId, status, createdAt])
   @@index([tableId])
-  @@index([idempotencyKey])
 }
 
 model OrderItem {
@@ -818,13 +848,17 @@ model PrinterDevice {
   tenantId         String
   outletId         String
   name             String
-  type             String   // BLUETOOTH_THERMAL, USB_THERMAL, NETWORK_LAN, CLOUD_PRINT
+  type             String   // USB_THERMAL, NETWORK_LAN, BLUETOOTH_THERMAL, LOCAL_BRIDGE, OS_PRINT_SERVICE
   paperWidth       String   @default("80mm") // 58mm, 80mm
   connectionString String?  // MAC address, IP:Port, USB device path, or Bluetooth UUID
-  status           String   @default("DISCONNECTED") // CONNECTED, DISCONNECTED, ERROR
+  bridgeUrl        String?  // Local print bridge / agent HTTP URL if configured
+  status           String   @default("DISCONNECTED") // CONNECTED, DISCONNECTED, OFFLINE, ERROR
   isDefaultBilling Boolean  @default(false)
   isDefaultKOT     Boolean  @default(false)
-  station          String?  // MAIN, BEVERAGE, KITCHEN, BAR, DESSERT
+  autoPrintEnabled Boolean  @default(true)
+  qrEnabled        Boolean  @default(true)
+  compatibilityNote String?
+  station          String?  // MAIN, BEVERAGE, KITCHEN, BAR, DESSERT, BILLING
   lastActiveAt     DateTime?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -849,38 +883,48 @@ model PrinterRoutingRule {
 }
 
 model PrintJob {
-  id          String   @id @default(cuid())
-  tenantId    String
-  outletId    String
-  printerId   String?
-  orderId     String?
-  jobType     String   // KOT, BILL, RECEIPT, TEST, REPORT
-  contentJson String   // Formatted receipt / ESC-POS commands / JSON payload
-  status      String   @default("PENDING") // PENDING, PROCESSING, PRINTED, FAILED, RETRYING
-  attempts    Int      @default(0)
-  lastError   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  printer     PrinterDevice? @relation(fields: [printerId], references: [id], onDelete: SetNull)
-  order       Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  outlet      Outlet   @relation(fields: [outletId], references: [id], onDelete: Cascade)
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id             String    @id @default(cuid())
+  tenantId       String
+  outletId       String
+  printerId      String?
+  orderId        String?
+  idempotencyKey String?
+  jobType        String    // KOT, BILL, RECEIPT, TEST, REPORT
+  paperWidth     String    @default("80mm")
+  contentJson    String    // Formatted receipt / ESC-POS commands / JSON payload
+  status         String    @default("QUEUED") // NOT_CONFIGURED, QUEUED, PRINTING, PRINT_REQUESTED, PRINTED, OFFLINE, FAILED
+  attempts       Int       @default(0)
+  maxRetries     Int       @default(3)
+  nextRetryAt    DateTime?
+  lastError      String?
+  dispatchedAt   DateTime?
+  printedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  printer        PrinterDevice? @relation(fields: [printerId], references: [id], onDelete: SetNull)
+  order          Order?    @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  outlet         Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  @@unique([tenantId, idempotencyKey])
   @@index([tenantId, status])
   @@index([outletId])
+  @@index([status, nextRetryAt])
 }
 
 model CustomerConsent {
-  id          String   @id @default(cuid())
-  tenantId    String
-  customerId  String?
-  phone       String
-  channel     String   @default("WHATSAPP") // WHATSAPP, SMS, EMAIL
-  optIn       Boolean  @default(true)
-  optInSource String   @default("POS_BILLING") // POS_BILLING, QR_ORDER, WEBSITE
-  recordedAt  DateTime @default(now())
-  ipAddress   String?
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  id             String   @id @default(cuid())
+  tenantId       String
+  customerId     String?
+  phone          String
+  channel        String   @default("WHATSAPP") // WHATSAPP, SMS, EMAIL
+  optIn          Boolean  @default(true) // Transactional e-bill delivery consent ONLY
+  marketingOptIn Boolean  @default(false) // Explicitly separated promotional marketing opt-in
+  optInSource    String   @default("POS_BILLING") // POS_BILLING, QR_ORDER, WEBSITE, WHATSAPP_STOP
+  recordedAt     DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer       Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
   @@unique([tenantId, phone, channel])
   @@index([tenantId])
 }

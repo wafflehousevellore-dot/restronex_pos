@@ -17,3 +17,4 @@ export async function GET() {
     email: guard.auth.user.email,
   });
 }
+

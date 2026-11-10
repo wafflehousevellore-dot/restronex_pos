@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { generateInvoicePDF, InvoicePDFData } from "@/lib/invoice-pdf";
+import { generateInvoicePDF } from "@/lib/invoice-pdf";
+import {
+  loadInvoicePdfPayload,
+  verifyInvoiceAccessToken,
+} from "@/lib/invoice-storage";
+import { createSupabaseAdminClient } from "@/lib/supabase";
+import { STORAGE_BUCKETS } from "@/lib/supabase-storage";
 
 export const dynamic = "force-dynamic";
 
@@ -14,80 +21,80 @@ export async function GET(
       return NextResponse.json({ error: "Invoice number required" }, { status: 400 });
     }
 
-    const invoice = await prisma.invoiceRecord.findFirst({
-      where: { invoiceNumber },
-      include: {
-        tenant: { include: { settings: true } },
-        order: {
-          include: {
-            items: true,
-            outlet: true,
-            table: true,
-            payments: { orderBy: { createdAt: "desc" }, take: 1 },
-          },
-        },
-      },
-    });
+    const sp = req.nextUrl.searchParams;
+    const tid = sp.get("tid");
+    const exp = sp.get("exp");
+    const sig = sp.get("sig");
 
-    if (!invoice || !invoice.order) {
+    let authorizedTenantId: string | undefined;
+
+    // 1. Time-bound HMAC signed access token (used for Meta Cloud API attachment & customer link)
+    if (tid && exp && sig) {
+      const valid = verifyInvoiceAccessToken(tid, invoiceNumber, exp, sig);
+      if (!valid) {
+        return NextResponse.json({ error: "Invalid or expired invoice download link" }, { status: 403 });
+      }
+      authorizedTenantId = tid;
+    } else {
+      // 2. Otherwise require authenticated session belonging to the invoice's tenant
+      const { userId } = await getSession();
+      if (!userId) {
+        return NextResponse.json({ error: "Authentication required to access private invoice PDF" }, { status: 401 });
+      }
+      const [invMeta, dbUser] = await Promise.all([
+        prisma.invoiceRecord.findFirst({
+          where: { invoiceNumber },
+          select: { tenantId: true },
+        }),
+        prisma.user.findUnique({
+          where: { id: userId },
+          select: { role: true, isPlatformAdmin: true },
+        }),
+      ]);
+      if (!invMeta) {
+        return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+      }
+      const isPlatformOwner = Boolean(
+        dbUser?.role === "PLATFORM_OWNER" && dbUser?.isPlatformAdmin
+      );
+      if (!isPlatformOwner) {
+        const mem = await prisma.membership.findFirst({
+          where: { userId, tenantId: invMeta.tenantId },
+        });
+        if (!mem) {
+          return NextResponse.json({ error: "Forbidden: Cross-tenant invoice access denied" }, { status: 403 });
+        }
+      }
+      authorizedTenantId = invMeta.tenantId;
+    }
+
+    const payload = await loadInvoicePdfPayload(invoiceNumber, authorizedTenantId);
+    if (!payload) {
       return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
     }
 
-    const order = invoice.order;
-    const tenant = invoice.tenant;
-    const outlet = order.outlet;
-    const setting = tenant.settings;
-    const payment = order.payments?.[0];
+    let pdfBuffer: Buffer | null = null;
 
-    const orderDate = new Date(order.createdAt);
-    const dateFormatted = orderDate.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-    const timeFormatted = orderDate.toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+    // Attempt read from private Supabase Storage bucket first if path recorded
+    if (
+      payload.invoice.pdfStoragePath &&
+      process.env.SUPABASE_SERVICE_ROLE_KEY &&
+      process.env.NEXT_PUBLIC_SUPABASE_URL
+    ) {
+      try {
+        const admin = createSupabaseAdminClient();
+        const { data: blob, error } = await admin.storage
+          .from(STORAGE_BUCKETS.PRIVATE_DOCS)
+          .download(payload.invoice.pdfStoragePath);
+        if (!error && blob) {
+          pdfBuffer = Buffer.from(await blob.arrayBuffer());
+        }
+      } catch {}
+    }
 
-    const isPaid = order.isPaid || payment?.status === "COMPLETED";
-
-    const pdfData: InvoicePDFData = {
-      restaurantName: setting?.receiptHeader || tenant.name || "RestroNex Restaurant",
-      outletName: outlet.name,
-      outletAddress: outlet.address,
-      outletCity: outlet.city,
-      outletPhone: outlet.phone,
-      gstin: setting?.gstNumber || null,
-      fssai: setting?.fssaiNumber || null,
-      invoiceNumber: invoice.invoiceNumber,
-      orderNumber: order.orderNumber,
-      date: dateFormatted,
-      time: timeFormatted,
-      orderType: order.type,
-      tableName: order.table?.number || null,
-      staffName: "Counter Staff",
-      customerName: invoice.customerName || order.customerName || "Valued Guest",
-      customerPhone: invoice.customerPhone || order.customerPhone || null,
-      items: order.items.map((it) => ({
-        name: it.name,
-        quantity: it.quantity,
-        unitPricePaise: it.unitPricePaise,
-        totalPaise: it.totalPaise,
-      })),
-      subtotalPaise: invoice.subtotalPaise,
-      discountPaise: invoice.discountPaise,
-      cgstPaise: Math.round(invoice.taxPaise / 2),
-      sgstPaise: Math.round(invoice.taxPaise / 2),
-      otherTaxesPaise: 0,
-      totalPaise: invoice.totalPaise,
-      paymentMethod: payment?.method || (order.isPaid ? "UPI" : "UNPAID"),
-      paymentStatus: isPaid ? "PAID" : "UNPAID",
-      transactionId: payment?.reference || order.orderNumber,
-    };
-
-    const pdfBuffer = await generateInvoicePDF(pdfData);
+    if (!pdfBuffer) {
+      pdfBuffer = await generateInvoicePDF(payload.pdfData);
+    }
 
     const filename = `Invoice-${invoiceNumber}.pdf`;
     return new NextResponse(new Uint8Array(pdfBuffer), {
@@ -95,11 +102,11 @@ export async function GET(
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${filename}"`,
         "Content-Length": String(pdfBuffer.length),
-        "Cache-Control": "public, max-age=3600, s-maxage=3600",
+        "Cache-Control": "private, no-store",
       },
     });
   } catch (err: any) {
     console.error("Failed to generate invoice PDF:", err);
-    return NextResponse.json({ error: "Failed to generate invoice PDF" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to serve invoice PDF" }, { status: 500 });
   }
 }

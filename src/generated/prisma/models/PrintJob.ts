@@ -28,10 +28,12 @@ export type AggregatePrintJob = {
 
 export type PrintJobAvgAggregateOutputType = {
   attempts: number | null
+  maxRetries: number | null
 }
 
 export type PrintJobSumAggregateOutputType = {
   attempts: number | null
+  maxRetries: number | null
 }
 
 export type PrintJobMinAggregateOutputType = {
@@ -40,11 +42,17 @@ export type PrintJobMinAggregateOutputType = {
   outletId: string | null
   printerId: string | null
   orderId: string | null
+  idempotencyKey: string | null
   jobType: string | null
+  paperWidth: string | null
   contentJson: string | null
   status: string | null
   attempts: number | null
+  maxRetries: number | null
+  nextRetryAt: Date | null
   lastError: string | null
+  dispatchedAt: Date | null
+  printedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -55,11 +63,17 @@ export type PrintJobMaxAggregateOutputType = {
   outletId: string | null
   printerId: string | null
   orderId: string | null
+  idempotencyKey: string | null
   jobType: string | null
+  paperWidth: string | null
   contentJson: string | null
   status: string | null
   attempts: number | null
+  maxRetries: number | null
+  nextRetryAt: Date | null
   lastError: string | null
+  dispatchedAt: Date | null
+  printedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,11 +84,17 @@ export type PrintJobCountAggregateOutputType = {
   outletId: number
   printerId: number
   orderId: number
+  idempotencyKey: number
   jobType: number
+  paperWidth: number
   contentJson: number
   status: number
   attempts: number
+  maxRetries: number
+  nextRetryAt: number
   lastError: number
+  dispatchedAt: number
+  printedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,10 +103,12 @@ export type PrintJobCountAggregateOutputType = {
 
 export type PrintJobAvgAggregateInputType = {
   attempts?: true
+  maxRetries?: true
 }
 
 export type PrintJobSumAggregateInputType = {
   attempts?: true
+  maxRetries?: true
 }
 
 export type PrintJobMinAggregateInputType = {
@@ -95,11 +117,17 @@ export type PrintJobMinAggregateInputType = {
   outletId?: true
   printerId?: true
   orderId?: true
+  idempotencyKey?: true
   jobType?: true
+  paperWidth?: true
   contentJson?: true
   status?: true
   attempts?: true
+  maxRetries?: true
+  nextRetryAt?: true
   lastError?: true
+  dispatchedAt?: true
+  printedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,11 +138,17 @@ export type PrintJobMaxAggregateInputType = {
   outletId?: true
   printerId?: true
   orderId?: true
+  idempotencyKey?: true
   jobType?: true
+  paperWidth?: true
   contentJson?: true
   status?: true
   attempts?: true
+  maxRetries?: true
+  nextRetryAt?: true
   lastError?: true
+  dispatchedAt?: true
+  printedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -125,11 +159,17 @@ export type PrintJobCountAggregateInputType = {
   outletId?: true
   printerId?: true
   orderId?: true
+  idempotencyKey?: true
   jobType?: true
+  paperWidth?: true
   contentJson?: true
   status?: true
   attempts?: true
+  maxRetries?: true
+  nextRetryAt?: true
   lastError?: true
+  dispatchedAt?: true
+  printedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -227,11 +267,17 @@ export type PrintJobGroupByOutputType = {
   outletId: string
   printerId: string | null
   orderId: string | null
+  idempotencyKey: string | null
   jobType: string
+  paperWidth: string
   contentJson: string
   status: string
   attempts: number
+  maxRetries: number
+  nextRetryAt: Date | null
   lastError: string | null
+  dispatchedAt: Date | null
+  printedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: PrintJobCountAggregateOutputType | null
@@ -265,11 +311,17 @@ export type PrintJobWhereInput = {
   outletId?: Prisma.StringFilter<"PrintJob"> | string
   printerId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   orderId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  idempotencyKey?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   jobType?: Prisma.StringFilter<"PrintJob"> | string
+  paperWidth?: Prisma.StringFilter<"PrintJob"> | string
   contentJson?: Prisma.StringFilter<"PrintJob"> | string
   status?: Prisma.StringFilter<"PrintJob"> | string
   attempts?: Prisma.IntFilter<"PrintJob"> | number
+  maxRetries?: Prisma.IntFilter<"PrintJob"> | number
+  nextRetryAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  dispatchedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
+  printedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
   printer?: Prisma.XOR<Prisma.PrinterDeviceNullableScalarRelationFilter, Prisma.PrinterDeviceWhereInput> | null
@@ -284,11 +336,17 @@ export type PrintJobOrderByWithRelationInput = {
   outletId?: Prisma.SortOrder
   printerId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   jobType?: Prisma.SortOrder
+  paperWidth?: Prisma.SortOrder
   contentJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
+  nextRetryAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
+  dispatchedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  printedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   printer?: Prisma.PrinterDeviceOrderByWithRelationInput
@@ -299,6 +357,7 @@ export type PrintJobOrderByWithRelationInput = {
 
 export type PrintJobWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  tenantId_idempotencyKey?: Prisma.PrintJobTenantIdIdempotencyKeyCompoundUniqueInput
   AND?: Prisma.PrintJobWhereInput | Prisma.PrintJobWhereInput[]
   OR?: Prisma.PrintJobWhereInput[]
   NOT?: Prisma.PrintJobWhereInput | Prisma.PrintJobWhereInput[]
@@ -306,18 +365,24 @@ export type PrintJobWhereUniqueInput = Prisma.AtLeast<{
   outletId?: Prisma.StringFilter<"PrintJob"> | string
   printerId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   orderId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  idempotencyKey?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   jobType?: Prisma.StringFilter<"PrintJob"> | string
+  paperWidth?: Prisma.StringFilter<"PrintJob"> | string
   contentJson?: Prisma.StringFilter<"PrintJob"> | string
   status?: Prisma.StringFilter<"PrintJob"> | string
   attempts?: Prisma.IntFilter<"PrintJob"> | number
+  maxRetries?: Prisma.IntFilter<"PrintJob"> | number
+  nextRetryAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  dispatchedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
+  printedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
   printer?: Prisma.XOR<Prisma.PrinterDeviceNullableScalarRelationFilter, Prisma.PrinterDeviceWhereInput> | null
   order?: Prisma.XOR<Prisma.OrderNullableScalarRelationFilter, Prisma.OrderWhereInput> | null
   outlet?: Prisma.XOR<Prisma.OutletScalarRelationFilter, Prisma.OutletWhereInput>
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
-}, "id">
+}, "id" | "tenantId_idempotencyKey">
 
 export type PrintJobOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -325,11 +390,17 @@ export type PrintJobOrderByWithAggregationInput = {
   outletId?: Prisma.SortOrder
   printerId?: Prisma.SortOrderInput | Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   jobType?: Prisma.SortOrder
+  paperWidth?: Prisma.SortOrder
   contentJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
+  nextRetryAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastError?: Prisma.SortOrderInput | Prisma.SortOrder
+  dispatchedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  printedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PrintJobCountOrderByAggregateInput
@@ -348,22 +419,34 @@ export type PrintJobScalarWhereWithAggregatesInput = {
   outletId?: Prisma.StringWithAggregatesFilter<"PrintJob"> | string
   printerId?: Prisma.StringNullableWithAggregatesFilter<"PrintJob"> | string | null
   orderId?: Prisma.StringNullableWithAggregatesFilter<"PrintJob"> | string | null
+  idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"PrintJob"> | string | null
   jobType?: Prisma.StringWithAggregatesFilter<"PrintJob"> | string
+  paperWidth?: Prisma.StringWithAggregatesFilter<"PrintJob"> | string
   contentJson?: Prisma.StringWithAggregatesFilter<"PrintJob"> | string
   status?: Prisma.StringWithAggregatesFilter<"PrintJob"> | string
   attempts?: Prisma.IntWithAggregatesFilter<"PrintJob"> | number
+  maxRetries?: Prisma.IntWithAggregatesFilter<"PrintJob"> | number
+  nextRetryAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PrintJob"> | Date | string | null
   lastError?: Prisma.StringNullableWithAggregatesFilter<"PrintJob"> | string | null
+  dispatchedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PrintJob"> | Date | string | null
+  printedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PrintJob"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PrintJob"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PrintJob"> | Date | string
 }
 
 export type PrintJobCreateInput = {
   id?: string
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   printer?: Prisma.PrinterDeviceCreateNestedOneWithoutPrintJobsInput
@@ -378,22 +461,34 @@ export type PrintJobUncheckedCreateInput = {
   outletId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   printer?: Prisma.PrinterDeviceUpdateOneWithoutPrintJobsNestedInput
@@ -408,11 +503,17 @@ export type PrintJobUncheckedUpdateInput = {
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -423,22 +524,34 @@ export type PrintJobCreateManyInput = {
   outletId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -449,11 +562,17 @@ export type PrintJobUncheckedUpdateManyInput = {
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -468,23 +587,35 @@ export type PrintJobOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PrintJobTenantIdIdempotencyKeyCompoundUniqueInput = {
+  tenantId: string
+  idempotencyKey: string
+}
+
 export type PrintJobCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   printerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   jobType?: Prisma.SortOrder
+  paperWidth?: Prisma.SortOrder
   contentJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
+  nextRetryAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  dispatchedAt?: Prisma.SortOrder
+  printedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type PrintJobAvgOrderByAggregateInput = {
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
 }
 
 export type PrintJobMaxOrderByAggregateInput = {
@@ -493,11 +624,17 @@ export type PrintJobMaxOrderByAggregateInput = {
   outletId?: Prisma.SortOrder
   printerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   jobType?: Prisma.SortOrder
+  paperWidth?: Prisma.SortOrder
   contentJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
+  nextRetryAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  dispatchedAt?: Prisma.SortOrder
+  printedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -508,17 +645,24 @@ export type PrintJobMinOrderByAggregateInput = {
   outletId?: Prisma.SortOrder
   printerId?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   jobType?: Prisma.SortOrder
+  paperWidth?: Prisma.SortOrder
   contentJson?: Prisma.SortOrder
   status?: Prisma.SortOrder
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
+  nextRetryAt?: Prisma.SortOrder
   lastError?: Prisma.SortOrder
+  dispatchedAt?: Prisma.SortOrder
+  printedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type PrintJobSumOrderByAggregateInput = {
   attempts?: Prisma.SortOrder
+  maxRetries?: Prisma.SortOrder
 }
 
 export type PrintJobCreateNestedManyWithoutTenantInput = {
@@ -691,11 +835,17 @@ export type PrintJobUncheckedUpdateManyWithoutPrinterNestedInput = {
 
 export type PrintJobCreateWithoutTenantInput = {
   id?: string
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   printer?: Prisma.PrinterDeviceCreateNestedOneWithoutPrintJobsInput
@@ -708,11 +858,17 @@ export type PrintJobUncheckedCreateWithoutTenantInput = {
   outletId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -752,22 +908,34 @@ export type PrintJobScalarWhereInput = {
   outletId?: Prisma.StringFilter<"PrintJob"> | string
   printerId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   orderId?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  idempotencyKey?: Prisma.StringNullableFilter<"PrintJob"> | string | null
   jobType?: Prisma.StringFilter<"PrintJob"> | string
+  paperWidth?: Prisma.StringFilter<"PrintJob"> | string
   contentJson?: Prisma.StringFilter<"PrintJob"> | string
   status?: Prisma.StringFilter<"PrintJob"> | string
   attempts?: Prisma.IntFilter<"PrintJob"> | number
+  maxRetries?: Prisma.IntFilter<"PrintJob"> | number
+  nextRetryAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   lastError?: Prisma.StringNullableFilter<"PrintJob"> | string | null
+  dispatchedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
+  printedAt?: Prisma.DateTimeNullableFilter<"PrintJob"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PrintJob"> | Date | string
 }
 
 export type PrintJobCreateWithoutOutletInput = {
   id?: string
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   printer?: Prisma.PrinterDeviceCreateNestedOneWithoutPrintJobsInput
@@ -780,11 +948,17 @@ export type PrintJobUncheckedCreateWithoutOutletInput = {
   tenantId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -817,11 +991,17 @@ export type PrintJobUpdateManyWithWhereWithoutOutletInput = {
 
 export type PrintJobCreateWithoutOrderInput = {
   id?: string
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   printer?: Prisma.PrinterDeviceCreateNestedOneWithoutPrintJobsInput
@@ -834,11 +1014,17 @@ export type PrintJobUncheckedCreateWithoutOrderInput = {
   tenantId: string
   outletId: string
   printerId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -871,11 +1057,17 @@ export type PrintJobUpdateManyWithWhereWithoutOrderInput = {
 
 export type PrintJobCreateWithoutPrinterInput = {
   id?: string
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   order?: Prisma.OrderCreateNestedOneWithoutPrintJobsInput
@@ -888,11 +1080,17 @@ export type PrintJobUncheckedCreateWithoutPrinterInput = {
   tenantId: string
   outletId: string
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -928,22 +1126,34 @@ export type PrintJobCreateManyTenantInput = {
   outletId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   printer?: Prisma.PrinterDeviceUpdateOneWithoutPrintJobsNestedInput
@@ -956,11 +1166,17 @@ export type PrintJobUncheckedUpdateWithoutTenantInput = {
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -970,11 +1186,17 @@ export type PrintJobUncheckedUpdateManyWithoutTenantInput = {
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -984,22 +1206,34 @@ export type PrintJobCreateManyOutletInput = {
   tenantId: string
   printerId?: string | null
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateWithoutOutletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   printer?: Prisma.PrinterDeviceUpdateOneWithoutPrintJobsNestedInput
@@ -1012,11 +1246,17 @@ export type PrintJobUncheckedUpdateWithoutOutletInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1026,11 +1266,17 @@ export type PrintJobUncheckedUpdateManyWithoutOutletInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1040,22 +1286,34 @@ export type PrintJobCreateManyOrderInput = {
   tenantId: string
   outletId: string
   printerId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   printer?: Prisma.PrinterDeviceUpdateOneWithoutPrintJobsNestedInput
@@ -1068,11 +1326,17 @@ export type PrintJobUncheckedUpdateWithoutOrderInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1082,11 +1346,17 @@ export type PrintJobUncheckedUpdateManyWithoutOrderInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   printerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1096,22 +1366,34 @@ export type PrintJobCreateManyPrinterInput = {
   tenantId: string
   outletId: string
   orderId?: string | null
+  idempotencyKey?: string | null
   jobType: string
+  paperWidth?: string
   contentJson: string
   status?: string
   attempts?: number
+  maxRetries?: number
+  nextRetryAt?: Date | string | null
   lastError?: string | null
+  dispatchedAt?: Date | string | null
+  printedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type PrintJobUpdateWithoutPrinterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneWithoutPrintJobsNestedInput
@@ -1124,11 +1406,17 @@ export type PrintJobUncheckedUpdateWithoutPrinterInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1138,11 +1426,17 @@ export type PrintJobUncheckedUpdateManyWithoutPrinterInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
+  paperWidth?: Prisma.StringFieldUpdateOperationsInput | string
   contentJson?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   attempts?: Prisma.IntFieldUpdateOperationsInput | number
+  maxRetries?: Prisma.IntFieldUpdateOperationsInput | number
+  nextRetryAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dispatchedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  printedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1155,11 +1449,17 @@ export type PrintJobSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   outletId?: boolean
   printerId?: boolean
   orderId?: boolean
+  idempotencyKey?: boolean
   jobType?: boolean
+  paperWidth?: boolean
   contentJson?: boolean
   status?: boolean
   attempts?: boolean
+  maxRetries?: boolean
+  nextRetryAt?: boolean
   lastError?: boolean
+  dispatchedAt?: boolean
+  printedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   printer?: boolean | Prisma.PrintJob$printerArgs<ExtArgs>
@@ -1174,11 +1474,17 @@ export type PrintJobSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   outletId?: boolean
   printerId?: boolean
   orderId?: boolean
+  idempotencyKey?: boolean
   jobType?: boolean
+  paperWidth?: boolean
   contentJson?: boolean
   status?: boolean
   attempts?: boolean
+  maxRetries?: boolean
+  nextRetryAt?: boolean
   lastError?: boolean
+  dispatchedAt?: boolean
+  printedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   printer?: boolean | Prisma.PrintJob$printerArgs<ExtArgs>
@@ -1193,11 +1499,17 @@ export type PrintJobSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   outletId?: boolean
   printerId?: boolean
   orderId?: boolean
+  idempotencyKey?: boolean
   jobType?: boolean
+  paperWidth?: boolean
   contentJson?: boolean
   status?: boolean
   attempts?: boolean
+  maxRetries?: boolean
+  nextRetryAt?: boolean
   lastError?: boolean
+  dispatchedAt?: boolean
+  printedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   printer?: boolean | Prisma.PrintJob$printerArgs<ExtArgs>
@@ -1212,16 +1524,22 @@ export type PrintJobSelectScalar = {
   outletId?: boolean
   printerId?: boolean
   orderId?: boolean
+  idempotencyKey?: boolean
   jobType?: boolean
+  paperWidth?: boolean
   contentJson?: boolean
   status?: boolean
   attempts?: boolean
+  maxRetries?: boolean
+  nextRetryAt?: boolean
   lastError?: boolean
+  dispatchedAt?: boolean
+  printedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PrintJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "printerId" | "orderId" | "jobType" | "contentJson" | "status" | "attempts" | "lastError" | "createdAt" | "updatedAt", ExtArgs["result"]["printJob"]>
+export type PrintJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "printerId" | "orderId" | "idempotencyKey" | "jobType" | "paperWidth" | "contentJson" | "status" | "attempts" | "maxRetries" | "nextRetryAt" | "lastError" | "dispatchedAt" | "printedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["printJob"]>
 export type PrintJobInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   printer?: boolean | Prisma.PrintJob$printerArgs<ExtArgs>
   order?: boolean | Prisma.PrintJob$orderArgs<ExtArgs>
@@ -1255,11 +1573,17 @@ export type $PrintJobPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     outletId: string
     printerId: string | null
     orderId: string | null
+    idempotencyKey: string | null
     jobType: string
+    paperWidth: string
     contentJson: string
     status: string
     attempts: number
+    maxRetries: number
+    nextRetryAt: Date | null
     lastError: string | null
+    dispatchedAt: Date | null
+    printedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["printJob"]>
@@ -1694,11 +2018,17 @@ export interface PrintJobFieldRefs {
   readonly outletId: Prisma.FieldRef<"PrintJob", 'String'>
   readonly printerId: Prisma.FieldRef<"PrintJob", 'String'>
   readonly orderId: Prisma.FieldRef<"PrintJob", 'String'>
+  readonly idempotencyKey: Prisma.FieldRef<"PrintJob", 'String'>
   readonly jobType: Prisma.FieldRef<"PrintJob", 'String'>
+  readonly paperWidth: Prisma.FieldRef<"PrintJob", 'String'>
   readonly contentJson: Prisma.FieldRef<"PrintJob", 'String'>
   readonly status: Prisma.FieldRef<"PrintJob", 'String'>
   readonly attempts: Prisma.FieldRef<"PrintJob", 'Int'>
+  readonly maxRetries: Prisma.FieldRef<"PrintJob", 'Int'>
+  readonly nextRetryAt: Prisma.FieldRef<"PrintJob", 'DateTime'>
   readonly lastError: Prisma.FieldRef<"PrintJob", 'String'>
+  readonly dispatchedAt: Prisma.FieldRef<"PrintJob", 'DateTime'>
+  readonly printedAt: Prisma.FieldRef<"PrintJob", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PrintJob", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PrintJob", 'DateTime'>
 }

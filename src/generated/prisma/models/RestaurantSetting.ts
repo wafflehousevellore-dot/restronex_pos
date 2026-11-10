@@ -37,6 +37,7 @@ export type RestaurantSettingSumAggregateOutputType = {
 export type RestaurantSettingMinAggregateOutputType = {
   id: string | null
   tenantId: string | null
+  logoUrl: string | null
   receiptHeader: string | null
   receiptFooter: string | null
   gstNumber: string | null
@@ -51,12 +52,19 @@ export type RestaurantSettingMinAggregateOutputType = {
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
+  whatsappDisplayPhone: string | null
   whatsappTemplateName: string | null
+  whatsappConnectionMode: string | null
+  whatsappConnectionStatus: string | null
+  whatsappOnboardingSkipped: boolean | null
+  printerOnboardingSkipped: boolean | null
+  qrFooterEnabled: boolean | null
 }
 
 export type RestaurantSettingMaxAggregateOutputType = {
   id: string | null
   tenantId: string | null
+  logoUrl: string | null
   receiptHeader: string | null
   receiptFooter: string | null
   gstNumber: string | null
@@ -71,12 +79,19 @@ export type RestaurantSettingMaxAggregateOutputType = {
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
+  whatsappDisplayPhone: string | null
   whatsappTemplateName: string | null
+  whatsappConnectionMode: string | null
+  whatsappConnectionStatus: string | null
+  whatsappOnboardingSkipped: boolean | null
+  printerOnboardingSkipped: boolean | null
+  qrFooterEnabled: boolean | null
 }
 
 export type RestaurantSettingCountAggregateOutputType = {
   id: number
   tenantId: number
+  logoUrl: number
   receiptHeader: number
   receiptFooter: number
   gstNumber: number
@@ -91,7 +106,13 @@ export type RestaurantSettingCountAggregateOutputType = {
   whatsappPhoneNumberId: number
   whatsappAccessToken: number
   whatsappWabaId: number
+  whatsappDisplayPhone: number
   whatsappTemplateName: number
+  whatsappConnectionMode: number
+  whatsappConnectionStatus: number
+  whatsappOnboardingSkipped: number
+  printerOnboardingSkipped: number
+  qrFooterEnabled: number
   _all: number
 }
 
@@ -107,6 +128,7 @@ export type RestaurantSettingSumAggregateInputType = {
 export type RestaurantSettingMinAggregateInputType = {
   id?: true
   tenantId?: true
+  logoUrl?: true
   receiptHeader?: true
   receiptFooter?: true
   gstNumber?: true
@@ -121,12 +143,19 @@ export type RestaurantSettingMinAggregateInputType = {
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
+  whatsappDisplayPhone?: true
   whatsappTemplateName?: true
+  whatsappConnectionMode?: true
+  whatsappConnectionStatus?: true
+  whatsappOnboardingSkipped?: true
+  printerOnboardingSkipped?: true
+  qrFooterEnabled?: true
 }
 
 export type RestaurantSettingMaxAggregateInputType = {
   id?: true
   tenantId?: true
+  logoUrl?: true
   receiptHeader?: true
   receiptFooter?: true
   gstNumber?: true
@@ -141,12 +170,19 @@ export type RestaurantSettingMaxAggregateInputType = {
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
+  whatsappDisplayPhone?: true
   whatsappTemplateName?: true
+  whatsappConnectionMode?: true
+  whatsappConnectionStatus?: true
+  whatsappOnboardingSkipped?: true
+  printerOnboardingSkipped?: true
+  qrFooterEnabled?: true
 }
 
 export type RestaurantSettingCountAggregateInputType = {
   id?: true
   tenantId?: true
+  logoUrl?: true
   receiptHeader?: true
   receiptFooter?: true
   gstNumber?: true
@@ -161,7 +197,13 @@ export type RestaurantSettingCountAggregateInputType = {
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
+  whatsappDisplayPhone?: true
   whatsappTemplateName?: true
+  whatsappConnectionMode?: true
+  whatsappConnectionStatus?: true
+  whatsappOnboardingSkipped?: true
+  printerOnboardingSkipped?: true
+  qrFooterEnabled?: true
   _all?: true
 }
 
@@ -254,6 +296,7 @@ export type RestaurantSettingGroupByArgs<ExtArgs extends runtime.Types.Extension
 export type RestaurantSettingGroupByOutputType = {
   id: string
   tenantId: string
+  logoUrl: string | null
   receiptHeader: string | null
   receiptFooter: string | null
   gstNumber: string | null
@@ -268,7 +311,13 @@ export type RestaurantSettingGroupByOutputType = {
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
+  whatsappDisplayPhone: string | null
   whatsappTemplateName: string | null
+  whatsappConnectionMode: string | null
+  whatsappConnectionStatus: string
+  whatsappOnboardingSkipped: boolean
+  printerOnboardingSkipped: boolean
+  qrFooterEnabled: boolean
   _count: RestaurantSettingCountAggregateOutputType | null
   _avg: RestaurantSettingAvgAggregateOutputType | null
   _sum: RestaurantSettingSumAggregateOutputType | null
@@ -297,6 +346,7 @@ export type RestaurantSettingWhereInput = {
   NOT?: Prisma.RestaurantSettingWhereInput | Prisma.RestaurantSettingWhereInput[]
   id?: Prisma.StringFilter<"RestaurantSetting"> | string
   tenantId?: Prisma.StringFilter<"RestaurantSetting"> | string
+  logoUrl?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   receiptHeader?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   receiptFooter?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   gstNumber?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
@@ -311,13 +361,20 @@ export type RestaurantSettingWhereInput = {
   whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappDisplayPhone?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappTemplateName?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionMode?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionStatus?: Prisma.StringFilter<"RestaurantSetting"> | string
+  whatsappOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  printerOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  qrFooterEnabled?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }
 
 export type RestaurantSettingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptHeader?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptFooter?: Prisma.SortOrderInput | Prisma.SortOrder
   gstNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -332,7 +389,13 @@ export type RestaurantSettingOrderByWithRelationInput = {
   whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappDisplayPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappTemplateName?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConnectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappOnboardingSkipped?: Prisma.SortOrder
+  printerOnboardingSkipped?: Prisma.SortOrder
+  qrFooterEnabled?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
 }
 
@@ -342,6 +405,7 @@ export type RestaurantSettingWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RestaurantSettingWhereInput | Prisma.RestaurantSettingWhereInput[]
   OR?: Prisma.RestaurantSettingWhereInput[]
   NOT?: Prisma.RestaurantSettingWhereInput | Prisma.RestaurantSettingWhereInput[]
+  logoUrl?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   receiptHeader?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   receiptFooter?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   gstNumber?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
@@ -356,13 +420,20 @@ export type RestaurantSettingWhereUniqueInput = Prisma.AtLeast<{
   whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappDisplayPhone?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappTemplateName?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionMode?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionStatus?: Prisma.StringFilter<"RestaurantSetting"> | string
+  whatsappOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  printerOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  qrFooterEnabled?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
 }, "id" | "tenantId">
 
 export type RestaurantSettingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptHeader?: Prisma.SortOrderInput | Prisma.SortOrder
   receiptFooter?: Prisma.SortOrderInput | Prisma.SortOrder
   gstNumber?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -377,7 +448,13 @@ export type RestaurantSettingOrderByWithAggregationInput = {
   whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappDisplayPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappTemplateName?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConnectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappOnboardingSkipped?: Prisma.SortOrder
+  printerOnboardingSkipped?: Prisma.SortOrder
+  qrFooterEnabled?: Prisma.SortOrder
   _count?: Prisma.RestaurantSettingCountOrderByAggregateInput
   _avg?: Prisma.RestaurantSettingAvgOrderByAggregateInput
   _max?: Prisma.RestaurantSettingMaxOrderByAggregateInput
@@ -391,6 +468,7 @@ export type RestaurantSettingScalarWhereWithAggregatesInput = {
   NOT?: Prisma.RestaurantSettingScalarWhereWithAggregatesInput | Prisma.RestaurantSettingScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RestaurantSetting"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"RestaurantSetting"> | string
+  logoUrl?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   receiptHeader?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   receiptFooter?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   gstNumber?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
@@ -405,11 +483,18 @@ export type RestaurantSettingScalarWhereWithAggregatesInput = {
   whatsappPhoneNumberId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
+  whatsappDisplayPhone?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappTemplateName?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionMode?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
+  whatsappConnectionStatus?: Prisma.StringWithAggregatesFilter<"RestaurantSetting"> | string
+  whatsappOnboardingSkipped?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  printerOnboardingSkipped?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  qrFooterEnabled?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
 }
 
 export type RestaurantSettingCreateInput = {
   id?: string
+  logoUrl?: string | null
   receiptHeader?: string | null
   receiptFooter?: string | null
   gstNumber?: string | null
@@ -424,13 +509,20 @@ export type RestaurantSettingCreateInput = {
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
+  whatsappDisplayPhone?: string | null
   whatsappTemplateName?: string | null
+  whatsappConnectionMode?: string | null
+  whatsappConnectionStatus?: string
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
   tenant: Prisma.TenantCreateNestedOneWithoutSettingsInput
 }
 
 export type RestaurantSettingUncheckedCreateInput = {
   id?: string
   tenantId: string
+  logoUrl?: string | null
   receiptHeader?: string | null
   receiptFooter?: string | null
   gstNumber?: string | null
@@ -445,11 +537,18 @@ export type RestaurantSettingUncheckedCreateInput = {
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
+  whatsappDisplayPhone?: string | null
   whatsappTemplateName?: string | null
+  whatsappConnectionMode?: string | null
+  whatsappConnectionStatus?: string
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
 }
 
 export type RestaurantSettingUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -464,13 +563,20 @@ export type RestaurantSettingUpdateInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenant?: Prisma.TenantUpdateOneRequiredWithoutSettingsNestedInput
 }
 
 export type RestaurantSettingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -485,12 +591,19 @@ export type RestaurantSettingUncheckedUpdateInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantSettingCreateManyInput = {
   id?: string
   tenantId: string
+  logoUrl?: string | null
   receiptHeader?: string | null
   receiptFooter?: string | null
   gstNumber?: string | null
@@ -505,11 +618,18 @@ export type RestaurantSettingCreateManyInput = {
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
+  whatsappDisplayPhone?: string | null
   whatsappTemplateName?: string | null
+  whatsappConnectionMode?: string | null
+  whatsappConnectionStatus?: string
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
 }
 
 export type RestaurantSettingUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,12 +644,19 @@ export type RestaurantSettingUpdateManyMutationInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantSettingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -544,7 +671,13 @@ export type RestaurantSettingUncheckedUpdateManyInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantSettingNullableScalarRelationFilter = {
@@ -555,6 +688,7 @@ export type RestaurantSettingNullableScalarRelationFilter = {
 export type RestaurantSettingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   receiptHeader?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
@@ -569,7 +703,13 @@ export type RestaurantSettingCountOrderByAggregateInput = {
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
+  whatsappDisplayPhone?: Prisma.SortOrder
   whatsappTemplateName?: Prisma.SortOrder
+  whatsappConnectionMode?: Prisma.SortOrder
+  whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappOnboardingSkipped?: Prisma.SortOrder
+  printerOnboardingSkipped?: Prisma.SortOrder
+  qrFooterEnabled?: Prisma.SortOrder
 }
 
 export type RestaurantSettingAvgOrderByAggregateInput = {
@@ -579,6 +719,7 @@ export type RestaurantSettingAvgOrderByAggregateInput = {
 export type RestaurantSettingMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   receiptHeader?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
@@ -593,12 +734,19 @@ export type RestaurantSettingMaxOrderByAggregateInput = {
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
+  whatsappDisplayPhone?: Prisma.SortOrder
   whatsappTemplateName?: Prisma.SortOrder
+  whatsappConnectionMode?: Prisma.SortOrder
+  whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappOnboardingSkipped?: Prisma.SortOrder
+  printerOnboardingSkipped?: Prisma.SortOrder
+  qrFooterEnabled?: Prisma.SortOrder
 }
 
 export type RestaurantSettingMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   receiptHeader?: Prisma.SortOrder
   receiptFooter?: Prisma.SortOrder
   gstNumber?: Prisma.SortOrder
@@ -613,7 +761,13 @@ export type RestaurantSettingMinOrderByAggregateInput = {
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
+  whatsappDisplayPhone?: Prisma.SortOrder
   whatsappTemplateName?: Prisma.SortOrder
+  whatsappConnectionMode?: Prisma.SortOrder
+  whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappOnboardingSkipped?: Prisma.SortOrder
+  printerOnboardingSkipped?: Prisma.SortOrder
+  qrFooterEnabled?: Prisma.SortOrder
 }
 
 export type RestaurantSettingSumOrderByAggregateInput = {
@@ -654,6 +808,7 @@ export type RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput = {
 
 export type RestaurantSettingCreateWithoutTenantInput = {
   id?: string
+  logoUrl?: string | null
   receiptHeader?: string | null
   receiptFooter?: string | null
   gstNumber?: string | null
@@ -668,11 +823,18 @@ export type RestaurantSettingCreateWithoutTenantInput = {
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
+  whatsappDisplayPhone?: string | null
   whatsappTemplateName?: string | null
+  whatsappConnectionMode?: string | null
+  whatsappConnectionStatus?: string
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
 }
 
 export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
   id?: string
+  logoUrl?: string | null
   receiptHeader?: string | null
   receiptFooter?: string | null
   gstNumber?: string | null
@@ -687,7 +849,13 @@ export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
+  whatsappDisplayPhone?: string | null
   whatsappTemplateName?: string | null
+  whatsappConnectionMode?: string | null
+  whatsappConnectionStatus?: string
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
 }
 
 export type RestaurantSettingCreateOrConnectWithoutTenantInput = {
@@ -708,6 +876,7 @@ export type RestaurantSettingUpdateToOneWithWhereWithoutTenantInput = {
 
 export type RestaurantSettingUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -722,11 +891,18 @@ export type RestaurantSettingUpdateWithoutTenantInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptHeader?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receiptFooter?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gstNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,7 +917,13 @@ export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappDisplayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -749,6 +931,7 @@ export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
 export type RestaurantSettingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
+  logoUrl?: boolean
   receiptHeader?: boolean
   receiptFooter?: boolean
   gstNumber?: boolean
@@ -763,13 +946,20 @@ export type RestaurantSettingSelect<ExtArgs extends runtime.Types.Extensions.Int
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
+  whatsappDisplayPhone?: boolean
   whatsappTemplateName?: boolean
+  whatsappConnectionMode?: boolean
+  whatsappConnectionStatus?: boolean
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
 export type RestaurantSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
+  logoUrl?: boolean
   receiptHeader?: boolean
   receiptFooter?: boolean
   gstNumber?: boolean
@@ -784,13 +974,20 @@ export type RestaurantSettingSelectCreateManyAndReturn<ExtArgs extends runtime.T
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
+  whatsappDisplayPhone?: boolean
   whatsappTemplateName?: boolean
+  whatsappConnectionMode?: boolean
+  whatsappConnectionStatus?: boolean
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
 export type RestaurantSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
+  logoUrl?: boolean
   receiptHeader?: boolean
   receiptFooter?: boolean
   gstNumber?: boolean
@@ -805,13 +1002,20 @@ export type RestaurantSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
+  whatsappDisplayPhone?: boolean
   whatsappTemplateName?: boolean
+  whatsappConnectionMode?: boolean
+  whatsappConnectionStatus?: boolean
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurantSetting"]>
 
 export type RestaurantSettingSelectScalar = {
   id?: boolean
   tenantId?: boolean
+  logoUrl?: boolean
   receiptHeader?: boolean
   receiptFooter?: boolean
   gstNumber?: boolean
@@ -826,10 +1030,16 @@ export type RestaurantSettingSelectScalar = {
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
+  whatsappDisplayPhone?: boolean
   whatsappTemplateName?: boolean
+  whatsappConnectionMode?: boolean
+  whatsappConnectionStatus?: boolean
+  whatsappOnboardingSkipped?: boolean
+  printerOnboardingSkipped?: boolean
+  qrFooterEnabled?: boolean
 }
 
-export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt" | "autoAcceptQROrders" | "autoPrintKOT" | "autoPrintBill" | "autoSendWhatsAppInvoice" | "whatsappPhoneNumberId" | "whatsappAccessToken" | "whatsappWabaId" | "whatsappTemplateName", ExtArgs["result"]["restaurantSetting"]>
+export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "logoUrl" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt" | "autoAcceptQROrders" | "autoPrintKOT" | "autoPrintBill" | "autoSendWhatsAppInvoice" | "whatsappPhoneNumberId" | "whatsappAccessToken" | "whatsappWabaId" | "whatsappDisplayPhone" | "whatsappTemplateName" | "whatsappConnectionMode" | "whatsappConnectionStatus" | "whatsappOnboardingSkipped" | "printerOnboardingSkipped" | "qrFooterEnabled", ExtArgs["result"]["restaurantSetting"]>
 export type RestaurantSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -848,6 +1058,7 @@ export type $RestaurantSettingPayload<ExtArgs extends runtime.Types.Extensions.I
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
+    logoUrl: string | null
     receiptHeader: string | null
     receiptFooter: string | null
     gstNumber: string | null
@@ -862,7 +1073,13 @@ export type $RestaurantSettingPayload<ExtArgs extends runtime.Types.Extensions.I
     whatsappPhoneNumberId: string | null
     whatsappAccessToken: string | null
     whatsappWabaId: string | null
+    whatsappDisplayPhone: string | null
     whatsappTemplateName: string | null
+    whatsappConnectionMode: string | null
+    whatsappConnectionStatus: string
+    whatsappOnboardingSkipped: boolean
+    printerOnboardingSkipped: boolean
+    qrFooterEnabled: boolean
   }, ExtArgs["result"]["restaurantSetting"]>
   composites: {}
 }
@@ -1289,6 +1506,7 @@ export interface Prisma__RestaurantSettingClient<T, Null = never, ExtArgs extend
 export interface RestaurantSettingFieldRefs {
   readonly id: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly tenantId: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly logoUrl: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly receiptHeader: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly receiptFooter: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly gstNumber: Prisma.FieldRef<"RestaurantSetting", 'String'>
@@ -1303,7 +1521,13 @@ export interface RestaurantSettingFieldRefs {
   readonly whatsappPhoneNumberId: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappAccessToken: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappWabaId: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappDisplayPhone: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappTemplateName: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappConnectionMode: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappConnectionStatus: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappOnboardingSkipped: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly printerOnboardingSkipped: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly qrFooterEnabled: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
 }
     
 

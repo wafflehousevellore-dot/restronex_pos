@@ -18,3 +18,4 @@ CREATE TABLE IF NOT EXISTS "PlatformMfaCredential" (
 
 -- Strictly isolate from Supabase anon/authenticated API keys (server/Prisma postgres only)
 ALTER TABLE "PlatformMfaCredential" ENABLE ROW LEVEL SECURITY;
+

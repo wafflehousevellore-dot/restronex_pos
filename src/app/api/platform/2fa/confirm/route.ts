@@ -95,3 +95,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err.message || "Failed to enable 2FA" }, { status: 500 });
   }
 }
+

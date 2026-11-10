@@ -88,9 +88,26 @@ export default function CustomersPage(){
                   <div className="text-sm font-bold text-[#172B25]">{c.name||"—"} <span className="text-[#718078] font-normal">• {c.phone}</span></div>
                   <div className="text-xs text-[#718078] mt-1">{c.email||""} • {c.totalOrders||0} orders • {c.loyaltyPoints||0} loyalty pts • {c.segment||"NEW"}</div>
                 </div>
-                <span className="text-xs rounded-full bg-[#E8F5EE] border border-[#E5EBE7] px-3 py-1 text-[#16845B] font-semibold self-start sm:self-center">
-                  {c.phone}
-                </span>
+                <div className="flex flex-wrap items-center gap-1.5 self-start sm:self-center">
+                  <span
+                    className={`text-[10px] rounded-full border px-2.5 py-1 font-semibold ${
+                      c.whatsappOptIn === false
+                        ? "bg-red-50 border-red-200 text-red-700"
+                        : "bg-[#E8F5EE] border-[#E5EBE7] text-[#16845B]"
+                    }`}
+                  >
+                    WA Bills: {c.whatsappOptIn === false ? "Opted Out" : "Enabled"}
+                  </span>
+                  <span
+                    className={`text-[10px] rounded-full border px-2.5 py-1 font-semibold ${
+                      c.marketingOptIn
+                        ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                        : "bg-[#F8FAF9] border-[#E5EBE7] text-[#718078]"
+                    }`}
+                  >
+                    Marketing: {c.marketingOptIn ? "Opt-In" : "Transactional Only"}
+                  </span>
+                </div>
               </div>
             ))
           ) : (

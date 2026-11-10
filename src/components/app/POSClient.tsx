@@ -1,12 +1,20 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
+import { dispatchClientPrintJob } from "@/lib/client-print";
 import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
+
+function createCheckoutIdempotencyKey(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return `pos_${crypto.randomUUID()}`;
+  }
+  return `pos_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
 
 type MenuItem = {
   id: string;
@@ -46,7 +54,12 @@ export type ReceiptData = {
   sgstPaise: number;
   totalPaise: number;
   orderId?: string;
+  invoicePdfUrl?: string | null;
   whatsappStatus?: string;
+  printJobId?: string | null;
+  printStatus?: string;
+  paperWidth?: "58mm" | "80mm";
+  printerName?: string | null;
 };
 
 function calculateCouponDiscount(code: string, subtotalPaise: number): number {
@@ -105,7 +118,14 @@ export default function POSClient({
   const [customerPhone, setCustomerPhone] = useState("");
   const [whatsappConsent, setWhatsappConsent] = useState(true);
   const [whatsappDeliveryStatus, setWhatsappDeliveryStatus] = useState<string | null>(null);
+  const [whatsappReason, setWhatsappReason] = useState<string | null>(null);
   const [retryingWhatsApp, setRetryingWhatsApp] = useState(false);
+  const [printJobStatus, setPrintJobStatus] = useState<string>("NOT_CONFIGURED");
+  const [printPaperWidth, setPrintPaperWidth] = useState<"58mm" | "80mm">("80mm");
+  const [printerLabel, setPrinterLabel] = useState<string | null>(null);
+  const [printErrorMsg, setPrintErrorMsg] = useState<string | null>(null);
+  const [retryingPrint, setRetryingPrint] = useState(false);
+  const checkoutKeyRef = useRef<string>("");
   const [paymentMethod, setPaymentMethod] = useState<"CASH" | "UPI" | "CARD">("UPI");
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountPaise: number } | null>(
@@ -206,6 +226,7 @@ export default function POSClient({
 
   function addToCart(it: MenuItem) {
     if (!it?.id || typeof it.pricePaise !== "number") return;
+    checkoutKeyRef.current = "";
     setCart((c) => {
       const idx = c.findIndex((x) => x.menuItemId === it.id);
       if (idx >= 0) {
@@ -219,6 +240,7 @@ export default function POSClient({
   }
 
   function decQty(idx: number) {
+    checkoutKeyRef.current = "";
     setCart((c) => {
       const copy = [...c];
       const q = Math.max(1, (copy[idx]?.quantity || 1) - 1);
@@ -228,6 +250,7 @@ export default function POSClient({
   }
 
   function incQty(idx: number) {
+    checkoutKeyRef.current = "";
     setCart((c) => {
       const copy = [...c];
       copy[idx] = { ...copy[idx], quantity: (copy[idx].quantity || 0) + 1 };
@@ -236,6 +259,7 @@ export default function POSClient({
   }
 
   function removeItem(idx: number) {
+    checkoutKeyRef.current = "";
     setCart((c) => c.filter((_, i) => i !== idx));
   }
 
@@ -276,6 +300,7 @@ export default function POSClient({
       return;
     }
 
+    checkoutKeyRef.current = "";
     setAppliedCoupon({ code: label, discountPaise: computedPaise });
     setCouponCode(label);
     setCouponError(null);
@@ -285,6 +310,7 @@ export default function POSClient({
     // Default Manager PIN is 1234
     if (managerPinInput === "1234") {
       if (managerPinModal?.pendingDiscount) {
+        checkoutKeyRef.current = "";
         setAppliedCoupon(managerPinModal.pendingDiscount);
         setCouponCode(managerPinModal.pendingDiscount.code);
         setCouponError(null);
@@ -310,6 +336,7 @@ export default function POSClient({
     }
     const discount = calculateCouponDiscount(target, subtotal);
     if (discount > 0) {
+      checkoutKeyRef.current = "";
       setAppliedCoupon({ code: target, discountPaise: discount });
       setCouponCode(target);
       setCouponError(null);
@@ -319,6 +346,7 @@ export default function POSClient({
   }
 
   function removePOSCoupon() {
+    checkoutKeyRef.current = "";
     setAppliedCoupon(null);
     setCouponCode("");
     setCouponError(null);
@@ -328,7 +356,7 @@ export default function POSClient({
     if (!selectedOutlet) {
       return setMsg({
         type: "error",
-        text: "Select an outlet first — complete 8-Step Onboarding to create your business.",
+        text: "Select an outlet first — complete 10-Step Onboarding to create your business.",
       });
     }
     if (cart.length === 0) {
@@ -346,13 +374,17 @@ export default function POSClient({
       }
     }
     setPosting(true);
-    setMsg({ type: "info", text: "Placing order..." });
+    setMsg({ type: "info", text: "Finalizing bill & generating invoice..." });
+    if (!checkoutKeyRef.current) {
+      checkoutKeyRef.current = createCheckoutIdempotencyKey();
+    }
     try {
       const res = await apiFetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           outletId: selectedOutlet,
+          idempotencyKey: checkoutKeyRef.current,
           type: orderType,
           tableId: selectedTable || undefined,
           customerName: customerName?.trim() || undefined,
@@ -393,6 +425,15 @@ export default function POSClient({
       const invoiceNumber = (j.invoiceNumber as string) || `INV-${orderNumber.replace("ORD-", "")}`;
       const outletObj = outlets.find((o) => o.id === selectedOutlet);
 
+      const waInfo = (j.whatsapp as any) || {};
+      const pjInfo = (j.printJob as any) || {};
+      const initialWaStatus = customerPhone.trim()
+        ? waInfo.status || "QUEUED"
+        : "NOT_CONFIGURED";
+      const initialPrintStatus = pjInfo.status || "NOT_CONFIGURED";
+      const resolvedPaperWidth: "58mm" | "80mm" =
+        pjInfo.paperWidth === "58mm" ? "58mm" : "80mm";
+
       const receipt: ReceiptData = {
         orderNumber,
         invoiceNumber,
@@ -420,66 +461,59 @@ export default function POSClient({
         sgstPaise: sgst,
         totalPaise: billedTotal,
         orderId: j.orderId as string,
-        whatsappStatus: (j.whatsapp as any)?.status || "QUEUED",
+        invoicePdfUrl: (j.invoicePdfUrl as string) || null,
+        whatsappStatus: initialWaStatus,
+        printJobId: pjInfo.jobId || null,
+        printStatus: initialPrintStatus,
+        paperWidth: resolvedPaperWidth,
+        printerName: pjInfo.printerName || null,
       };
 
-      if (customerPhone.trim()) {
-        const initialStatus = (j.whatsapp as any)?.status || "SENT";
-        setWhatsappDeliveryStatus(initialStatus);
-        if (j.orderId) {
-          const pollInterval = setInterval(() => {
-            apiFetch(`/api/whatsapp/status?orderId=${j.orderId}`)
-              .then((r) => r.json())
-              .then((st) => {
-                if (st?.status && st.status !== "NONE") {
-                  setWhatsappDeliveryStatus(st.status);
-                  if (st.status === "SENT" || st.status === "DELIVERED" || st.status === "FAILED") {
-                    clearInterval(pollInterval);
-                  }
-                }
-              })
-              .catch(() => {});
-          }, 1200);
-          setTimeout(() => clearInterval(pollInterval), 10000);
-        }
-      } else {
-        setWhatsappDeliveryStatus(null);
-      }
+      // Reset idempotency key ONLY after successful bill finalization
+      checkoutKeyRef.current = "";
+
+      setWhatsappDeliveryStatus(initialWaStatus);
+      setWhatsappReason(waInfo.reason || null);
+      setPrintJobStatus(initialPrintStatus);
+      setPrintPaperWidth(resolvedPaperWidth);
+      setPrinterLabel(pjInfo.printerName || null);
+      setPrintErrorMsg(pjInfo.error || null);
 
       setActiveReceipt(receipt);
       setShowReceipt(true);
 
-      // 1. AUTOMATIC PRINT: Automatically trigger printer when closing/finalizing bill
-      setTimeout(() => {
-        try {
-          window.print();
-        } catch {}
-      }, 350);
+      // 1. Silent non-blocking client print handoff ONLY when printer requires counter/browser execution
+      if (pjInfo.requiresClientDispatch && pjInfo.jobId) {
+        void dispatchClientPrintJob({
+          jobId: pjInfo.jobId,
+          printerType: pjInfo.printerType || "OS_PRINT_SERVICE",
+          paperWidth: resolvedPaperWidth,
+          escPosBase64: pjInfo.escPosBase64,
+          textLines: pjInfo.textLines,
+        }).then((clientRes) => {
+          setPrintJobStatus(clientRes.status);
+          if (clientRes.error) setPrintErrorMsg(clientRes.error);
+        });
+      }
 
-      // 2. AUTOMATIC WHATSAPP: Auto-dispatch e-bill to customer mobile
-      if (receipt.customerPhone && whatsappConsent) {
-        const raw = receipt.customerPhone.replace(/\D/g, "");
-        const intlPhone = raw.length === 10 ? `91${raw}` : raw;
-        const originUrl = typeof window !== "undefined" ? window.location.origin : "https://www.restronexpos.com";
-        const pdfUrl = `${originUrl}/api/invoices/${encodeURIComponent(receipt.invoiceNumber)}/pdf`;
-        const waMsg =
-          `🍽️ *${receipt.outletName}* - TAX INVOICE\n\n` +
-          `Hi ${receipt.customerName || "Customer"}! 👋\n` +
-          `Thank you for dining with us.\n\n` +
-          `🧾 *TAX INVOICE*\n` +
-          `Bill No: ${receipt.invoiceNumber}\n` +
-          `Date: ${receipt.date}\n` +
-          `Total Amount: ${formatINR(receipt.totalPaise)}\n` +
-          `Payment Mode: ${receipt.paymentMethod} (PAID)\n\n` +
-          `📥 *Download Official Tax Invoice PDF:*\n${pdfUrl}\n\n` +
-          `Thank you for choosing us! ❤️\nPowered by RestroNex`;
-
-        const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent(intlPhone)}&text=${encodeURIComponent(waMsg)}`;
-        setTimeout(() => {
-          try {
-            window.open(waUrl, "_blank", "noopener,noreferrer");
-          } catch {}
-        }, 750);
+      // 2. Poll real WhatsApp & Printer statuses if transitional (QUEUED / SENDING / PRINTING)
+      if (
+        j.orderId &&
+        (["QUEUED", "SENDING"].includes(initialWaStatus) || ["QUEUED", "PRINTING"].includes(initialPrintStatus))
+      ) {
+        const pollInterval = setInterval(() => {
+          apiFetch(`/api/whatsapp/status?orderId=${j.orderId}`)
+            .then((r) => r.json())
+            .then((st) => {
+              if (st?.status) setWhatsappDeliveryStatus(st.status);
+              if (st?.printJob?.status) setPrintJobStatus(st.printJob.status);
+              const waDone = !["QUEUED", "SENDING"].includes(st?.status || "");
+              const prDone = !["QUEUED", "PRINTING"].includes(st?.printJob?.status || "");
+              if (waDone && prDone) clearInterval(pollInterval);
+            })
+            .catch(() => {});
+        }, 1200);
+        setTimeout(() => clearInterval(pollInterval), 10000);
       }
       setLastOrder({ orderNumber, total: billedTotal });
       setMsg({
@@ -513,6 +547,7 @@ export default function POSClient({
       const json = await res.json();
       if (res.ok && json.result?.status) {
         setWhatsappDeliveryStatus(json.result.status);
+        setWhatsappReason(json.result.error || null);
       } else {
         setMsg({ type: "error", text: json.error || "WhatsApp retry failed" });
       }
@@ -520,6 +555,41 @@ export default function POSClient({
       setMsg({ type: "error", text: "Network error during WhatsApp retry" });
     } finally {
       setRetryingWhatsApp(false);
+    }
+  }
+
+  async function handleRetryPrint() {
+    if (!activeReceipt?.orderId) return;
+    setRetryingPrint(true);
+    setPrintErrorMsg(null);
+    try {
+      const res = await apiFetch("/api/print-jobs/retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobId: activeReceipt.printJobId || undefined,
+          orderId: activeReceipt.orderId,
+        }),
+      });
+      const json = await res.json();
+      if (json.requiresClientDispatch && json.jobId) {
+        const clientRes = await dispatchClientPrintJob({
+          jobId: json.jobId,
+          printerType: json.printerType || "OS_PRINT_SERVICE",
+          paperWidth: printPaperWidth,
+          escPosBase64: json.escPosBase64,
+          textLines: json.textLines,
+        });
+        setPrintJobStatus(clientRes.status);
+        setPrintErrorMsg(clientRes.error || null);
+      } else if (json.status) {
+        setPrintJobStatus(json.status);
+        setPrintErrorMsg(json.error || null);
+      }
+    } catch {
+      setPrintErrorMsg("Failed to retry thermal print");
+    } finally {
+      setRetryingPrint(false);
     }
   }
 
@@ -709,7 +779,7 @@ export default function POSClient({
                     className="h-3.5 w-3.5 rounded text-[#16845B] accent-[#16845B] cursor-pointer"
                   />
                   <span className="text-[11px] text-[#718078] font-medium">
-                    Send my bill and order updates to my WhatsApp number
+                    Send digital invoice via WhatsApp (transactional bill only)
                   </span>
                 </label>
               </div>
@@ -1268,11 +1338,13 @@ export default function POSClient({
               </button>
             </div>
 
-            {/* Scrollable Receipt Preview & Printable Zone */}
+            {/* Scrollable Receipt Preview & Printable Zone (supports 58mm & 80mm widths) */}
             <div className="p-6 overflow-y-auto bg-[#F8FAF9]/50 flex justify-center">
               <div
                 id="thermal-receipt-printable"
-                className="w-full max-w-[340px] bg-white p-5 rounded-2xl border border-[#E5EBE7] shadow-xs font-mono text-xs text-[#172B25] space-y-3"
+                className={`w-full ${
+                  printPaperWidth === "58mm" ? "max-w-[260px] text-[11px]" : "max-w-[340px] text-xs"
+                } bg-white p-5 rounded-2xl border border-[#E5EBE7] shadow-xs font-mono text-[#172B25] space-y-3`}
               >
                 {/* Header */}
                 <div className="text-center pb-2 border-b border-dashed border-[#718078]/40">
@@ -1370,42 +1442,38 @@ export default function POSClient({
                   </div>
                 </div>
 
-                {/* WhatsApp Auto-Delivery Status Banner */}
-                {activeReceipt.customerPhone && (
-                  <div className="mt-4 p-3.5 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex flex-col gap-1.5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        <MessageSquare className="h-4 w-4 text-[#16845B]" />
-                        <span className="text-xs font-bold text-[#172B25]">WhatsApp Delivery</span>
-                      </div>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                          whatsappDeliveryStatus === "DELIVERED" || whatsappDeliveryStatus === "READ"
-                            ? "bg-[#16845B] text-white"
-                            : whatsappDeliveryStatus === "SENT"
-                            ? "bg-[#16845B] text-white"
-                            : whatsappDeliveryStatus === "FAILED"
-                            ? "bg-red-600 text-white"
-                            : "bg-amber-100 text-amber-900 border border-amber-300"
-                        }`}
-                      >
-                        {whatsappDeliveryStatus === "SENT"
-                          ? "SENT ✓"
-                          : whatsappDeliveryStatus === "DELIVERED"
-                          ? "DELIVERED ✓"
-                          : whatsappDeliveryStatus || "QUEUED"}
-                      </span>
+                {/* Independent WhatsApp Auto-Delivery Status Banner */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex flex-col gap-1.5 font-sans">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <MessageSquare className="h-4 w-4 text-[#16845B]" />
+                      <span className="text-xs font-bold text-[#172B25]">WhatsApp Invoice</span>
                     </div>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                        whatsappDeliveryStatus === "DELIVERED" ||
+                        whatsappDeliveryStatus === "READ" ||
+                        whatsappDeliveryStatus === "SENT"
+                          ? "bg-[#16845B] text-white"
+                          : whatsappDeliveryStatus === "FAILED" || whatsappDeliveryStatus === "OPTED_OUT"
+                          ? "bg-red-600 text-white"
+                          : whatsappDeliveryStatus === "NOT_CONFIGURED"
+                          ? "bg-slate-200 text-slate-800"
+                          : "bg-amber-100 text-amber-900 border border-amber-300"
+                      }`}
+                    >
+                      {whatsappDeliveryStatus || "NOT_CONFIGURED"}
+                    </span>
+                  </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-[#718078]">
+                  {activeReceipt.customerPhone ? (
+                    <div className="flex items-center justify-between text-[11px] text-[#718078] gap-2">
                       <span>
-                        Recipient:{" "}
+                        To:{" "}
                         <strong className="text-[#172B25]">
                           {(() => {
                             const p = activeReceipt.customerPhone.replace(/\D/g, "");
-                            return p.length >= 10
-                              ? `+91 ${p.slice(-10, -8)}*** **${p.slice(-3)}`
-                              : activeReceipt.customerPhone;
+                            return p.length >= 10 ? `+91 ${p.slice(-10, -8)}*** **${p.slice(-3)}` : activeReceipt.customerPhone;
                           })()}
                         </strong>
                       </span>
@@ -1414,26 +1482,70 @@ export default function POSClient({
                           type="button"
                           onClick={handleRetryWhatsApp}
                           disabled={retryingWhatsApp}
-                          className="text-xs font-bold text-[#16845B] hover:underline"
+                          className="text-xs font-bold text-[#16845B] hover:underline cursor-pointer"
                         >
                           {retryingWhatsApp ? "Retrying..." : "Retry Delivery →"}
                         </button>
-                      ) : (
-                        <span className="text-[10px] text-[#16845B] font-semibold">Auto-Dispatched ✓</span>
-                      )}
+                      ) : whatsappDeliveryStatus === "NOT_CONFIGURED" ? (
+                        <Link href="/app/settings/integrations" className="text-[11px] font-bold text-[#16845B] underline">
+                          Connect →
+                        </Link>
+                      ) : null}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-[11px] text-[#718078]">No customer phone entered on this bill.</div>
+                  )}
+                  {whatsappReason && whatsappDeliveryStatus !== "SENT" && whatsappDeliveryStatus !== "DELIVERED" && (
+                    <div className="text-[10px] text-[#718078]">{whatsappReason}</div>
+                  )}
+                </div>
 
-                {/* Auto-Print Hardware Dispatch Pill */}
-                <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] flex items-center justify-between text-[11px]">
-                  <div className="flex items-center gap-2">
-                    <Printer className="h-4 w-4 text-[#16845B]" />
-                    <span className="font-bold text-[#172B25]">Thermal Printer (80mm)</span>
+                {/* Honest Independent Thermal Printer Dispatch Pill */}
+                <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-1 text-[11px] font-sans">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Printer className="h-4 w-4 text-[#16845B]" />
+                      <span className="font-bold text-[#172B25]">
+                        {printerLabel || "Thermal Printer"} ({printPaperWidth})
+                      </span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${
+                        printJobStatus === "PRINTED"
+                          ? "text-[#16845B] bg-[#E8F5EE] border-[#16845B]/20"
+                          : printJobStatus === "OFFLINE" || printJobStatus === "FAILED"
+                          ? "text-red-700 bg-red-50 border-red-200"
+                          : printJobStatus === "NOT_CONFIGURED"
+                          ? "text-slate-700 bg-slate-100 border-slate-200"
+                          : "text-amber-900 bg-amber-50 border-amber-200"
+                      }`}
+                    >
+                      {printJobStatus}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold text-[#16845B] bg-[#E8F5EE] px-2.5 py-0.5 rounded-full border border-[#16845B]/20">
-                    PRINT SENT ✓
-                  </span>
+                  {(printJobStatus === "OFFLINE" || printJobStatus === "FAILED" || printJobStatus === "QUEUED") && (
+                    <div className="flex items-center justify-between pt-0.5">
+                      <span className="text-[10px] text-[#718078] truncate max-w-[180px]">
+                        {printErrorMsg || "Waiting on printer / local bridge"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRetryPrint}
+                        disabled={retryingPrint}
+                        className="text-[11px] font-bold text-[#16845B] hover:underline cursor-pointer"
+                      >
+                        {retryingPrint ? "Retrying..." : "Retry Print →"}
+                      </button>
+                    </div>
+                  )}
+                  {printJobStatus === "NOT_CONFIGURED" && (
+                    <div className="flex justify-between text-[10px] text-[#718078]">
+                      <span>No outlet default printer configured</span>
+                      <Link href="/app/settings/integrations" className="text-[#16845B] font-bold underline">
+                        Configure →
+                      </Link>
+                    </div>
+                  )}
                 </div>
 
                 {/* Footer */}
@@ -1451,33 +1563,11 @@ export default function POSClient({
                 onClick={() => window.print()}
                 className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Printer className="h-4 w-4" /> Print Receipt (80mm)
+                <Printer className="h-4 w-4" /> Manual Print ({printPaperWidth})
               </button>
 
-              {activeReceipt.customerPhone && (
-                <a
-                  href={`https://api.whatsapp.com/send?phone=${encodeURIComponent(
-                    activeReceipt.customerPhone.replace(/\D/g, "").length === 10
-                      ? `91${activeReceipt.customerPhone.replace(/\D/g, "")}`
-                      : activeReceipt.customerPhone.replace(/\D/g, "")
-                  )}&text=${encodeURIComponent(
-                    `🍽️ *${activeReceipt.outletName}* - TAX INVOICE\n` +
-                    `Bill No: ${activeReceipt.invoiceNumber}\n` +
-                    `Total: ${formatINR(activeReceipt.totalPaise)}\n` +
-                    `Payment: ${activeReceipt.paymentMethod} (PAID)\n\n` +
-                    `📥 Download Official PDF Tax Invoice:\n${typeof window !== "undefined" ? window.location.origin : "https://www.restronexpos.com"}/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf\n\n` +
-                    `Thank you for dining with us! ❤️\nPowered by RestroNex`
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-[#25D366] hover:bg-[#1DA851] text-white py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                >
-                  <MessageSquare className="h-4 w-4" /> Send WhatsApp
-                </a>
-              )}
-
               <a
-                href={`/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf`}
+                href={activeReceipt.invoicePdfUrl || `/api/invoices/${encodeURIComponent(activeReceipt.invoiceNumber)}/pdf`}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full border border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9] py-2.5 px-4 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"

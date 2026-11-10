@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -422,7 +423,13 @@ export default function IntegrationsClient() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/app/settings/integrations"
+            className="rounded-full bg-[#16845B] hover:bg-[#116B49] px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition"
+          >
+            WhatsApp &amp; Auto-Printing Hub →
+          </Link>
           <span className="rounded-full bg-white border border-[#E5EBE7] px-3.5 py-1 text-xs text-[#718078] font-bold shadow-xs">
             {configs.filter((c) => c.status === "CONNECTED").length} Connected •{" "}
             {configs.filter((c) => c.status === "PENDING_APPROVAL").length} Pending Review
@@ -990,8 +997,16 @@ export default function IntegrationsClient() {
               {/* ========================================================================= */}
               {meta.connectionMode === "DEVICE_LAN" && (
                 <form onSubmit={handleConnect} className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs text-[#718078] leading-relaxed">
-                    Enter the local IPv4 address of your thermal printer (ESC/POS compatible). Ensure your tablet/POS is on the same Wi-Fi router.
+                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] text-xs text-[#718078] leading-relaxed flex flex-wrap items-center justify-between gap-2">
+                    <span>
+                      Enter the local IPv4 address of your thermal printer (ESC/POS compatible). Need USB, Bluetooth, 58mm/80mm auto-print, or multi-outlet printer rules?
+                    </span>
+                    <Link
+                      href="/app/settings/integrations"
+                      className="font-bold text-[#16845B] underline shrink-0"
+                    >
+                      Open Auto-Print Manager →
+                    </Link>
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">

@@ -403,6 +403,7 @@ export const ModelName = {
   Membership: 'Membership',
   Outlet: 'Outlet',
   RestaurantSetting: 'RestaurantSetting',
+  OutletWhatsAppConfig: 'OutletWhatsAppConfig',
   TaxConfig: 'TaxConfig',
   MenuCategory: 'MenuCategory',
   MenuItem: 'MenuItem',
@@ -465,7 +466,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
+    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -910,6 +911,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RestaurantSettingCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RestaurantSettingCountAggregateOutputType> | number
+        }
+      }
+    }
+    OutletWhatsAppConfig: {
+      payload: Prisma.$OutletWhatsAppConfigPayload<ExtArgs>
+      fields: Prisma.OutletWhatsAppConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OutletWhatsAppConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OutletWhatsAppConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.OutletWhatsAppConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OutletWhatsAppConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        findMany: {
+          args: Prisma.OutletWhatsAppConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>[]
+        }
+        create: {
+          args: Prisma.OutletWhatsAppConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        createMany: {
+          args: Prisma.OutletWhatsAppConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OutletWhatsAppConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.OutletWhatsAppConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        update: {
+          args: Prisma.OutletWhatsAppConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.OutletWhatsAppConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OutletWhatsAppConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OutletWhatsAppConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.OutletWhatsAppConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletWhatsAppConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.OutletWhatsAppConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOutletWhatsAppConfig>
+        }
+        groupBy: {
+          args: Prisma.OutletWhatsAppConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutletWhatsAppConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OutletWhatsAppConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutletWhatsAppConfigCountAggregateOutputType> | number
         }
       }
     }
@@ -4524,6 +4599,7 @@ export type OutletScalarFieldEnum = (typeof OutletScalarFieldEnum)[keyof typeof 
 export const RestaurantSettingScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  logoUrl: 'logoUrl',
   receiptHeader: 'receiptHeader',
   receiptFooter: 'receiptFooter',
   gstNumber: 'gstNumber',
@@ -4538,10 +4614,36 @@ export const RestaurantSettingScalarFieldEnum = {
   whatsappPhoneNumberId: 'whatsappPhoneNumberId',
   whatsappAccessToken: 'whatsappAccessToken',
   whatsappWabaId: 'whatsappWabaId',
-  whatsappTemplateName: 'whatsappTemplateName'
+  whatsappDisplayPhone: 'whatsappDisplayPhone',
+  whatsappTemplateName: 'whatsappTemplateName',
+  whatsappConnectionMode: 'whatsappConnectionMode',
+  whatsappConnectionStatus: 'whatsappConnectionStatus',
+  whatsappOnboardingSkipped: 'whatsappOnboardingSkipped',
+  printerOnboardingSkipped: 'printerOnboardingSkipped',
+  qrFooterEnabled: 'qrFooterEnabled'
 } as const
 
 export type RestaurantSettingScalarFieldEnum = (typeof RestaurantSettingScalarFieldEnum)[keyof typeof RestaurantSettingScalarFieldEnum]
+
+
+export const OutletWhatsAppConfigScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  enabled: 'enabled',
+  phoneNumberId: 'phoneNumberId',
+  wabaId: 'wabaId',
+  displayPhone: 'displayPhone',
+  accessTokenEnc: 'accessTokenEnc',
+  templateName: 'templateName',
+  connectionMode: 'connectionMode',
+  status: 'status',
+  lastVerifiedAt: 'lastVerifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OutletWhatsAppConfigScalarFieldEnum = (typeof OutletWhatsAppConfigScalarFieldEnum)[keyof typeof OutletWhatsAppConfigScalarFieldEnum]
 
 
 export const TaxConfigScalarFieldEnum = {
@@ -4653,6 +4755,7 @@ export const OrderScalarFieldEnum = {
   billClosedAt: 'billClosedAt',
   whatsappConsent: 'whatsappConsent',
   whatsappStatus: 'whatsappStatus',
+  printStatus: 'printStatus',
   qrSessionId: 'qrSessionId',
   idempotencyKey: 'idempotencyKey',
   createdAt: 'createdAt',
@@ -5159,9 +5262,13 @@ export const PrinterDeviceScalarFieldEnum = {
   type: 'type',
   paperWidth: 'paperWidth',
   connectionString: 'connectionString',
+  bridgeUrl: 'bridgeUrl',
   status: 'status',
   isDefaultBilling: 'isDefaultBilling',
   isDefaultKOT: 'isDefaultKOT',
+  autoPrintEnabled: 'autoPrintEnabled',
+  qrEnabled: 'qrEnabled',
+  compatibilityNote: 'compatibilityNote',
   station: 'station',
   lastActiveAt: 'lastActiveAt',
   createdAt: 'createdAt',
@@ -5191,11 +5298,17 @@ export const PrintJobScalarFieldEnum = {
   outletId: 'outletId',
   printerId: 'printerId',
   orderId: 'orderId',
+  idempotencyKey: 'idempotencyKey',
   jobType: 'jobType',
+  paperWidth: 'paperWidth',
   contentJson: 'contentJson',
   status: 'status',
   attempts: 'attempts',
+  maxRetries: 'maxRetries',
+  nextRetryAt: 'nextRetryAt',
   lastError: 'lastError',
+  dispatchedAt: 'dispatchedAt',
+  printedAt: 'printedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -5210,8 +5323,10 @@ export const CustomerConsentScalarFieldEnum = {
   phone: 'phone',
   channel: 'channel',
   optIn: 'optIn',
+  marketingOptIn: 'marketingOptIn',
   optInSource: 'optInSource',
   recordedAt: 'recordedAt',
+  updatedAt: 'updatedAt',
   ipAddress: 'ipAddress'
 } as const
 
@@ -5548,6 +5663,7 @@ export type GlobalOmitConfig = {
   membership?: Prisma.MembershipOmit
   outlet?: Prisma.OutletOmit
   restaurantSetting?: Prisma.RestaurantSettingOmit
+  outletWhatsAppConfig?: Prisma.OutletWhatsAppConfigOmit
   taxConfig?: Prisma.TaxConfigOmit
   menuCategory?: Prisma.MenuCategoryOmit
   menuItem?: Prisma.MenuItemOmit

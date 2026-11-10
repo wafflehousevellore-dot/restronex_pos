@@ -31,8 +31,10 @@ export type CustomerConsentMinAggregateOutputType = {
   phone: string | null
   channel: string | null
   optIn: boolean | null
+  marketingOptIn: boolean | null
   optInSource: string | null
   recordedAt: Date | null
+  updatedAt: Date | null
   ipAddress: string | null
 }
 
@@ -43,8 +45,10 @@ export type CustomerConsentMaxAggregateOutputType = {
   phone: string | null
   channel: string | null
   optIn: boolean | null
+  marketingOptIn: boolean | null
   optInSource: string | null
   recordedAt: Date | null
+  updatedAt: Date | null
   ipAddress: string | null
 }
 
@@ -55,8 +59,10 @@ export type CustomerConsentCountAggregateOutputType = {
   phone: number
   channel: number
   optIn: number
+  marketingOptIn: number
   optInSource: number
   recordedAt: number
+  updatedAt: number
   ipAddress: number
   _all: number
 }
@@ -69,8 +75,10 @@ export type CustomerConsentMinAggregateInputType = {
   phone?: true
   channel?: true
   optIn?: true
+  marketingOptIn?: true
   optInSource?: true
   recordedAt?: true
+  updatedAt?: true
   ipAddress?: true
 }
 
@@ -81,8 +89,10 @@ export type CustomerConsentMaxAggregateInputType = {
   phone?: true
   channel?: true
   optIn?: true
+  marketingOptIn?: true
   optInSource?: true
   recordedAt?: true
+  updatedAt?: true
   ipAddress?: true
 }
 
@@ -93,8 +103,10 @@ export type CustomerConsentCountAggregateInputType = {
   phone?: true
   channel?: true
   optIn?: true
+  marketingOptIn?: true
   optInSource?: true
   recordedAt?: true
+  updatedAt?: true
   ipAddress?: true
   _all?: true
 }
@@ -178,8 +190,10 @@ export type CustomerConsentGroupByOutputType = {
   phone: string
   channel: string
   optIn: boolean
+  marketingOptIn: boolean
   optInSource: string
   recordedAt: Date
+  updatedAt: Date
   ipAddress: string | null
   _count: CustomerConsentCountAggregateOutputType | null
   _min: CustomerConsentMinAggregateOutputType | null
@@ -211,8 +225,10 @@ export type CustomerConsentWhereInput = {
   phone?: Prisma.StringFilter<"CustomerConsent"> | string
   channel?: Prisma.StringFilter<"CustomerConsent"> | string
   optIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
+  marketingOptIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
   optInSource?: Prisma.StringFilter<"CustomerConsent"> | string
   recordedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
   ipAddress?: Prisma.StringNullableFilter<"CustomerConsent"> | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
@@ -225,8 +241,10 @@ export type CustomerConsentOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   optIn?: Prisma.SortOrder
+  marketingOptIn?: Prisma.SortOrder
   optInSource?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
@@ -243,8 +261,10 @@ export type CustomerConsentWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"CustomerConsent"> | string
   channel?: Prisma.StringFilter<"CustomerConsent"> | string
   optIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
+  marketingOptIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
   optInSource?: Prisma.StringFilter<"CustomerConsent"> | string
   recordedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
   ipAddress?: Prisma.StringNullableFilter<"CustomerConsent"> | string | null
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
@@ -257,8 +277,10 @@ export type CustomerConsentOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   optIn?: Prisma.SortOrder
+  marketingOptIn?: Prisma.SortOrder
   optInSource?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CustomerConsentCountOrderByAggregateInput
   _max?: Prisma.CustomerConsentMaxOrderByAggregateInput
@@ -275,8 +297,10 @@ export type CustomerConsentScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"CustomerConsent"> | string
   channel?: Prisma.StringWithAggregatesFilter<"CustomerConsent"> | string
   optIn?: Prisma.BoolWithAggregatesFilter<"CustomerConsent"> | boolean
+  marketingOptIn?: Prisma.BoolWithAggregatesFilter<"CustomerConsent"> | boolean
   optInSource?: Prisma.StringWithAggregatesFilter<"CustomerConsent"> | string
   recordedAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerConsent"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CustomerConsent"> | Date | string
   ipAddress?: Prisma.StringNullableWithAggregatesFilter<"CustomerConsent"> | string | null
 }
 
@@ -285,8 +309,10 @@ export type CustomerConsentCreateInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCustomerConsentsInput
   customer?: Prisma.CustomerCreateNestedOneWithoutConsentsInput
@@ -299,8 +325,10 @@ export type CustomerConsentUncheckedCreateInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -309,8 +337,10 @@ export type CustomerConsentUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomerConsentsNestedInput
   customer?: Prisma.CustomerUpdateOneWithoutConsentsNestedInput
@@ -323,8 +353,10 @@ export type CustomerConsentUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -335,8 +367,10 @@ export type CustomerConsentCreateManyInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -345,8 +379,10 @@ export type CustomerConsentUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -357,8 +393,10 @@ export type CustomerConsentUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -385,8 +423,10 @@ export type CustomerConsentCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   optIn?: Prisma.SortOrder
+  marketingOptIn?: Prisma.SortOrder
   optInSource?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
 }
 
@@ -397,8 +437,10 @@ export type CustomerConsentMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   optIn?: Prisma.SortOrder
+  marketingOptIn?: Prisma.SortOrder
   optInSource?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
 }
 
@@ -409,8 +451,10 @@ export type CustomerConsentMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   channel?: Prisma.SortOrder
   optIn?: Prisma.SortOrder
+  marketingOptIn?: Prisma.SortOrder
   optInSource?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   ipAddress?: Prisma.SortOrder
 }
 
@@ -503,8 +547,10 @@ export type CustomerConsentCreateWithoutTenantInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
   customer?: Prisma.CustomerCreateNestedOneWithoutConsentsInput
 }
@@ -515,8 +561,10 @@ export type CustomerConsentUncheckedCreateWithoutTenantInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -556,8 +604,10 @@ export type CustomerConsentScalarWhereInput = {
   phone?: Prisma.StringFilter<"CustomerConsent"> | string
   channel?: Prisma.StringFilter<"CustomerConsent"> | string
   optIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
+  marketingOptIn?: Prisma.BoolFilter<"CustomerConsent"> | boolean
   optInSource?: Prisma.StringFilter<"CustomerConsent"> | string
   recordedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"CustomerConsent"> | Date | string
   ipAddress?: Prisma.StringNullableFilter<"CustomerConsent"> | string | null
 }
 
@@ -566,8 +616,10 @@ export type CustomerConsentCreateWithoutCustomerInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
   tenant: Prisma.TenantCreateNestedOneWithoutCustomerConsentsInput
 }
@@ -578,8 +630,10 @@ export type CustomerConsentUncheckedCreateWithoutCustomerInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -615,8 +669,10 @@ export type CustomerConsentCreateManyTenantInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -625,8 +681,10 @@ export type CustomerConsentUpdateWithoutTenantInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customer?: Prisma.CustomerUpdateOneWithoutConsentsNestedInput
 }
@@ -637,8 +695,10 @@ export type CustomerConsentUncheckedUpdateWithoutTenantInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -648,8 +708,10 @@ export type CustomerConsentUncheckedUpdateManyWithoutTenantInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -659,8 +721,10 @@ export type CustomerConsentCreateManyCustomerInput = {
   phone: string
   channel?: string
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: string
   recordedAt?: Date | string
+  updatedAt?: Date | string
   ipAddress?: string | null
 }
 
@@ -669,8 +733,10 @@ export type CustomerConsentUpdateWithoutCustomerInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tenant?: Prisma.TenantUpdateOneRequiredWithoutCustomerConsentsNestedInput
 }
@@ -681,8 +747,10 @@ export type CustomerConsentUncheckedUpdateWithoutCustomerInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -692,8 +760,10 @@ export type CustomerConsentUncheckedUpdateManyWithoutCustomerInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.StringFieldUpdateOperationsInput | string
   optIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  marketingOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   optInSource?: Prisma.StringFieldUpdateOperationsInput | string
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ipAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -706,8 +776,10 @@ export type CustomerConsentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   phone?: boolean
   channel?: boolean
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: boolean
   recordedAt?: boolean
+  updatedAt?: boolean
   ipAddress?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerConsent$customerArgs<ExtArgs>
@@ -720,8 +792,10 @@ export type CustomerConsentSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   phone?: boolean
   channel?: boolean
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: boolean
   recordedAt?: boolean
+  updatedAt?: boolean
   ipAddress?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerConsent$customerArgs<ExtArgs>
@@ -734,8 +808,10 @@ export type CustomerConsentSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   phone?: boolean
   channel?: boolean
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: boolean
   recordedAt?: boolean
+  updatedAt?: boolean
   ipAddress?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerConsent$customerArgs<ExtArgs>
@@ -748,12 +824,14 @@ export type CustomerConsentSelectScalar = {
   phone?: boolean
   channel?: boolean
   optIn?: boolean
+  marketingOptIn?: boolean
   optInSource?: boolean
   recordedAt?: boolean
+  updatedAt?: boolean
   ipAddress?: boolean
 }
 
-export type CustomerConsentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "phone" | "channel" | "optIn" | "optInSource" | "recordedAt" | "ipAddress", ExtArgs["result"]["customerConsent"]>
+export type CustomerConsentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "customerId" | "phone" | "channel" | "optIn" | "marketingOptIn" | "optInSource" | "recordedAt" | "updatedAt" | "ipAddress", ExtArgs["result"]["customerConsent"]>
 export type CustomerConsentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerConsent$customerArgs<ExtArgs>
@@ -780,8 +858,10 @@ export type $CustomerConsentPayload<ExtArgs extends runtime.Types.Extensions.Int
     phone: string
     channel: string
     optIn: boolean
+    marketingOptIn: boolean
     optInSource: string
     recordedAt: Date
+    updatedAt: Date
     ipAddress: string | null
   }, ExtArgs["result"]["customerConsent"]>
   composites: {}
@@ -1214,8 +1294,10 @@ export interface CustomerConsentFieldRefs {
   readonly phone: Prisma.FieldRef<"CustomerConsent", 'String'>
   readonly channel: Prisma.FieldRef<"CustomerConsent", 'String'>
   readonly optIn: Prisma.FieldRef<"CustomerConsent", 'Boolean'>
+  readonly marketingOptIn: Prisma.FieldRef<"CustomerConsent", 'Boolean'>
   readonly optInSource: Prisma.FieldRef<"CustomerConsent", 'String'>
   readonly recordedAt: Prisma.FieldRef<"CustomerConsent", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"CustomerConsent", 'DateTime'>
   readonly ipAddress: Prisma.FieldRef<"CustomerConsent", 'String'>
 }
     

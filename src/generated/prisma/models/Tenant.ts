@@ -363,6 +363,7 @@ export type TenantWhereInput = {
   customerConsents?: Prisma.CustomerConsentListRelationFilter
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
   whatsAppQueue?: Prisma.WhatsAppMessageQueueListRelationFilter
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigListRelationFilter
   invoices?: Prisma.InvoiceRecordListRelationFilter
   featureUsages?: Prisma.FeatureUsageListRelationFilter
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
@@ -420,6 +421,7 @@ export type TenantOrderByWithRelationInput = {
   customerConsents?: Prisma.CustomerConsentOrderByRelationAggregateInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogOrderByRelationAggregateInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueOrderByRelationAggregateInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceRecordOrderByRelationAggregateInput
   featureUsages?: Prisma.FeatureUsageOrderByRelationAggregateInput
   qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
@@ -480,6 +482,7 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   customerConsents?: Prisma.CustomerConsentListRelationFilter
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
   whatsAppQueue?: Prisma.WhatsAppMessageQueueListRelationFilter
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigListRelationFilter
   invoices?: Prisma.InvoiceRecordListRelationFilter
   featureUsages?: Prisma.FeatureUsageListRelationFilter
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
@@ -591,6 +594,7 @@ export type TenantCreateInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -648,6 +652,7 @@ export type TenantUncheckedCreateInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -705,6 +710,7 @@ export type TenantUpdateInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -762,6 +768,7 @@ export type TenantUncheckedUpdateInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -967,6 +974,20 @@ export type TenantUpdateOneRequiredWithoutSettingsNestedInput = {
   upsert?: Prisma.TenantUpsertWithoutSettingsInput
   connect?: Prisma.TenantWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutSettingsInput, Prisma.TenantUpdateWithoutSettingsInput>, Prisma.TenantUncheckedUpdateWithoutSettingsInput>
+}
+
+export type TenantCreateNestedOneWithoutOutletWhatsAppConfigsInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutOutletWhatsAppConfigsInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutOutletWhatsAppConfigsNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutOutletWhatsAppConfigsInput
+  upsert?: Prisma.TenantUpsertWithoutOutletWhatsAppConfigsInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutOutletWhatsAppConfigsInput, Prisma.TenantUpdateWithoutOutletWhatsAppConfigsInput>, Prisma.TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput>
 }
 
 export type TenantCreateNestedOneWithoutTaxConfigsInput = {
@@ -1452,6 +1473,7 @@ export type TenantCreateWithoutMembershipsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -1508,6 +1530,7 @@ export type TenantUncheckedCreateWithoutMembershipsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -1580,6 +1603,7 @@ export type TenantUpdateWithoutMembershipsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -1636,6 +1660,7 @@ export type TenantUncheckedUpdateWithoutMembershipsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -1692,6 +1717,7 @@ export type TenantCreateWithoutOutletsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -1748,6 +1774,7 @@ export type TenantUncheckedCreateWithoutOutletsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -1820,6 +1847,7 @@ export type TenantUpdateWithoutOutletsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -1876,6 +1904,7 @@ export type TenantUncheckedUpdateWithoutOutletsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -1932,6 +1961,7 @@ export type TenantCreateWithoutSettingsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -1988,6 +2018,7 @@ export type TenantUncheckedCreateWithoutSettingsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -2060,6 +2091,7 @@ export type TenantUpdateWithoutSettingsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -2092,6 +2124,251 @@ export type TenantUncheckedUpdateWithoutSettingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
   outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutOutletWhatsAppConfigsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutOutletWhatsAppConfigsInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput>
+}
+
+export type TenantUpsertWithoutOutletWhatsAppConfigsInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutOutletWhatsAppConfigsInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutOutletWhatsAppConfigsInput, Prisma.TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput>
+}
+
+export type TenantUpdateWithoutOutletWhatsAppConfigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
   taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
   categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
   menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
@@ -2172,6 +2449,7 @@ export type TenantCreateWithoutTaxConfigsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -2228,6 +2506,7 @@ export type TenantUncheckedCreateWithoutTaxConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -2300,6 +2579,7 @@ export type TenantUpdateWithoutTaxConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -2356,6 +2636,7 @@ export type TenantUncheckedUpdateWithoutTaxConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -2412,6 +2693,7 @@ export type TenantCreateWithoutCategoriesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -2468,6 +2750,7 @@ export type TenantUncheckedCreateWithoutCategoriesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -2540,6 +2823,7 @@ export type TenantUpdateWithoutCategoriesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -2596,6 +2880,7 @@ export type TenantUncheckedUpdateWithoutCategoriesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -2652,6 +2937,7 @@ export type TenantCreateWithoutMenuItemsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -2708,6 +2994,7 @@ export type TenantUncheckedCreateWithoutMenuItemsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -2780,6 +3067,7 @@ export type TenantUpdateWithoutMenuItemsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -2836,6 +3124,7 @@ export type TenantUncheckedUpdateWithoutMenuItemsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -2892,6 +3181,7 @@ export type TenantCreateWithoutTablesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -2948,6 +3238,7 @@ export type TenantUncheckedCreateWithoutTablesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -3020,6 +3311,7 @@ export type TenantUpdateWithoutTablesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -3076,6 +3368,7 @@ export type TenantUncheckedUpdateWithoutTablesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -3132,6 +3425,7 @@ export type TenantCreateWithoutOrdersInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -3188,6 +3482,7 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -3260,6 +3555,7 @@ export type TenantUpdateWithoutOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -3316,6 +3612,7 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -3373,6 +3670,7 @@ export type TenantCreateWithoutPaymentRefundsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -3429,6 +3727,7 @@ export type TenantUncheckedCreateWithoutPaymentRefundsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -3501,6 +3800,7 @@ export type TenantUpdateWithoutPaymentRefundsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -3557,6 +3857,7 @@ export type TenantUncheckedUpdateWithoutPaymentRefundsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -3612,6 +3913,7 @@ export type TenantCreateWithoutInventoryItemsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -3668,6 +3970,7 @@ export type TenantUncheckedCreateWithoutInventoryItemsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -3740,6 +4043,7 @@ export type TenantUpdateWithoutInventoryItemsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -3796,6 +4100,7 @@ export type TenantUncheckedUpdateWithoutInventoryItemsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -3852,6 +4157,7 @@ export type TenantCreateWithoutSuppliersInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -3908,6 +4214,7 @@ export type TenantUncheckedCreateWithoutSuppliersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -3980,6 +4287,7 @@ export type TenantUpdateWithoutSuppliersInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -4036,6 +4344,7 @@ export type TenantUncheckedUpdateWithoutSuppliersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -4092,6 +4401,7 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -4148,6 +4458,7 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -4220,6 +4531,7 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -4276,6 +4588,7 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -4332,6 +4645,7 @@ export type TenantCreateWithoutStockMovementsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -4388,6 +4702,7 @@ export type TenantUncheckedCreateWithoutStockMovementsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -4460,6 +4775,7 @@ export type TenantUpdateWithoutStockMovementsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -4516,6 +4832,7 @@ export type TenantUncheckedUpdateWithoutStockMovementsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -4572,6 +4889,7 @@ export type TenantCreateWithoutCustomersInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -4628,6 +4946,7 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -4700,6 +5019,7 @@ export type TenantUpdateWithoutCustomersInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -4756,6 +5076,7 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -4812,6 +5133,7 @@ export type TenantCreateWithoutSubscriptionsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -4868,6 +5190,7 @@ export type TenantUncheckedCreateWithoutSubscriptionsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -4940,6 +5263,7 @@ export type TenantUpdateWithoutSubscriptionsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -4996,6 +5320,7 @@ export type TenantUncheckedUpdateWithoutSubscriptionsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -5053,6 +5378,7 @@ export type TenantCreateWithoutSubscriptionNotificationsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -5109,6 +5435,7 @@ export type TenantUncheckedCreateWithoutSubscriptionNotificationsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -5181,6 +5508,7 @@ export type TenantUpdateWithoutSubscriptionNotificationsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -5237,6 +5565,7 @@ export type TenantUncheckedUpdateWithoutSubscriptionNotificationsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -5293,6 +5622,7 @@ export type TenantCreateWithoutPaymentGatewayConfigInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -5349,6 +5679,7 @@ export type TenantUncheckedCreateWithoutPaymentGatewayConfigInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -5421,6 +5752,7 @@ export type TenantUpdateWithoutPaymentGatewayConfigInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -5477,6 +5809,7 @@ export type TenantUncheckedUpdateWithoutPaymentGatewayConfigInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -5533,6 +5866,7 @@ export type TenantCreateWithoutPaymentAttemptsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -5589,6 +5923,7 @@ export type TenantUncheckedCreateWithoutPaymentAttemptsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -5661,6 +5996,7 @@ export type TenantUpdateWithoutPaymentAttemptsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -5717,6 +6053,7 @@ export type TenantUncheckedUpdateWithoutPaymentAttemptsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -5772,6 +6109,7 @@ export type TenantCreateWithoutIntegrationConfigsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -5828,6 +6166,7 @@ export type TenantUncheckedCreateWithoutIntegrationConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -5900,6 +6239,7 @@ export type TenantUpdateWithoutIntegrationConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -5956,6 +6296,7 @@ export type TenantUncheckedUpdateWithoutIntegrationConfigsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -6012,6 +6353,7 @@ export type TenantCreateWithoutTokensInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -6068,6 +6410,7 @@ export type TenantUncheckedCreateWithoutTokensInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -6140,6 +6483,7 @@ export type TenantUpdateWithoutTokensInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -6196,6 +6540,7 @@ export type TenantUncheckedUpdateWithoutTokensInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -6252,6 +6597,7 @@ export type TenantCreateWithoutReservationsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -6308,6 +6654,7 @@ export type TenantUncheckedCreateWithoutReservationsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -6380,6 +6727,7 @@ export type TenantUpdateWithoutReservationsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -6436,6 +6784,7 @@ export type TenantUncheckedUpdateWithoutReservationsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -6492,6 +6841,7 @@ export type TenantCreateWithoutFeedbacksInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -6548,6 +6898,7 @@ export type TenantUncheckedCreateWithoutFeedbacksInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -6620,6 +6971,7 @@ export type TenantUpdateWithoutFeedbacksInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -6676,6 +7028,7 @@ export type TenantUncheckedUpdateWithoutFeedbacksInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -6732,6 +7085,7 @@ export type TenantCreateWithoutExpensesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -6788,6 +7142,7 @@ export type TenantUncheckedCreateWithoutExpensesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -6860,6 +7215,7 @@ export type TenantUpdateWithoutExpensesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -6916,6 +7272,7 @@ export type TenantUncheckedUpdateWithoutExpensesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -6972,6 +7329,7 @@ export type TenantCreateWithoutSupplierPricesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -7028,6 +7386,7 @@ export type TenantUncheckedCreateWithoutSupplierPricesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -7100,6 +7459,7 @@ export type TenantUpdateWithoutSupplierPricesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -7156,6 +7516,7 @@ export type TenantUncheckedUpdateWithoutSupplierPricesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -7212,6 +7573,7 @@ export type TenantCreateWithoutDayEndsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -7268,6 +7630,7 @@ export type TenantUncheckedCreateWithoutDayEndsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -7340,6 +7703,7 @@ export type TenantUpdateWithoutDayEndsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -7396,6 +7760,7 @@ export type TenantUncheckedUpdateWithoutDayEndsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -7452,6 +7817,7 @@ export type TenantCreateWithoutAuditLogsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -7508,6 +7874,7 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -7580,6 +7947,7 @@ export type TenantUpdateWithoutAuditLogsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -7636,6 +8004,7 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -7693,6 +8062,7 @@ export type TenantCreateWithoutQrSessionsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
@@ -7749,6 +8119,7 @@ export type TenantUncheckedCreateWithoutQrSessionsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
@@ -7821,6 +8192,7 @@ export type TenantUpdateWithoutQrSessionsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
@@ -7877,6 +8249,7 @@ export type TenantUncheckedUpdateWithoutQrSessionsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
@@ -7932,6 +8305,7 @@ export type TenantCreateWithoutPrinterDevicesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -7988,6 +8362,7 @@ export type TenantUncheckedCreateWithoutPrinterDevicesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -8060,6 +8435,7 @@ export type TenantUpdateWithoutPrinterDevicesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -8116,6 +8492,7 @@ export type TenantUncheckedUpdateWithoutPrinterDevicesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -8172,6 +8549,7 @@ export type TenantCreateWithoutPrintJobsInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -8228,6 +8606,7 @@ export type TenantUncheckedCreateWithoutPrintJobsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -8300,6 +8679,7 @@ export type TenantUpdateWithoutPrintJobsInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -8356,6 +8736,7 @@ export type TenantUncheckedUpdateWithoutPrintJobsInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -8412,6 +8793,7 @@ export type TenantCreateWithoutCustomerConsentsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -8468,6 +8850,7 @@ export type TenantUncheckedCreateWithoutCustomerConsentsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -8540,6 +8923,7 @@ export type TenantUpdateWithoutCustomerConsentsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -8596,6 +8980,7 @@ export type TenantUncheckedUpdateWithoutCustomerConsentsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -8652,6 +9037,7 @@ export type TenantCreateWithoutWhatsAppLogsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -8708,6 +9094,7 @@ export type TenantUncheckedCreateWithoutWhatsAppLogsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -8780,6 +9167,7 @@ export type TenantUpdateWithoutWhatsAppLogsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -8836,6 +9224,7 @@ export type TenantUncheckedUpdateWithoutWhatsAppLogsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -8893,6 +9282,7 @@ export type TenantCreateWithoutInvoicesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
@@ -8949,6 +9339,7 @@ export type TenantUncheckedCreateWithoutInvoicesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
@@ -9021,6 +9412,7 @@ export type TenantUpdateWithoutInvoicesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
@@ -9077,6 +9469,7 @@ export type TenantUncheckedUpdateWithoutInvoicesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
@@ -9133,6 +9526,7 @@ export type TenantCreateWithoutFeatureUsagesInput = {
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
@@ -9189,6 +9583,7 @@ export type TenantUncheckedCreateWithoutFeatureUsagesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
@@ -9261,6 +9656,7 @@ export type TenantUpdateWithoutFeatureUsagesInput = {
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
@@ -9317,6 +9713,7 @@ export type TenantUncheckedUpdateWithoutFeatureUsagesInput = {
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
   paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
@@ -9372,6 +9769,7 @@ export type TenantCreateWithoutWhatsAppQueueInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
   customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
@@ -9428,6 +9826,7 @@ export type TenantUncheckedCreateWithoutWhatsAppQueueInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
   customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
   invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
   featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
@@ -9500,6 +9899,7 @@ export type TenantUpdateWithoutWhatsAppQueueInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
   customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
@@ -9556,6 +9956,7 @@ export type TenantUncheckedUpdateWithoutWhatsAppQueueInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
   customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
   invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
   featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
@@ -9597,6 +9998,7 @@ export type TenantCountOutputType = {
   customerConsents: number
   whatsAppLogs: number
   whatsAppQueue: number
+  outletWhatsAppConfigs: number
   invoices: number
   featureUsages: number
   qrSessions: number
@@ -9632,6 +10034,7 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   customerConsents?: boolean | TenantCountOutputTypeCountCustomerConsentsArgs
   whatsAppLogs?: boolean | TenantCountOutputTypeCountWhatsAppLogsArgs
   whatsAppQueue?: boolean | TenantCountOutputTypeCountWhatsAppQueueArgs
+  outletWhatsAppConfigs?: boolean | TenantCountOutputTypeCountOutletWhatsAppConfigsArgs
   invoices?: boolean | TenantCountOutputTypeCountInvoicesArgs
   featureUsages?: boolean | TenantCountOutputTypeCountFeatureUsagesArgs
   qrSessions?: boolean | TenantCountOutputTypeCountQrSessionsArgs
@@ -9835,6 +10238,13 @@ export type TenantCountOutputTypeCountWhatsAppQueueArgs<ExtArgs extends runtime.
 /**
  * TenantCountOutputType without action
  */
+export type TenantCountOutputTypeCountOutletWhatsAppConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OutletWhatsAppConfigWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
 export type TenantCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.InvoiceRecordWhereInput
 }
@@ -9923,6 +10333,7 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   customerConsents?: boolean | Prisma.Tenant$customerConsentsArgs<ExtArgs>
   whatsAppLogs?: boolean | Prisma.Tenant$whatsAppLogsArgs<ExtArgs>
   whatsAppQueue?: boolean | Prisma.Tenant$whatsAppQueueArgs<ExtArgs>
+  outletWhatsAppConfigs?: boolean | Prisma.Tenant$outletWhatsAppConfigsArgs<ExtArgs>
   invoices?: boolean | Prisma.Tenant$invoicesArgs<ExtArgs>
   featureUsages?: boolean | Prisma.Tenant$featureUsagesArgs<ExtArgs>
   qrSessions?: boolean | Prisma.Tenant$qrSessionsArgs<ExtArgs>
@@ -10031,6 +10442,7 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   customerConsents?: boolean | Prisma.Tenant$customerConsentsArgs<ExtArgs>
   whatsAppLogs?: boolean | Prisma.Tenant$whatsAppLogsArgs<ExtArgs>
   whatsAppQueue?: boolean | Prisma.Tenant$whatsAppQueueArgs<ExtArgs>
+  outletWhatsAppConfigs?: boolean | Prisma.Tenant$outletWhatsAppConfigsArgs<ExtArgs>
   invoices?: boolean | Prisma.Tenant$invoicesArgs<ExtArgs>
   featureUsages?: boolean | Prisma.Tenant$featureUsagesArgs<ExtArgs>
   qrSessions?: boolean | Prisma.Tenant$qrSessionsArgs<ExtArgs>
@@ -10073,6 +10485,7 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     customerConsents: Prisma.$CustomerConsentPayload<ExtArgs>[]
     whatsAppLogs: Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>[]
     whatsAppQueue: Prisma.$WhatsAppMessageQueuePayload<ExtArgs>[]
+    outletWhatsAppConfigs: Prisma.$OutletWhatsAppConfigPayload<ExtArgs>[]
     invoices: Prisma.$InvoiceRecordPayload<ExtArgs>[]
     featureUsages: Prisma.$FeatureUsagePayload<ExtArgs>[]
     qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
@@ -10523,6 +10936,7 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   customerConsents<T extends Prisma.Tenant$customerConsentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$customerConsentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerConsentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppLogs<T extends Prisma.Tenant$whatsAppLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$whatsAppLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppQueue<T extends Prisma.Tenant$whatsAppQueueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$whatsAppQueueArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppMessageQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  outletWhatsAppConfigs<T extends Prisma.Tenant$outletWhatsAppConfigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$outletWhatsAppConfigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutletWhatsAppConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoices<T extends Prisma.Tenant$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoiceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   featureUsages<T extends Prisma.Tenant$featureUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$featureUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qrSessions<T extends Prisma.Tenant$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -11612,6 +12026,30 @@ export type Tenant$whatsAppQueueArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.WhatsAppMessageQueueScalarFieldEnum | Prisma.WhatsAppMessageQueueScalarFieldEnum[]
+}
+
+/**
+ * Tenant.outletWhatsAppConfigs
+ */
+export type Tenant$outletWhatsAppConfigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OutletWhatsAppConfig
+   */
+  select?: Prisma.OutletWhatsAppConfigSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OutletWhatsAppConfig
+   */
+  omit?: Prisma.OutletWhatsAppConfigOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutletWhatsAppConfigInclude<ExtArgs> | null
+  where?: Prisma.OutletWhatsAppConfigWhereInput
+  orderBy?: Prisma.OutletWhatsAppConfigOrderByWithRelationInput | Prisma.OutletWhatsAppConfigOrderByWithRelationInput[]
+  cursor?: Prisma.OutletWhatsAppConfigWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OutletWhatsAppConfigScalarFieldEnum | Prisma.OutletWhatsAppConfigScalarFieldEnum[]
 }
 
 /**

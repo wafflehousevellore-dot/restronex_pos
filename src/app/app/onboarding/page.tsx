@@ -13,24 +13,32 @@ import {
   Users,
   Rocket,
   Printer,
+  MessageSquare,
+  LayoutGrid,
+  Bluetooth,
+  Usb,
   Check,
   ChevronLeft,
   ShieldCheck,
   Building2,
   Loader2,
   FileCheck,
+  Play,
 } from "lucide-react";
 import Link from "next/link";
+import { discoverBluetoothPrinter, discoverUsbPrinter, dispatchClientPrintJob } from "@/lib/client-print";
 
 const ONBOARDING_STEPS = [
-  { id: 1, name: "Business", icon: Store, title: "Business Information", desc: "Legal entity & brand identity" },
-  { id: 2, name: "Address", icon: MapPin, title: "Business Address", desc: "Registered address & location" },
-  { id: 3, name: "Outlet", icon: Building2, title: "Outlet Setup", desc: "Branch name, hours & service modes" },
-  { id: 4, name: "Tax & Billing", icon: Receipt, title: "Tax & Billing Settings", desc: "GSTIN, receipt header & tax rates" },
-  { id: 5, name: "Menu", icon: UtensilsCrossed, title: "Menu Setup", desc: "Categories, products & pricing" },
-  { id: 6, name: "Staff", icon: Users, title: "Staff Setup", desc: "Team roles & cashier access" },
-  { id: 7, name: "Operations", icon: Printer, title: "Hardware & Tables", desc: "Printers, KOT & table seating" },
-  { id: 8, name: "Launch", icon: Rocket, title: "Final Review", desc: "Verify setup & activate POS" },
+  { id: 1, name: "Business", icon: Store, title: "Business Information", desc: "Legal entity & brand identity", optional: false },
+  { id: 2, name: "Address", icon: MapPin, title: "Business Address", desc: "Registered address & location", optional: false },
+  { id: 3, name: "Outlet", icon: Building2, title: "Outlet Setup", desc: "Branch name, hours & service modes", optional: false },
+  { id: 4, name: "Tax & Billing", icon: Receipt, title: "Tax & Billing Settings", desc: "GSTIN, receipt header & tax rates", optional: false },
+  { id: 5, name: "Menu", icon: UtensilsCrossed, title: "Menu Setup", desc: "Categories, products & pricing", optional: false },
+  { id: 6, name: "Staff", icon: Users, title: "Staff Setup", desc: "Team roles & cashier access", optional: false },
+  { id: 7, name: "WhatsApp", icon: MessageSquare, title: "Connect WhatsApp Business", desc: "Automatically send invoices and order notifications to your customers.", optional: true },
+  { id: 8, name: "Printer", icon: Printer, title: "Connect Your Receipt Printer", desc: "Automatic silent bill printing (58mm / 80mm thermal)", optional: true },
+  { id: 9, name: "Tables & KOT", icon: LayoutGrid, title: "Tables & Kitchen Setup", desc: "Floor seating & KOT routing", optional: false },
+  { id: 10, name: "Launch", icon: Rocket, title: "Final Review", desc: "Verify setup & activate POS", optional: false },
 ] as const;
 
 export default function OnboardingPage() {
@@ -70,9 +78,35 @@ export default function OnboardingPage() {
   const [step6Staff, setStep6Staff] = useState([
     { name: "Shift Cashier", email: "cashier@restaurant.local", role: "CASHIER" },
   ]);
-  const [step7, setStep7] = useState({
+  const [step7WhatsApp, setStep7WhatsApp] = useState({
+    displayPhone: "",
+    phoneNumberId: "",
+    wabaId: "",
+    accessToken: "",
+    hasExistingToken: false,
+    templateName: "order_invoice_utility",
+    autoSendWhatsAppInvoice: true,
+    skipped: false,
+    testPhone: "",
+  });
+  const [sendingTestWa, setSendingTestWa] = useState(false);
+
+  const [step8Printer, setStep8Printer] = useState({
+    outletId: "",
     printerName: "Counter Thermal Receipt Printer",
-    paperWidth: 80,
+    printerType: "USB_THERMAL",
+    paperWidth: "80mm",
+    connectionString: "",
+    bridgeUrl: "",
+    isDefaultBilling: true,
+    autoPrintBill: true,
+    skipped: false,
+    savedPrinterId: "",
+  });
+  const [outletsList, setOutletsList] = useState<any[]>([]);
+  const [testingPrint, setTestingPrint] = useState(false);
+
+  const [step9Tables, setStep9Tables] = useState({
     enableKOT: true,
     tableCount: 12,
     areaName: "Main Hall",
@@ -104,6 +138,7 @@ export default function OnboardingPage() {
           });
 
           if (data.outlets && data.outlets.length > 0) {
+            setOutletsList(data.outlets);
             const out = data.outlets[0];
             setStep3({
               outletName: out.name || "",
@@ -113,6 +148,22 @@ export default function OnboardingPage() {
               serviceModes: (out.serviceModes || "DINE_IN,TAKEAWAY,DELIVERY").split(","),
               openingHours: out.openingHours || "10:00 AM - 11:00 PM",
             });
+            setStep8Printer((prev) => ({ ...prev, outletId: prev.outletId || out.id }));
+          }
+
+          if (data.printers && data.printers.length > 0) {
+            const p = data.printers[0];
+            setStep8Printer((prev) => ({
+              ...prev,
+              savedPrinterId: p.id,
+              outletId: p.outletId || prev.outletId,
+              printerName: p.name || prev.printerName,
+              printerType: p.type || prev.printerType,
+              paperWidth: p.paperWidth || prev.paperWidth,
+              connectionString: p.connectionString || "",
+              bridgeUrl: p.bridgeUrl || "",
+              isDefaultBilling: Boolean(p.isDefaultBilling),
+            }));
           }
 
           if (data.setting) {
@@ -124,11 +175,30 @@ export default function OnboardingPage() {
               receiptFooter: data.setting.receiptFooter || prev.receiptFooter,
               serviceChargePct: data.setting.serviceChargePct || 0,
             }));
+            setStep7WhatsApp((prev) => ({
+              ...prev,
+              displayPhone: data.setting.whatsappDisplayPhone || data.tenant.phone || "",
+              phoneNumberId: data.setting.whatsappPhoneNumberId || "",
+              wabaId: data.setting.whatsappWabaId || "",
+              hasExistingToken: Boolean(data.setting.hasWhatsappToken),
+              templateName: data.setting.whatsappTemplateName || "order_invoice_utility",
+              autoSendWhatsAppInvoice: Boolean(data.setting.autoSendWhatsAppInvoice),
+              skipped: Boolean(data.setting.whatsappOnboardingSkipped),
+            }));
+            setStep8Printer((prev) => ({
+              ...prev,
+              autoPrintBill: data.setting.autoPrintBill ?? true,
+              skipped: Boolean(data.setting.printerOnboardingSkipped),
+            }));
+            setStep9Tables((prev) => ({
+              ...prev,
+              enableKOT: data.setting.enableKOT ?? true,
+            }));
           }
 
           // Restore step progress
           const savedStep = (data.tenant.onboardingStep || 0) + 1;
-          setCurrentStep(Math.min(Math.max(1, savedStep), 8));
+          setCurrentStep(Math.min(Math.max(1, savedStep), 10));
 
           if (data.tenant.onboardingComplete) {
             setSuccessMsg(`Onboarding for ${data.tenant.name} is complete!`);
@@ -168,14 +238,144 @@ export default function OnboardingPage() {
         return;
       }
 
-      setSuccessMsg(`✓ Step ${stepNum} saved successfully.`);
-      if (stepNum < 8) {
+      if (json.printerId) {
+        setStep8Printer((prev) => ({ ...prev, savedPrinterId: json.printerId }));
+      }
+
+      setSuccessMsg(
+        json.skipped
+          ? `✓ Step ${stepNum} skipped — you can configure it anytime in Settings → Integrations.`
+          : `✓ Step ${stepNum} saved successfully.`
+      );
+      if (stepNum < 10) {
         setCurrentStep(stepNum + 1);
       }
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to save step");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleSendTestWhatsApp() {
+    if (!step7WhatsApp.testPhone || step7WhatsApp.testPhone.trim().length < 10) {
+      return setErrorMsg("Enter a valid 10+ digit test mobile number first.");
+    }
+    setSendingTestWa(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      // Save credentials silently before dispatching test ping
+      const saveRes = await fetch("/api/onboarding/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          step: 7,
+          currentStep: 7,
+          skip: false,
+          displayPhone: step7WhatsApp.displayPhone,
+          phoneNumberId: step7WhatsApp.phoneNumberId,
+          wabaId: step7WhatsApp.wabaId,
+          accessToken: step7WhatsApp.accessToken || undefined,
+          templateName: step7WhatsApp.templateName,
+          autoSendWhatsAppInvoice: step7WhatsApp.autoSendWhatsAppInvoice,
+        }),
+      });
+      if (!saveRes.ok) {
+        const sj = await saveRes.json();
+        throw new Error(sj.error || "Failed to save WhatsApp settings");
+      }
+
+      const res = await fetch("/api/whatsapp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isTest: true, testPhone: step7WhatsApp.testPhone }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "WhatsApp test message failed");
+      setSuccessMsg("✓ Test WhatsApp message dispatched via Meta Cloud API!");
+    } catch (err: any) {
+      setErrorMsg(err.message || "WhatsApp test failed.");
+    } finally {
+      setSendingTestWa(false);
+    }
+  }
+
+  async function handleOnboardingDiscoverPrinter() {
+    setErrorMsg(null);
+    if (step8Printer.printerType === "USB_THERMAL") {
+      const res = await discoverUsbPrinter();
+      if (!res.ok) return setErrorMsg(res.error || "USB discovery failed");
+      setStep8Printer((prev) => ({
+        ...prev,
+        printerName: res.name || prev.printerName,
+        connectionString: res.connectionString || prev.connectionString,
+      }));
+      setSuccessMsg(`✓ Discovered USB printer: ${res.name}`);
+    } else if (step8Printer.printerType === "BLUETOOTH_THERMAL") {
+      const res = await discoverBluetoothPrinter();
+      if (!res.ok) return setErrorMsg(res.error || "Bluetooth discovery failed");
+      setStep8Printer((prev) => ({
+        ...prev,
+        printerName: res.name || prev.printerName,
+        connectionString: res.connectionString || prev.connectionString,
+      }));
+      setSuccessMsg(`✓ Paired Bluetooth printer: ${res.name}`);
+    }
+  }
+
+  async function handleOnboardingTestPrint() {
+    setTestingPrint(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      const saveRes = await fetch("/api/onboarding/step", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          step: 8,
+          currentStep: 8,
+          skip: false,
+          ...step8Printer,
+        }),
+      });
+      const sj = await saveRes.json();
+      if (!saveRes.ok) throw new Error(sj.error || "Failed to save printer configuration");
+
+      const printerId = sj.printerId || step8Printer.savedPrinterId;
+      if (printerId) {
+        setStep8Printer((prev) => ({ ...prev, savedPrinterId: printerId }));
+      }
+      const res = await fetch("/api/print-jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          printerId,
+          jobType: "TEST",
+          paperWidth: step8Printer.paperWidth,
+        }),
+      });
+      const pj = await res.json();
+      if (pj.requiresClientDispatch && pj.jobId) {
+        const clientRes = await dispatchClientPrintJob({
+          jobId: pj.jobId,
+          printerType: step8Printer.printerType,
+          connectionString: step8Printer.connectionString,
+          bridgeUrl: step8Printer.bridgeUrl,
+          paperWidth: step8Printer.paperWidth === "58mm" ? "58mm" : "80mm",
+          escPosBase64: pj.escPosBase64,
+          textLines: pj.textLines,
+        });
+        setSuccessMsg(
+          `Test print status: ${clientRes.status}${clientRes.error ? ` (${clientRes.error})` : ""}`
+        );
+      } else {
+        setSuccessMsg(pj.message || `Test print status: ${pj.status}`);
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Test print failed");
+    } finally {
+      setTestingPrint(false);
     }
   }
 
@@ -275,14 +475,14 @@ export default function OnboardingPage() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl font-black text-[#172B25] flex items-center gap-2">
-                <span>Step {currentStep} of 8: {ONBOARDING_STEPS[currentStep - 1].title}</span>
+                <span>Step {currentStep} of 10: {ONBOARDING_STEPS[currentStep - 1].title}</span>
               </CardTitle>
               <CardDescription className="text-xs text-[#718078] mt-1">
                 {ONBOARDING_STEPS[currentStep - 1].desc}
               </CardDescription>
             </div>
             <span className="text-xs font-bold text-[#16845B] bg-[#E8F5EE] px-3 py-1 rounded-full border border-[#16845B]/20">
-              Mandatory Setup
+              {ONBOARDING_STEPS[currentStep - 1].optional ? "Optional Step" : "Mandatory Setup"}
             </span>
           </div>
         </CardHeader>
@@ -764,36 +964,338 @@ export default function OnboardingPage() {
                   className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-6 font-bold cursor-pointer"
                 >
                   {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
-                  Save & Continue to Hardware →
+                  Save & Continue to WhatsApp →
                 </Button>
               </div>
             </div>
           )}
 
-          {/* STEP 7: Hardware & Operational Settings */}
+          {/* STEP 7 (Step A): Connect WhatsApp Business (Optional) */}
           {currentStep === 7 && (
-            <div className="space-y-4 max-w-2xl">
-              <div>
-                <Label className="text-xs font-bold text-[#172B25]">Thermal Printer Device Name</Label>
-                <Input
-                  value={step7.printerName}
-                  onChange={(e) => setStep7({ ...step7, printerName: e.target.value })}
-                  placeholder="e.g. Counter ESC/POS 80mm Printer"
-                  className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
-                />
+            <div className="space-y-5 max-w-2xl">
+              <div className="rounded-2xl border border-[#16845B]/20 bg-[#E8F5EE]/60 p-4 text-xs text-[#172B25] space-y-1">
+                <div className="font-bold">Official Meta WhatsApp Business Cloud API</div>
+                <p className="text-[#718078] leading-relaxed">
+                  Automatically send GST PDF invoices and order alerts directly from your business number using approved Meta Utility templates. Zero WhatsApp Web scraping or passwords required — tokens are AES-256 encrypted server-side.
+                </p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-bold text-[#172B25]">Thermal Paper Width</Label>
+                  <Label className="text-xs font-bold text-[#172B25]">Verified Business Phone Number</Label>
+                  <Input
+                    value={step7WhatsApp.displayPhone}
+                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, displayPhone: e.target.value })}
+                    placeholder="e.g. +91 95130 08467"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Approved Utility Template</Label>
+                  <Input
+                    value={step7WhatsApp.templateName}
+                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, templateName: e.target.value })}
+                    placeholder="order_invoice_utility"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Meta Phone Number ID</Label>
+                  <Input
+                    value={step7WhatsApp.phoneNumberId}
+                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, phoneNumberId: e.target.value })}
+                    placeholder="e.g. 104857291827461"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">WhatsApp Business Account ID (WABA)</Label>
+                  <Input
+                    value={step7WhatsApp.wabaId}
+                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, wabaId: e.target.value })}
+                    placeholder="e.g. 293847192837461"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-xs font-bold text-[#172B25]">
+                  System User Permanent Access Token{" "}
+                  {step7WhatsApp.hasExistingToken && <span className="text-[#16845B]">(Encrypted Token Stored ✓)</span>}
+                </Label>
+                <Input
+                  type="password"
+                  value={step7WhatsApp.accessToken}
+                  onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, accessToken: e.target.value })}
+                  placeholder={step7WhatsApp.hasExistingToken ? "Leave blank to keep stored token" : "EAAG..."}
+                  className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
+                />
+              </div>
+
+              <label className="p-3 bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl flex items-center justify-between cursor-pointer">
+                <div>
+                  <div className="text-xs font-bold text-[#172B25]">Enable Automatic WhatsApp Invoice Delivery</div>
+                  <div className="text-[11px] text-[#718078]">Send digital PDF tax invoice automatically when bills close</div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={step7WhatsApp.autoSendWhatsAppInvoice}
+                  onChange={(e) =>
+                    setStep7WhatsApp({ ...step7WhatsApp, autoSendWhatsAppInvoice: e.target.checked })
+                  }
+                  className="h-4 w-4 rounded border-[#E5EBE7] text-[#16845B]"
+                />
+              </label>
+
+              <div className="rounded-xl border border-[#E5EBE7] bg-white p-4 space-y-2">
+                <Label className="text-xs font-bold text-[#172B25]">Send Test WhatsApp Message (Optional)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={step7WhatsApp.testPhone}
+                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, testPhone: e.target.value })}
+                    placeholder="+91 9XXXXXXXXX"
+                    className="bg-[#F8FAF9] border-[#E5EBE7] text-xs font-mono"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleSendTestWhatsApp}
+                    disabled={sendingTestWa}
+                    className="rounded-xl border-[#E5EBE7] text-xs font-bold text-[#16845B] shrink-0 cursor-pointer"
+                  >
+                    {sendingTestWa ? "Sending..." : "Send Test Message"}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="pt-4 flex flex-wrap justify-between gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(6)}
+                  className="rounded-full border-[#E5EBE7] text-[#172B25]"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" /> Back
+                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={saving}
+                    onClick={() => {
+                      setStep7WhatsApp((prev) => ({ ...prev, skipped: true }));
+                      handleSaveStep(7, { skip: true });
+                    }}
+                    className="rounded-full border-[#E5EBE7] text-[#718078] hover:text-[#172B25] px-5 font-semibold cursor-pointer"
+                  >
+                    Skip for Now
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => {
+                      setStep7WhatsApp((prev) => ({ ...prev, skipped: false }));
+                      handleSaveStep(7, { skip: false, ...step7WhatsApp });
+                    }}
+                    className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-6 font-bold cursor-pointer"
+                  >
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
+                    Connect Now →
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 8 (Step B): Connect Your Receipt Printer (Optional) */}
+          {currentStep === 8 && (
+            <div className="space-y-5 max-w-2xl">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Connection Method</Label>
                   <select
-                    value={step7.paperWidth}
-                    onChange={(e) => setStep7({ ...step7, paperWidth: Number(e.target.value) })}
+                    value={step8Printer.printerType}
+                    onChange={(e) => setStep8Printer({ ...step8Printer, printerType: e.target.value })}
                     className="mt-1.5 w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-sm text-[#172B25]"
                   >
-                    <option value={80}>80mm (Standard Restaurant Thermal)</option>
-                    <option value={58}>58mm (Compact Mobile Receipt)</option>
+                    <option value="USB_THERMAL">USB Thermal Printer (WebUSB)</option>
+                    <option value="NETWORK_LAN">Network / LAN Thermal Printer (Port 9100)</option>
+                    <option value="BLUETOOTH_THERMAL">Supported Bluetooth Printer (BLE GATT)</option>
+                    <option value="LOCAL_BRIDGE">Supported Local Print Bridge / Agent</option>
+                    <option value="OS_PRINT_SERVICE">Operating System Print Service / Kiosk</option>
                   </select>
+                </div>
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Paper Width</Label>
+                  <select
+                    value={step8Printer.paperWidth}
+                    onChange={(e) => setStep8Printer({ ...step8Printer, paperWidth: e.target.value })}
+                    className="mt-1.5 w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-sm text-[#172B25]"
+                  >
+                    <option value="80mm">80mm (Standard Full Width)</option>
+                    <option value="58mm">58mm (Compact Roll)</option>
+                  </select>
+                </div>
+              </div>
+
+              {(step8Printer.printerType === "USB_THERMAL" || step8Printer.printerType === "BLUETOOTH_THERMAL") && (
+                <div className="rounded-xl border border-[#16845B]/25 bg-[#E8F5EE]/50 p-3.5 flex flex-wrap items-center justify-between gap-2">
+                  <div className="text-xs text-[#172B25]">
+                    <b>Hardware Discovery:</b> Discover a paired{" "}
+                    {step8Printer.printerType === "USB_THERMAL" ? "USB thermal printer (Chrome/Edge)" : "BLE Bluetooth printer"}.
+                  </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleOnboardingDiscoverPrinter}
+                    className="rounded-full bg-white border-[#E5EBE7] text-xs font-bold text-[#16845B] cursor-pointer"
+                  >
+                    {step8Printer.printerType === "USB_THERMAL" ? (
+                      <><Usb className="h-3.5 w-3.5 mr-1" /> Discover USB Printer</>
+                    ) : (
+                      <><Bluetooth className="h-3.5 w-3.5 mr-1" /> Discover Bluetooth</>
+                    )}
+                  </Button>
+                </div>
+              )}
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Printer Name</Label>
+                  <Input
+                    value={step8Printer.printerName}
+                    onChange={(e) => setStep8Printer({ ...step8Printer, printerName: e.target.value })}
+                    placeholder="e.g. Main Billing Thermal Printer"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">
+                    {step8Printer.printerType === "NETWORK_LAN"
+                      ? "Printer IP:Port"
+                      : step8Printer.printerType === "LOCAL_BRIDGE"
+                      ? "Local Print Bridge URL"
+                      : "Device ID / System Printer Name"}
+                  </Label>
+                  <Input
+                    value={
+                      step8Printer.printerType === "LOCAL_BRIDGE"
+                        ? step8Printer.bridgeUrl
+                        : step8Printer.connectionString
+                    }
+                    onChange={(e) =>
+                      step8Printer.printerType === "LOCAL_BRIDGE"
+                        ? setStep8Printer({ ...step8Printer, bridgeUrl: e.target.value })
+                        : setStep8Printer({ ...step8Printer, connectionString: e.target.value })
+                    }
+                    placeholder={
+                      step8Printer.printerType === "NETWORK_LAN"
+                        ? "192.168.1.200:9100"
+                        : step8Printer.printerType === "LOCAL_BRIDGE"
+                        ? "http://127.0.0.1:9111"
+                        : "Auto-filled via discovery or OS printer name"
+                    }
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
+                  />
+                </div>
+              </div>
+
+              {outletsList.length > 0 && (
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Default Outlet Selection</Label>
+                  <select
+                    value={step8Printer.outletId}
+                    onChange={(e) => setStep8Printer({ ...step8Printer, outletId: e.target.value })}
+                    className="mt-1.5 w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-sm text-[#172B25]"
+                  >
+                    {outletsList.map((o) => (
+                      <option key={o.id} value={o.id}>{o.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <label className="p-3 bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl flex items-center justify-between cursor-pointer">
+                <div>
+                  <div className="text-xs font-bold text-[#172B25]">Automatic Receipt Printing Upon Bill Close</div>
+                  <div className="text-[11px] text-[#718078]">Silently dispatch thermal receipt when payment settles</div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={step8Printer.autoPrintBill}
+                  onChange={(e) => setStep8Printer({ ...step8Printer, autoPrintBill: e.target.checked })}
+                  className="h-4 w-4 rounded border-[#E5EBE7] text-[#16845B]"
+                />
+              </label>
+
+              <div className="flex items-center justify-between rounded-xl border border-[#E5EBE7] bg-white p-3.5 text-xs">
+                <span className="text-[#718078]">Verify printer connectivity with a 58mm/80mm diagnostic slip:</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={handleOnboardingTestPrint}
+                  disabled={testingPrint}
+                  className="rounded-full border-[#E5EBE7] text-[#16845B] font-bold cursor-pointer"
+                >
+                  <Play className="h-3.5 w-3.5 mr-1" /> {testingPrint ? "Testing..." : "Test Print"}
+                </Button>
+              </div>
+
+              <div className="pt-4 flex flex-wrap justify-between gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentStep(7)}
+                  className="rounded-full border-[#E5EBE7] text-[#172B25]"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" /> Back
+                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={saving}
+                    onClick={() => {
+                      setStep8Printer((prev) => ({ ...prev, skipped: true }));
+                      handleSaveStep(8, { skip: true });
+                    }}
+                    className="rounded-full border-[#E5EBE7] text-[#718078] hover:text-[#172B25] px-5 font-semibold cursor-pointer"
+                  >
+                    Skip for Now
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={saving}
+                    onClick={() => {
+                      setStep8Printer((prev) => ({ ...prev, skipped: false }));
+                      handleSaveStep(8, { skip: false, ...step8Printer });
+                    }}
+                    className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-6 font-bold cursor-pointer"
+                  >
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
+                    Connect Printer →
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 9: Tables & Kitchen Setup */}
+          {currentStep === 9 && (
+            <div className="space-y-4 max-w-2xl">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs font-bold text-[#172B25]">Primary Dining Area Name</Label>
+                  <Input
+                    value={step9Tables.areaName}
+                    onChange={(e) => setStep9Tables({ ...step9Tables, areaName: e.target.value })}
+                    placeholder="e.g. Main Hall"
+                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
+                  />
                 </div>
                 <div>
                   <Label className="text-xs font-bold text-[#172B25]">Seating Capacity: Table Count</Label>
@@ -801,8 +1303,8 @@ export default function OnboardingPage() {
                     type="number"
                     min="1"
                     max="50"
-                    value={step7.tableCount}
-                    onChange={(e) => setStep7({ ...step7, tableCount: Number(e.target.value) })}
+                    value={step9Tables.tableCount}
+                    onChange={(e) => setStep9Tables({ ...step9Tables, tableCount: Number(e.target.value) })}
                     className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
                   />
                 </div>
@@ -815,8 +1317,8 @@ export default function OnboardingPage() {
                 </div>
                 <input
                   type="checkbox"
-                  checked={step7.enableKOT}
-                  onChange={(e) => setStep7({ ...step7, enableKOT: e.target.checked })}
+                  checked={step9Tables.enableKOT}
+                  onChange={(e) => setStep9Tables({ ...step9Tables, enableKOT: e.target.checked })}
                   className="h-4 w-4 rounded border-[#E5EBE7] text-[#16845B]"
                 />
               </div>
@@ -824,13 +1326,13 @@ export default function OnboardingPage() {
               <div className="pt-4 flex justify-between">
                 <Button
                   variant="outline"
-                  onClick={() => setCurrentStep(6)}
+                  onClick={() => setCurrentStep(8)}
                   className="rounded-full border-[#E5EBE7] text-[#172B25]"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" /> Back
                 </Button>
                 <Button
-                  onClick={() => handleSaveStep(7, step7)}
+                  onClick={() => handleSaveStep(9, step9Tables)}
                   disabled={saving}
                   className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-6 font-bold cursor-pointer"
                 >
@@ -841,8 +1343,8 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 8: Final Review & Launch Confirmation */}
-          {currentStep === 8 && (
+          {/* STEP 10: Final Review & Launch Confirmation */}
+          {currentStep === 10 && (
             <div className="space-y-5 max-w-3xl">
               <div className="rounded-2xl border border-[#16845B]/30 bg-[#E8F5EE] p-5 flex items-start gap-4">
                 <div className="h-10 w-10 rounded-full bg-[#16845B] text-white grid place-items-center font-bold text-lg shrink-0">
@@ -851,7 +1353,7 @@ export default function OnboardingPage() {
                 <div>
                   <h4 className="text-base font-black text-[#172B25]">Onboarding Review & System Readiness</h4>
                   <p className="text-xs text-[#718078] mt-0.5">
-                    All mandatory modules are configured. Confirming will activate your live restaurant POS dashboard.
+                    All mandatory modules are ready. Optional WhatsApp Business &amp; Thermal Printer integrations can be updated anytime in Settings → Integrations.
                   </p>
                 </div>
               </div>
@@ -884,24 +1386,36 @@ export default function OnboardingPage() {
 
                 <div className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] p-4 space-y-2">
                   <div className="text-xs font-bold text-[#172B25] uppercase tracking-wider flex items-center justify-between">
-                    <span>3. Menu & Catalog</span>
-                    <button onClick={() => setCurrentStep(5)} className="text-[#16845B] text-[11px] underline">Edit</button>
+                    <span>3. WhatsApp Business</span>
+                    <button onClick={() => setCurrentStep(7)} className="text-[#16845B] text-[11px] underline">Edit</button>
                   </div>
                   <div className="text-xs text-[#718078]">
-                    <div><b>Categories:</b> {step5Categories.length} configured</div>
-                    <div><b>Dishes:</b> {step5Categories.reduce((acc, c) => acc + c.items.length, 0)} starter items</div>
+                    <div>
+                      <b>Status:</b>{" "}
+                      {step7WhatsApp.phoneNumberId && (step7WhatsApp.accessToken || step7WhatsApp.hasExistingToken)
+                        ? "Connected ✓"
+                        : step7WhatsApp.skipped
+                        ? "Skipped (Configure later in Settings)"
+                        : "Not Configured"}
+                    </div>
+                    <div><b>Auto-Send Invoice:</b> {step7WhatsApp.autoSendWhatsAppInvoice ? "ON" : "OFF"}</div>
                   </div>
                 </div>
 
                 <div className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] p-4 space-y-2">
                   <div className="text-xs font-bold text-[#172B25] uppercase tracking-wider flex items-center justify-between">
-                    <span>4. Operations & Hardware</span>
-                    <button onClick={() => setCurrentStep(7)} className="text-[#16845B] text-[11px] underline">Edit</button>
+                    <span>4. Receipt Printer &amp; Tables</span>
+                    <button onClick={() => setCurrentStep(8)} className="text-[#16845B] text-[11px] underline">Edit</button>
                   </div>
                   <div className="text-xs text-[#718078]">
-                    <div><b>Printer:</b> {step7.printerName} ({step7.paperWidth}mm)</div>
-                    <div><b>Tables:</b> {step7.tableCount} tables in {step7.areaName}</div>
-                    <div><b>KOT Engine:</b> {step7.enableKOT ? "Enabled" : "Disabled"}</div>
+                    <div>
+                      <b>Printer:</b>{" "}
+                      {step8Printer.skipped
+                        ? "Skipped (Configure later in Settings)"
+                        : `${step8Printer.printerName} (${step8Printer.paperWidth}, ${step8Printer.printerType})`}
+                    </div>
+                    <div><b>Tables:</b> {step9Tables.tableCount} tables in {step9Tables.areaName}</div>
+                    <div><b>KOT Engine:</b> {step9Tables.enableKOT ? "Enabled" : "Disabled"}</div>
                   </div>
                 </div>
               </div>
@@ -909,14 +1423,14 @@ export default function OnboardingPage() {
               <div className="pt-4 flex justify-between items-center border-t border-[#E5EBE7]">
                 <Button
                   variant="outline"
-                  onClick={() => setCurrentStep(7)}
+                  onClick={() => setCurrentStep(9)}
                   className="rounded-full border-[#E5EBE7] text-[#172B25]"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" /> Back
                 </Button>
 
                 <Button
-                  onClick={() => handleSaveStep(8, { confirmLaunch: true })}
+                  onClick={() => handleSaveStep(10, { confirmLaunch: true })}
                   disabled={saving}
                   className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-8 py-3 text-sm font-black shadow-md cursor-pointer transition transform hover:scale-[1.02]"
                 >
