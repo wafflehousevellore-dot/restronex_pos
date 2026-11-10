@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  PlatformMfaCredential: 'PlatformMfaCredential',
   Tenant: 'Tenant',
   Membership: 'Membership',
   Outlet: 'Outlet',
@@ -134,6 +135,26 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PlatformMfaCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  enabled: 'enabled',
+  pendingSecretEnc: 'pendingSecretEnc',
+  pendingCreatedAt: 'pendingCreatedAt',
+  secretEnc: 'secretEnc',
+  backupCodesHashJson: 'backupCodesHashJson',
+  lastUsedStep: 'lastUsedStep',
+  failedAttempts: 'failedAttempts',
+  lockedUntil: 'lockedUntil',
+  enrolledAt: 'enrolledAt',
+  lastVerifiedAt: 'lastVerifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformMfaCredentialScalarFieldEnum = (typeof PlatformMfaCredentialScalarFieldEnum)[keyof typeof PlatformMfaCredentialScalarFieldEnum]
 
 
 export const TenantScalarFieldEnum = {

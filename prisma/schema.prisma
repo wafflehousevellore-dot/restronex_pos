@@ -19,6 +19,25 @@ model User {
   updatedAt     DateTime @updatedAt
   memberships   Membership[]
   auditLogs     AuditLog[]
+  platformMfa   PlatformMfaCredential?
+}
+
+model PlatformMfaCredential {
+  id                  String    @id @default(cuid())
+  userId              String    @unique
+  enabled             Boolean   @default(false)
+  pendingSecretEnc    String?
+  pendingCreatedAt    DateTime?
+  secretEnc           String?
+  backupCodesHashJson String?
+  lastUsedStep        Int       @default(-1)
+  failedAttempts      Int       @default(0)
+  lockedUntil         DateTime?
+  enrolledAt          DateTime?
+  lastVerifiedAt      DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Tenant {

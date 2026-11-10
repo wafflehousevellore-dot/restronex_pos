@@ -16,6 +16,11 @@ export default async function PlatformSettings() {
       primaryOwnerEmail={authResult.user.email}
       mfaEnrolled={authResult.mfaEnrolled}
       mfaVerifiedInSession={authResult.mfaVerifiedInSession}
+      totpEnabled={authResult.totpEnabled}
+      clerkMfaEnrolled={authResult.clerkMfaEnrolled}
+      totpEnrolledAt={authResult.totpEnrolledAt}
+      totpLastVerifiedAt={authResult.totpLastVerifiedAt}
+      remainingBackupCodes={authResult.remainingBackupCodes}
       gstBps={GST_BPS}
       razorpayConfigured={isRazorpayConfigured()}
       razorpayLiveMode={isRazorpayLiveMode()}

@@ -398,6 +398,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  PlatformMfaCredential: 'PlatformMfaCredential',
   Tenant: 'Tenant',
   Membership: 'Membership',
   Outlet: 'Outlet',
@@ -464,7 +465,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
+    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -539,6 +540,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformMfaCredential: {
+      payload: Prisma.$PlatformMfaCredentialPayload<ExtArgs>
+      fields: Prisma.PlatformMfaCredentialFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformMfaCredentialFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformMfaCredentialFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformMfaCredentialFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformMfaCredentialFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformMfaCredentialFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformMfaCredentialCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformMfaCredentialCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformMfaCredentialCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformMfaCredentialDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        update: {
+          args: Prisma.PlatformMfaCredentialUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformMfaCredentialDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformMfaCredentialUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformMfaCredentialUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformMfaCredentialUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformMfaCredentialPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformMfaCredentialAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformMfaCredential>
+        }
+        groupBy: {
+          args: Prisma.PlatformMfaCredentialGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformMfaCredentialGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformMfaCredentialCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformMfaCredentialCountAggregateOutputType> | number
         }
       }
     }
@@ -4370,6 +4445,26 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const PlatformMfaCredentialScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  enabled: 'enabled',
+  pendingSecretEnc: 'pendingSecretEnc',
+  pendingCreatedAt: 'pendingCreatedAt',
+  secretEnc: 'secretEnc',
+  backupCodesHashJson: 'backupCodesHashJson',
+  lastUsedStep: 'lastUsedStep',
+  failedAttempts: 'failedAttempts',
+  lockedUntil: 'lockedUntil',
+  enrolledAt: 'enrolledAt',
+  lastVerifiedAt: 'lastVerifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformMfaCredentialScalarFieldEnum = (typeof PlatformMfaCredentialScalarFieldEnum)[keyof typeof PlatformMfaCredentialScalarFieldEnum]
+
+
 export const TenantScalarFieldEnum = {
   id: 'id',
   clerkOrgId: 'clerkOrgId',
@@ -5448,6 +5543,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  platformMfaCredential?: Prisma.PlatformMfaCredentialOmit
   tenant?: Prisma.TenantOmit
   membership?: Prisma.MembershipOmit
   outlet?: Prisma.OutletOmit

@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/PlatformMfaCredential'
 export type * from './models/Tenant'
 export type * from './models/Membership'
 export type * from './models/Outlet'

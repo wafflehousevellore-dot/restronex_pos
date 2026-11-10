@@ -24,6 +24,9 @@ export async function GET() {
     primaryOwnerEmail: PRIMARY_PLATFORM_OWNER_EMAIL,
     mfaEnrolled: guard.auth.mfaEnrolled,
     mfaVerifiedInSession: guard.auth.mfaVerifiedInSession,
+    totpEnabled: guard.auth.totpEnabled,
+    clerkMfaEnrolled: guard.auth.clerkMfaEnrolled,
+    remainingBackupCodes: guard.auth.remainingBackupCodes,
     gstBps: GST_BPS,
     razorpayConfigured: isRazorpayConfigured(),
     razorpayLiveMode: isRazorpayLiveMode(),
@@ -87,3 +90,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: err.message || "Action failed" }, { status: 500 });
   }
 }
+

@@ -42,7 +42,9 @@ export async function createSession(user: SessionUser, opts?: { secure?: boolean
 
 export async function clearSession() {
   const c = await cookies();
-  c.delete(COOKIE_NAME); c.delete(ORG_COOKIE);
+  c.delete(COOKIE_NAME);
+  c.delete(ORG_COOKIE);
+  c.delete("restronex_platform_mfa");
 }
 
 // ---------- Clerk-first getSession ----------

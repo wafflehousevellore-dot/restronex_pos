@@ -13,7 +13,11 @@ export default async function PlatformLayout({ children }: { children: React.Rea
     if (authResult.reason === "UNAUTHENTICATED") {
       redirect("/sign-in?next=/platform");
     }
-    if (authResult.reason === "MFA_REQUIRED" || authResult.reason === "REVERIFICATION_REQUIRED") {
+    if (
+      authResult.reason === "TOTP_REQUIRED" ||
+      authResult.reason === "MFA_REQUIRED" ||
+      authResult.reason === "REVERIFICATION_REQUIRED"
+    ) {
       return (
         <PlatformVerificationGate
           reason={authResult.reason}
@@ -93,12 +97,12 @@ export default async function PlatformLayout({ children }: { children: React.Rea
         ))}
       </div>
       {!authResult.mfaEnrolled && (
-        <div className="bg-amber-50 border-b border-amber-200 px-6 py-2.5 text-xs text-amber-900 flex flex-wrap items-center justify-between gap-2">
+        <div className="bg-[#E8F5EE] border-b border-[#16845B]/20 px-6 py-2.5 text-xs text-[#172B25] flex flex-wrap items-center justify-between gap-2">
           <span>
-            <b>Security Notice:</b> Hardware/TOTP MFA is not yet enrolled on <b>{authResult.user.email}</b> in Clerk. Enable Authenticator App 2FA in your Clerk Dashboard → User &amp; Authentication → Multi-factor, then enroll below.
+            <b>Free Authenticator 2FA Available:</b> Protect <b>{authResult.user.email}</b> with Google Authenticator / Authy TOTP 2FA at zero extra cost (no Clerk Pro needed).
           </span>
-          <Link href="/platform/settings" className="font-bold underline text-amber-950">
-            Security &amp; MFA Settings →
+          <Link href="/platform/settings" className="font-bold underline text-[#16845B]">
+            Set Up Free 2FA →
           </Link>
         </div>
       )}
