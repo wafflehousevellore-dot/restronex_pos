@@ -110,12 +110,12 @@ export async function POST(req: NextRequest) {
         const phoneNumberId = value.metadata?.phone_number_id;
         if (messages.length > 0 && phoneNumberId) {
           const outletCfg = await prisma.outletWhatsAppConfig.findFirst({
-            where: { phoneNumberId },
+            where: { phoneNumberId, status: "CONNECTED" },
             select: { tenantId: true },
           });
           const setting = !outletCfg
             ? await prisma.restaurantSetting.findFirst({
-                where: { whatsappPhoneNumberId: phoneNumberId },
+                where: { whatsappPhoneNumberId: phoneNumberId, whatsappConnectionStatus: "CONNECTED" },
                 select: { tenantId: true },
               })
             : null;

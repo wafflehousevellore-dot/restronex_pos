@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/utils";
-
-import { encryptAccessToken } from "@/lib/whatsapp-invoice";
 import { getPrinterCompatibility } from "@/lib/thermal-printer";
 
 export const dynamic = "force-dynamic";
@@ -287,17 +285,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, step: 6, nextStep: 7 });
   }
 
-  // STEP 7: Connect WhatsApp Business (Optional)
+  // STEP 7: Connect WhatsApp Business (Optional via Meta Embedded Signup — never manual API credentials)
   if (step === 7) {
     const {
       skip = false,
-      displayPhone,
-      phoneNumberId,
-      wabaId,
-      accessToken,
-      templateName = "order_invoice_utility",
       autoSendWhatsAppInvoice = true,
-      connectionMode = "META_CLOUD_API",
+      sendPdfTaxInvoice = true,
+      sendPaymentConfirmation = true,
+      sendOrderConfirmation = false,
     } = body;
 
     if (skip) {
@@ -314,57 +309,22 @@ export async function POST(req: NextRequest) {
         },
       });
     } else {
-      const existing = await prisma.restaurantSetting.findUnique({ where: { tenantId } });
-      const encryptedToken = accessToken ? encryptAccessToken(String(accessToken)) : undefined;
-      const finalPhoneId = phoneNumberId?.trim() || existing?.whatsappPhoneNumberId || null;
-      const finalHasToken = Boolean(encryptedToken || existing?.whatsappAccessToken);
-      const nextStatus = finalPhoneId && finalHasToken ? "CONNECTED" : "NOT_CONFIGURED";
-
       await prisma.restaurantSetting.upsert({
         where: { tenantId },
         create: {
           tenantId,
-          whatsappDisplayPhone: displayPhone?.trim() || null,
-          whatsappPhoneNumberId: finalPhoneId,
-          whatsappWabaId: wabaId?.trim() || null,
-          ...(encryptedToken ? { whatsappAccessToken: encryptedToken } : {}),
-          whatsappTemplateName: templateName?.trim() || "order_invoice_utility",
           autoSendWhatsAppInvoice: Boolean(autoSendWhatsAppInvoice),
-          whatsappConnectionMode: connectionMode,
-          whatsappConnectionStatus: nextStatus,
+          whatsappSendPdfTaxInvoice: Boolean(sendPdfTaxInvoice),
+          whatsappSendPaymentConfirm: Boolean(sendPaymentConfirmation),
+          whatsappSendOrderConfirm: Boolean(sendOrderConfirmation),
           whatsappOnboardingSkipped: false,
         },
         update: {
-          ...(displayPhone !== undefined ? { whatsappDisplayPhone: displayPhone?.trim() || null } : {}),
-          ...(phoneNumberId !== undefined ? { whatsappPhoneNumberId: phoneNumberId?.trim() || null } : {}),
-          ...(wabaId !== undefined ? { whatsappWabaId: wabaId?.trim() || null } : {}),
-          ...(encryptedToken ? { whatsappAccessToken: encryptedToken } : {}),
-          ...(templateName !== undefined ? { whatsappTemplateName: templateName?.trim() || "order_invoice_utility" } : {}),
           autoSendWhatsAppInvoice: Boolean(autoSendWhatsAppInvoice),
-          whatsappConnectionMode: connectionMode,
-          whatsappConnectionStatus: nextStatus,
+          whatsappSendPdfTaxInvoice: Boolean(sendPdfTaxInvoice),
+          whatsappSendPaymentConfirm: Boolean(sendPaymentConfirmation),
+          whatsappSendOrderConfirm: Boolean(sendOrderConfirmation),
           whatsappOnboardingSkipped: false,
-        },
-      });
-
-      await prisma.integrationConfig.upsert({
-        where: { tenantId_provider: { tenantId, provider: "whatsapp_cloud" } },
-        create: {
-          tenantId,
-          provider: "whatsapp_cloud",
-          status: nextStatus,
-          configJson: JSON.stringify({
-            displayPhone: displayPhone?.trim() || null,
-            phoneNumberId: finalPhoneId,
-            wabaId: wabaId?.trim() || null,
-            templateName: templateName?.trim() || "order_invoice_utility",
-            tokenEncrypted: true,
-          }),
-          lastSyncAt: new Date(),
-        },
-        update: {
-          status: nextStatus,
-          lastSyncAt: new Date(),
         },
       });
     }

@@ -3,9 +3,9 @@ import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import {
   defaultMetaWhatsAppTransport,
-  normalizeWhatsAppPhone,
   queueAndSendWhatsAppInvoice,
   resolveWhatsAppConfig,
+  validateAndNormalizeWhatsAppPhone,
 } from "@/lib/whatsapp-invoice";
 
 export async function POST(req: NextRequest) {
@@ -24,18 +24,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Only owners/managers can send test messages" }, { status: 403 });
     }
 
-    const recipientPhone = normalizeWhatsAppPhone(String(testPhone || rawPhone || ""));
-    if (recipientPhone.length < 10) {
-      return NextResponse.json({ error: "Valid 10+ digit test phone number required" }, { status: 400 });
+    const phoneCheck = validateAndNormalizeWhatsAppPhone(String(testPhone || rawPhone || ""));
+    if (!phoneCheck.valid && "error" in phoneCheck) {
+      return NextResponse.json({ error: phoneCheck.error }, { status: 400 });
     }
+    if (!("waDigits" in phoneCheck)) {
+      return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
+    }
+    const recipientPhone = phoneCheck.waDigits;
 
     const cfg = await resolveWhatsAppConfig(tenantId, outletId || null);
-    if (!cfg.phoneNumberId || !cfg.accessToken) {
+    if (!cfg.phoneNumberId || !cfg.accessToken || cfg.status !== "CONNECTED") {
       return NextResponse.json(
         {
           error:
-            "Cannot send test: WhatsApp Business Phone Number ID and Access Token must be connected first.",
-          status: "NOT_CONFIGURED",
+            "Connect your verified WhatsApp Business number with Meta first before sending a test message.",
+          status: cfg.status || "NOT_CONFIGURED",
         },
         { status: 400 }
       );

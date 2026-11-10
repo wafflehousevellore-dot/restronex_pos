@@ -158,13 +158,21 @@ model RestaurantSetting {
   autoPrintKOT             Boolean @default(true)
   autoPrintBill            Boolean @default(true)
   autoSendWhatsAppInvoice  Boolean @default(false)
+  whatsappSendPdfTaxInvoice Boolean @default(true)
+  whatsappSendPaymentConfirm Boolean @default(true)
+  whatsappSendOrderConfirm  Boolean @default(false)
+  defaultWhatsAppOutletId  String?
   whatsappPhoneNumberId    String?
   whatsappAccessToken      String?
   whatsappWabaId           String?
   whatsappDisplayPhone     String?
   whatsappTemplateName     String? @default("order_invoice_utility")
-  whatsappConnectionMode   String? @default("META_CLOUD_API")
+  whatsappConnectionMode   String? @default("EMBEDDED_SIGNUP")
   whatsappConnectionStatus String @default("NOT_CONFIGURED")
+  whatsappCoexistence      Boolean @default(false)
+  whatsappConnectedAt      DateTime?
+  whatsappLastVerifiedAt   DateTime?
+  whatsappVerificationError String?
   whatsappOnboardingSkipped Boolean @default(false)
   printerOnboardingSkipped Boolean @default(false)
   qrFooterEnabled          Boolean @default(true)
@@ -172,22 +180,26 @@ model RestaurantSetting {
 }
 
 model OutletWhatsAppConfig {
-  id             String    @id @default(cuid())
-  tenantId       String
-  outletId       String    @unique
-  enabled        Boolean   @default(true)
-  phoneNumberId  String?
-  wabaId         String?
-  displayPhone   String?
-  accessTokenEnc String?
-  templateName   String?   @default("order_invoice_utility")
-  connectionMode String?   @default("META_CLOUD_API")
-  status         String    @default("NOT_CONFIGURED")
-  lastVerifiedAt DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  outlet         Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
-  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id                String    @id @default(cuid())
+  tenantId          String
+  outletId          String    @unique
+  enabled           Boolean   @default(true)
+  isDefaultSender   Boolean   @default(false)
+  phoneNumberId     String?
+  wabaId            String?
+  displayPhone      String?
+  accessTokenEnc    String?
+  templateName      String?   @default("order_invoice_utility")
+  connectionMode    String?   @default("EMBEDDED_SIGNUP")
+  isCoexistence     Boolean   @default(false)
+  status            String    @default("NOT_CONFIGURED")
+  verificationError String?
+  connectedAt       DateTime?
+  lastVerifiedAt    DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  outlet            Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   @@index([tenantId])
 }
 

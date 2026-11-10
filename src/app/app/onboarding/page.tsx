@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { discoverBluetoothPrinter, discoverUsbPrinter, dispatchClientPrintJob } from "@/lib/client-print";
+import MetaWhatsAppConnectCard, { type WhatsAppConfigResponse } from "@/components/app/MetaWhatsAppConnectCard";
 
 const ONBOARDING_STEPS = [
   { id: 1, name: "Business", icon: Store, title: "Business Information", desc: "Legal entity & brand identity", optional: false },
@@ -79,16 +80,13 @@ export default function OnboardingPage() {
     { name: "Shift Cashier", email: "cashier@restaurant.local", role: "CASHIER" },
   ]);
   const [step7WhatsApp, setStep7WhatsApp] = useState({
+    status: "NOT_CONFIGURED",
     displayPhone: "",
-    phoneNumberId: "",
-    wabaId: "",
-    accessToken: "",
-    hasExistingToken: false,
-    templateName: "order_invoice_utility",
     autoSendWhatsAppInvoice: true,
     skipped: false,
-    testPhone: "",
   });
+  const [waConfigMeta, setWaConfigMeta] = useState<WhatsAppConfigResponse | null>(null);
+  const [testWaPhone, setTestWaPhone] = useState("");
   const [sendingTestWa, setSendingTestWa] = useState(false);
 
   const [step8Printer, setStep8Printer] = useState({
@@ -177,11 +175,10 @@ export default function OnboardingPage() {
             }));
             setStep7WhatsApp((prev) => ({
               ...prev,
-              displayPhone: data.setting.whatsappDisplayPhone || data.tenant.phone || "",
-              phoneNumberId: data.setting.whatsappPhoneNumberId || "",
-              wabaId: data.setting.whatsappWabaId || "",
-              hasExistingToken: Boolean(data.setting.hasWhatsappToken),
-              templateName: data.setting.whatsappTemplateName || "order_invoice_utility",
+              status: data.setting.hasWhatsappConnection
+                ? "CONNECTED"
+                : data.setting.whatsappConnectionStatus || "NOT_CONFIGURED",
+              displayPhone: data.setting.whatsappDisplayPhone || "",
               autoSendWhatsAppInvoice: Boolean(data.setting.autoSendWhatsAppInvoice),
               skipped: Boolean(data.setting.whatsappOnboardingSkipped),
             }));
@@ -258,38 +255,17 @@ export default function OnboardingPage() {
   }
 
   async function handleSendTestWhatsApp() {
-    if (!step7WhatsApp.testPhone || step7WhatsApp.testPhone.trim().length < 10) {
-      return setErrorMsg("Enter a valid 10+ digit test mobile number first.");
+    if (!testWaPhone || testWaPhone.trim().length < 10) {
+      return setErrorMsg("Enter a valid mobile number with country code first.");
     }
     setSendingTestWa(true);
     setErrorMsg(null);
     setSuccessMsg(null);
     try {
-      // Save credentials silently before dispatching test ping
-      const saveRes = await fetch("/api/onboarding/step", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          step: 7,
-          currentStep: 7,
-          skip: false,
-          displayPhone: step7WhatsApp.displayPhone,
-          phoneNumberId: step7WhatsApp.phoneNumberId,
-          wabaId: step7WhatsApp.wabaId,
-          accessToken: step7WhatsApp.accessToken || undefined,
-          templateName: step7WhatsApp.templateName,
-          autoSendWhatsAppInvoice: step7WhatsApp.autoSendWhatsAppInvoice,
-        }),
-      });
-      if (!saveRes.ok) {
-        const sj = await saveRes.json();
-        throw new Error(sj.error || "Failed to save WhatsApp settings");
-      }
-
       const res = await fetch("/api/whatsapp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isTest: true, testPhone: step7WhatsApp.testPhone }),
+        body: JSON.stringify({ isTest: true, testPhone: testWaPhone }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "WhatsApp test message failed");
@@ -970,107 +946,46 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 7 (Step A): Connect WhatsApp Business (Optional) */}
+          {/* STEP 7 (Step A): Connect WhatsApp Business (Optional OTP Meta Embedded Signup) */}
           {currentStep === 7 && (
             <div className="space-y-5 max-w-2xl">
-              <div className="rounded-2xl border border-[#16845B]/20 bg-[#E8F5EE]/60 p-4 text-xs text-[#172B25] space-y-1">
-                <div className="font-bold">Official Meta WhatsApp Business Cloud API</div>
-                <p className="text-[#718078] leading-relaxed">
-                  Automatically send GST PDF invoices and order alerts directly from your business number using approved Meta Utility templates. Zero WhatsApp Web scraping or passwords required — tokens are AES-256 encrypted server-side.
-                </p>
-              </div>
+              <MetaWhatsAppConnectCard
+                compactOnboarding={true}
+                onStatusLoaded={(cfg) => {
+                  setWaConfigMeta(cfg);
+                  setStep7WhatsApp({
+                    status: cfg.status || "NOT_CONFIGURED",
+                    displayPhone: cfg.displayPhone || "",
+                    autoSendWhatsAppInvoice: cfg.deliverySettings?.enabled ?? true,
+                    skipped: Boolean(cfg.whatsappOnboardingSkipped),
+                  });
+                }}
+              />
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-xs font-bold text-[#172B25]">Verified Business Phone Number</Label>
-                  <Input
-                    value={step7WhatsApp.displayPhone}
-                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, displayPhone: e.target.value })}
-                    placeholder="e.g. +91 95130 08467"
-                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm"
-                  />
+              {step7WhatsApp.status === "CONNECTED" && (
+                <div className="rounded-xl border border-[#E5EBE7] bg-white p-4 space-y-2">
+                  <Label className="text-xs font-bold text-[#172B25]">
+                    Send Test WhatsApp Message (Optional)
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={testWaPhone}
+                      onChange={(e) => setTestWaPhone(e.target.value)}
+                      placeholder="+91 9XXXXXXXXX"
+                      className="bg-[#F8FAF9] border-[#E5EBE7] text-xs font-mono"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleSendTestWhatsApp}
+                      disabled={sendingTestWa}
+                      className="rounded-xl border-[#E5EBE7] text-xs font-bold text-[#16845B] shrink-0 cursor-pointer"
+                    >
+                      {sendingTestWa ? "Sending..." : "Send Test Message"}
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-xs font-bold text-[#172B25]">Approved Utility Template</Label>
-                  <Input
-                    value={step7WhatsApp.templateName}
-                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, templateName: e.target.value })}
-                    placeholder="order_invoice_utility"
-                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-xs font-bold text-[#172B25]">Meta Phone Number ID</Label>
-                  <Input
-                    value={step7WhatsApp.phoneNumberId}
-                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, phoneNumberId: e.target.value })}
-                    placeholder="e.g. 104857291827461"
-                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs font-bold text-[#172B25]">WhatsApp Business Account ID (WABA)</Label>
-                  <Input
-                    value={step7WhatsApp.wabaId}
-                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, wabaId: e.target.value })}
-                    placeholder="e.g. 293847192837461"
-                    className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label className="text-xs font-bold text-[#172B25]">
-                  System User Permanent Access Token{" "}
-                  {step7WhatsApp.hasExistingToken && <span className="text-[#16845B]">(Encrypted Token Stored ✓)</span>}
-                </Label>
-                <Input
-                  type="password"
-                  value={step7WhatsApp.accessToken}
-                  onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, accessToken: e.target.value })}
-                  placeholder={step7WhatsApp.hasExistingToken ? "Leave blank to keep stored token" : "EAAG..."}
-                  className="mt-1.5 bg-[#F8FAF9] border-[#E5EBE7] text-sm font-mono"
-                />
-              </div>
-
-              <label className="p-3 bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl flex items-center justify-between cursor-pointer">
-                <div>
-                  <div className="text-xs font-bold text-[#172B25]">Enable Automatic WhatsApp Invoice Delivery</div>
-                  <div className="text-[11px] text-[#718078]">Send digital PDF tax invoice automatically when bills close</div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={step7WhatsApp.autoSendWhatsAppInvoice}
-                  onChange={(e) =>
-                    setStep7WhatsApp({ ...step7WhatsApp, autoSendWhatsAppInvoice: e.target.checked })
-                  }
-                  className="h-4 w-4 rounded border-[#E5EBE7] text-[#16845B]"
-                />
-              </label>
-
-              <div className="rounded-xl border border-[#E5EBE7] bg-white p-4 space-y-2">
-                <Label className="text-xs font-bold text-[#172B25]">Send Test WhatsApp Message (Optional)</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={step7WhatsApp.testPhone}
-                    onChange={(e) => setStep7WhatsApp({ ...step7WhatsApp, testPhone: e.target.value })}
-                    placeholder="+91 9XXXXXXXXX"
-                    className="bg-[#F8FAF9] border-[#E5EBE7] text-xs font-mono"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleSendTestWhatsApp}
-                    disabled={sendingTestWa}
-                    className="rounded-xl border-[#E5EBE7] text-xs font-bold text-[#16845B] shrink-0 cursor-pointer"
-                  >
-                    {sendingTestWa ? "Sending..." : "Send Test Message"}
-                  </Button>
-                </div>
-              </div>
+              )}
 
               <div className="pt-4 flex flex-wrap justify-between gap-2">
                 <Button
@@ -1098,12 +1013,20 @@ export default function OnboardingPage() {
                     disabled={saving}
                     onClick={() => {
                       setStep7WhatsApp((prev) => ({ ...prev, skipped: false }));
-                      handleSaveStep(7, { skip: false, ...step7WhatsApp });
+                      handleSaveStep(7, {
+                        skip: false,
+                        autoSendWhatsAppInvoice: waConfigMeta?.deliverySettings?.enabled ?? true,
+                        sendPdfTaxInvoice: waConfigMeta?.deliverySettings?.sendPdfTaxInvoice ?? true,
+                        sendPaymentConfirmation:
+                          waConfigMeta?.deliverySettings?.sendPaymentConfirmation ?? true,
+                        sendOrderConfirmation:
+                          waConfigMeta?.deliverySettings?.sendOrderConfirmation ?? false,
+                      });
                     }}
                     className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-6 font-bold cursor-pointer"
                   >
                     {saving ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : null}
-                    Connect Now →
+                    Continue to Receipt Printer →
                   </Button>
                 </div>
               </div>
@@ -1392,11 +1315,11 @@ export default function OnboardingPage() {
                   <div className="text-xs text-[#718078]">
                     <div>
                       <b>Status:</b>{" "}
-                      {step7WhatsApp.phoneNumberId && (step7WhatsApp.accessToken || step7WhatsApp.hasExistingToken)
-                        ? "Connected ✓"
+                      {step7WhatsApp.status === "CONNECTED"
+                        ? `Connected (${step7WhatsApp.displayPhone || "Verified"}) ✓`
                         : step7WhatsApp.skipped
                         ? "Skipped (Configure later in Settings)"
-                        : "Not Configured"}
+                        : step7WhatsApp.status}
                     </div>
                     <div><b>Auto-Send Invoice:</b> {step7WhatsApp.autoSendWhatsAppInvoice ? "ON" : "OFF"}</div>
                   </div>

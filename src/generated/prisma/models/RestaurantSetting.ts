@@ -49,6 +49,10 @@ export type RestaurantSettingMinAggregateOutputType = {
   autoPrintKOT: boolean | null
   autoPrintBill: boolean | null
   autoSendWhatsAppInvoice: boolean | null
+  whatsappSendPdfTaxInvoice: boolean | null
+  whatsappSendPaymentConfirm: boolean | null
+  whatsappSendOrderConfirm: boolean | null
+  defaultWhatsAppOutletId: string | null
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
@@ -56,6 +60,10 @@ export type RestaurantSettingMinAggregateOutputType = {
   whatsappTemplateName: string | null
   whatsappConnectionMode: string | null
   whatsappConnectionStatus: string | null
+  whatsappCoexistence: boolean | null
+  whatsappConnectedAt: Date | null
+  whatsappLastVerifiedAt: Date | null
+  whatsappVerificationError: string | null
   whatsappOnboardingSkipped: boolean | null
   printerOnboardingSkipped: boolean | null
   qrFooterEnabled: boolean | null
@@ -76,6 +84,10 @@ export type RestaurantSettingMaxAggregateOutputType = {
   autoPrintKOT: boolean | null
   autoPrintBill: boolean | null
   autoSendWhatsAppInvoice: boolean | null
+  whatsappSendPdfTaxInvoice: boolean | null
+  whatsappSendPaymentConfirm: boolean | null
+  whatsappSendOrderConfirm: boolean | null
+  defaultWhatsAppOutletId: string | null
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
@@ -83,6 +95,10 @@ export type RestaurantSettingMaxAggregateOutputType = {
   whatsappTemplateName: string | null
   whatsappConnectionMode: string | null
   whatsappConnectionStatus: string | null
+  whatsappCoexistence: boolean | null
+  whatsappConnectedAt: Date | null
+  whatsappLastVerifiedAt: Date | null
+  whatsappVerificationError: string | null
   whatsappOnboardingSkipped: boolean | null
   printerOnboardingSkipped: boolean | null
   qrFooterEnabled: boolean | null
@@ -103,6 +119,10 @@ export type RestaurantSettingCountAggregateOutputType = {
   autoPrintKOT: number
   autoPrintBill: number
   autoSendWhatsAppInvoice: number
+  whatsappSendPdfTaxInvoice: number
+  whatsappSendPaymentConfirm: number
+  whatsappSendOrderConfirm: number
+  defaultWhatsAppOutletId: number
   whatsappPhoneNumberId: number
   whatsappAccessToken: number
   whatsappWabaId: number
@@ -110,6 +130,10 @@ export type RestaurantSettingCountAggregateOutputType = {
   whatsappTemplateName: number
   whatsappConnectionMode: number
   whatsappConnectionStatus: number
+  whatsappCoexistence: number
+  whatsappConnectedAt: number
+  whatsappLastVerifiedAt: number
+  whatsappVerificationError: number
   whatsappOnboardingSkipped: number
   printerOnboardingSkipped: number
   qrFooterEnabled: number
@@ -140,6 +164,10 @@ export type RestaurantSettingMinAggregateInputType = {
   autoPrintKOT?: true
   autoPrintBill?: true
   autoSendWhatsAppInvoice?: true
+  whatsappSendPdfTaxInvoice?: true
+  whatsappSendPaymentConfirm?: true
+  whatsappSendOrderConfirm?: true
+  defaultWhatsAppOutletId?: true
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
@@ -147,6 +175,10 @@ export type RestaurantSettingMinAggregateInputType = {
   whatsappTemplateName?: true
   whatsappConnectionMode?: true
   whatsappConnectionStatus?: true
+  whatsappCoexistence?: true
+  whatsappConnectedAt?: true
+  whatsappLastVerifiedAt?: true
+  whatsappVerificationError?: true
   whatsappOnboardingSkipped?: true
   printerOnboardingSkipped?: true
   qrFooterEnabled?: true
@@ -167,6 +199,10 @@ export type RestaurantSettingMaxAggregateInputType = {
   autoPrintKOT?: true
   autoPrintBill?: true
   autoSendWhatsAppInvoice?: true
+  whatsappSendPdfTaxInvoice?: true
+  whatsappSendPaymentConfirm?: true
+  whatsappSendOrderConfirm?: true
+  defaultWhatsAppOutletId?: true
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
@@ -174,6 +210,10 @@ export type RestaurantSettingMaxAggregateInputType = {
   whatsappTemplateName?: true
   whatsappConnectionMode?: true
   whatsappConnectionStatus?: true
+  whatsappCoexistence?: true
+  whatsappConnectedAt?: true
+  whatsappLastVerifiedAt?: true
+  whatsappVerificationError?: true
   whatsappOnboardingSkipped?: true
   printerOnboardingSkipped?: true
   qrFooterEnabled?: true
@@ -194,6 +234,10 @@ export type RestaurantSettingCountAggregateInputType = {
   autoPrintKOT?: true
   autoPrintBill?: true
   autoSendWhatsAppInvoice?: true
+  whatsappSendPdfTaxInvoice?: true
+  whatsappSendPaymentConfirm?: true
+  whatsappSendOrderConfirm?: true
+  defaultWhatsAppOutletId?: true
   whatsappPhoneNumberId?: true
   whatsappAccessToken?: true
   whatsappWabaId?: true
@@ -201,6 +245,10 @@ export type RestaurantSettingCountAggregateInputType = {
   whatsappTemplateName?: true
   whatsappConnectionMode?: true
   whatsappConnectionStatus?: true
+  whatsappCoexistence?: true
+  whatsappConnectedAt?: true
+  whatsappLastVerifiedAt?: true
+  whatsappVerificationError?: true
   whatsappOnboardingSkipped?: true
   printerOnboardingSkipped?: true
   qrFooterEnabled?: true
@@ -308,6 +356,10 @@ export type RestaurantSettingGroupByOutputType = {
   autoPrintKOT: boolean
   autoPrintBill: boolean
   autoSendWhatsAppInvoice: boolean
+  whatsappSendPdfTaxInvoice: boolean
+  whatsappSendPaymentConfirm: boolean
+  whatsappSendOrderConfirm: boolean
+  defaultWhatsAppOutletId: string | null
   whatsappPhoneNumberId: string | null
   whatsappAccessToken: string | null
   whatsappWabaId: string | null
@@ -315,6 +367,10 @@ export type RestaurantSettingGroupByOutputType = {
   whatsappTemplateName: string | null
   whatsappConnectionMode: string | null
   whatsappConnectionStatus: string
+  whatsappCoexistence: boolean
+  whatsappConnectedAt: Date | null
+  whatsappLastVerifiedAt: Date | null
+  whatsappVerificationError: string | null
   whatsappOnboardingSkipped: boolean
   printerOnboardingSkipped: boolean
   qrFooterEnabled: boolean
@@ -358,6 +414,10 @@ export type RestaurantSettingWhereInput = {
   autoPrintKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   autoPrintBill?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  defaultWhatsAppOutletId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
@@ -365,6 +425,10 @@ export type RestaurantSettingWhereInput = {
   whatsappTemplateName?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappConnectionMode?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappConnectionStatus?: Prisma.StringFilter<"RestaurantSetting"> | string
+  whatsappCoexistence?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappConnectedAt?: Prisma.DateTimeNullableFilter<"RestaurantSetting"> | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.DateTimeNullableFilter<"RestaurantSetting"> | Date | string | null
+  whatsappVerificationError?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   printerOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   qrFooterEnabled?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
@@ -386,6 +450,10 @@ export type RestaurantSettingOrderByWithRelationInput = {
   autoPrintKOT?: Prisma.SortOrder
   autoPrintBill?: Prisma.SortOrder
   autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappSendPdfTaxInvoice?: Prisma.SortOrder
+  whatsappSendPaymentConfirm?: Prisma.SortOrder
+  whatsappSendOrderConfirm?: Prisma.SortOrder
+  defaultWhatsAppOutletId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -393,6 +461,10 @@ export type RestaurantSettingOrderByWithRelationInput = {
   whatsappTemplateName?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConnectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappCoexistence?: Prisma.SortOrder
+  whatsappConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappLastVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappVerificationError?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappOnboardingSkipped?: Prisma.SortOrder
   printerOnboardingSkipped?: Prisma.SortOrder
   qrFooterEnabled?: Prisma.SortOrder
@@ -417,6 +489,10 @@ export type RestaurantSettingWhereUniqueInput = Prisma.AtLeast<{
   autoPrintKOT?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   autoPrintBill?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  defaultWhatsAppOutletId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappPhoneNumberId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
@@ -424,6 +500,10 @@ export type RestaurantSettingWhereUniqueInput = Prisma.AtLeast<{
   whatsappTemplateName?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappConnectionMode?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappConnectionStatus?: Prisma.StringFilter<"RestaurantSetting"> | string
+  whatsappCoexistence?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
+  whatsappConnectedAt?: Prisma.DateTimeNullableFilter<"RestaurantSetting"> | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.DateTimeNullableFilter<"RestaurantSetting"> | Date | string | null
+  whatsappVerificationError?: Prisma.StringNullableFilter<"RestaurantSetting"> | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   printerOnboardingSkipped?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
   qrFooterEnabled?: Prisma.BoolFilter<"RestaurantSetting"> | boolean
@@ -445,6 +525,10 @@ export type RestaurantSettingOrderByWithAggregationInput = {
   autoPrintKOT?: Prisma.SortOrder
   autoPrintBill?: Prisma.SortOrder
   autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappSendPdfTaxInvoice?: Prisma.SortOrder
+  whatsappSendPaymentConfirm?: Prisma.SortOrder
+  whatsappSendOrderConfirm?: Prisma.SortOrder
+  defaultWhatsAppOutletId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappPhoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -452,6 +536,10 @@ export type RestaurantSettingOrderByWithAggregationInput = {
   whatsappTemplateName?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConnectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappCoexistence?: Prisma.SortOrder
+  whatsappConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappLastVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappVerificationError?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappOnboardingSkipped?: Prisma.SortOrder
   printerOnboardingSkipped?: Prisma.SortOrder
   qrFooterEnabled?: Prisma.SortOrder
@@ -480,6 +568,10 @@ export type RestaurantSettingScalarWhereWithAggregatesInput = {
   autoPrintKOT?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
   autoPrintBill?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  defaultWhatsAppOutletId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappPhoneNumberId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappAccessToken?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappWabaId?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
@@ -487,6 +579,10 @@ export type RestaurantSettingScalarWhereWithAggregatesInput = {
   whatsappTemplateName?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappConnectionMode?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappConnectionStatus?: Prisma.StringWithAggregatesFilter<"RestaurantSetting"> | string
+  whatsappCoexistence?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
+  whatsappConnectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RestaurantSetting"> | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RestaurantSetting"> | Date | string | null
+  whatsappVerificationError?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSetting"> | string | null
   whatsappOnboardingSkipped?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
   printerOnboardingSkipped?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
   qrFooterEnabled?: Prisma.BoolWithAggregatesFilter<"RestaurantSetting"> | boolean
@@ -506,6 +602,10 @@ export type RestaurantSettingCreateInput = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: string | null
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
@@ -513,6 +613,10 @@ export type RestaurantSettingCreateInput = {
   whatsappTemplateName?: string | null
   whatsappConnectionMode?: string | null
   whatsappConnectionStatus?: string
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: Date | string | null
+  whatsappLastVerifiedAt?: Date | string | null
+  whatsappVerificationError?: string | null
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -534,6 +638,10 @@ export type RestaurantSettingUncheckedCreateInput = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: string | null
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
@@ -541,6 +649,10 @@ export type RestaurantSettingUncheckedCreateInput = {
   whatsappTemplateName?: string | null
   whatsappConnectionMode?: string | null
   whatsappConnectionStatus?: string
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: Date | string | null
+  whatsappLastVerifiedAt?: Date | string | null
+  whatsappVerificationError?: string | null
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -560,6 +672,10 @@ export type RestaurantSettingUpdateInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -567,6 +683,10 @@ export type RestaurantSettingUpdateInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -588,6 +708,10 @@ export type RestaurantSettingUncheckedUpdateInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -595,6 +719,10 @@ export type RestaurantSettingUncheckedUpdateInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -615,6 +743,10 @@ export type RestaurantSettingCreateManyInput = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: string | null
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
@@ -622,6 +754,10 @@ export type RestaurantSettingCreateManyInput = {
   whatsappTemplateName?: string | null
   whatsappConnectionMode?: string | null
   whatsappConnectionStatus?: string
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: Date | string | null
+  whatsappLastVerifiedAt?: Date | string | null
+  whatsappVerificationError?: string | null
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -641,6 +777,10 @@ export type RestaurantSettingUpdateManyMutationInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -648,6 +788,10 @@ export type RestaurantSettingUpdateManyMutationInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -668,6 +812,10 @@ export type RestaurantSettingUncheckedUpdateManyInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -675,6 +823,10 @@ export type RestaurantSettingUncheckedUpdateManyInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -700,6 +852,10 @@ export type RestaurantSettingCountOrderByAggregateInput = {
   autoPrintKOT?: Prisma.SortOrder
   autoPrintBill?: Prisma.SortOrder
   autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappSendPdfTaxInvoice?: Prisma.SortOrder
+  whatsappSendPaymentConfirm?: Prisma.SortOrder
+  whatsappSendOrderConfirm?: Prisma.SortOrder
+  defaultWhatsAppOutletId?: Prisma.SortOrder
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
@@ -707,6 +863,10 @@ export type RestaurantSettingCountOrderByAggregateInput = {
   whatsappTemplateName?: Prisma.SortOrder
   whatsappConnectionMode?: Prisma.SortOrder
   whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappCoexistence?: Prisma.SortOrder
+  whatsappConnectedAt?: Prisma.SortOrder
+  whatsappLastVerifiedAt?: Prisma.SortOrder
+  whatsappVerificationError?: Prisma.SortOrder
   whatsappOnboardingSkipped?: Prisma.SortOrder
   printerOnboardingSkipped?: Prisma.SortOrder
   qrFooterEnabled?: Prisma.SortOrder
@@ -731,6 +891,10 @@ export type RestaurantSettingMaxOrderByAggregateInput = {
   autoPrintKOT?: Prisma.SortOrder
   autoPrintBill?: Prisma.SortOrder
   autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappSendPdfTaxInvoice?: Prisma.SortOrder
+  whatsappSendPaymentConfirm?: Prisma.SortOrder
+  whatsappSendOrderConfirm?: Prisma.SortOrder
+  defaultWhatsAppOutletId?: Prisma.SortOrder
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
@@ -738,6 +902,10 @@ export type RestaurantSettingMaxOrderByAggregateInput = {
   whatsappTemplateName?: Prisma.SortOrder
   whatsappConnectionMode?: Prisma.SortOrder
   whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappCoexistence?: Prisma.SortOrder
+  whatsappConnectedAt?: Prisma.SortOrder
+  whatsappLastVerifiedAt?: Prisma.SortOrder
+  whatsappVerificationError?: Prisma.SortOrder
   whatsappOnboardingSkipped?: Prisma.SortOrder
   printerOnboardingSkipped?: Prisma.SortOrder
   qrFooterEnabled?: Prisma.SortOrder
@@ -758,6 +926,10 @@ export type RestaurantSettingMinOrderByAggregateInput = {
   autoPrintKOT?: Prisma.SortOrder
   autoPrintBill?: Prisma.SortOrder
   autoSendWhatsAppInvoice?: Prisma.SortOrder
+  whatsappSendPdfTaxInvoice?: Prisma.SortOrder
+  whatsappSendPaymentConfirm?: Prisma.SortOrder
+  whatsappSendOrderConfirm?: Prisma.SortOrder
+  defaultWhatsAppOutletId?: Prisma.SortOrder
   whatsappPhoneNumberId?: Prisma.SortOrder
   whatsappAccessToken?: Prisma.SortOrder
   whatsappWabaId?: Prisma.SortOrder
@@ -765,6 +937,10 @@ export type RestaurantSettingMinOrderByAggregateInput = {
   whatsappTemplateName?: Prisma.SortOrder
   whatsappConnectionMode?: Prisma.SortOrder
   whatsappConnectionStatus?: Prisma.SortOrder
+  whatsappCoexistence?: Prisma.SortOrder
+  whatsappConnectedAt?: Prisma.SortOrder
+  whatsappLastVerifiedAt?: Prisma.SortOrder
+  whatsappVerificationError?: Prisma.SortOrder
   whatsappOnboardingSkipped?: Prisma.SortOrder
   printerOnboardingSkipped?: Prisma.SortOrder
   qrFooterEnabled?: Prisma.SortOrder
@@ -820,6 +996,10 @@ export type RestaurantSettingCreateWithoutTenantInput = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: string | null
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
@@ -827,6 +1007,10 @@ export type RestaurantSettingCreateWithoutTenantInput = {
   whatsappTemplateName?: string | null
   whatsappConnectionMode?: string | null
   whatsappConnectionStatus?: string
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: Date | string | null
+  whatsappLastVerifiedAt?: Date | string | null
+  whatsappVerificationError?: string | null
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -846,6 +1030,10 @@ export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: string | null
   whatsappPhoneNumberId?: string | null
   whatsappAccessToken?: string | null
   whatsappWabaId?: string | null
@@ -853,6 +1041,10 @@ export type RestaurantSettingUncheckedCreateWithoutTenantInput = {
   whatsappTemplateName?: string | null
   whatsappConnectionMode?: string | null
   whatsappConnectionStatus?: string
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: Date | string | null
+  whatsappLastVerifiedAt?: Date | string | null
+  whatsappVerificationError?: string | null
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -888,6 +1080,10 @@ export type RestaurantSettingUpdateWithoutTenantInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -895,6 +1091,10 @@ export type RestaurantSettingUpdateWithoutTenantInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -914,6 +1114,10 @@ export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
   autoPrintKOT?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoPrintBill?: Prisma.BoolFieldUpdateOperationsInput | boolean
   autoSendWhatsAppInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPdfTaxInvoice?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendPaymentConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappSendOrderConfirm?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultWhatsAppOutletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappPhoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappAccessToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappWabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -921,6 +1125,10 @@ export type RestaurantSettingUncheckedUpdateWithoutTenantInput = {
   whatsappTemplateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappConnectionStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  whatsappCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappLastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappVerificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   printerOnboardingSkipped?: Prisma.BoolFieldUpdateOperationsInput | boolean
   qrFooterEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -943,6 +1151,10 @@ export type RestaurantSettingSelect<ExtArgs extends runtime.Types.Extensions.Int
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: boolean
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
@@ -950,6 +1162,10 @@ export type RestaurantSettingSelect<ExtArgs extends runtime.Types.Extensions.Int
   whatsappTemplateName?: boolean
   whatsappConnectionMode?: boolean
   whatsappConnectionStatus?: boolean
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: boolean
+  whatsappLastVerifiedAt?: boolean
+  whatsappVerificationError?: boolean
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -971,6 +1187,10 @@ export type RestaurantSettingSelectCreateManyAndReturn<ExtArgs extends runtime.T
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: boolean
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
@@ -978,6 +1198,10 @@ export type RestaurantSettingSelectCreateManyAndReturn<ExtArgs extends runtime.T
   whatsappTemplateName?: boolean
   whatsappConnectionMode?: boolean
   whatsappConnectionStatus?: boolean
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: boolean
+  whatsappLastVerifiedAt?: boolean
+  whatsappVerificationError?: boolean
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -999,6 +1223,10 @@ export type RestaurantSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: boolean
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
@@ -1006,6 +1234,10 @@ export type RestaurantSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   whatsappTemplateName?: boolean
   whatsappConnectionMode?: boolean
   whatsappConnectionStatus?: boolean
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: boolean
+  whatsappLastVerifiedAt?: boolean
+  whatsappVerificationError?: boolean
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
@@ -1027,6 +1259,10 @@ export type RestaurantSettingSelectScalar = {
   autoPrintKOT?: boolean
   autoPrintBill?: boolean
   autoSendWhatsAppInvoice?: boolean
+  whatsappSendPdfTaxInvoice?: boolean
+  whatsappSendPaymentConfirm?: boolean
+  whatsappSendOrderConfirm?: boolean
+  defaultWhatsAppOutletId?: boolean
   whatsappPhoneNumberId?: boolean
   whatsappAccessToken?: boolean
   whatsappWabaId?: boolean
@@ -1034,12 +1270,16 @@ export type RestaurantSettingSelectScalar = {
   whatsappTemplateName?: boolean
   whatsappConnectionMode?: boolean
   whatsappConnectionStatus?: boolean
+  whatsappCoexistence?: boolean
+  whatsappConnectedAt?: boolean
+  whatsappLastVerifiedAt?: boolean
+  whatsappVerificationError?: boolean
   whatsappOnboardingSkipped?: boolean
   printerOnboardingSkipped?: boolean
   qrFooterEnabled?: boolean
 }
 
-export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "logoUrl" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt" | "autoAcceptQROrders" | "autoPrintKOT" | "autoPrintBill" | "autoSendWhatsAppInvoice" | "whatsappPhoneNumberId" | "whatsappAccessToken" | "whatsappWabaId" | "whatsappDisplayPhone" | "whatsappTemplateName" | "whatsappConnectionMode" | "whatsappConnectionStatus" | "whatsappOnboardingSkipped" | "printerOnboardingSkipped" | "qrFooterEnabled", ExtArgs["result"]["restaurantSetting"]>
+export type RestaurantSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "logoUrl" | "receiptHeader" | "receiptFooter" | "gstNumber" | "fssaiNumber" | "serviceChargePct" | "enableKOT" | "enableTableMgmt" | "autoAcceptQROrders" | "autoPrintKOT" | "autoPrintBill" | "autoSendWhatsAppInvoice" | "whatsappSendPdfTaxInvoice" | "whatsappSendPaymentConfirm" | "whatsappSendOrderConfirm" | "defaultWhatsAppOutletId" | "whatsappPhoneNumberId" | "whatsappAccessToken" | "whatsappWabaId" | "whatsappDisplayPhone" | "whatsappTemplateName" | "whatsappConnectionMode" | "whatsappConnectionStatus" | "whatsappCoexistence" | "whatsappConnectedAt" | "whatsappLastVerifiedAt" | "whatsappVerificationError" | "whatsappOnboardingSkipped" | "printerOnboardingSkipped" | "qrFooterEnabled", ExtArgs["result"]["restaurantSetting"]>
 export type RestaurantSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
 }
@@ -1070,6 +1310,10 @@ export type $RestaurantSettingPayload<ExtArgs extends runtime.Types.Extensions.I
     autoPrintKOT: boolean
     autoPrintBill: boolean
     autoSendWhatsAppInvoice: boolean
+    whatsappSendPdfTaxInvoice: boolean
+    whatsappSendPaymentConfirm: boolean
+    whatsappSendOrderConfirm: boolean
+    defaultWhatsAppOutletId: string | null
     whatsappPhoneNumberId: string | null
     whatsappAccessToken: string | null
     whatsappWabaId: string | null
@@ -1077,6 +1321,10 @@ export type $RestaurantSettingPayload<ExtArgs extends runtime.Types.Extensions.I
     whatsappTemplateName: string | null
     whatsappConnectionMode: string | null
     whatsappConnectionStatus: string
+    whatsappCoexistence: boolean
+    whatsappConnectedAt: Date | null
+    whatsappLastVerifiedAt: Date | null
+    whatsappVerificationError: string | null
     whatsappOnboardingSkipped: boolean
     printerOnboardingSkipped: boolean
     qrFooterEnabled: boolean
@@ -1518,6 +1766,10 @@ export interface RestaurantSettingFieldRefs {
   readonly autoPrintKOT: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
   readonly autoPrintBill: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
   readonly autoSendWhatsAppInvoice: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly whatsappSendPdfTaxInvoice: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly whatsappSendPaymentConfirm: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly whatsappSendOrderConfirm: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly defaultWhatsAppOutletId: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappPhoneNumberId: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappAccessToken: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappWabaId: Prisma.FieldRef<"RestaurantSetting", 'String'>
@@ -1525,6 +1777,10 @@ export interface RestaurantSettingFieldRefs {
   readonly whatsappTemplateName: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappConnectionMode: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappConnectionStatus: Prisma.FieldRef<"RestaurantSetting", 'String'>
+  readonly whatsappCoexistence: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
+  readonly whatsappConnectedAt: Prisma.FieldRef<"RestaurantSetting", 'DateTime'>
+  readonly whatsappLastVerifiedAt: Prisma.FieldRef<"RestaurantSetting", 'DateTime'>
+  readonly whatsappVerificationError: Prisma.FieldRef<"RestaurantSetting", 'String'>
   readonly whatsappOnboardingSkipped: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
   readonly printerOnboardingSkipped: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>
   readonly qrFooterEnabled: Prisma.FieldRef<"RestaurantSetting", 'Boolean'>

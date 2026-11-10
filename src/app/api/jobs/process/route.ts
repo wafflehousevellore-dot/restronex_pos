@@ -27,3 +27,4 @@ export async function POST(req: NextRequest) {
   const result = await processDueBackgroundJobs({ tenantId, limit: 25 });
   return NextResponse.json({ ok: true, ...result });
 }
+

@@ -557,3 +557,4 @@ export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOut
     </div>
   );
 }
+

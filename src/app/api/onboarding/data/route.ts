@@ -43,12 +43,17 @@ export async function GET(_req: NextRequest) {
       getTenantSubscriptionEntitlements(tenantId),
     ]);
 
-  // Never serialize plaintext access token back to the onboarding frontend
+  // Never serialize internal Meta IDs, template identifiers, or access tokens to the frontend
   const safeSetting = setting
     ? {
         ...setting,
         whatsappAccessToken: undefined,
-        hasWhatsappToken: Boolean(setting.whatsappAccessToken),
+        whatsappPhoneNumberId: undefined,
+        whatsappWabaId: undefined,
+        whatsappTemplateName: undefined,
+        hasWhatsappConnection:
+          setting.whatsappConnectionStatus === "CONNECTED" &&
+          Boolean(setting.whatsappPhoneNumberId && setting.whatsappAccessToken),
       }
     : null;
 

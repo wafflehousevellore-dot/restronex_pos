@@ -180,6 +180,7 @@ async function run15ScenarioWhatsAppAndPrinterSuite() {
         totalPaise,
         customerName: params.customerName ?? "Aarav Kumar",
         customerPhone: params.customerPhone === undefined ? "+91 9000000001" : params.customerPhone,
+        whatsappConsent: true,
         idempotencyKey: params.idempotencyKey ?? null,
         items: {
           create: {
@@ -432,14 +433,13 @@ async function run15ScenarioWhatsAppAndPrinterSuite() {
     const sentPayload = mockWaPayloads[0];
     assert(sentPayload.to === "919000000006", "Recipient normalized to 91...");
     assert(sentPayload.accessToken === s1PlainToken, "Decrypted tenant token passed to Meta transport");
-    assert(sentPayload.messageText.includes("🍽️ *S1 Bistro*"), "Contains header");
-    assert(sentPayload.messageText.includes("🧾 *TAX INVOICE*"), "Contains invoice title");
-    assert(sentPayload.messageText.includes(s6Invoice.invoiceNumber), "Contains invoice number");
-    assert(sentPayload.messageText.includes("Belgian Chocolate Waffle"), "Contains ordered item");
-    assert(sentPayload.messageText.includes("CGST:"), "Contains CGST");
-    assert(sentPayload.messageText.includes("SGST:"), "Contains SGST");
-    assert(sentPayload.messageText.includes("*TOTAL AMOUNT:"), "Contains TOTAL AMOUNT");
-    assert(sentPayload.messageText.includes("Powered by RestroNex – Restaurant OS."), "Contains branding footer");
+    assert(sentPayload.messageText.includes("Hello Priya Nair,"), "Contains customer greeting");
+    assert(sentPayload.messageText.includes("Thank you for visiting S1 Bistro!"), "Contains restaurant name");
+    assert(sentPayload.messageText.includes(`Your bill ${s6Invoice.invoiceNumber} has been generated.`), "Contains invoice number");
+    assert(sentPayload.messageText.includes("Amount: ₹330.40"), "Contains exact rupee total");
+    assert(sentPayload.messageText.includes("Payment: PAID (UPI)"), "Contains payment status");
+    assert(sentPayload.messageText.includes("Your invoice is attached as a PDF."), "Mentions PDF attachment");
+    assert(sentPayload.messageText.includes("Powered by RestroNex."), "Contains branding footer");
     assert(sentPayload.pdfUrl?.includes(`/api/invoices/${encodeURIComponent(s6Invoice.invoiceNumber)}/pdf`), "Has PDF URL");
     const s6OrderAfter = await prisma.order.findUnique({ where: { id: s6Order.id } });
     assert(s6OrderAfter?.whatsappStatus === "SENT", "Order whatsappStatus updated to SENT");
@@ -856,7 +856,7 @@ async function run15ScenarioWhatsAppAndPrinterSuite() {
       paymentStatus: "PAID",
       outletName: "Main",
     });
-    assert(sampleMsg.includes("Table: Counter / Takeaway"), "Takeaway label formatted accurately");
+    assert(sampleMsg.includes("Amount: ₹118") && sampleMsg.includes("Powered by RestroNex."), "WhatsApp bill copy formatted accurately");
     console.log("  ✓ PASS: 58mm (32-col) and 80mm (48-col) text + ESC/POS binary with QR & cut verified");
     passed++;
   } catch (err: any) {

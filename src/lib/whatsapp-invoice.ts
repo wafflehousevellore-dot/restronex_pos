@@ -31,13 +31,19 @@ export interface FormattedWhatsAppBillParams {
 export type ResolvedWhatsAppConfig = {
   source: "OUTLET" | "TENANT" | "NONE";
   enabled: boolean;
+  sendPdfTaxInvoice: boolean;
+  sendPaymentConfirmation: boolean;
+  sendOrderConfirmation: boolean;
   phoneNumberId: string | null;
   wabaId: string | null;
   displayPhone: string | null;
   accessToken: string | null;
   templateName: string;
   connectionMode: string;
+  isCoexistence: boolean;
   status: string;
+  connectedAt: Date | null;
+  lastVerifiedAt: Date | null;
 };
 
 export type WhatsAppTransportResult = {
@@ -80,112 +86,195 @@ export async function resolveWhatsAppConfig(
   tenantId: string,
   outletId?: string | null
 ): Promise<ResolvedWhatsAppConfig> {
-  const [outletCfg, setting] = await Promise.all([
-    outletId
-      ? prisma.outletWhatsAppConfig.findFirst({
-          where: { tenantId, outletId },
-        })
-      : Promise.resolve(null),
-    prisma.restaurantSetting.findUnique({ where: { tenantId } }),
-  ]);
+  const setting = await prisma.restaurantSetting.findUnique({ where: { tenantId } });
+  const outletConfigs = await prisma.outletWhatsAppConfig.findMany({
+    where: { tenantId },
+    orderBy: { createdAt: "asc" },
+  });
 
-  if (outletCfg && outletCfg.phoneNumberId && outletCfg.accessTokenEnc) {
+  const outletCfg = outletId ? outletConfigs.find((o) => o.outletId === outletId) || null : null;
+  const defaultOutletCfg =
+    outletConfigs.find((o) => o.isDefaultSender && o.status === "CONNECTED") || null;
+  const explicitDefaultOutlet = setting?.defaultWhatsAppOutletId
+    ? outletConfigs.find(
+        (o) => o.outletId === setting.defaultWhatsAppOutletId && o.status === "CONNECTED"
+      ) || null
+    : defaultOutletCfg;
+
+  const sendPdfTaxInvoice = setting?.whatsappSendPdfTaxInvoice ?? true;
+  const sendPaymentConfirmation = setting?.whatsappSendPaymentConfirm ?? true;
+  const sendOrderConfirmation = setting?.whatsappSendOrderConfirm ?? false;
+
+  if (
+    outletCfg &&
+    outletCfg.status !== "DISCONNECTED" &&
+    outletCfg.phoneNumberId &&
+    outletCfg.accessTokenEnc
+  ) {
     return {
       source: "OUTLET",
       enabled: outletCfg.enabled,
+      sendPdfTaxInvoice,
+      sendPaymentConfirmation,
+      sendOrderConfirmation,
       phoneNumberId: outletCfg.phoneNumberId,
       wabaId: outletCfg.wabaId,
       displayPhone: outletCfg.displayPhone,
       accessToken: decryptAccessToken(outletCfg.accessTokenEnc),
       templateName: outletCfg.templateName || setting?.whatsappTemplateName || "order_invoice_utility",
-      connectionMode: outletCfg.connectionMode || "META_CLOUD_API",
+      connectionMode: outletCfg.connectionMode || "EMBEDDED_SIGNUP",
+      isCoexistence: Boolean(outletCfg.isCoexistence),
       status: outletCfg.status || "CONNECTED",
+      connectedAt: outletCfg.connectedAt || null,
+      lastVerifiedAt: outletCfg.lastVerifiedAt || null,
+    };
+  }
+
+  if (
+    explicitDefaultOutlet &&
+    explicitDefaultOutlet.phoneNumberId &&
+    explicitDefaultOutlet.accessTokenEnc
+  ) {
+    return {
+      source: "OUTLET",
+      enabled: setting ? setting.autoSendWhatsAppInvoice && explicitDefaultOutlet.enabled : explicitDefaultOutlet.enabled,
+      sendPdfTaxInvoice,
+      sendPaymentConfirmation,
+      sendOrderConfirmation,
+      phoneNumberId: explicitDefaultOutlet.phoneNumberId,
+      wabaId: explicitDefaultOutlet.wabaId,
+      displayPhone: explicitDefaultOutlet.displayPhone,
+      accessToken: decryptAccessToken(explicitDefaultOutlet.accessTokenEnc),
+      templateName: explicitDefaultOutlet.templateName || setting?.whatsappTemplateName || "order_invoice_utility",
+      connectionMode: explicitDefaultOutlet.connectionMode || "EMBEDDED_SIGNUP",
+      isCoexistence: Boolean(explicitDefaultOutlet.isCoexistence),
+      status: explicitDefaultOutlet.status || "CONNECTED",
+      connectedAt: explicitDefaultOutlet.connectedAt || null,
+      lastVerifiedAt: explicitDefaultOutlet.lastVerifiedAt || null,
     };
   }
 
   if (setting) {
     const token = decryptAccessToken(setting.whatsappAccessToken);
     const hasCreds = Boolean(setting.whatsappPhoneNumberId && token);
+    const notDisconnected = setting.whatsappConnectionStatus !== "DISCONNECTED";
     return {
       source: hasCreds ? "TENANT" : "NONE",
       enabled: setting.autoSendWhatsAppInvoice,
-      phoneNumberId: setting.whatsappPhoneNumberId || null,
+      sendPdfTaxInvoice,
+      sendPaymentConfirmation,
+      sendOrderConfirmation,
+      phoneNumberId: notDisconnected ? setting.whatsappPhoneNumberId || null : null,
       wabaId: setting.whatsappWabaId || null,
       displayPhone: setting.whatsappDisplayPhone || null,
-      accessToken: token,
+      accessToken: notDisconnected ? token : null,
       templateName: setting.whatsappTemplateName || "order_invoice_utility",
-      connectionMode: setting.whatsappConnectionMode || "META_CLOUD_API",
-      status: hasCreds ? setting.whatsappConnectionStatus || "CONNECTED" : "NOT_CONFIGURED",
+      connectionMode: setting.whatsappConnectionMode || "EMBEDDED_SIGNUP",
+      isCoexistence: Boolean(setting.whatsappCoexistence),
+      status: hasCreds && notDisconnected ? setting.whatsappConnectionStatus || "CONNECTED" : setting.whatsappConnectionStatus || "NOT_CONFIGURED",
+      connectedAt: setting.whatsappConnectedAt || null,
+      lastVerifiedAt: setting.whatsappLastVerifiedAt || null,
     };
   }
 
   return {
     source: "NONE",
     enabled: false,
+    sendPdfTaxInvoice: true,
+    sendPaymentConfirmation: true,
+    sendOrderConfirmation: false,
     phoneNumberId: null,
     wabaId: null,
     displayPhone: null,
     accessToken: null,
     templateName: "order_invoice_utility",
-    connectionMode: "META_CLOUD_API",
+    connectionMode: "EMBEDDED_SIGNUP",
+    isCoexistence: false,
     status: "NOT_CONFIGURED",
+    connectedAt: null,
+    lastVerifiedAt: null,
   };
 }
 
 /**
- * Builds the exact compliant transactional invoice WhatsApp message format.
+ * Builds the exact transactional invoice WhatsApp message copy.
  */
 export function formatWhatsAppBillMessage(params: FormattedWhatsAppBillParams): string {
-  const dynamicItems = params.items
-    .map((item) => `• ${item.quantity}x ${item.name} — ${formatINR(item.totalPaise)}`)
-    .join("\n");
-
-  const tableStr = params.tableNumber ? params.tableNumber : "Counter / Takeaway";
-  const orderTypeStr = (params.orderType || "DINE_IN").replace("_", " ");
-  const discountStr = params.discountPaise > 0 ? `- ${formatINR(params.discountPaise)}` : "₹0.00";
-  const otherTaxesStr =
-    params.otherTaxesPaise && params.otherTaxesPaise > 0 ? formatINR(params.otherTaxesPaise) : "₹0.00";
-  const txnIdStr = params.transactionId || params.invoiceNumber;
-  const pdfLine = params.pdfUrl ? `\n📄 Invoice PDF: ${params.pdfUrl}\n` : "";
+  const formattedTotal = formatINR(params.totalPaise).replace(/^₹\s*/, "");
+  const paymentSummary = `${params.paymentStatus}${params.paymentMethod ? ` (${params.paymentMethod})` : ""}`;
 
   return (
-    `🍽️ *${params.restaurantName}*\n\n` +
-    `Hi ${params.customerName}! 👋\n` +
-    `Thank you for dining with us.\n\n` +
-    `🧾 *TAX INVOICE*\n\n` +
-    `Bill No: ${params.invoiceNumber}\n` +
-    `Order Type: ${orderTypeStr}\n` +
-    `Table: ${tableStr}\n` +
-    `Date: ${params.invoiceDate}\n` +
-    `Time: ${params.invoiceTime}\n\n` +
-    `━━━━━━━━━━━━━━━━━━\n` +
-    `*ORDER DETAILS*\n\n` +
-    `${dynamicItems}\n\n` +
-    `━━━━━━━━━━━━━━━━━━\n` +
-    `*BILL SUMMARY*\n\n` +
-    `Subtotal: ${formatINR(params.subtotalPaise)}\n` +
-    `Discount: ${discountStr}\n` +
-    `CGST: ${formatINR(params.cgstPaise)}\n` +
-    `SGST: ${formatINR(params.sgstPaise)}\n` +
-    `Other Taxes: ${otherTaxesStr}\n\n` +
-    `━━━━━━━━━━━━━━━━━━\n` +
-    `*TOTAL AMOUNT: ${formatINR(params.totalPaise)}*\n` +
-    `━━━━━━━━━━━━━━━━━━\n\n` +
-    `Payment Method: ${params.paymentMethod}\n` +
-    `Payment Status: ${params.paymentStatus}\n\n` +
-    `Transaction ID: ${txnIdStr}\n\n` +
-    `Outlet: ${params.outletName}\n` +
-    `${pdfLine}\n` +
-    `Thank you for choosing us! ❤️\n\n` +
-    `Powered by RestroNex – Restaurant OS.`
+    `Hello ${params.customerName || "Valued Guest"},\n\n` +
+    `Thank you for visiting ${params.restaurantName}!\n\n` +
+    `Your bill ${params.invoiceNumber} has been generated.\n\n` +
+    `Amount: ₹${formattedTotal}\n` +
+    `Payment: ${paymentSummary}\n\n` +
+    `Your invoice is attached as a PDF.\n\n` +
+    `Thank you for choosing us!\n\n` +
+    `Powered by RestroNex.`
   );
+}
+
+/**
+ * Validates & normalizes customer phone numbers with explicit country-code checking (E.164 digits without '+').
+ */
+export function validateAndNormalizeWhatsAppPhone(
+  rawPhone: string,
+  defaultCountryCode = "91"
+): { valid: true; waDigits: string; e164: string } | { valid: false; error: string } {
+  const trimmed = (rawPhone || "").trim();
+  if (!trimmed) {
+    return { valid: false, error: "Customer mobile number is required for WhatsApp delivery." };
+  }
+  // Reject non-phone alphabetic characters
+  if (/[a-zA-Z]/.test(trimmed) || !/^[\d\s+\-().]+$/.test(trimmed)) {
+    return { valid: false, error: "Phone number contains invalid characters." };
+  }
+
+  const hasPlus = trimmed.startsWith("+");
+  const digits = trimmed.replace(/\D/g, "");
+
+  if (hasPlus) {
+    if (digits.length < 8 || digits.length > 15 || digits.startsWith("0")) {
+      return { valid: false, error: "Enter a valid international number with country code (e.g. +91 9876543210)." };
+    }
+    if (digits.startsWith("91")) {
+      const local = digits.slice(2);
+      if (!/^[6-9]\d{9}$/.test(local)) {
+        return { valid: false, error: "Enter a valid 10-digit Indian mobile number after +91." };
+      }
+    }
+    return { valid: true, waDigits: digits, e164: `+${digits}` };
+  }
+
+  // Without leading '+': handle standard 10-digit Indian numbers or 12-digit 91xxxxxxxxxx
+  if (digits.length === 10 && defaultCountryCode === "91") {
+    if (!/^[6-9]\d{9}$/.test(digits)) {
+      return { valid: false, error: "Enter a valid 10-digit Indian mobile number starting with 6–9 or include country code (+)." };
+    }
+    const full = `91${digits}`;
+    return { valid: true, waDigits: full, e164: `+${full}` };
+  }
+
+  if (digits.length === 12 && digits.startsWith("91") && /^[6-9]\d{9}$/.test(digits.slice(2))) {
+    return { valid: true, waDigits: digits, e164: `+${digits}` };
+  }
+
+  if (digits.length >= 11 && digits.length <= 15 && !digits.startsWith("0")) {
+    return { valid: true, waDigits: digits, e164: `+${digits}` };
+  }
+
+  return {
+    valid: false,
+    error: "Invalid phone number or missing country code (e.g. +91 9876543210).",
+  };
 }
 
 /**
  * Normalizes phone numbers to international standard format (E.164 digits without '+' for Meta API).
  */
 export function normalizeWhatsAppPhone(rawPhone: string): string {
-  const digits = rawPhone.replace(/\D/g, "");
+  const digits = (rawPhone || "").replace(/\D/g, "");
   if (digits.length === 10) {
     return `91${digits}`;
   }
@@ -305,49 +394,17 @@ export async function queueAndSendWhatsAppInvoice(
 
     if (!order) return { queued: false, status: "NOT_CONFIGURED", reason: "Order not found" };
 
-    const rawPhone = order.customerPhone || "";
-    const normalizedPhone = normalizeWhatsAppPhone(rawPhone);
-    if (!normalizedPhone || normalizedPhone.length < 10) {
+    const rawPhone = (order.customerPhone || "").trim();
+    if (!rawPhone) {
       await prisma.order
         .update({ where: { id: order.id }, data: { whatsappStatus: "NOT_CONFIGURED" } })
         .catch(() => {});
       return { queued: false, status: "NOT_CONFIGURED", reason: "Customer phone not provided" };
     }
 
-    // Check explicit customer opt-out (never send if opted out)
-    const consentRecord = await prisma.customerConsent.findUnique({
-      where: {
-        tenantId_phone_channel: {
-          tenantId: order.tenantId,
-          phone: normalizedPhone,
-          channel: "WHATSAPP",
-        },
-      },
-    });
-    const rawConsent = await prisma.customerConsent.findUnique({
-      where: {
-        tenantId_phone_channel: {
-          tenantId: order.tenantId,
-          phone: rawPhone.trim(),
-          channel: "WHATSAPP",
-        },
-      },
-    });
-
-    if (consentRecord?.optIn === false || rawConsent?.optIn === false) {
-      await prisma.order
-        .update({ where: { id: order.id }, data: { whatsappStatus: "OPTED_OUT" } })
-        .catch(() => {});
-      return {
-        queued: false,
-        status: "OPTED_OUT",
-        reason: "Customer opted out of WhatsApp invoice delivery",
-      };
-    }
-
     const cfg = await resolveWhatsAppConfig(order.tenantId, order.outletId);
 
-    if (!cfg.enabled || !cfg.phoneNumberId || !cfg.accessToken) {
+    if (!cfg.enabled || !cfg.phoneNumberId || !cfg.accessToken || cfg.status === "DISCONNECTED") {
       await prisma.order
         .update({ where: { id: order.id }, data: { whatsappStatus: "NOT_CONFIGURED" } })
         .catch(() => {});
@@ -356,7 +413,87 @@ export async function queueAndSendWhatsAppInvoice(
         status: "NOT_CONFIGURED",
         reason: !cfg.enabled
           ? "Automatic WhatsApp invoice delivery is disabled"
-          : "Meta WhatsApp Business Phone Number ID or Access Token not configured",
+          : "WhatsApp Business account is not connected",
+      };
+    }
+
+    const phoneCheck = validateAndNormalizeWhatsAppPhone(rawPhone);
+    if (!phoneCheck.valid && "error" in phoneCheck) {
+      await prisma.order
+        .update({ where: { id: order.id }, data: { whatsappStatus: "FAILED" } })
+        .catch(() => {});
+      await prisma.whatsAppDeliveryLog.create({
+        data: {
+          tenantId: order.tenantId,
+          outletId: order.outletId,
+          orderId: order.id,
+          recipientPhone: rawPhone.slice(0, 32),
+          templateName: cfg.templateName,
+          status: "FAILED",
+          errorMessage: phoneCheck.error,
+          metadataJson: JSON.stringify({ validationFailure: true }),
+        },
+      });
+      return {
+        queued: false,
+        status: "FAILED",
+        reason: phoneCheck.error,
+      };
+    }
+    if (!("waDigits" in phoneCheck)) {
+      return { queued: false, status: "FAILED", reason: "Invalid phone number" };
+    }
+    const normalizedPhone = phoneCheck.waDigits;
+
+    // Strict transactional consent & STOP opt-out enforcement
+    const [consentRecord, rawConsent] = await Promise.all([
+      prisma.customerConsent.findUnique({
+        where: {
+          tenantId_phone_channel: {
+            tenantId: order.tenantId,
+            phone: normalizedPhone,
+            channel: "WHATSAPP",
+          },
+        },
+      }),
+      prisma.customerConsent.findUnique({
+        where: {
+          tenantId_phone_channel: {
+            tenantId: order.tenantId,
+            phone: rawPhone,
+            channel: "WHATSAPP",
+          },
+        },
+      }),
+    ]);
+
+    const explicitlyOptedOut = consentRecord?.optIn === false || rawConsent?.optIn === false;
+    const hasConsent =
+      !explicitlyOptedOut &&
+      (order.whatsappConsent === true || consentRecord?.optIn === true || rawConsent?.optIn === true);
+
+    if (!hasConsent) {
+      const reasonMsg = explicitlyOptedOut
+        ? "Customer opted out of WhatsApp invoice delivery"
+        : "Customer WhatsApp consent required at checkout";
+      await prisma.order
+        .update({ where: { id: order.id }, data: { whatsappStatus: "OPTED_OUT" } })
+        .catch(() => {});
+      return {
+        queued: false,
+        status: "OPTED_OUT",
+        reason: reasonMsg,
+      };
+    }
+
+    if (!cfg.sendPdfTaxInvoice && !cfg.sendPaymentConfirmation) {
+      await prisma.order
+        .update({ where: { id: order.id }, data: { whatsappStatus: "NOT_CONFIGURED" } })
+        .catch(() => {});
+      return {
+        queued: false,
+        status: "NOT_CONFIGURED",
+        reason: "PDF invoice and payment confirmation messages are turned off in settings",
       };
     }
 
@@ -381,19 +518,22 @@ export async function queueAndSendWhatsAppInvoice(
       };
     }
 
-    // Generate & save invoice PDF in Supabase private bucket (best effort, never fails bill)
-    let pdfUrl = order.invoice?.fileUrl || null;
+    // Generate & save invoice PDF in Supabase private bucket when PDF attachment is enabled
+    let pdfUrl: string | null = null;
     const invoiceNumber = order.invoice?.invoiceNumber || `INV-${order.orderNumber.replace("ORD-", "")}`;
-    try {
-      const persisted = await generateAndPersistInvoicePdf(order.id, options?.baseUrl);
-      if (persisted?.signedPdfUrl) {
-        pdfUrl = persisted.signedPdfUrl;
+    if (cfg.sendPdfTaxInvoice) {
+      pdfUrl = order.invoice?.fileUrl || null;
+      try {
+        const persisted = await generateAndPersistInvoicePdf(order.id, options?.baseUrl);
+        if (persisted?.signedPdfUrl) {
+          pdfUrl = persisted.signedPdfUrl;
+        }
+      } catch (pdfErr) {
+        console.warn("[WhatsApp] PDF storage persistence warning:", pdfErr);
       }
-    } catch (pdfErr) {
-      console.warn("[WhatsApp] PDF storage persistence warning:", pdfErr);
-    }
-    if (!pdfUrl) {
-      pdfUrl = buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl);
+      if (!pdfUrl) {
+        pdfUrl = buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl);
+      }
     }
 
     const orderDate = new Date(order.createdAt);
@@ -563,8 +703,10 @@ export async function dispatchWhatsAppQueueItem(
   const order = item.order;
   const restaurantName = item.tenant.settings?.receiptHeader || item.tenant.name;
   const invoiceNumber = item.invoiceNumber || order?.invoice?.invoiceNumber || order?.orderNumber || "INV";
-  const totalFormatted = formatINR(order?.totalPaise || 0);
-  const outletName = order?.outlet?.name || "Main Outlet";
+  const cleanAmount = formatINR(order?.totalPaise || 0).replace(/^₹\s*/, "");
+  const payment = order?.payments?.[0];
+  const isPaid = order?.isPaid || payment?.status === "COMPLETED";
+  const paymentSummary = `${isPaid ? "PAID" : "UNPAID"}${payment?.method ? ` (${payment.method})` : ""}`;
 
   const transportRes = await transport({
     phoneNumberId: cfg.phoneNumberId,
@@ -578,8 +720,8 @@ export async function dispatchWhatsAppQueueItem(
       item.customerName || "Valued Guest",
       restaurantName,
       invoiceNumber,
-      totalFormatted,
-      outletName,
+      cleanAmount,
+      paymentSummary,
     ],
   });
 

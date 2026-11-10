@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
-import { maskCredential } from "@/lib/encryption";
 import {
-  decryptAccessToken,
-  encryptAccessToken,
-  resolveWhatsAppConfig,
-} from "@/lib/whatsapp-invoice";
+  getMetaAppCapabilityStatus,
+  verifyConnectedWhatsAppNumber,
+} from "@/lib/meta-whatsapp-onboarding";
+import { resolveWhatsAppConfig } from "@/lib/whatsapp-invoice";
 
 export const dynamic = "force-dynamic";
 
@@ -20,8 +19,9 @@ export async function GET(req: NextRequest) {
   if (!mem) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const outletId = req.nextUrl.searchParams.get("outletId") || null;
+  const metaCap = getMetaAppCapabilityStatus();
 
-  const [setting, outletConfigs, effective] = await Promise.all([
+  const [setting, outletConfigs, effective, lastSuccessLog, logs] = await Promise.all([
     prisma.restaurantSetting.findUnique({ where: { tenantId } }),
     prisma.outletWhatsAppConfig.findMany({
       where: { tenantId },
@@ -29,52 +29,93 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "asc" },
     }),
     resolveWhatsAppConfig(tenantId, outletId),
+    prisma.whatsAppDeliveryLog.findFirst({
+      where: { tenantId, status: { in: ["SENT", "DELIVERED", "READ"] } },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, createdAt: true, recipientPhone: true, status: true },
+    }),
+    prisma.whatsAppDeliveryLog.findMany({
+      where: { tenantId },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+      include: { order: { select: { orderNumber: true } } },
+    }),
   ]);
 
-  const tenantToken = decryptAccessToken(setting?.whatsappAccessToken);
+  const rawStatus = effective.status || "NOT_CONFIGURED";
+  const uiStatus =
+    !metaCap.configured && rawStatus !== "CONNECTED" && rawStatus !== "DISCONNECTED"
+      ? "SETUP_REQUIRED"
+      : rawStatus;
 
-  return NextResponse.json({
-    // Effective active configuration for selected outlet (or tenant default)
-    source: effective.source,
-    enabled: effective.enabled,
-    phoneNumberId: effective.phoneNumberId || "",
-    wabaId: effective.wabaId || "",
-    displayPhone: effective.displayPhone || "",
-    templateName: effective.templateName || "order_invoice_utility",
-    connectionMode: effective.connectionMode || "META_CLOUD_API",
-    status: effective.status || "NOT_CONFIGURED",
-    hasAccessToken: Boolean(effective.accessToken),
-    maskedToken: maskCredential(effective.accessToken),
-    qrFooterEnabled: setting?.qrFooterEnabled ?? true,
-    whatsappOnboardingSkipped: setting?.whatsappOnboardingSkipped ?? false,
-    printerOnboardingSkipped: setting?.printerOnboardingSkipped ?? false,
-    autoPrintBill: setting?.autoPrintBill ?? true,
-    tenantConfig: {
-      enabled: setting?.autoSendWhatsAppInvoice ?? false,
-      phoneNumberId: setting?.whatsappPhoneNumberId || "",
-      wabaId: setting?.whatsappWabaId || "",
-      displayPhone: setting?.whatsappDisplayPhone || "",
-      templateName: setting?.whatsappTemplateName || "order_invoice_utility",
-      hasAccessToken: Boolean(tenantToken),
-      maskedToken: maskCredential(tenantToken),
-      status:
-        setting?.whatsappPhoneNumberId && tenantToken
-          ? setting?.whatsappConnectionStatus || "CONNECTED"
-          : "NOT_CONFIGURED",
-    },
-    outletConfigs: outletConfigs.map((oc) => ({
-      id: oc.id,
+  const availableSenders = [
+    ...(setting?.whatsappDisplayPhone && setting?.whatsappConnectionStatus === "CONNECTED"
+      ? [
+          {
+            scope: "TENANT",
+            outletId: null,
+            label: `Organization Main (${setting.whatsappDisplayPhone})`,
+            displayPhone: setting.whatsappDisplayPhone,
+            status: setting.whatsappConnectionStatus,
+            isDefaultSender: !setting.defaultWhatsAppOutletId,
+            isCoexistence: Boolean(setting.whatsappCoexistence),
+            connectedAt: setting.whatsappConnectedAt,
+            lastVerifiedAt: setting.whatsappLastVerifiedAt,
+          },
+        ]
+      : []),
+    ...outletConfigs.map((oc) => ({
+      scope: "OUTLET",
       outletId: oc.outletId,
-      outletName: oc.outlet.name,
-      enabled: oc.enabled,
-      phoneNumberId: oc.phoneNumberId || "",
-      wabaId: oc.wabaId || "",
+      label: `${oc.outlet.name}${oc.displayPhone ? ` (${oc.displayPhone})` : ""}`,
       displayPhone: oc.displayPhone || "",
-      templateName: oc.templateName || "order_invoice_utility",
-      hasAccessToken: Boolean(oc.accessTokenEnc),
-      maskedToken: maskCredential(decryptAccessToken(oc.accessTokenEnc)),
       status: oc.status,
+      isDefaultSender:
+        setting?.defaultWhatsAppOutletId === oc.outletId || Boolean(oc.isDefaultSender),
+      isCoexistence: Boolean(oc.isCoexistence),
+      connectedAt: oc.connectedAt,
       lastVerifiedAt: oc.lastVerifiedAt,
+    })),
+  ];
+
+  // Zero sensitive credentials (no PhoneNumberId, WABA ID, access token, verify token, or template names)
+  return NextResponse.json({
+    metaPartnerConfigured: metaCap.configured,
+    metaAppId: metaCap.metaAppId,
+    embeddedSignupConfigId: metaCap.configId,
+    missingMetaPrerequisites: metaCap.missingPrerequisites,
+    source: effective.source,
+    status: uiStatus,
+    displayPhone: effective.displayPhone || null,
+    connectionMode: effective.connectionMode || "EMBEDDED_SIGNUP",
+    isCoexistence: effective.isCoexistence,
+    connectedAt: effective.connectedAt,
+    lastVerifiedAt: effective.lastVerifiedAt,
+    verificationError: setting?.whatsappVerificationError || null,
+    whatsappOnboardingSkipped: setting?.whatsappOnboardingSkipped ?? false,
+    deliverySettings: {
+      enabled: effective.enabled,
+      sendPdfTaxInvoice: setting?.whatsappSendPdfTaxInvoice ?? true,
+      sendPaymentConfirmation: setting?.whatsappSendPaymentConfirm ?? true,
+      sendOrderConfirmation: setting?.whatsappSendOrderConfirm ?? false,
+      defaultWhatsAppOutletId: setting?.defaultWhatsAppOutletId || null,
+    },
+    availableSenders,
+    lastSuccessfulDelivery: lastSuccessLog
+      ? {
+          id: lastSuccessLog.id,
+          at: lastSuccessLog.createdAt,
+          status: lastSuccessLog.status,
+        }
+      : null,
+    recentLogs: logs.map((l) => ({
+      id: l.id,
+      orderId: l.orderId,
+      orderNumber: l.order?.orderNumber || "TEST",
+      recipientPhone: l.recipientPhone,
+      status: l.status,
+      errorMessage: l.errorMessage,
+      createdAt: l.createdAt,
     })),
   });
 }
@@ -82,40 +123,21 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
-  const body = await req.json();
+  const body = await req.json().catch(() => ({}));
   const tenantId = await resolveTenantId(userId, body.tenantId);
   if (!tenantId) return NextResponse.json({ error: "Tenant required" }, { status: 400 });
 
   const mem = await prisma.membership.findFirst({ where: { userId, tenantId } });
   if (!mem || !["OWNER", "HEAD_OFFICE"].includes(mem.role)) {
-    return NextResponse.json({ error: "Only owners can configure WhatsApp Business" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Only owners can manage WhatsApp Business integration." },
+      { status: 403 }
+    );
   }
 
-  const {
-    action = "SAVE",
-    outletId,
-    enabled,
-    phoneNumberId,
-    accessToken,
-    wabaId,
-    displayPhone,
-    templateName,
-    connectionMode = "META_CLOUD_API",
-    embeddedCode,
-  } = body as {
-    action?: "SAVE" | "DISCONNECT";
-    outletId?: string;
-    enabled?: boolean;
-    phoneNumberId?: string;
-    accessToken?: string;
-    wabaId?: string;
-    displayPhone?: string;
-    templateName?: string;
-    connectionMode?: string;
-    embeddedCode?: string;
-  };
+  const action = String(body?.action || "");
+  const outletId = body?.outletId ? String(body.outletId) : null;
 
-  // Verify outlet belongs strictly to this tenant if outletId is passed
   if (outletId) {
     const outlet = await prisma.outlet.findFirst({ where: { id: outletId, tenantId } });
     if (!outlet) {
@@ -123,10 +145,35 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Handle explicit disconnect action
+  // Strictly block manual API credential/token injection from UI
+  if (action === "SAVE" || body.accessToken || body.phoneNumberId || body.wabaId) {
+    return NextResponse.json(
+      {
+        error:
+          "Manual Meta API credentials cannot be entered manually. Connect securely using Meta Embedded Signup OTP verification.",
+      },
+      { status: 400 }
+    );
+  }
+
+  if (action === "VERIFY_CONNECTION") {
+    const res = await verifyConnectedWhatsAppNumber({ tenantId, outletId });
+    return NextResponse.json(res, { status: res.ok ? 200 : 400 });
+  }
+
   if (action === "DISCONNECT") {
     if (outletId) {
-      await prisma.outletWhatsAppConfig.deleteMany({ where: { tenantId, outletId } });
+      await prisma.outletWhatsAppConfig.updateMany({
+        where: { tenantId, outletId },
+        data: {
+          enabled: false,
+          isDefaultSender: false,
+          accessTokenEnc: null,
+          phoneNumberId: null,
+          status: "DISCONNECTED",
+          verificationError: null,
+        },
+      });
     } else {
       await prisma.restaurantSetting.upsert({
         where: { tenantId },
@@ -140,8 +187,9 @@ export async function POST(req: NextRequest) {
           whatsappAccessToken: null,
           whatsappPhoneNumberId: null,
           whatsappWabaId: null,
-          whatsappDisplayPhone: null,
+          whatsappCoexistence: false,
           whatsappConnectionStatus: "DISCONNECTED",
+          whatsappVerificationError: null,
         },
       });
       await prisma.integrationConfig.upsert({
@@ -161,145 +209,72 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ ok: true, status: "DISCONNECTED", message: "WhatsApp Business disconnected." });
+    return NextResponse.json({
+      ok: true,
+      status: "DISCONNECTED",
+      message: "WhatsApp Business disconnected cleanly. All historical invoices, sales, and customer data remain preserved.",
+    });
   }
 
-  // Optional Meta Embedded Signup OAuth code exchange server-side
-  let exchangedToken: string | null = null;
-  if (embeddedCode && process.env.NEXT_PUBLIC_META_APP_ID && process.env.META_APP_SECRET) {
-    try {
-      const tokenUrl = new URL("https://graph.facebook.com/v21.0/oauth/access_token");
-      tokenUrl.searchParams.set("client_id", process.env.NEXT_PUBLIC_META_APP_ID);
-      tokenUrl.searchParams.set("client_secret", process.env.META_APP_SECRET);
-      tokenUrl.searchParams.set("code", embeddedCode);
-      const exRes = await fetch(tokenUrl.toString());
-      const exJson = await exRes.json();
-      if (exRes.ok && exJson.access_token) {
-        exchangedToken = exJson.access_token;
-      }
-    } catch {}
-  }
+  if (action === "UPDATE_DELIVERY_SETTINGS") {
+    const {
+      enabled,
+      sendPdfTaxInvoice,
+      sendPaymentConfirmation,
+      sendOrderConfirmation,
+      defaultWhatsAppOutletId,
+    } = body;
 
-  const plainToken = (exchangedToken || accessToken || "").trim();
-  const encryptedToken = plainToken ? encryptAccessToken(plainToken) : undefined;
-
-  if (outletId) {
-    const existingOutletCfg = await prisma.outletWhatsAppConfig.findFirst({
-      where: { tenantId, outletId },
-    });
-    const finalPhoneId = phoneNumberId !== undefined ? phoneNumberId.trim() || null : existingOutletCfg?.phoneNumberId || null;
-    const finalHasToken = Boolean(encryptedToken || existingOutletCfg?.accessTokenEnc);
-    const nextStatus = finalPhoneId && finalHasToken ? "CONNECTED" : "NOT_CONFIGURED";
-
-    await prisma.outletWhatsAppConfig.upsert({
-      where: { outletId },
-      create: {
-        tenantId,
-        outletId,
-        enabled: enabled ?? true,
-        phoneNumberId: finalPhoneId,
-        wabaId: wabaId?.trim() || null,
-        displayPhone: displayPhone?.trim() || null,
-        accessTokenEnc: encryptedToken || null,
-        templateName: templateName?.trim() || "order_invoice_utility",
-        connectionMode,
-        status: nextStatus,
-        lastVerifiedAt: nextStatus === "CONNECTED" ? new Date() : null,
-      },
-      update: {
-        ...(enabled !== undefined ? { enabled: Boolean(enabled) } : {}),
-        ...(phoneNumberId !== undefined ? { phoneNumberId: phoneNumberId.trim() || null } : {}),
-        ...(wabaId !== undefined ? { wabaId: wabaId.trim() || null } : {}),
-        ...(displayPhone !== undefined ? { displayPhone: displayPhone.trim() || null } : {}),
-        ...(encryptedToken ? { accessTokenEnc: encryptedToken } : {}),
-        ...(templateName !== undefined ? { templateName: templateName.trim() || "order_invoice_utility" } : {}),
-        connectionMode,
-        status: nextStatus,
-        lastVerifiedAt: nextStatus === "CONNECTED" ? new Date() : existingOutletCfg?.lastVerifiedAt,
-      },
-    });
-  } else {
-    const existingSetting = await prisma.restaurantSetting.findUnique({ where: { tenantId } });
-    const finalPhoneId =
-      phoneNumberId !== undefined ? phoneNumberId.trim() || null : existingSetting?.whatsappPhoneNumberId || null;
-    const finalHasToken = Boolean(encryptedToken || existingSetting?.whatsappAccessToken);
-    const nextStatus = finalPhoneId && finalHasToken ? "CONNECTED" : "NOT_CONFIGURED";
+    if (outletId) {
+      await prisma.outletWhatsAppConfig.updateMany({
+        where: { tenantId, outletId },
+        data: {
+          ...(enabled !== undefined ? { enabled: Boolean(enabled) } : {}),
+        },
+      });
+    }
 
     await prisma.restaurantSetting.upsert({
       where: { tenantId },
       create: {
         tenantId,
-        autoSendWhatsAppInvoice: enabled ?? Boolean(finalPhoneId && finalHasToken),
-        whatsappPhoneNumberId: finalPhoneId,
-        whatsappAccessToken: encryptedToken || null,
-        whatsappWabaId: wabaId?.trim() || null,
-        whatsappDisplayPhone: displayPhone?.trim() || null,
-        whatsappTemplateName: templateName?.trim() || "order_invoice_utility",
-        whatsappConnectionMode: connectionMode,
-        whatsappConnectionStatus: nextStatus,
-        whatsappOnboardingSkipped: false,
+        autoSendWhatsAppInvoice: enabled ?? false,
+        whatsappSendPdfTaxInvoice: sendPdfTaxInvoice ?? true,
+        whatsappSendPaymentConfirm: sendPaymentConfirmation ?? true,
+        whatsappSendOrderConfirm: sendOrderConfirmation ?? false,
+        defaultWhatsAppOutletId: defaultWhatsAppOutletId || null,
       },
       update: {
-        ...(enabled !== undefined ? { autoSendWhatsAppInvoice: Boolean(enabled) } : {}),
-        ...(phoneNumberId !== undefined ? { whatsappPhoneNumberId: phoneNumberId.trim() || null } : {}),
-        ...(encryptedToken ? { whatsappAccessToken: encryptedToken } : {}),
-        ...(wabaId !== undefined ? { whatsappWabaId: wabaId.trim() || null } : {}),
-        ...(displayPhone !== undefined ? { whatsappDisplayPhone: displayPhone.trim() || null } : {}),
-        ...(templateName !== undefined ? { whatsappTemplateName: templateName.trim() || "order_invoice_utility" } : {}),
-        whatsappConnectionMode: connectionMode,
-        whatsappConnectionStatus: nextStatus,
-        whatsappOnboardingSkipped: false,
+        ...(enabled !== undefined && !outletId ? { autoSendWhatsAppInvoice: Boolean(enabled) } : {}),
+        ...(sendPdfTaxInvoice !== undefined ? { whatsappSendPdfTaxInvoice: Boolean(sendPdfTaxInvoice) } : {}),
+        ...(sendPaymentConfirmation !== undefined
+          ? { whatsappSendPaymentConfirm: Boolean(sendPaymentConfirmation) }
+          : {}),
+        ...(sendOrderConfirmation !== undefined ? { whatsappSendOrderConfirm: Boolean(sendOrderConfirmation) } : {}),
+        ...(defaultWhatsAppOutletId !== undefined
+          ? { defaultWhatsAppOutletId: defaultWhatsAppOutletId || null }
+          : {}),
       },
     });
 
-    await prisma.integrationConfig.upsert({
-      where: { tenantId_provider: { tenantId, provider: "whatsapp_cloud" } },
-      create: {
-        tenantId,
-        provider: "whatsapp_cloud",
-        status: nextStatus,
-        configJson: JSON.stringify({
-          phoneNumberId: finalPhoneId,
-          wabaId: wabaId?.trim() || existingSetting?.whatsappWabaId || null,
-          displayPhone: displayPhone?.trim() || existingSetting?.whatsappDisplayPhone || null,
-          templateName: templateName?.trim() || "order_invoice_utility",
-          connectionMode,
-          tokenEncrypted: true,
-        }),
-        lastSyncAt: new Date(),
-      },
-      update: {
-        status: nextStatus,
-        configJson: JSON.stringify({
-          phoneNumberId: finalPhoneId,
-          wabaId: wabaId?.trim() || existingSetting?.whatsappWabaId || null,
-          displayPhone: displayPhone?.trim() || existingSetting?.whatsappDisplayPhone || null,
-          templateName: templateName?.trim() || "order_invoice_utility",
-          connectionMode,
-          tokenEncrypted: true,
-        }),
-        lastSyncAt: new Date(),
-      },
+    if (defaultWhatsAppOutletId !== undefined) {
+      await prisma.outletWhatsAppConfig.updateMany({
+        where: { tenantId },
+        data: { isDefaultSender: false },
+      });
+      if (defaultWhatsAppOutletId) {
+        await prisma.outletWhatsAppConfig.updateMany({
+          where: { tenantId, outletId: defaultWhatsAppOutletId },
+          data: { isDefaultSender: true },
+        });
+      }
+    }
+
+    return NextResponse.json({
+      ok: true,
+      message: "WhatsApp automatic delivery preferences updated.",
     });
   }
 
-  await prisma.auditLog.create({
-    data: {
-      tenantId,
-      userId,
-      action: "WHATSAPP_CONFIG_SAVED",
-      entity: outletId ? "OutletWhatsAppConfig" : "RestaurantSetting",
-      entityId: outletId || tenantId,
-      metadataJson: JSON.stringify({
-        outletId: outletId || null,
-        connectionMode,
-        hasTokenUpdated: Boolean(encryptedToken),
-      }),
-    },
-  });
-
-  return NextResponse.json({
-    ok: true,
-    message: "WhatsApp Business Cloud API credentials saved securely.",
-  });
+  return NextResponse.json({ error: "Unsupported action" }, { status: 400 });
 }

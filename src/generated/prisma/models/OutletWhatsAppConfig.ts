@@ -29,13 +29,17 @@ export type OutletWhatsAppConfigMinAggregateOutputType = {
   tenantId: string | null
   outletId: string | null
   enabled: boolean | null
+  isDefaultSender: boolean | null
   phoneNumberId: string | null
   wabaId: string | null
   displayPhone: string | null
   accessTokenEnc: string | null
   templateName: string | null
   connectionMode: string | null
+  isCoexistence: boolean | null
   status: string | null
+  verificationError: string | null
+  connectedAt: Date | null
   lastVerifiedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -46,13 +50,17 @@ export type OutletWhatsAppConfigMaxAggregateOutputType = {
   tenantId: string | null
   outletId: string | null
   enabled: boolean | null
+  isDefaultSender: boolean | null
   phoneNumberId: string | null
   wabaId: string | null
   displayPhone: string | null
   accessTokenEnc: string | null
   templateName: string | null
   connectionMode: string | null
+  isCoexistence: boolean | null
   status: string | null
+  verificationError: string | null
+  connectedAt: Date | null
   lastVerifiedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -63,13 +71,17 @@ export type OutletWhatsAppConfigCountAggregateOutputType = {
   tenantId: number
   outletId: number
   enabled: number
+  isDefaultSender: number
   phoneNumberId: number
   wabaId: number
   displayPhone: number
   accessTokenEnc: number
   templateName: number
   connectionMode: number
+  isCoexistence: number
   status: number
+  verificationError: number
+  connectedAt: number
   lastVerifiedAt: number
   createdAt: number
   updatedAt: number
@@ -82,13 +94,17 @@ export type OutletWhatsAppConfigMinAggregateInputType = {
   tenantId?: true
   outletId?: true
   enabled?: true
+  isDefaultSender?: true
   phoneNumberId?: true
   wabaId?: true
   displayPhone?: true
   accessTokenEnc?: true
   templateName?: true
   connectionMode?: true
+  isCoexistence?: true
   status?: true
+  verificationError?: true
+  connectedAt?: true
   lastVerifiedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -99,13 +115,17 @@ export type OutletWhatsAppConfigMaxAggregateInputType = {
   tenantId?: true
   outletId?: true
   enabled?: true
+  isDefaultSender?: true
   phoneNumberId?: true
   wabaId?: true
   displayPhone?: true
   accessTokenEnc?: true
   templateName?: true
   connectionMode?: true
+  isCoexistence?: true
   status?: true
+  verificationError?: true
+  connectedAt?: true
   lastVerifiedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -116,13 +136,17 @@ export type OutletWhatsAppConfigCountAggregateInputType = {
   tenantId?: true
   outletId?: true
   enabled?: true
+  isDefaultSender?: true
   phoneNumberId?: true
   wabaId?: true
   displayPhone?: true
   accessTokenEnc?: true
   templateName?: true
   connectionMode?: true
+  isCoexistence?: true
   status?: true
+  verificationError?: true
+  connectedAt?: true
   lastVerifiedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -206,13 +230,17 @@ export type OutletWhatsAppConfigGroupByOutputType = {
   tenantId: string
   outletId: string
   enabled: boolean
+  isDefaultSender: boolean
   phoneNumberId: string | null
   wabaId: string | null
   displayPhone: string | null
   accessTokenEnc: string | null
   templateName: string | null
   connectionMode: string | null
+  isCoexistence: boolean
   status: string
+  verificationError: string | null
+  connectedAt: Date | null
   lastVerifiedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -244,13 +272,17 @@ export type OutletWhatsAppConfigWhereInput = {
   tenantId?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
   outletId?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
   enabled?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
+  isDefaultSender?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   phoneNumberId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   wabaId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   displayPhone?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   accessTokenEnc?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   templateName?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   connectionMode?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  isCoexistence?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   status?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
+  verificationError?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  connectedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   lastVerifiedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
@@ -263,13 +295,17 @@ export type OutletWhatsAppConfigOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
+  isDefaultSender?: Prisma.SortOrder
   phoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   wabaId?: Prisma.SortOrderInput | Prisma.SortOrder
   displayPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   accessTokenEnc?: Prisma.SortOrderInput | Prisma.SortOrder
   templateName?: Prisma.SortOrderInput | Prisma.SortOrder
   connectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  isCoexistence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  verificationError?: Prisma.SortOrderInput | Prisma.SortOrder
+  connectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -285,13 +321,17 @@ export type OutletWhatsAppConfigWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.OutletWhatsAppConfigWhereInput | Prisma.OutletWhatsAppConfigWhereInput[]
   tenantId?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
   enabled?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
+  isDefaultSender?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   phoneNumberId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   wabaId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   displayPhone?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   accessTokenEnc?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   templateName?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   connectionMode?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  isCoexistence?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   status?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
+  verificationError?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  connectedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   lastVerifiedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
@@ -304,13 +344,17 @@ export type OutletWhatsAppConfigOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
+  isDefaultSender?: Prisma.SortOrder
   phoneNumberId?: Prisma.SortOrderInput | Prisma.SortOrder
   wabaId?: Prisma.SortOrderInput | Prisma.SortOrder
   displayPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   accessTokenEnc?: Prisma.SortOrderInput | Prisma.SortOrder
   templateName?: Prisma.SortOrderInput | Prisma.SortOrder
   connectionMode?: Prisma.SortOrderInput | Prisma.SortOrder
+  isCoexistence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  verificationError?: Prisma.SortOrderInput | Prisma.SortOrder
+  connectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -327,13 +371,17 @@ export type OutletWhatsAppConfigScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"OutletWhatsAppConfig"> | string
   outletId?: Prisma.StringWithAggregatesFilter<"OutletWhatsAppConfig"> | string
   enabled?: Prisma.BoolWithAggregatesFilter<"OutletWhatsAppConfig"> | boolean
+  isDefaultSender?: Prisma.BoolWithAggregatesFilter<"OutletWhatsAppConfig"> | boolean
   phoneNumberId?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
   wabaId?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
   displayPhone?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
   accessTokenEnc?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
   templateName?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
   connectionMode?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
+  isCoexistence?: Prisma.BoolWithAggregatesFilter<"OutletWhatsAppConfig"> | boolean
   status?: Prisma.StringWithAggregatesFilter<"OutletWhatsAppConfig"> | string
+  verificationError?: Prisma.StringNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | string | null
+  connectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | Date | string | null
   lastVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OutletWhatsAppConfig"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OutletWhatsAppConfig"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OutletWhatsAppConfig"> | Date | string
@@ -342,13 +390,17 @@ export type OutletWhatsAppConfigScalarWhereWithAggregatesInput = {
 export type OutletWhatsAppConfigCreateInput = {
   id?: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -361,13 +413,17 @@ export type OutletWhatsAppConfigUncheckedCreateInput = {
   tenantId: string
   outletId: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -376,13 +432,17 @@ export type OutletWhatsAppConfigUncheckedCreateInput = {
 export type OutletWhatsAppConfigUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -395,13 +455,17 @@ export type OutletWhatsAppConfigUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -412,13 +476,17 @@ export type OutletWhatsAppConfigCreateManyInput = {
   tenantId: string
   outletId: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -427,13 +495,17 @@ export type OutletWhatsAppConfigCreateManyInput = {
 export type OutletWhatsAppConfigUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -444,13 +516,17 @@ export type OutletWhatsAppConfigUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -476,13 +552,17 @@ export type OutletWhatsAppConfigCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
+  isDefaultSender?: Prisma.SortOrder
   phoneNumberId?: Prisma.SortOrder
   wabaId?: Prisma.SortOrder
   displayPhone?: Prisma.SortOrder
   accessTokenEnc?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
   connectionMode?: Prisma.SortOrder
+  isCoexistence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  verificationError?: Prisma.SortOrder
+  connectedAt?: Prisma.SortOrder
   lastVerifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -493,13 +573,17 @@ export type OutletWhatsAppConfigMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
+  isDefaultSender?: Prisma.SortOrder
   phoneNumberId?: Prisma.SortOrder
   wabaId?: Prisma.SortOrder
   displayPhone?: Prisma.SortOrder
   accessTokenEnc?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
   connectionMode?: Prisma.SortOrder
+  isCoexistence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  verificationError?: Prisma.SortOrder
+  connectedAt?: Prisma.SortOrder
   lastVerifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -510,13 +594,17 @@ export type OutletWhatsAppConfigMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
   enabled?: Prisma.SortOrder
+  isDefaultSender?: Prisma.SortOrder
   phoneNumberId?: Prisma.SortOrder
   wabaId?: Prisma.SortOrder
   displayPhone?: Prisma.SortOrder
   accessTokenEnc?: Prisma.SortOrder
   templateName?: Prisma.SortOrder
   connectionMode?: Prisma.SortOrder
+  isCoexistence?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  verificationError?: Prisma.SortOrder
+  connectedAt?: Prisma.SortOrder
   lastVerifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -599,13 +687,17 @@ export type OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput = {
 export type OutletWhatsAppConfigCreateWithoutTenantInput = {
   id?: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -616,13 +708,17 @@ export type OutletWhatsAppConfigUncheckedCreateWithoutTenantInput = {
   id?: string
   outletId: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -662,13 +758,17 @@ export type OutletWhatsAppConfigScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
   outletId?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
   enabled?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
+  isDefaultSender?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   phoneNumberId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   wabaId?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   displayPhone?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   accessTokenEnc?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   templateName?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
   connectionMode?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  isCoexistence?: Prisma.BoolFilter<"OutletWhatsAppConfig"> | boolean
   status?: Prisma.StringFilter<"OutletWhatsAppConfig"> | string
+  verificationError?: Prisma.StringNullableFilter<"OutletWhatsAppConfig"> | string | null
+  connectedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   lastVerifiedAt?: Prisma.DateTimeNullableFilter<"OutletWhatsAppConfig"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OutletWhatsAppConfig"> | Date | string
@@ -677,13 +777,17 @@ export type OutletWhatsAppConfigScalarWhereInput = {
 export type OutletWhatsAppConfigCreateWithoutOutletInput = {
   id?: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -694,13 +798,17 @@ export type OutletWhatsAppConfigUncheckedCreateWithoutOutletInput = {
   id?: string
   tenantId: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -725,13 +833,17 @@ export type OutletWhatsAppConfigUpdateToOneWithWhereWithoutOutletInput = {
 export type OutletWhatsAppConfigUpdateWithoutOutletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -742,13 +854,17 @@ export type OutletWhatsAppConfigUncheckedUpdateWithoutOutletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -758,13 +874,17 @@ export type OutletWhatsAppConfigCreateManyTenantInput = {
   id?: string
   outletId: string
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: string | null
   wabaId?: string | null
   displayPhone?: string | null
   accessTokenEnc?: string | null
   templateName?: string | null
   connectionMode?: string | null
+  isCoexistence?: boolean
   status?: string
+  verificationError?: string | null
+  connectedAt?: Date | string | null
   lastVerifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -773,13 +893,17 @@ export type OutletWhatsAppConfigCreateManyTenantInput = {
 export type OutletWhatsAppConfigUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -790,13 +914,17 @@ export type OutletWhatsAppConfigUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -806,13 +934,17 @@ export type OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.StringFieldUpdateOperationsInput | string
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDefaultSender?: Prisma.BoolFieldUpdateOperationsInput | boolean
   phoneNumberId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   wabaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   accessTokenEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   templateName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   connectionMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCoexistence?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  verificationError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  connectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -825,13 +957,17 @@ export type OutletWhatsAppConfigSelect<ExtArgs extends runtime.Types.Extensions.
   tenantId?: boolean
   outletId?: boolean
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: boolean
   wabaId?: boolean
   displayPhone?: boolean
   accessTokenEnc?: boolean
   templateName?: boolean
   connectionMode?: boolean
+  isCoexistence?: boolean
   status?: boolean
+  verificationError?: boolean
+  connectedAt?: boolean
   lastVerifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -844,13 +980,17 @@ export type OutletWhatsAppConfigSelectCreateManyAndReturn<ExtArgs extends runtim
   tenantId?: boolean
   outletId?: boolean
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: boolean
   wabaId?: boolean
   displayPhone?: boolean
   accessTokenEnc?: boolean
   templateName?: boolean
   connectionMode?: boolean
+  isCoexistence?: boolean
   status?: boolean
+  verificationError?: boolean
+  connectedAt?: boolean
   lastVerifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -863,13 +1003,17 @@ export type OutletWhatsAppConfigSelectUpdateManyAndReturn<ExtArgs extends runtim
   tenantId?: boolean
   outletId?: boolean
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: boolean
   wabaId?: boolean
   displayPhone?: boolean
   accessTokenEnc?: boolean
   templateName?: boolean
   connectionMode?: boolean
+  isCoexistence?: boolean
   status?: boolean
+  verificationError?: boolean
+  connectedAt?: boolean
   lastVerifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -882,19 +1026,23 @@ export type OutletWhatsAppConfigSelectScalar = {
   tenantId?: boolean
   outletId?: boolean
   enabled?: boolean
+  isDefaultSender?: boolean
   phoneNumberId?: boolean
   wabaId?: boolean
   displayPhone?: boolean
   accessTokenEnc?: boolean
   templateName?: boolean
   connectionMode?: boolean
+  isCoexistence?: boolean
   status?: boolean
+  verificationError?: boolean
+  connectedAt?: boolean
   lastVerifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OutletWhatsAppConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "enabled" | "phoneNumberId" | "wabaId" | "displayPhone" | "accessTokenEnc" | "templateName" | "connectionMode" | "status" | "lastVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["outletWhatsAppConfig"]>
+export type OutletWhatsAppConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "enabled" | "isDefaultSender" | "phoneNumberId" | "wabaId" | "displayPhone" | "accessTokenEnc" | "templateName" | "connectionMode" | "isCoexistence" | "status" | "verificationError" | "connectedAt" | "lastVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["outletWhatsAppConfig"]>
 export type OutletWhatsAppConfigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   outlet?: boolean | Prisma.OutletDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -919,13 +1067,17 @@ export type $OutletWhatsAppConfigPayload<ExtArgs extends runtime.Types.Extension
     tenantId: string
     outletId: string
     enabled: boolean
+    isDefaultSender: boolean
     phoneNumberId: string | null
     wabaId: string | null
     displayPhone: string | null
     accessTokenEnc: string | null
     templateName: string | null
     connectionMode: string | null
+    isCoexistence: boolean
     status: string
+    verificationError: string | null
+    connectedAt: Date | null
     lastVerifiedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1358,13 +1510,17 @@ export interface OutletWhatsAppConfigFieldRefs {
   readonly tenantId: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly outletId: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly enabled: Prisma.FieldRef<"OutletWhatsAppConfig", 'Boolean'>
+  readonly isDefaultSender: Prisma.FieldRef<"OutletWhatsAppConfig", 'Boolean'>
   readonly phoneNumberId: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly wabaId: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly displayPhone: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly accessTokenEnc: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly templateName: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
   readonly connectionMode: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
+  readonly isCoexistence: Prisma.FieldRef<"OutletWhatsAppConfig", 'Boolean'>
   readonly status: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
+  readonly verificationError: Prisma.FieldRef<"OutletWhatsAppConfig", 'String'>
+  readonly connectedAt: Prisma.FieldRef<"OutletWhatsAppConfig", 'DateTime'>
   readonly lastVerifiedAt: Prisma.FieldRef<"OutletWhatsAppConfig", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"OutletWhatsAppConfig", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OutletWhatsAppConfig", 'DateTime'>

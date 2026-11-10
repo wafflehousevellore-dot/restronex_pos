@@ -115,7 +115,11 @@ export default function POSClient({
     { menuItemId: string; name: string; quantity: number; unitPricePaise: number }[]
   >([]);
   const [customerName, setCustomerName] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [crmCustomers, setCrmCustomers] = useState<
+    { id: string; name: string; phone: string; whatsappOptIn?: boolean }[]
+  >([]);
   const [whatsappConsent, setWhatsappConsent] = useState(true);
   const [whatsappDeliveryStatus, setWhatsappDeliveryStatus] = useState<string | null>(null);
   const [whatsappReason, setWhatsappReason] = useState<string | null>(null);
@@ -186,11 +190,20 @@ export default function POSClient({
     }
   }
 
+  useEffect(() => {
+    apiFetch("/api/customers")
+      .then((r) => r.json())
+      .then((list) => {
+        if (Array.isArray(list)) setCrmCustomers(list.slice(0, 40));
+      })
+      .catch(() => {});
+  }, []);
+
   // Auto-fetch Customer Loyalty profile when phone is typed (>= 10 digits)
   useEffect(() => {
     const clean = customerPhone.replace(/\D/g, "");
     if (clean.length >= 10) {
-      apiFetch(`/api/customers?phone=${clean}`)
+      apiFetch(`/api/customers?phone=${encodeURIComponent(clean.slice(-10))}`)
         .then((r) => r.json())
         .then((data) => {
           if (data && data.id) {
@@ -201,6 +214,9 @@ export default function POSClient({
               visitCount: data.visitCount || 0,
             });
             setCustomerName((prev) => (!prev || prev === "Guest Customer" ? data.name : prev));
+            if (data.whatsappOptIn === false) {
+              setWhatsappConsent(false);
+            }
           } else {
             setCustomerLoyalty(null);
           }
@@ -378,6 +394,12 @@ export default function POSClient({
     if (!checkoutKeyRef.current) {
       checkoutKeyRef.current = createCheckoutIdempotencyKey();
     }
+    const rawTrimmedPhone = customerPhone?.trim() || "";
+    const normalizedSubmitPhone = rawTrimmedPhone
+      ? rawTrimmedPhone.startsWith("+")
+        ? rawTrimmedPhone
+        : `${countryCode}${rawTrimmedPhone.replace(/^0+/, "")}`
+      : undefined;
     try {
       const res = await apiFetch("/api/orders", {
         method: "POST",
@@ -388,8 +410,8 @@ export default function POSClient({
           type: orderType,
           tableId: selectedTable || undefined,
           customerName: customerName?.trim() || undefined,
-          customerPhone: customerPhone?.trim() || undefined,
-          whatsappConsent: !!(customerPhone?.trim() && whatsappConsent),
+          customerPhone: normalizedSubmitPhone,
+          whatsappConsent: !!(normalizedSubmitPhone && whatsappConsent),
           items: cart.map((c) => ({
             menuItemId: c.menuItemId,
             name: c.name,
@@ -764,13 +786,60 @@ export default function POSClient({
                 )}
               </div>
               <div>
-                <Label className="text-[#718078] text-xs font-semibold uppercase tracking-wider">Customer phone</Label>
-                <Input
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className="mt-1 bg-white border-[#E5EBE7] text-[#172B25] text-sm h-10 font-medium"
-                />
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="text-[#718078] text-xs font-semibold uppercase tracking-wider">
+                    Customer phone
+                  </Label>
+                  {crmCustomers.length > 0 && (
+                    <select
+                      aria-label="Select existing customer"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const chosen = crmCustomers.find((c) => c.id === e.target.value);
+                        if (chosen) {
+                          setCustomerName(chosen.name || "");
+                          setCustomerPhone(chosen.phone || "");
+                          if (chosen.whatsappOptIn === false) setWhatsappConsent(false);
+                        }
+                      }}
+                      className="text-[10px] font-bold text-[#16845B] bg-[#F8FAF9] border border-[#E5EBE7] rounded-lg px-2 py-0.5 max-w-[140px]"
+                    >
+                      <option value="">Quick pick guest...</option>
+                      {crmCustomers.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name || c.phone}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+                <div className="mt-1 flex gap-1.5">
+                  <select
+                    aria-label="Country code"
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-2 text-xs font-bold text-[#172B25] h-10 shrink-0"
+                  >
+                    <option value="+91">🇮🇳 +91</option>
+                    <option value="+1">🇺🇸 +1</option>
+                    <option value="+44">🇬🇧 +44</option>
+                    <option value="+971">🇦🇪 +971</option>
+                    <option value="+65">🇸🇬 +65</option>
+                    <option value="+61">🇦🇺 +61</option>
+                  </select>
+                  <Input
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="98765 43210"
+                    className="bg-white border-[#E5EBE7] text-[#172B25] text-sm h-10 font-medium"
+                  />
+                </div>
+                {customerPhone.trim().length > 0 &&
+                  customerPhone.replace(/\D/g, "").length < 8 && (
+                    <div className="text-[10px] text-amber-700 mt-1">
+                      Enter full valid phone digits ({countryCode} + number) for WhatsApp bill.
+                    </div>
+                  )}
                 <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -779,7 +848,7 @@ export default function POSClient({
                     className="h-3.5 w-3.5 rounded text-[#16845B] accent-[#16845B] cursor-pointer"
                   />
                   <span className="text-[11px] text-[#718078] font-medium">
-                    Send digital invoice via WhatsApp (transactional bill only)
+                    Customer consents to receive WhatsApp bill &amp; payment update
                   </span>
                 </label>
               </div>
