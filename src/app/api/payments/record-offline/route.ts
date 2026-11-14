@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { appCache } from "@/lib/cache";
 
 export async function POST(req: NextRequest) {
   const { userId } = await getSession();
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
 
     return { payment, order: updatedOrder };
   });
+
+  appCache.delPrefix(`report_${result.order.tenantId}`);
 
   return NextResponse.json({
     ok: true,

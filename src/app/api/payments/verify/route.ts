@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { resolveTenantGateway } from "@/lib/tenant-gateway";
+import { appCache } from "@/lib/cache";
 
 export async function POST(req: NextRequest) {
   let body: any;
@@ -150,6 +151,8 @@ export async function POST(req: NextRequest) {
 
     return { payment, order: updatedOrder };
   });
+
+  appCache.delPrefix(`report_${result.order.tenantId}`);
 
   return NextResponse.json({
     ok: true,

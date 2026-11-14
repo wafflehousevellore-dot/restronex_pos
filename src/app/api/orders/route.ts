@@ -6,6 +6,7 @@ import { calcOrderTotals } from "@/lib/money";
 import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
 import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
+import { appCache } from "@/lib/cache";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -488,6 +489,8 @@ export async function POST(req: NextRequest) {
       ? printSettled.value
       : { jobId: null, status: "FAILED", requiresClientDispatch: false, error: "Print dispatch failure" };
 
+  appCache.delPrefix(`report_${tenantId}`);
+
   return NextResponse.json({
     ok: true,
     orderId: order.id,
@@ -638,5 +641,6 @@ export async function PATCH(req: NextRequest) {
     }).catch(() => {});
   }
 
+  appCache.delPrefix(`report_${order.tenantId}`);
   return NextResponse.json({ ok: true, order: updated });
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { resolveTenantGateway } from "@/lib/tenant-gateway";
+import { appCache } from "@/lib/cache";
 
 export async function POST(req: NextRequest) {
   const { userId } = await getSession();
@@ -140,6 +141,8 @@ export async function POST(req: NextRequest) {
 
     return ref;
   });
+
+  appCache.delPrefix(`report_${tenantId}`);
 
   return NextResponse.json({
     ok: true,

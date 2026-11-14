@@ -6,6 +6,7 @@ import { formatINR } from "@/lib/money";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getEntitlements } from "@/lib/entitlements";
+import { getTimeZoneDateString, getTimeZoneDayBoundsUtc } from "@/lib/timezone";
 
 export default async function Dashboard(){
   const { userId } = await getSession();
@@ -92,15 +93,114 @@ export default async function Dashboard(){
     redirect("/checkout?reason=subscription_required");
   }
 
-  const orders = await prisma.order.findMany({ where:{ tenantId }});
-  const totalSales = orders.reduce((s,o)=>s+o.totalPaise,0);
-  const todayOrders = orders.filter(o=> new Date(o.createdAt).toDateString()===new Date().toDateString());
-  const customers = await prisma.customer.count({ where:{ tenantId }});
-  const tables = await prisma.table.count({ where:{ tenantId, status:"OCCUPIED"}});
-  const memCount = await prisma.membership.count({ where:{ tenantId }});
-  const salesByOutlet = await prisma.order.groupBy({ by:["outletId"], where:{ tenantId }, _sum:{ totalPaise:true }, _count:true });
-  const outlets = await prisma.outlet.findMany({ where:{ tenantId }});
-  const outletMap = Object.fromEntries(outlets.map(o=>[o.id,o.name]));
+  const tz = tenant.timeZone || "Asia/Kolkata";
+  const now = new Date();
+  const todayBounds = getTimeZoneDayBoundsUtc(undefined, tz, now);
+  const yesterdayStr = getTimeZoneDateString(
+    new Date(now.getTime() - 24 * 60 * 60 * 1000),
+    tz
+  );
+  const yesterdayBounds = getTimeZoneDayBoundsUtc(yesterdayStr, tz, now);
+  const urgentCutoff = new Date(now.getTime() - 15 * 60 * 1000);
+  const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+  const [
+    todayAgg,
+    yesterdayAgg,
+    totalAgg,
+    recentOrders,
+    customers,
+    tables,
+    memCount,
+    salesByOutlet,
+    outlets,
+    activeKdsTickets,
+    urgentKdsTickets,
+    inventoryItems,
+    waConnectedCount,
+    printerCount,
+    waFailed24h,
+    printFailed24h,
+  ] = await Promise.all([
+    prisma.order.aggregate({
+      where: {
+        tenantId,
+        status: { not: "CANCELLED" },
+        createdAt: { gte: todayBounds.startOfDay, lte: todayBounds.endOfDay },
+      },
+      _sum: { totalPaise: true },
+      _count: true,
+    }),
+    prisma.order.aggregate({
+      where: {
+        tenantId,
+        status: { not: "CANCELLED" },
+        createdAt: { gte: yesterdayBounds.startOfDay, lte: yesterdayBounds.endOfDay },
+      },
+      _sum: { totalPaise: true },
+      _count: true,
+    }),
+    prisma.order.aggregate({
+      where: { tenantId, status: { not: "CANCELLED" } },
+      _sum: { totalPaise: true },
+      _count: true,
+    }),
+    prisma.order.findMany({
+      where: { tenantId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: { outlet: { select: { name: true } } },
+    }),
+    prisma.customer.count({ where: { tenantId } }),
+    prisma.table.count({ where: { tenantId, status: "OCCUPIED" } }),
+    prisma.membership.count({ where: { tenantId } }),
+    prisma.order.groupBy({
+      by: ["outletId"],
+      where: { tenantId, status: { not: "CANCELLED" } },
+      _sum: { totalPaise: true },
+      _count: true,
+    }),
+    prisma.outlet.findMany({ where: { tenantId } }),
+    prisma.kitchenTicket.count({
+      where: { tenantId, status: { in: ["NEW", "PREPARING"] } },
+    }),
+    prisma.kitchenTicket.count({
+      where: {
+        tenantId,
+        status: { in: ["NEW", "PREPARING"] },
+        createdAt: { lte: urgentCutoff },
+      },
+    }),
+    prisma.inventoryItem.findMany({
+      where: { tenantId },
+      select: { id: true, name: true, currentStock: true, lowStockThreshold: true, unit: true },
+    }),
+    prisma.outletWhatsAppConfig.count({
+      where: { tenantId, status: "CONNECTED" },
+    }),
+    prisma.printerDevice.count({ where: { tenantId } }),
+    prisma.whatsAppMessageQueue.count({
+      where: { tenantId, status: "FAILED", createdAt: { gte: last24h } },
+    }),
+    prisma.printJob.count({
+      where: { tenantId, status: "FAILED", createdAt: { gte: last24h } },
+    }),
+  ]);
+
+  const todaySales = todayAgg._sum.totalPaise || 0;
+  const todayOrdersCount = todayAgg._count || 0;
+  const yesterdaySales = yesterdayAgg._sum.totalPaise || 0;
+  const todayDeltaPct =
+    yesterdaySales > 0
+      ? Math.round(((todaySales - yesterdaySales) / yesterdaySales) * 100)
+      : null;
+  const totalSales = totalAgg._sum.totalPaise || 0;
+  const lifetimeOrdersCount = totalAgg._count || 0;
+  const lowStockItems = inventoryItems.filter(
+    (item) => item.currentStock <= item.lowStockThreshold
+  );
+  const failedAutomationCount = waFailed24h + printFailed24h;
+  const outletMap = Object.fromEntries(outlets.map((o) => [o.id, o.name]));
 
   return (
     <div className="space-y-6 text-[#172B25]">
@@ -131,11 +231,21 @@ export default async function Dashboard(){
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Today Sales</CardTitle>
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">
+              Today Sales ({todayBounds.date})
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{formatINR(todayOrders.reduce((s,o)=>s+o.totalPaise,0))}</div>
-            <div className="text-xs text-[#16845B] font-semibold mt-1">{todayOrders.length} orders today • {ent.canUsePOS ? "POS enabled" : "POS gated"}</div>
+            <div className="text-2xl font-black text-[#172B25]">{formatINR(todaySales)}</div>
+            <div className="text-xs text-[#16845B] font-semibold mt-1">
+              {todayOrdersCount} orders today
+              {todayDeltaPct !== null && (
+                <span className={todayDeltaPct >= 0 ? "text-[#16845B]" : "text-amber-600"}>
+                  {" "}• {todayDeltaPct >= 0 ? "+" : ""}{todayDeltaPct}% vs yesterday
+                </span>
+              )}
+              {" "}• {ent.canUsePOS ? "POS enabled" : "POS gated"}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
@@ -144,7 +254,9 @@ export default async function Dashboard(){
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-black text-[#172B25]">{formatINR(totalSales)}</div>
-            <div className="text-xs text-[#718078] mt-1">{orders.length} total lifetime orders</div>
+            <div className="text-xs text-[#718078] mt-1">
+              {lifetimeOrdersCount} non-cancelled lifetime orders
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
@@ -230,24 +342,91 @@ export default async function Dashboard(){
         </Card>
       </div>
 
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link href="/app/kitchen" className="block group">
+          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${urgentKdsTickets > 0 ? "bg-amber-50/70 border-amber-200" : "bg-white border-[#E5EBE7]"}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Live Kitchen Queue</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-black text-[#172B25]">{activeKdsTickets} active tickets</div>
+              <div className={`text-xs font-semibold mt-1 ${urgentKdsTickets > 0 ? "text-amber-700" : "text-[#16845B]"}`}>
+                {urgentKdsTickets > 0 ? `${urgentKdsTickets} delayed (>15m) • View KDS →` : "Kitchen running on time →"}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/app/inventory" className="block group">
+          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${lowStockItems.length > 0 ? "bg-red-50/50 border-red-200" : "bg-white border-[#E5EBE7]"}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Stock Alerts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-black text-[#172B25]">{lowStockItems.length} low-stock items</div>
+              <div className={`text-xs font-semibold mt-1 truncate ${lowStockItems.length > 0 ? "text-red-700" : "text-[#16845B]"}`}>
+                {lowStockItems.length > 0 ? `Reorder: ${lowStockItems[0].name} (${lowStockItems[0].currentStock} ${lowStockItems[0].unit})` : "All ingredients above threshold →"}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/app/integrations" className="block group">
+          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${failedAutomationCount > 0 ? "bg-amber-50/70 border-amber-200" : "bg-white border-[#E5EBE7]"}`}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">WhatsApp & Printers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-black text-[#172B25]">{waConnectedCount} WA • {printerCount} Printers</div>
+              <div className={`text-xs font-semibold mt-1 ${failedAutomationCount > 0 ? "text-amber-700" : "text-[#718078]"}`}>
+                {failedAutomationCount > 0 ? `${failedAutomationCount} failed job(s) in 24h • Inspect →` : "Billing automation ready →"}
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/app/reports" className="block group">
+          <Card className="h-full bg-[#E8F5EE]/60 border-[#16845B]/25 shadow-xs transition group-hover:border-[#16845B]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-wider text-[#16845B]">Business Insights</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl font-black text-[#172B25]">
+                {todayOrdersCount > 0 ? formatINR(Math.round(todaySales / todayOrdersCount)) : "₹0"} avg bill
+              </div>
+              <div className="text-xs font-semibold text-[#16845B] mt-1">
+                Charts, COGS, GST & CSV export →
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+
       <Card className="bg-white border-[#E5EBE7] shadow-xs">
         <CardHeader>
           <CardTitle className="text-[#172B25]">Recent Orders</CardTitle>
         </CardHeader>
         <CardContent>
-          {orders.slice(0,5).length===0 ? (
+          {recentOrders.length === 0 ? (
             <div className="text-sm text-[#718078] py-6 text-center border border-dashed border-[#E5EBE7] rounded-xl bg-[#F8FAF9]">
               No orders yet.
             </div>
           ) : (
             <div className="space-y-2">
-              {orders.slice(0,5).map(o=> (
+              {recentOrders.map((o) => (
                 <div key={o.id} className="flex justify-between items-center rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-4 py-3">
                   <div>
-                    <div className="text-sm font-bold text-[#172B25]">{o.orderNumber} • {o.type}</div>
-                    <div className="text-xs text-[#718078]">{o.status} • {new Date(o.createdAt).toLocaleString()}</div>
+                    <div className="text-sm font-bold text-[#172B25]">
+                      {o.orderNumber} • {o.type} {o.outlet?.name ? `(${o.outlet.name})` : ""}
+                    </div>
+                    <div className="text-xs text-[#718078]">
+                      <span className={o.status === "CANCELLED" ? "text-red-600 font-semibold" : ""}>{o.status}</span>
+                      {" "}• {new Date(o.createdAt).toLocaleString("en-IN", { timeZone: todayBounds.timeZone })}
+                    </div>
                   </div>
-                  <div className="text-sm font-bold text-[#16845B]">{formatINR(o.totalPaise)}</div>
+                  <div className={`text-sm font-bold ${o.status === "CANCELLED" ? "text-[#718078] line-through" : "text-[#16845B]"}`}>
+                    {formatINR(o.totalPaise)}
+                  </div>
                 </div>
               ))}
             </div>

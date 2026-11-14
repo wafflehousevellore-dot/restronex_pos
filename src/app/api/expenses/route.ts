@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
+import { appCache } from "@/lib/cache";
 export async function GET(req: NextRequest){
   const {userId}=await getSession(); if(!userId) return NextResponse.json({error:"Unauth"},{status:401});
   const tenantId = await resolveTenantId(userId, req.nextUrl.searchParams.get("tenantId"));
@@ -17,5 +18,6 @@ export async function POST(req: NextRequest){
   const outlet=await prisma.outlet.findFirst({where:{ id: body.outletId, tenantId }}); if(!outlet) return NextResponse.json({error:"Invalid outlet"},{status:403});
   const e=await prisma.expense.create({ data:{ tenantId, outletId: body.outletId, category: body.category||"Other", amountPaise: body.amountPaise||0, note: body.note||null }});
   await prisma.auditLog.create({ data:{ tenantId, userId, action:"EXPENSE_CREATED", entity:"Expense", entityId:e.id }});
+  appCache.delPrefix(`report_${tenantId}`);
   return NextResponse.json(e);
 }

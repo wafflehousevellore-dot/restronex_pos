@@ -337,6 +337,8 @@ export async function POST(
     appCache.del(`qr_table_${token}`);
   }
 
+  appCache.delPrefix(`report_${order.tenantId}`);
+
   return NextResponse.json({
     ok: true,
     orderId: order.id,

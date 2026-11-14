@@ -9,6 +9,7 @@ import {
   IntegrationConfigData,
 } from "@/lib/integrations";
 import { encryptSecret } from "@/lib/encryption";
+import { getTimeZoneDayBoundsUtc } from "@/lib/timezone";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -972,22 +973,29 @@ export async function POST(req: NextRequest) {
   // ACTION: EXPORT ACCOUNTING DATA (TALLY XML / CSV)
   // --------------------------------------------------------------------------
   if (action === "export_accounting") {
-    const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+    const tenant = await prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { timeZone: true },
+    });
+    const { date: localDate, startOfDay, endOfDay } = getTimeZoneDayBoundsUtc(
+      undefined,
+      tenant?.timeZone
+    );
 
     const [paidOrders, expenses] = await Promise.all([
       prisma.order.findMany({
         where: {
           tenantId,
           isPaid: true,
-          createdAt: { gte: startOfDay },
+          status: { not: "CANCELLED" },
+          createdAt: { gte: startOfDay, lte: endOfDay },
         },
         include: { items: true, payments: true },
       }),
       prisma.expense.findMany({
         where: {
           tenantId,
-          createdAt: { gte: startOfDay },
+          createdAt: { gte: startOfDay, lte: endOfDay },
         },
       }),
     ]);
@@ -1010,7 +1018,7 @@ export async function POST(req: NextRequest) {
       <REQUESTDATA>
         <TALLYMESSAGE xmlns:UDF="TallyUDF">
           <VOUCHER VCHTYPE="Sales" ACTION="Create">
-            <DATE>${today.toISOString().slice(0, 10).replace(/-/g, "")}</DATE>
+            <DATE>${localDate.replace(/-/g, "")}</DATE>
             <NARRATION>RestroNex Daily POS Sales Reconciliation</NARRATION>
             <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
             <PARTYLEDGERNAME>Cash / Counter POS</PARTYLEDGERNAME>
@@ -1039,7 +1047,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       ok: true,
       format: exportFormat || "TALLY_XML",
-      date: today.toISOString().slice(0, 10),
+      date: localDate,
       summary: {
         orderCount: paidOrders.length,
         totalSalesPaise: totalSales,
@@ -1047,7 +1055,7 @@ export async function POST(req: NextRequest) {
         totalExpensePaise: totalExpenses,
       },
       exportPayload: tallyXml,
-      filename: `RestroNex_Tally_Sales_${today.toISOString().slice(0, 10)}.xml`,
+      filename: `RestroNex_Tally_Sales_${localDate}.xml`,
     });
   }
 

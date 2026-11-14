@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { getWebhookSecret, verifyWebhookSignature } from "@/lib/razorpay";
 import { decryptSecret } from "@/lib/encryption";
+import { appCache } from "@/lib/cache";
 
 /**
  * RESTRO NEX UNIFIED RAZORPAY WEBHOOK PIPELINE
@@ -285,6 +286,7 @@ export async function POST(req: NextRequest) {
               },
             });
           });
+          appCache.delPrefix(`report_${order.tenantId}`);
         }
       } else if (eventType === "payment.failed") {
         const razorpayOrderId = orderEntity?.id || paymentEntity?.order_id;
@@ -331,6 +333,7 @@ export async function POST(req: NextRequest) {
                 refundedPaise: refundAmount,
               },
             });
+            appCache.delPrefix(`report_${payment.tenantId}`);
           }
         }
       }

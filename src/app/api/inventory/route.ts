@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
+import { appCache } from "@/lib/cache";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  appCache.delPrefix(`report_${tenantId}`);
   return NextResponse.json(item);
 }
 
@@ -146,6 +148,7 @@ export async function PATCH(req: NextRequest) {
     },
   });
 
+  appCache.delPrefix(`report_${item.tenantId}`);
   return NextResponse.json({ ok: true, item: updated });
 }
 
@@ -162,5 +165,6 @@ export async function DELETE(req: NextRequest) {
   if (!memCheck || memCheck.role !== "OWNER") return NextResponse.json({ error: "Only owners can delete materials" }, { status: 403 });
 
   await prisma.inventoryItem.delete({ where: { id: itemId } });
+  appCache.delPrefix(`report_${item.tenantId}`);
   return NextResponse.json({ ok: true });
 }
