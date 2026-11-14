@@ -1,4 +1,5 @@
 import net from "net";
+import QRCode from "qrcode";
 import { prisma } from "./db";
 import { buildSignedInvoicePdfUrl } from "./invoice-storage";
 
@@ -125,6 +126,56 @@ function twoColLine(left: string, right: string, width: number): string {
   return `${l}${" ".repeat(gap)}${r}`;
 }
 
+export function buildEscPosQrRasterCentered(text: string, is58mm = true): Buffer {
+  try {
+    const qr = QRCode.create(text, { errorCorrectionLevel: "M" });
+    const size = qr.modules.size;
+    const data = qr.modules.data;
+    const margin = 2; // quiet zone in modules
+    const scale = is58mm ? 4 : 5;
+    const qrPixels = (size + margin * 2) * scale;
+    const qrByteWidth = Math.ceil(qrPixels / 8);
+    const pixelHeight = qrPixels;
+
+    // Line widths in bytes: 58mm = 48 bytes (384 dots), 80mm = 72 bytes (576 dots)
+    const targetLineBytes = is58mm ? 48 : 72;
+    const leftPaddingBytes = Math.max(0, Math.floor((targetLineBytes - qrByteWidth) / 2));
+    const totalLineBytes = Math.max(qrByteWidth, leftPaddingBytes + qrByteWidth);
+
+    const totalRasterBytes = totalLineBytes * pixelHeight;
+    const raster = Buffer.alloc(totalRasterBytes, 0);
+
+    for (let y = 0; y < pixelHeight; y++) {
+      const modY = Math.floor(y / scale) - margin;
+      for (let x = 0; x < qrPixels; x++) {
+        const modX = Math.floor(x / scale) - margin;
+        if (modY >= 0 && modY < size && modX >= 0 && modX < size) {
+          if (data[modY * size + modX]) {
+            const byteIndex = y * totalLineBytes + leftPaddingBytes + Math.floor(x / 8);
+            const bitOffset = 7 - (x % 8);
+            raster[byteIndex] |= (1 << bitOffset);
+          }
+        }
+      }
+    }
+
+    const xL = totalLineBytes & 0xff;
+    const xH = (totalLineBytes >> 8) & 0xff;
+    const yL = pixelHeight & 0xff;
+    const yH = (pixelHeight >> 8) & 0xff;
+
+    // Universal ESC/POS GS v 0 raster bit image command
+    return Buffer.concat([
+      Buffer.from([0x1d, 0x76, 0x30, 0x00, xL, xH, yL, yH]),
+      raster,
+      Buffer.from([0x0a]),
+    ]);
+  } catch (err) {
+    console.error("[ESC/POS] Failed to build QR raster:", err);
+    return Buffer.alloc(0);
+  }
+}
+
 export function formatThermalReceipt(
   input: ThermalReceiptInput,
   paperWidth: "58mm" | "80mm" = "80mm"
@@ -134,7 +185,8 @@ export function formatThermalReceipt(
   textLines: string[];
   escPosBase64: string;
 } {
-  const cols = paperWidth === "58mm" ? 32 : 48;
+  const is58mm = paperWidth === "58mm";
+  const cols = is58mm ? 32 : 48;
   const eq = "=".repeat(cols);
   const dash = "-".repeat(cols);
 
@@ -203,20 +255,38 @@ export function formatThermalReceipt(
     lines.push(twoColLine("Txn ID", input.transactionId, cols));
   }
 
+  // Pre-QR text lines
+  const preQrLines = [...lines];
+
+  // QR banner lines
+  const qrLines: string[] = [];
+  let extractedUpiVpa = "";
   if (input.qrData) {
-    lines.push(dash);
+    qrLines.push(dash);
     if (input.qrData.startsWith("upi://")) {
-      lines.push(centerLine("Scan QR with GPay / PhonePe to Pay", cols));
+      qrLines.push(centerLine("SCAN TO PAY WITH ANY UPI APP", cols));
+      qrLines.push(centerLine("GPay • PhonePe • Paytm • BHIM", cols));
+      const upiMatch = input.qrData.match(/pa=([^&]+)/);
+      if (upiMatch) extractedUpiVpa = decodeURIComponent(upiMatch[1]);
     } else {
-      lines.push(centerLine("Scan QR for Digital Invoice PDF", cols));
+      qrLines.push(centerLine("Scan QR for Digital Invoice PDF", cols));
     }
+    qrLines.push(dash);
   }
 
-  lines.push(dash);
-  lines.push(centerLine(input.footerText || "Thank you for dining with us!", cols));
-  lines.push(centerLine("Powered by RestroNex - Restaurant OS", cols));
+  // Post-QR lines
+  const postQrLines: string[] = [];
+  if (extractedUpiVpa) {
+    postQrLines.push(centerLine(`UPI ID: ${extractedUpiVpa}`, cols));
+    postQrLines.push(dash);
+  }
+  postQrLines.push(centerLine(input.footerText || "Thank you for dining with us!", cols));
+  postQrLines.push(centerLine("Powered by RestroNex - Restaurant OS", cols));
 
-  // Build authentic ESC/POS command stream
+  // Full human-readable textLines array
+  const fullTextLines = [...preQrLines, ...qrLines, ...postQrLines];
+
+  // Build authentic ESC/POS binary command stream
   const chunks: Buffer[] = [
     Buffer.from([0x1b, 0x40]), // ESC @ Initialize printer
     Buffer.from([0x1b, 0x61, 0x01]), // Center align
@@ -224,11 +294,23 @@ export function formatThermalReceipt(
     Buffer.from(`${input.restaurantName.toUpperCase()}\n`, "ascii"),
     Buffer.from([0x1b, 0x45, 0x00]), // Bold OFF
     Buffer.from([0x1b, 0x61, 0x00]), // Left align
-    Buffer.from(lines.slice(1).join("\n") + "\n", "ascii"),
+    Buffer.from(preQrLines.slice(1).join("\n") + "\n", "ascii"),
   ];
 
-  // ESC/POS Native QR Code commands (GS ( k) when configured
   if (input.qrData) {
+    // 1. Text header above QR
+    chunks.push(
+      Buffer.from([0x1b, 0x61, 0x01]), // Center
+      Buffer.from(qrLines.join("\n") + "\n", "ascii")
+    );
+
+    // 2. Universal Raster Bitmap QR (GS v 0) - supported by 100% of 58mm & 80mm printers
+    const rasterBuffer = buildEscPosQrRasterCentered(input.qrData, is58mm);
+    if (rasterBuffer.length > 0) {
+      chunks.push(rasterBuffer);
+    }
+
+    // 3. Optional Epson native GS ( k command fallback
     const qrBytes = Buffer.from(input.qrData, "utf8");
     const len = qrBytes.length + 3;
     const pL = len & 0xff;
@@ -236,7 +318,7 @@ export function formatThermalReceipt(
     chunks.push(
       Buffer.from([0x1b, 0x61, 0x01]), // Center
       Buffer.from([0x1d, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41, 0x32, 0x00]), // Model 2
-      Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43, cols === 32 ? 0x04 : 0x05]), // Module size 4 (58mm) / 5 (80mm)
+      Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43, is58mm ? 0x04 : 0x05]), // Module size
       Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45, 0x31]), // Error correction M
       Buffer.from([0x1d, 0x28, 0x6b, pL, pH, 0x31, 0x50, 0x30]), // Store data
       qrBytes,
@@ -246,15 +328,17 @@ export function formatThermalReceipt(
     );
   }
 
+  // Footer & Cut
   chunks.push(
-    Buffer.from("\n\n\n", "ascii"),
+    Buffer.from([0x1b, 0x61, 0x01]), // Center
+    Buffer.from(postQrLines.join("\n") + "\n\n\n", "ascii"),
     Buffer.from([0x1d, 0x56, 0x42, 0x00]) // GS V 66 0 Partial Cut
   );
 
   return {
-    paperWidth: cols === 32 ? "58mm" : "80mm",
+    paperWidth: is58mm ? "58mm" : "80mm",
     columns: cols,
-    textLines: lines,
+    textLines: fullTextLines,
     escPosBase64: Buffer.concat(chunks).toString("base64"),
   };
 }
