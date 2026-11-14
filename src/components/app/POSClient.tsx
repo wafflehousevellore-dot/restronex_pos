@@ -62,6 +62,42 @@ export type ReceiptData = {
   printerName?: string | null;
 };
 
+function buildWhatsAppShareUrl(receipt: ReceiptData): string {
+  const digits = (receipt.customerPhone || "").replace(/\D/g, "");
+  const to = digits.length === 10 ? `91${digits}` : digits;
+  const restaurant = receipt.outletName || "Waffle Plum House";
+  const itemsText = (receipt.items || [])
+    .map(
+      (item) =>
+        `• ${item.name} x${item.quantity} — ₹${((item.unitPricePaise * item.quantity) / 100).toFixed(2)}`
+    )
+    .join("\n");
+  const pdfUrl = receipt.invoicePdfUrl
+    ? receipt.invoicePdfUrl.startsWith("http")
+      ? receipt.invoicePdfUrl
+      : `https://www.restronexpos.com${receipt.invoicePdfUrl}`
+    : `https://www.restronexpos.com/api/invoices/${encodeURIComponent(receipt.invoiceNumber)}/pdf`;
+
+  const lines = [
+    `*🧾 TAX INVOICE — ${restaurant.toUpperCase()}*`,
+    `Invoice: ${receipt.invoiceNumber} | Order: ${receipt.orderNumber}`,
+    `Date: ${receipt.date}`,
+    receipt.customerName ? `Customer: ${receipt.customerName}` : null,
+    `--------------------------------`,
+    `*Items Billed:*`,
+    itemsText,
+    `--------------------------------`,
+    `*TOTAL PAID:* ₹${(receipt.totalPaise / 100).toFixed(2)} (${receipt.paymentMethod || "PAID"})`,
+    `--------------------------------`,
+    `*📄 Download Official PDF Tax Invoice:*`,
+    pdfUrl,
+    ``,
+    `Thank you for visiting ${restaurant}! Have a wonderful day! ❤️`,
+  ].filter(Boolean);
+
+  return `https://wa.me/${to}?text=${encodeURIComponent(lines.join("\n"))}`;
+}
+
 function calculateCouponDiscount(code: string, subtotalPaise: number): number {
   const c = code.trim().toUpperCase();
   if (
@@ -1533,20 +1569,30 @@ export default function POSClient({
                           })()}
                         </strong>
                       </span>
-                      {whatsappDeliveryStatus === "FAILED" ? (
-                        <button
-                          type="button"
-                          onClick={handleRetryWhatsApp}
-                          disabled={retryingWhatsApp}
-                          className="text-xs font-bold text-[#16845B] hover:underline cursor-pointer"
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={buildWhatsAppShareUrl(activeReceipt)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] font-bold text-[#16845B] hover:underline cursor-pointer"
                         >
-                          {retryingWhatsApp ? "Retrying..." : "Retry Delivery →"}
-                        </button>
-                      ) : whatsappDeliveryStatus === "NOT_CONFIGURED" ? (
-                        <Link href="/app/settings/integrations" className="text-[11px] font-bold text-[#16845B] underline">
-                          Connect →
-                        </Link>
-                      ) : null}
+                          Open in WhatsApp ↗
+                        </a>
+                        {whatsappDeliveryStatus === "FAILED" ? (
+                          <button
+                            type="button"
+                            onClick={handleRetryWhatsApp}
+                            disabled={retryingWhatsApp}
+                            className="text-xs font-bold text-[#16845B] hover:underline cursor-pointer"
+                          >
+                            {retryingWhatsApp ? "Retrying..." : "Retry Delivery →"}
+                          </button>
+                        ) : whatsappDeliveryStatus === "NOT_CONFIGURED" ? (
+                          <Link href="/app/settings/integrations" className="text-[11px] font-bold text-[#16845B] underline">
+                            Connect →
+                          </Link>
+                        ) : null}
+                      </div>
                     </div>
                   ) : (
                     <div className="text-[11px] text-[#718078]">No customer phone entered on this bill.</div>
@@ -1613,6 +1659,17 @@ export default function POSClient({
 
             {/* Actions Bar */}
             <div className="p-4 border-t border-[#E5EBE7] bg-white flex flex-col sm:flex-row gap-2">
+              {activeReceipt.customerPhone && (
+                <a
+                  href={buildWhatsAppShareUrl(activeReceipt)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <MessageSquare className="h-4 w-4" /> Send WhatsApp Bill
+                </a>
+              )}
+
               <button
                 type="button"
                 onClick={() => window.print()}

@@ -133,7 +133,9 @@ export default function MetaWhatsAppConnectCard({
     defaultWhatsAppOutletId: "",
   });
 
-  const [connectionMode, setConnectionMode] = useState<"DIRECT" | "EMBEDDED">("DIRECT");
+  const [connectionMode, setConnectionMode] = useState<"PLATFORM" | "DIRECT" | "EMBEDDED">("PLATFORM");
+  const [platformPhone, setPlatformPhone] = useState("+91 9513008467");
+  const [activatingPlatform, setActivatingPlatform] = useState(false);
   const [directForm, setDirectForm] = useState({
     phoneNumberId: "",
     wabaId: "",
@@ -211,6 +213,40 @@ export default function MetaWhatsAppConnectCard({
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, []);
+
+  async function handlePlatformActivate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!platformPhone.trim()) {
+      return setBanner({ type: "error", text: "Please enter your store's mobile number." });
+    }
+    setActivatingPlatform(true);
+    setBanner(null);
+    try {
+      const res = await apiFetch("/api/whatsapp/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "ACTIVATE_PLATFORM_GATEWAY",
+          outletId: outletId || undefined,
+          displayPhone: platformPhone.trim(),
+        }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setBanner({ type: "error", text: j.error || "Failed to activate platform gateway." });
+      } else {
+        setBanner({
+          type: "success",
+          text: j.message || "✓ RestroNex Managed WhatsApp Gateway connected! Automatic billing active.",
+        });
+        await fetchConfig();
+      }
+    } catch (err: any) {
+      setBanner({ type: "error", text: err?.message || "Failed to activate WhatsApp gateway." });
+    } finally {
+      setActivatingPlatform(false);
+    }
+  }
 
   async function handleDirectSave(e: React.FormEvent) {
     e.preventDefault();
@@ -489,7 +525,7 @@ export default function MetaWhatsAppConnectCard({
         </CardHeader>
 
         <CardContent className="pt-5 space-y-5">
-          {!data?.metaPartnerConfigured && !loading && (
+          {!data?.metaPartnerConfigured && !loading && connectionMode === "EMBEDDED" && (
             <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-950 space-y-2">
               <div className="font-bold flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-amber-700 shrink-0" />
@@ -521,7 +557,11 @@ export default function MetaWhatsAppConnectCard({
                       <span>
                         Mode:{" "}
                         <b className="text-[#172B25]">
-                          {data?.isCoexistence ? "WhatsApp Business App Coexistence" : "Meta Cloud API"}
+                          {data?.connectionMode === "PLATFORM_GATEWAY"
+                            ? "RestroNex Cloud Gateway (Option B)"
+                            : data?.isCoexistence
+                              ? "WhatsApp Business App Coexistence"
+                              : "Meta Cloud API"}
                         </b>
                       </span>
                       {data?.connectedAt && (
@@ -583,7 +623,18 @@ export default function MetaWhatsAppConnectCard({
               )}
 
               {/* Method Switcher */}
-              <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-md shadow-2xs">
+              <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-xl shadow-2xs">
+                <button
+                  type="button"
+                  onClick={() => setConnectionMode("PLATFORM")}
+                  className={`flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition cursor-pointer ${
+                    connectionMode === "PLATFORM"
+                      ? "bg-[#16845B] text-white shadow-xs"
+                      : "text-[#718078] hover:text-[#172B25]"
+                  }`}
+                >
+                  ⚡ RestroNex Cloud (Option B)
+                </button>
                 <button
                   type="button"
                   onClick={() => setConnectionMode("DIRECT")}
@@ -593,7 +644,7 @@ export default function MetaWhatsAppConnectCard({
                       : "text-[#718078] hover:text-[#172B25]"
                   }`}
                 >
-                  Direct Meta Cloud API (Instant)
+                  Direct Meta API
                 </button>
                 <button
                   type="button"
@@ -604,11 +655,69 @@ export default function MetaWhatsAppConnectCard({
                       : "text-[#718078] hover:text-[#172B25]"
                   }`}
                 >
-                  Meta Embedded Signup (OTP)
+                  Meta SMS OTP Popup
                 </button>
               </div>
 
-              {connectionMode === "DIRECT" ? (
+              {connectionMode === "PLATFORM" ? (
+                /* RestroNex Managed Platform Gateway (Option B) */
+                <form onSubmit={handlePlatformActivate} className="space-y-4 pt-1">
+                  <div className="rounded-xl border border-[#16845B]/20 bg-[#E8F5EE]/50 p-4 text-xs text-[#172B25] space-y-2">
+                    <div className="font-bold flex items-center gap-1.5 text-[#16845B] text-sm">
+                      <CheckCircle2 className="h-4 w-4 shrink-0" />
+                      Automatic WhatsApp Setup by Mobile Number (Option B)
+                    </div>
+                    <p className="text-[11px] text-[#718078] leading-relaxed">
+                      Connect your outlet automatically without creating a Meta developer account or dealing with access tokens and IDs. Digital tax invoices and PDF links are delivered automatically to your customers upon checkout.
+                    </p>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        Store / Counter WhatsApp Number *
+                      </label>
+                      <Input
+                        type="text"
+                        value={platformPhone}
+                        onChange={(e) => setPlatformPhone(e.target.value)}
+                        placeholder="+91 9513008467"
+                        required
+                        className="mt-1 bg-white border-[#E5EBE7] text-xs h-9 rounded-xl font-bold"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Verified business contact number shown on receipts.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        Restaurant Display Name
+                      </label>
+                      <Input
+                        type="text"
+                        defaultValue="WAFFLE PLUM HOUSE"
+                        disabled
+                        className="mt-1 bg-white/70 border-[#E5EBE7] text-xs h-9 rounded-xl font-bold text-[#172B25]"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Official restaurant header for WhatsApp delivery.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={activatingPlatform}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-7 py-2.5 text-xs font-bold shadow-xs transition inline-flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {activatingPlatform ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ShieldCheck className="h-3.5 w-3.5" />}
+                      {activatingPlatform ? "Connecting..." : "⚡ Activate Automatic WhatsApp Billing"}
+                    </button>
+                  </div>
+                </form>
+              ) : connectionMode === "DIRECT" ? (
                 /* Direct Meta Cloud API Form */
                 <form onSubmit={handleDirectSave} className="space-y-4 pt-1">
                   <div className="rounded-xl border border-[#16845B]/20 bg-[#E8F5EE]/40 p-3.5 text-xs text-[#172B25] space-y-1">

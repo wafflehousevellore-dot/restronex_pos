@@ -147,6 +147,106 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Option B: RestroNex Managed Platform Gateway (Auto by Mobile Number)
+  if (action === "ACTIVATE_PLATFORM_GATEWAY") {
+    const displayPhone = String(body.displayPhone || "+91 9513008467").trim();
+    const now = new Date();
+    const encToken = encryptSecret("PLATFORM_MANAGED_TOKEN");
+
+    if (outletId) {
+      await prisma.outletWhatsAppConfig.upsert({
+        where: { outletId },
+        create: {
+          tenantId,
+          outletId,
+          enabled: true,
+          isDefaultSender: true,
+          phoneNumberId: "PLATFORM_MANAGED",
+          wabaId: "PLATFORM_MANAGED_WABA",
+          displayPhone,
+          accessTokenEnc: encToken,
+          templateName: "order_invoice_utility",
+          connectionMode: "PLATFORM_GATEWAY",
+          isCoexistence: false,
+          status: "CONNECTED",
+          connectedAt: now,
+          lastVerifiedAt: now,
+        },
+        update: {
+          enabled: true,
+          phoneNumberId: "PLATFORM_MANAGED",
+          wabaId: "PLATFORM_MANAGED_WABA",
+          displayPhone,
+          accessTokenEnc: encToken,
+          templateName: "order_invoice_utility",
+          connectionMode: "PLATFORM_GATEWAY",
+          status: "CONNECTED",
+          verificationError: null,
+          connectedAt: now,
+          lastVerifiedAt: now,
+        },
+      });
+    } else {
+      await prisma.restaurantSetting.upsert({
+        where: { tenantId },
+        create: {
+          tenantId,
+          autoSendWhatsAppInvoice: true,
+          whatsappSendPdfTaxInvoice: true,
+          whatsappSendPaymentConfirm: true,
+          whatsappPhoneNumberId: "PLATFORM_MANAGED",
+          whatsappWabaId: "PLATFORM_MANAGED_WABA",
+          whatsappDisplayPhone: displayPhone,
+          whatsappAccessToken: encToken,
+          whatsappTemplateName: "order_invoice_utility",
+          whatsappConnectionMode: "PLATFORM_GATEWAY",
+          whatsappConnectionStatus: "CONNECTED",
+          whatsappConnectedAt: now,
+          whatsappLastVerifiedAt: now,
+        },
+        update: {
+          autoSendWhatsAppInvoice: true,
+          whatsappSendPdfTaxInvoice: true,
+          whatsappSendPaymentConfirm: true,
+          whatsappPhoneNumberId: "PLATFORM_MANAGED",
+          whatsappWabaId: "PLATFORM_MANAGED_WABA",
+          whatsappDisplayPhone: displayPhone,
+          whatsappAccessToken: encToken,
+          whatsappTemplateName: "order_invoice_utility",
+          whatsappConnectionMode: "PLATFORM_GATEWAY",
+          whatsappConnectionStatus: "CONNECTED",
+          whatsappConnectedAt: now,
+          whatsappLastVerifiedAt: now,
+          whatsappVerificationError: null,
+        },
+      });
+    }
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        userId,
+        action: "WHATSAPP_CONFIG_CONNECTED_PLATFORM_GATEWAY",
+        entity: "WhatsAppConfig",
+        entityId: outletId || tenantId,
+        metadataJson: JSON.stringify({
+          displayPhone,
+          connectionMode: "PLATFORM_GATEWAY",
+        }),
+      },
+    });
+
+    appCache.delPrefix(`report_${tenantId}`);
+
+    return NextResponse.json({
+      ok: true,
+      status: "CONNECTED",
+      displayPhone,
+      connectionMode: "PLATFORM_GATEWAY",
+      message: "RestroNex Managed WhatsApp Gateway connected! Automatic customer billing is now active.",
+    });
+  }
+
   // Direct Meta Cloud API Connection (Option 1)
   if (action === "SAVE_DIRECT" || (action === "SAVE" && (body.phoneNumberId || body.accessToken))) {
     const phoneNumberId = String(body.phoneNumberId || "").trim();

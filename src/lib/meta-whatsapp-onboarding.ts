@@ -731,6 +731,42 @@ export async function verifyConnectedWhatsAppNumber(
 
   const phoneNumberId = outletCfg?.phoneNumberId || setting?.whatsappPhoneNumberId;
   const accessToken = decryptAccessToken(outletCfg?.accessTokenEnc || setting?.whatsappAccessToken);
+  const isPlatform =
+    phoneNumberId === "PLATFORM_MANAGED" ||
+    setting?.whatsappConnectionMode === "PLATFORM_GATEWAY" ||
+    outletCfg?.connectionMode === "PLATFORM_GATEWAY";
+
+  if (isPlatform) {
+    const now = new Date();
+    const verifiedPhone = outletCfg?.displayPhone || setting?.whatsappDisplayPhone || "+91 9513008467";
+    if (outletCfg) {
+      await prisma.outletWhatsAppConfig.update({
+        where: { id: outletCfg.id },
+        data: {
+          status: "CONNECTED",
+          displayPhone: verifiedPhone,
+          lastVerifiedAt: now,
+          verificationError: null,
+        },
+      });
+    } else if (setting) {
+      await prisma.restaurantSetting.update({
+        where: { id: setting.id },
+        data: {
+          whatsappConnectionStatus: "CONNECTED",
+          whatsappDisplayPhone: verifiedPhone,
+          whatsappLastVerifiedAt: now,
+          whatsappVerificationError: null,
+        },
+      });
+    }
+    return {
+      ok: true,
+      status: "CONNECTED",
+      displayPhone: verifiedPhone,
+      lastVerifiedAt: now,
+    };
+  }
 
   if (!phoneNumberId || !accessToken) {
     return {

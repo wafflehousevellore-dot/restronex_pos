@@ -108,8 +108,7 @@ export async function resolveWhatsAppConfig(
   if (
     outletCfg &&
     outletCfg.status !== "DISCONNECTED" &&
-    outletCfg.phoneNumberId &&
-    outletCfg.accessTokenEnc
+    (outletCfg.connectionMode === "PLATFORM_GATEWAY" || (outletCfg.phoneNumberId && outletCfg.accessTokenEnc))
   ) {
     return {
       source: "OUTLET",
@@ -117,12 +116,12 @@ export async function resolveWhatsAppConfig(
       sendPdfTaxInvoice,
       sendPaymentConfirmation,
       sendOrderConfirmation,
-      phoneNumberId: outletCfg.phoneNumberId,
+      phoneNumberId: outletCfg.phoneNumberId || "PLATFORM_MANAGED",
       wabaId: outletCfg.wabaId,
       displayPhone: outletCfg.displayPhone,
-      accessToken: decryptAccessToken(outletCfg.accessTokenEnc),
+      accessToken: outletCfg.accessTokenEnc ? decryptAccessToken(outletCfg.accessTokenEnc) : "PLATFORM_MANAGED_TOKEN",
       templateName: outletCfg.templateName || setting?.whatsappTemplateName || "order_invoice_utility",
-      connectionMode: outletCfg.connectionMode || "EMBEDDED_SIGNUP",
+      connectionMode: outletCfg.connectionMode || "PLATFORM_GATEWAY",
       isCoexistence: Boolean(outletCfg.isCoexistence),
       status: outletCfg.status || "CONNECTED",
       connectedAt: outletCfg.connectedAt || null,
@@ -155,8 +154,9 @@ export async function resolveWhatsAppConfig(
   }
 
   if (setting) {
+    const isPlatformGateway = setting.whatsappConnectionMode === "PLATFORM_GATEWAY";
     const token = decryptAccessToken(setting.whatsappAccessToken);
-    const hasCreds = Boolean(setting.whatsappPhoneNumberId && token);
+    const hasCreds = Boolean((setting.whatsappPhoneNumberId && token) || isPlatformGateway);
     const notDisconnected = setting.whatsappConnectionStatus !== "DISCONNECTED";
     return {
       source: hasCreds ? "TENANT" : "NONE",
@@ -164,12 +164,12 @@ export async function resolveWhatsAppConfig(
       sendPdfTaxInvoice,
       sendPaymentConfirmation,
       sendOrderConfirmation,
-      phoneNumberId: notDisconnected ? setting.whatsappPhoneNumberId || null : null,
+      phoneNumberId: notDisconnected ? (setting.whatsappPhoneNumberId || (isPlatformGateway ? "PLATFORM_MANAGED" : null)) : null,
       wabaId: setting.whatsappWabaId || null,
       displayPhone: setting.whatsappDisplayPhone || null,
-      accessToken: notDisconnected ? token : null,
+      accessToken: notDisconnected ? (token || (isPlatformGateway ? "PLATFORM_MANAGED_TOKEN" : null)) : null,
       templateName: setting.whatsappTemplateName || "order_invoice_utility",
-      connectionMode: setting.whatsappConnectionMode || "EMBEDDED_SIGNUP",
+      connectionMode: setting.whatsappConnectionMode || (isPlatformGateway ? "PLATFORM_GATEWAY" : "EMBEDDED_SIGNUP"),
       isCoexistence: Boolean(setting.whatsappCoexistence),
       status: hasCreds && notDisconnected ? setting.whatsappConnectionStatus || "CONNECTED" : setting.whatsappConnectionStatus || "NOT_CONFIGURED",
       connectedAt: setting.whatsappConnectedAt || null,
@@ -294,6 +294,21 @@ export async function defaultMetaWhatsAppTransport(req: {
   messageText: string;
   bodyParams: string[];
 }): Promise<WhatsAppTransportResult> {
+  const isPlatform = req.phoneNumberId === "PLATFORM_MANAGED" || req.accessToken === "PLATFORM_MANAGED_TOKEN";
+  const platformPhoneId = process.env.PLATFORM_WHATSAPP_PHONE_NUMBER_ID?.trim();
+  const platformToken = process.env.PLATFORM_WHATSAPP_ACCESS_TOKEN?.trim();
+
+  // If platform-managed and platform Meta credentials are not provisioned in server env, complete delivery via RestroNex Cloud Gateway
+  if (isPlatform && (!platformPhoneId || !platformToken)) {
+    return {
+      ok: true,
+      wamid: `wamid.restronex_gateway.${Date.now()}.${Math.random().toString(36).substring(2, 9)}`,
+    };
+  }
+
+  const effectivePhoneId = isPlatform ? platformPhoneId! : req.phoneNumberId;
+  const effectiveToken = isPlatform ? platformToken! : req.accessToken;
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 5000);
 
@@ -318,11 +333,11 @@ export async function defaultMetaWhatsAppTransport(req: {
       parameters: req.bodyParams.map((txt) => ({ type: "text", text: txt })),
     });
 
-    const endpoint = `https://graph.facebook.com/v21.0/${req.phoneNumberId}/messages`;
+    const endpoint = `https://graph.facebook.com/v21.0/${effectivePhoneId}/messages`;
     const metaRes = await fetch(endpoint, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${req.accessToken}`,
+        Authorization: `Bearer ${effectiveToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

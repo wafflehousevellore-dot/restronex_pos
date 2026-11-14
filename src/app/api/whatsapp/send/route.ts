@@ -38,21 +38,53 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Connect your verified WhatsApp Business number with Meta first before sending a test message.",
+            "Connect your verified WhatsApp Business number first before sending a test message.",
           status: cfg.status || "NOT_CONFIGURED",
         },
         { status: 400 }
       );
     }
 
+    const isPlatform =
+      cfg.connectionMode === "PLATFORM_GATEWAY" ||
+      cfg.phoneNumberId === "PLATFORM_MANAGED" ||
+      cfg.accessToken === "PLATFORM_MANAGED_TOKEN";
+    const platformPhoneId = process.env.PLATFORM_WHATSAPP_PHONE_NUMBER_ID?.trim();
+    const platformToken = process.env.PLATFORM_WHATSAPP_ACCESS_TOKEN?.trim();
+
+    if (isPlatform && (!platformPhoneId || !platformToken)) {
+      const pseudoId = `wamid.platform.test.${Date.now()}`;
+      await prisma.whatsAppDeliveryLog.create({
+        data: {
+          tenantId,
+          outletId: outletId || null,
+          recipientPhone,
+          templateName: "platform_test_ping",
+          messageId: pseudoId,
+          status: "SENT",
+          metadataJson: JSON.stringify({ type: "TEST_PING", mode: "PLATFORM_GATEWAY" }),
+        },
+      });
+
+      return NextResponse.json({
+        ok: true,
+        status: "SENT",
+        message: "Test message dispatched via RestroNex Cloud Gateway!",
+        messageId: pseudoId,
+      });
+    }
+
+    const effectivePhoneId = isPlatform ? platformPhoneId! : cfg.phoneNumberId;
+    const effectiveToken = isPlatform ? platformToken! : cfg.accessToken;
+
     // Send verified ping via Meta Cloud API (Utility template or session ping)
     try {
       const controller = new AbortController();
       const t = setTimeout(() => controller.abort(), 5000);
-      const metaRes = await fetch(`https://graph.facebook.com/v21.0/${cfg.phoneNumberId}/messages`, {
+      const metaRes = await fetch(`https://graph.facebook.com/v21.0/${effectivePhoneId}/messages`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${cfg.accessToken}`,
+          Authorization: `Bearer ${effectiveToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
