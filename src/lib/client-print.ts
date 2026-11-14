@@ -41,6 +41,18 @@ export async function discoverUsbPrinter(): Promise<{
   }
 }
 
+let activeBleDevice: any = null;
+let activeBleCharacteristic: any = null;
+
+export const POPULAR_BLE_PRINTER_SERVICES = [
+  "000018f0-0000-1000-8000-00805f9b34fb", // Standard POS BLE service
+  "49535343-fe7d-4ae5-8fa9-9fafd205e455", // ISSC transparent serial UART service
+  "0000e781-0000-1000-8000-00805f9b34fb", // Xprinter / Zhuhai BLE
+  "0000ff00-0000-1000-8000-00805f9b34fb", // General BLE UART
+  "e7810a71-73ae-499d-8c15-faa9aef0c3f2", // Common 58mm mobile printer
+  "0000ae00-0000-1000-8000-00805f9b34fb", // Android BLE thermal profile
+];
+
 export async function discoverBluetoothPrinter(): Promise<{
   ok: boolean;
   name?: string;
@@ -56,8 +68,10 @@ export async function discoverBluetoothPrinter(): Promise<{
   try {
     const dev = await (navigator as any).bluetooth.requestDevice({
       acceptAllDevices: true,
-      optionalServices: ["000018f0-0000-1000-8000-00805f9b34fb"],
+      optionalServices: POPULAR_BLE_PRINTER_SERVICES,
     });
+    activeBleDevice = dev;
+    activeBleCharacteristic = null;
     return {
       ok: true,
       name: dev.name || "Bluetooth Thermal Printer",
@@ -175,9 +189,90 @@ export async function dispatchClientPrintJob(params: {
       errMsg = "WebUSB unsupported in this browser; install Chrome/Edge or Local Print Bridge";
     }
   } else if (params.printerType === "BLUETOOTH_THERMAL") {
-    // Web Bluetooth requires active gesture for initial connect; if unavailable from background click, queue/report honestly
-    finalStatus = "PRINT_REQUESTED";
-    errMsg = "Bluetooth ESC/POS requires active BLE session or Android counter app; queued for handoff";
+    let printedViaBle = false;
+    if (activeBleDevice && params.escPosBase64) {
+      try {
+        if (!activeBleDevice.gatt?.connected) {
+          await activeBleDevice.gatt?.connect();
+        }
+        if (!activeBleCharacteristic && activeBleDevice.gatt?.connected) {
+          for (const serviceUuid of POPULAR_BLE_PRINTER_SERVICES) {
+            try {
+              const service = await activeBleDevice.gatt.getPrimaryService(serviceUuid);
+              const chars = await service.getCharacteristics();
+              const writeChar = chars.find(
+                (c: any) => c.properties.write || c.properties.writeWithoutResponse
+              );
+              if (writeChar) {
+                activeBleCharacteristic = writeChar;
+                break;
+              }
+            } catch {}
+          }
+        }
+
+        if (activeBleCharacteristic) {
+          const rawBytes = base64ToUint8Array(params.escPosBase64);
+          const chunkSize = 100;
+          for (let i = 0; i < rawBytes.length; i += chunkSize) {
+            const chunk = rawBytes.slice(i, i + chunkSize);
+            if (activeBleCharacteristic.writeValueWithoutResponse) {
+              await activeBleCharacteristic.writeValueWithoutResponse(chunk);
+            } else {
+              await activeBleCharacteristic.writeValue(chunk);
+            }
+          }
+          finalStatus = "PRINTED";
+          printedViaBle = true;
+        }
+      } catch (bleErr: any) {
+        console.warn("BLE thermal write failed, using spooler handoff:", bleErr);
+      }
+    }
+
+    if (!printedViaBle) {
+      // If BLE connection wasn't held or on desktop without active BLE, trigger browser print dialog cleanly
+      try {
+        if (typeof document !== "undefined" && params.textLines && params.textLines.length > 0) {
+          const iframe = document.createElement("iframe");
+          iframe.style.position = "fixed";
+          iframe.style.right = "0";
+          iframe.style.bottom = "0";
+          iframe.style.width = "0";
+          iframe.style.height = "0";
+          iframe.style.border = "0";
+          document.body.appendChild(iframe);
+          const doc = iframe.contentWindow?.document;
+          if (doc) {
+            const widthMm = params.paperWidth === "58mm" ? "58mm" : "80mm";
+            const pre = params.textLines
+              .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
+              .join("\n");
+            doc.open();
+            doc.write(
+              `<!doctype html><html><head><style>@page{margin:2mm;size:${widthMm} auto;}body{font-family:monospace;font-size:${
+                params.paperWidth === "58mm" ? "10px" : "12px"
+              };white-space:pre;width:${widthMm};margin:0;}</style></head><body>${pre}</body></html>`
+            );
+            doc.close();
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+          }
+          setTimeout(() => {
+            try {
+              document.body.removeChild(iframe);
+            } catch {}
+          }, 4000);
+          finalStatus = "PRINT_REQUESTED";
+        } else {
+          finalStatus = "PRINT_REQUESTED";
+          errMsg = "Bluetooth ESC/POS queued for paired BLE printer / mobile counter handoff";
+        }
+      } catch {
+        finalStatus = "FAILED";
+        errMsg = "Bluetooth print dispatch failed";
+      }
+    }
   } else {
     // OS_PRINT_SERVICE: uses hidden iframe silently (never blocks checkout) and reports PRINT_REQUESTED accurately
     try {
