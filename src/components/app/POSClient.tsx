@@ -1561,7 +1561,7 @@ export default function POSClient({
                 </div>
 
                 {/* Independent WhatsApp Auto-Delivery Status Banner */}
-                <div className="mt-4 p-3.5 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex flex-col gap-1.5 font-sans">
+                <div className="mt-4 p-3.5 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex flex-col gap-1.5 font-sans print:hidden">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <MessageSquare className="h-4 w-4 text-[#16845B]" />
@@ -1628,7 +1628,7 @@ export default function POSClient({
                 </div>
 
                 {/* Honest Independent Thermal Printer Dispatch Pill */}
-                <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-1 text-[11px] font-sans">
+                <div className="p-3 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] space-y-1 text-[11px] font-sans print:hidden">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Printer className="h-4 w-4 text-[#16845B]" />
@@ -1672,6 +1672,32 @@ export default function POSClient({
                       </Link>
                     </div>
                   )}
+                </div>
+
+                {/* Dynamic UPI Payment QR Code on Printable Bill */}
+                <div className="py-2.5 border-t border-dashed border-[#718078]/40 text-center space-y-1">
+                  <div className="text-[10px] font-bold text-[#172B25] uppercase tracking-wide">
+                    Scan with Any UPI App to Pay
+                  </div>
+                  <div className="mx-auto w-fit p-1 bg-white border border-[#E5EBE7] rounded-xl shadow-2xs">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
+                        `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                          activeMerchantName || activeReceipt.outletName || "WAFFLE PLUM HOUSE"
+                        )}&am=${(activeReceipt.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(
+                          `Bill for ${activeReceipt.invoiceNumber}`
+                        )}`
+                      )}&margin=1`}
+                      alt="UPI Payment QR Code"
+                      className="w-24 h-24 object-contain mx-auto"
+                    />
+                  </div>
+                  <div className="text-[9px] font-mono text-[#718078]">
+                    UPI ID: <span className="font-bold text-[#172B25]">{activeUpiId}</span>
+                  </div>
+                  <div className="text-[8px] text-[#718078]">
+                    Google Pay • PhonePe • Paytm • BHIM • CRED
+                  </div>
                 </div>
 
                 {/* Footer */}
