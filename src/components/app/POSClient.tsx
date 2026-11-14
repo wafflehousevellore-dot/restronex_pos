@@ -5,8 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { apiFetch } from "@/lib/api";
-import { dispatchClientPrintJob } from "@/lib/client-print";
-import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed } from "lucide-react";
+import {
+  dispatchClientPrintJob,
+  discoverBluetoothPrinter,
+  getOrRestoreBleDevice,
+} from "@/lib/client-print";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed, Bluetooth } from "lucide-react";
 import Link from "next/link";
 
 function createCheckoutIdempotencyKey(): string {
@@ -195,6 +199,34 @@ export default function POSClient({
   const [activeUpiId, setActiveUpiId] = useState("9513008467@upi");
   const [activeMerchantName, setActiveMerchantName] = useState("WAFFLE PLUM HOUSE");
   const [showUpiFullscreen, setShowUpiFullscreen] = useState(false);
+  const [bleConnected, setBleConnected] = useState(false);
+  const [connectingBle, setConnectingBle] = useState(false);
+
+  useEffect(() => {
+    // Check & pre-warm Bluetooth printer connection on POS load
+    getOrRestoreBleDevice()
+      .then((dev) => {
+        if (dev && dev.gatt?.connected) setBleConnected(true);
+      })
+      .catch(() => {});
+  }, []);
+
+  async function handleConnectBluetoothPrinter() {
+    setConnectingBle(true);
+    try {
+      const r = await discoverBluetoothPrinter();
+      if (r.ok) {
+        setBleConnected(true);
+        setMsg({ type: "success", text: `✓ Bluetooth Printer '${r.name}' connected & ready!` });
+      } else {
+        setMsg({ type: "error", text: r.error || "Bluetooth connection failed." });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Bluetooth connection error." });
+    } finally {
+      setConnectingBle(false);
+    }
+  }
 
   useEffect(() => {
     apiFetch("/api/settings/payments")
@@ -699,7 +731,21 @@ export default function POSClient({
             Paise-precise • CGST 9% + SGST 9% • KOT auto-fired • {items.length} items
           </p>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center flex-wrap">
+          <button
+            type="button"
+            onClick={handleConnectBluetoothPrinter}
+            disabled={connectingBle}
+            title={bleConnected ? "Bluetooth Thermal Printer Connected" : "Click to connect Bluetooth printer"}
+            className={`rounded-full px-3.5 py-1.5 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer border ${
+              bleConnected
+                ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+                : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9] shadow-xs"
+            }`}
+          >
+            <Bluetooth className={`h-3.5 w-3.5 ${connectingBle ? "animate-spin" : bleConnected ? "text-[#16845B]" : "text-[#718078]"}`} />
+            <span>{connectingBle ? "Connecting..." : bleConnected ? "BT Printer Ready" : "Connect BT Printer"}</span>
+          </button>
           <select
             value={selectedOutlet}
             onChange={(e) => setSelectedOutlet(e.target.value)}
@@ -1723,10 +1769,20 @@ export default function POSClient({
 
               <button
                 type="button"
+                onClick={handleRetryPrint}
+                disabled={retryingPrint}
+                className="flex-1 rounded-full bg-[#172B25] hover:bg-black text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                <Printer className="h-4 w-4 text-[#16845B]" />
+                {retryingPrint ? "Sending..." : "🖨️ Bluetooth Print"}
+              </button>
+
+              <button
+                type="button"
                 onClick={() => window.print()}
                 className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-4 text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Printer className="h-4 w-4" /> Manual Print ({printPaperWidth})
+                <Printer className="h-4 w-4" /> System Print ({printPaperWidth})
               </button>
 
               <a

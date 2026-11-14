@@ -21,6 +21,7 @@ import {
   discoverBluetoothPrinter,
   discoverUsbPrinter,
   dispatchClientPrintJob,
+  getOrRestoreBleDevice,
 } from "@/lib/client-print";
 
 export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOutletId?: string }) {
@@ -111,6 +112,15 @@ export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOut
   async function triggerTestPrint(printer: any) {
     setStatusBanner({ type: "success", text: `Dispatching ${printer.paperWidth} diagnostic slip to ${printer.name}…` });
     try {
+      if (printer.type === "BLUETOOTH_THERMAL") {
+        const dev = await getOrRestoreBleDevice();
+        if (!dev) {
+          const r = await discoverBluetoothPrinter();
+          if (!r.ok) {
+            return setStatusBanner({ type: "error", text: r.error || "Bluetooth printer pairing required to print." });
+          }
+        }
+      }
       const res = await apiFetch("/api/print-jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
