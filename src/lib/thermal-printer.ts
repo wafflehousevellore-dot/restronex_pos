@@ -205,7 +205,11 @@ export function formatThermalReceipt(
 
   if (input.qrData) {
     lines.push(dash);
-    lines.push(centerLine("Scan QR for Digital Invoice PDF", cols));
+    if (input.qrData.startsWith("upi://")) {
+      lines.push(centerLine("Scan QR with GPay / PhonePe to Pay", cols));
+    } else {
+      lines.push(centerLine("Scan QR for Digital Invoice PDF", cols));
+    }
   }
 
   lines.push(dash);
@@ -480,10 +484,21 @@ export async function queueAndDispatchBillPrintJob(
     const invoiceNumber =
       order.invoice?.invoiceNumber || `INV-${order.orderNumber.replace("ORD-", "")}`;
 
+    const paymentGateway = await prisma.tenantPaymentGatewayConfig.findUnique({
+      where: { tenantId: order.tenantId },
+    });
+    const upiVpa = paymentGateway?.provider === "DIRECT_UPI" ? paymentGateway.keyId : null;
+    const upiQrString = upiVpa
+      ? `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent(
+          paymentGateway?.merchantName || setting?.receiptHeader || order.tenant.name
+        )}&am=${(order.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${invoiceNumber}`)}`
+      : null;
+
     const qrData =
       printer.qrEnabled && setting?.qrFooterEnabled !== false
-        ? order.invoice?.fileUrl ||
-          buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl)
+        ? (upiQrString ||
+            order.invoice?.fileUrl ||
+            buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl))
         : null;
 
     if (existingJob) {

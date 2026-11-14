@@ -14,6 +14,8 @@ import {
   Search,
   Lock,
   RotateCcw,
+  QrCode,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function PaymentsClient() {
@@ -34,6 +36,11 @@ export default function PaymentsClient() {
   const [upiManualEnabled, setUpiManualEnabled] = useState(true);
   const [savingGateway, setSavingGateway] = useState(false);
   const [gatewayMsg, setGatewayMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Direct Dynamic UPI QR state (Option 2)
+  const [gatewaySubTab, setGatewaySubTab] = useState<"DIRECT_UPI" | "RAZORPAY">("DIRECT_UPI");
+  const [upiId, setUpiId] = useState("9513008467@upi");
+  const [savingUpi, setSavingUpi] = useState(false);
 
   // Refund modal state
   const [refundingPayment, setRefundingPayment] = useState<any>(null);
@@ -57,8 +64,10 @@ export default function PaymentsClient() {
       if (resConfig.ok) {
         const c = await resConfig.json();
         setGatewayConfig(c);
+        setGatewaySubTab(c.provider === "RAZORPAY" ? "RAZORPAY" : "DIRECT_UPI");
+        setUpiId(c.upiId || c.keyId || "9513008467@upi");
         setKeyId(c.keyId || "");
-        setMerchantName(c.merchantName || "");
+        setMerchantName(c.merchantName || "WAFFLE PLUM HOUSE");
         setIsGatewayEnabled(c.isEnabled || false);
         setCashEnabled(c.cashEnabled ?? true);
         setCardTerminalEnabled(c.cardTerminalEnabled ?? true);
@@ -74,6 +83,41 @@ export default function PaymentsClient() {
   useEffect(() => {
     loadData();
   }, []);
+
+  async function handleSaveDirectUpi(e: React.FormEvent) {
+    e.preventDefault();
+    if (!upiId.trim()) {
+      return setGatewayMsg({ type: "error", text: "Please enter your UPI ID (VPA)." });
+    }
+    setSavingUpi(true);
+    setGatewayMsg(null);
+
+    try {
+      const res = await fetch("/api/settings/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: "DIRECT_UPI",
+          upiId: upiId.trim(),
+          merchantName: merchantName.trim() || "WAFFLE PLUM HOUSE",
+          isEnabled: true,
+          cashEnabled,
+          cardTerminalEnabled,
+          upiManualEnabled: true,
+        }),
+      });
+
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error || "Failed to save UPI settings");
+
+      setGatewayMsg({ type: "success", text: "✓ Direct Dynamic UPI QR (0% Fee) activated successfully!" });
+      await loadData();
+    } catch (err: any) {
+      setGatewayMsg({ type: "error", text: err.message || "Failed to save UPI settings." });
+    } finally {
+      setSavingUpi(false);
+    }
+  }
 
   async function handleSaveGateway(e: React.FormEvent) {
     e.preventDefault();
@@ -410,141 +454,296 @@ export default function PaymentsClient() {
 
       {/* Tab 2: Direct Merchant Gateway Setup */}
       {activeTab === "GATEWAY_CONFIG" && (
-        <div className="max-w-2xl mx-auto space-y-6">
-          <Card className="bg-white border-[#E5EBE7] shadow-sm">
-            <CardHeader className="border-b border-[#E5EBE7] pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
-                  <Lock className="h-4 w-4 text-[#16845B]" />
-                  Direct Razorpay Merchant Integration
-                </CardTitle>
-                <span
-                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
-                    gatewayConfig?.isEnabled
-                      ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
-                      : "bg-[#F8FAF9] border-[#E5EBE7] text-[#718078]"
-                  }`}
-                >
-                  {gatewayConfig?.isEnabled ? "Gateway Active" : "Offline Only"}
-                </span>
-              </div>
-              <p className="text-xs text-[#718078] mt-1">
-                All food sales revenue goes <b>directly into your restaurant&apos;s bank account</b> through your own Razorpay credentials. RestroNex does not touch or pool your customer money.
-              </p>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-5">
-              <form onSubmit={handleSaveGateway} className="space-y-4">
-                <div className="flex items-center justify-between p-3.5 bg-[#F8FAF9] rounded-xl border border-[#E5EBE7]">
-                  <div>
-                    <div className="text-xs font-bold text-[#172B25]">Enable Online Customer Payments</div>
-                    <div className="text-[11px] text-[#718078]">Allow QR ordering and POS customers to pay via Razorpay</div>
+        <div className="max-w-2xl mx-auto space-y-5">
+          {/* Method Switcher */}
+          <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-md shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setGatewaySubTab("DIRECT_UPI")}
+              className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
+                gatewaySubTab === "DIRECT_UPI"
+                  ? "bg-[#16845B] text-white shadow-xs"
+                  : "text-[#718078] hover:text-[#172B25]"
+              }`}
+            >
+              <QrCode className="h-3.5 w-3.5" />
+              ⚡ Direct Dynamic UPI QR (0% Fee)
+            </button>
+            <button
+              type="button"
+              onClick={() => setGatewaySubTab("RAZORPAY")}
+              className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
+                gatewaySubTab === "RAZORPAY"
+                  ? "bg-[#16845B] text-white shadow-xs"
+                  : "text-[#718078] hover:text-[#172B25]"
+              }`}
+            >
+              <Lock className="h-3.5 w-3.5" />
+              Razorpay Gateway
+            </button>
+          </div>
+
+          {gatewayMsg && (
+            <div
+              className={`p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-between ${
+                gatewayMsg.type === "success"
+                  ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+                  : "bg-red-50 border-red-200 text-red-700"
+              }`}
+            >
+              <span>{gatewayMsg.text}</span>
+              <button type="button" onClick={() => setGatewayMsg(null)} className="px-1 font-bold">
+                ×
+              </button>
+            </div>
+          )}
+
+          {gatewaySubTab === "DIRECT_UPI" ? (
+            /* Option 2: Direct Dynamic UPI QR */
+            <Card className="bg-white border-[#E5EBE7] shadow-sm">
+              <CardHeader className="border-b border-[#E5EBE7] pb-4 bg-gradient-to-r from-[#F8FAF9] to-[#E8F5EE]/40">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
+                    <QrCode className="h-5 w-5 text-[#16845B]" />
+                    Direct Dynamic UPI QR (Zero Fee Option)
+                  </CardTitle>
+                  <span className="text-[11px] font-black px-3 py-1 rounded-full border bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]">
+                    0% COMMISSION
+                  </span>
+                </div>
+                <p className="text-xs text-[#718078] mt-1">
+                  All customer payments go <b>100% directly into your bank account instantly</b> via Google Pay, PhonePe, Paytm, or BHIM. RestroNex generates dynamic UPI QR codes on the POS terminal and thermal printed bills with the exact bill amount. No merchant KYC or gateway fees!
+                </p>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-5">
+                <form onSubmit={handleSaveDirectUpi} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold text-[#172B25]">
+                      Business UPI ID / VPA <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      placeholder="e.g. 9513008467@upi or wafflehouse@okhdfcbank"
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
+                      required
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono font-bold"
+                    />
+                    <div className="text-[10px] text-[#718078]">
+                      Found in your Google Pay, PhonePe, Paytm Business, or bank mobile app profile.
+                    </div>
                   </div>
-                  <input
-                    type="checkbox"
-                    checked={isGatewayEnabled}
-                    onChange={(e) => setIsGatewayEnabled(e.target.checked)}
-                    className="h-4 w-4 rounded accent-[#16845B]"
-                  />
-                </div>
 
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-[#172B25]">
-                    Razorpay Key ID <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    placeholder="rzp_live_... or rzp_test_..."
-                    value={keyId}
-                    onChange={(e) => setKeyId(e.target.value)}
-                    className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
-                  />
-                  <div className="text-[10px] text-[#718078]">Found in your Razorpay Dashboard → Settings → API Keys</div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-[#172B25]">
-                    Razorpay Key Secret <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    type="password"
-                    placeholder={gatewayConfig?.hasSecret ? "•••••••••••••••• (Encrypted on Server)" : "Enter Key Secret"}
-                    value={keySecret}
-                    onChange={(e) => setKeySecret(e.target.value)}
-                    className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
-                  />
-                  <div className="text-[10px] text-[#718078]">
-                    Stored securely using AES-256-GCM encryption. Never exposed to browser.
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold text-[#172B25]">Merchant Payee Display Name</Label>
+                    <Input
+                      placeholder="WAFFLE PLUM HOUSE"
+                      value={merchantName}
+                      onChange={(e) => setMerchantName(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-bold"
+                    />
+                    <div className="text-[10px] text-[#718078]">
+                      The restaurant name displayed on customer UPI apps upon scanning.
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-[#172B25]">Merchant Display Name</Label>
-                  <Input
-                    placeholder="Your Restaurant Name"
-                    value={merchantName}
-                    onChange={(e) => setMerchantName(e.target.value)}
-                    className="bg-white border-[#E5EBE7] text-xs h-9"
-                  />
-                </div>
-
-                <div className="pt-2 border-t border-[#E5EBE7] space-y-2.5">
-                  <div className="text-xs font-bold text-[#172B25]">Supported In-Person Tender Methods</div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={cashEnabled}
-                        onChange={(e) => setCashEnabled(e.target.checked)}
-                        className="accent-[#16845B]"
+                  <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] flex flex-col sm:flex-row items-center gap-4">
+                    <div className="bg-white p-2 rounded-xl border border-[#E5EBE7] shrink-0 shadow-xs">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
+                          `upi://pay?pa=${upiId || "9513008467@upi"}&pn=${encodeURIComponent(
+                            merchantName || "WAFFLE PLUM HOUSE"
+                          )}&am=100.00&cu=INR&tn=Sample%20Bill`
+                        )}`}
+                        alt="Test UPI QR Code"
+                        className="w-28 h-28 object-contain"
                       />
-                      <span>Cash at Counter</span>
-                    </label>
-
-                    <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={cardTerminalEnabled}
-                        onChange={(e) => setCardTerminalEnabled(e.target.checked)}
-                        className="accent-[#16845B]"
-                      />
-                      <span>Card Machine</span>
-                    </label>
-
-                    <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={upiManualEnabled}
-                        onChange={(e) => setUpiManualEnabled(e.target.checked)}
-                        className="accent-[#16845B]"
-                      />
-                      <span>Direct Staff UPI</span>
-                    </label>
+                    </div>
+                    <div className="text-xs text-[#718078] space-y-1">
+                      <div className="font-bold text-[#172B25] flex items-center gap-1.5 text-xs">
+                        <CheckCircle2 className="h-4 w-4 text-[#16845B]" />
+                        Live Test QR Code Preview
+                      </div>
+                      <p className="text-[11px] leading-relaxed">
+                        Scan with your PhonePe, Google Pay, or Paytm app right now to test. The payment will route directly to <b>{upiId || "your UPI ID"}</b>.
+                      </p>
+                      <div className="text-[10px] font-mono text-[#16845B] pt-0.5">
+                        Amount: ₹100.00 (Test) • Direct Bank Settlement
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                {gatewayMsg && (
-                  <div
-                    className={`p-3 rounded-xl text-xs font-medium border ${
-                      gatewayMsg.type === "success"
+                  <div className="pt-2 border-t border-[#E5EBE7] space-y-2.5">
+                    <div className="text-xs font-bold text-[#172B25]">Supported In-Person Tender Methods</div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cashEnabled}
+                          onChange={(e) => setCashEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Cash at Counter</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cardTerminalEnabled}
+                          onChange={(e) => setCardTerminalEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Card Machine</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={upiManualEnabled}
+                          onChange={(e) => setUpiManualEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Direct Dynamic UPI QR</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="pt-3">
+                    <Button
+                      type="submit"
+                      disabled={savingUpi}
+                      className="w-full bg-[#16845B] hover:bg-[#116B49] text-white rounded-full font-bold text-xs h-10 shadow-xs cursor-pointer"
+                    >
+                      {savingUpi ? "Saving UPI Settings..." : "⚡ Save & Activate Direct Dynamic UPI QR (0% Fee)"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          ) : (
+            /* Razorpay Gateway Card */
+            <Card className="bg-white border-[#E5EBE7] shadow-sm">
+              <CardHeader className="border-b border-[#E5EBE7] pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
+                    <Lock className="h-4 w-4 text-[#16845B]" />
+                    Direct Razorpay Merchant Integration
+                  </CardTitle>
+                  <span
+                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                      gatewayConfig?.isEnabled && gatewayConfig?.provider === "RAZORPAY"
                         ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
-                        : "bg-red-50 border-red-200 text-red-700"
+                        : "bg-[#F8FAF9] border-[#E5EBE7] text-[#718078]"
                     }`}
                   >
-                    {gatewayMsg.text}
-                  </div>
-                )}
-
-                <div className="pt-2">
-                  <Button
-                    type="submit"
-                    disabled={savingGateway}
-                    className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold py-3 shadow-xs"
-                  >
-                    {savingGateway ? "Verifying Credentials with Razorpay..." : "Save & Verify Razorpay Credentials"}
-                  </Button>
+                    {gatewayConfig?.isEnabled && gatewayConfig?.provider === "RAZORPAY" ? "Gateway Active" : "Optional"}
+                  </span>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
+                <p className="text-xs text-[#718078] mt-1">
+                  Optional: If you wish to accept online cards and netbanking via Razorpay.
+                </p>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-5">
+                <form onSubmit={handleSaveGateway} className="space-y-4">
+                  <div className="flex items-center justify-between p-3.5 bg-[#F8FAF9] rounded-xl border border-[#E5EBE7]">
+                    <div>
+                      <div className="text-xs font-bold text-[#172B25]">Enable Online Customer Payments</div>
+                      <div className="text-[11px] text-[#718078]">Allow QR ordering and POS customers to pay via Razorpay</div>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={isGatewayEnabled}
+                      onChange={(e) => setIsGatewayEnabled(e.target.checked)}
+                      className="h-4 w-4 rounded accent-[#16845B]"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-[#172B25]">
+                      Razorpay Key ID <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      placeholder="rzp_live_... or rzp_test_..."
+                      value={keyId}
+                      onChange={(e) => setKeyId(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
+                    />
+                    <div className="text-[10px] text-[#718078]">Found in your Razorpay Dashboard → Settings → API Keys</div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-[#172B25]">
+                      Razorpay Key Secret <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      type="password"
+                      placeholder={gatewayConfig?.hasSecret ? "•••••••••••••••• (Encrypted on Server)" : "Enter Key Secret"}
+                      value={keySecret}
+                      onChange={(e) => setKeySecret(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
+                    />
+                    <div className="text-[10px] text-[#718078]">
+                      Stored securely using AES-256-GCM encryption. Never exposed to browser.
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-[#172B25]">Merchant Display Name</Label>
+                    <Input
+                      placeholder="Your Restaurant Name"
+                      value={merchantName}
+                      onChange={(e) => setMerchantName(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9"
+                    />
+                  </div>
+
+                  <div className="pt-2 border-t border-[#E5EBE7] space-y-2.5">
+                    <div className="text-xs font-bold text-[#172B25]">Supported In-Person Tender Methods</div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cashEnabled}
+                          onChange={(e) => setCashEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Cash at Counter</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cardTerminalEnabled}
+                          onChange={(e) => setCardTerminalEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Card Machine</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={upiManualEnabled}
+                          onChange={(e) => setUpiManualEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Direct Staff UPI</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <Button
+                      type="submit"
+                      disabled={savingGateway}
+                      className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold py-2.5 shadow-xs"
+                    >
+                      {savingGateway ? "Verifying Credentials with Razorpay..." : "Save & Verify Razorpay Credentials"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
         </div>
       )}
 

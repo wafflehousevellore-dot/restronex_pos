@@ -192,6 +192,19 @@ export default function POSClient({
   const [activeReceipt, setActiveReceipt] = useState<ReceiptData | null>(null);
   const [showReceipt, setShowReceipt] = useState(false);
   const [loadingTableOrder, setLoadingTableOrder] = useState(false);
+  const [activeUpiId, setActiveUpiId] = useState("9513008467@upi");
+  const [activeMerchantName, setActiveMerchantName] = useState("WAFFLE PLUM HOUSE");
+  const [showUpiFullscreen, setShowUpiFullscreen] = useState(false);
+
+  useEffect(() => {
+    apiFetch("/api/settings/payments")
+      .then((r) => r.json())
+      .then((c) => {
+        if (c?.upiId || c?.keyId) setActiveUpiId(c.upiId || c.keyId);
+        if (c?.merchantName) setActiveMerchantName(c.merchantName);
+      })
+      .catch(() => {});
+  }, []);
 
   async function loadActiveTableOrder(orderId: string) {
     setLoadingTableOrder(true);
@@ -1111,7 +1124,7 @@ export default function POSClient({
                 <div className="rounded-xl border border-[#E5EBE7] bg-[#E8F5EE]/40 p-3 text-center space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-[#16845B]">
                     <span className="flex items-center gap-1.5">
-                      <QrCode className="h-3.5 w-3.5" /> Customer Scan & Pay
+                      <QrCode className="h-3.5 w-3.5" /> Customer Dynamic UPI QR
                     </span>
                     <span className="text-[11px] bg-[#16845B] text-white px-2 py-0.5 rounded-full font-black">
                       {formatINR(total)}
@@ -1119,17 +1132,29 @@ export default function POSClient({
                   </div>
                   <div className="mx-auto w-fit p-2 bg-white rounded-xl shadow-xs border border-[#E5EBE7]">
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-                        `upi://pay?pa=restronex@icici&pn=${encodeURIComponent(
-                          outlets.find((o) => o.id === selectedOutlet)?.name || "Restaurant"
-                        )}&am=${(total / 100).toFixed(2)}&cu=INR`
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                        `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                          outlets.find((o) => o.id === selectedOutlet)?.name || activeMerchantName || "WAFFLE PLUM HOUSE"
+                        )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for Order`)}`
                       )}&margin=2`}
                       alt="Customer UPI QR Code"
                       className="w-28 h-28 object-contain rounded"
                     />
                   </div>
+                  <div className="flex items-center justify-center gap-2 pt-0.5">
+                    <span className="text-[10px] text-[#718078] font-medium">
+                      Pay to: <b className="text-[#172B25]">{activeUpiId}</b>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowUpiFullscreen(true)}
+                      className="text-[10px] font-bold text-[#16845B] hover:underline cursor-pointer"
+                    >
+                      [ Enlarge QR ]
+                    </button>
+                  </div>
                   <div className="text-[10px] text-[#718078] font-medium">
-                    Scan with GPay, PhonePe, Paytm, BHIM
+                    Scan with GPay, PhonePe, Paytm, BHIM (0% Commission)
                   </div>
                 </div>
               )}
@@ -1693,6 +1718,65 @@ export default function POSClient({
                 className="rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:bg-[#F8FAF9] py-2.5 px-4 text-xs font-semibold cursor-pointer"
               >
                 Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Fullscreen Customer Counter Dynamic UPI QR Modal */}
+      {showUpiFullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full border border-[#E5EBE7] p-6 shadow-2xl text-center space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-3">
+              <div className="flex items-center gap-2 text-[#16845B] font-bold text-sm">
+                <QrCode className="h-5 w-5" />
+                Scan to Pay (UPI)
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowUpiFullscreen(false)}
+                className="text-[#718078] hover:text-[#172B25] font-bold text-sm cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-1">
+              <div className="text-3xl font-black text-[#172B25]">{formatINR(total)}</div>
+              <div className="text-xs text-[#718078]">
+                Payee: <b className="text-[#172B25]">{activeMerchantName}</b>
+              </div>
+              <div className="text-[11px] font-mono text-[#16845B] font-bold">{activeUpiId}</div>
+            </div>
+
+            <div className="mx-auto w-fit p-3 bg-white rounded-2xl border-2 border-[#16845B]/20 shadow-sm">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
+                  `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                    activeMerchantName
+                  )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${activeMerchantName}`)}`
+                )}&margin=2`}
+                alt="Fullscreen Dynamic UPI QR"
+                className="w-56 h-56 object-contain"
+              />
+            </div>
+
+            <div className="text-xs text-[#718078]">
+              Supports Google Pay, PhonePe, Paytm, BHIM, CRED
+            </div>
+
+            <div className="pt-2 flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowUpiFullscreen(false);
+                  placeOrder();
+                }}
+                disabled={posting}
+                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold shadow-xs cursor-pointer"
+              >
+                {posting ? "Finalizing Bill..." : "✓ Customer Paid — Bill & Print"}
               </button>
             </div>
           </div>

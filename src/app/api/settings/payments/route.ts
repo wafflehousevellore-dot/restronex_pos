@@ -25,11 +25,13 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     tenantId,
+    provider: config?.provider || "DIRECT_UPI",
     isEnabled: config?.isEnabled || false,
     keyId: config?.keyId || "",
-    keyIdMasked: maskCredential(config?.keyId),
+    keyIdMasked: config?.provider === "DIRECT_UPI" ? config?.keyId || "" : maskCredential(config?.keyId),
     hasSecret: !!config?.keySecretEncrypted,
-    merchantName: config?.merchantName || tenant?.name || "Restaurant Merchant",
+    merchantName: config?.merchantName || tenant?.name || "WAFFLE PLUM HOUSE",
+    upiId: config?.provider === "DIRECT_UPI" ? config?.keyId : config?.keyId || "9513008467@upi",
     autoCapture: config?.autoCapture ?? true,
     cashEnabled: config?.cashEnabled ?? true,
     cardTerminalEnabled: config?.cardTerminalEnabled ?? true,
@@ -58,6 +60,8 @@ export async function POST(req: NextRequest) {
   }
 
   const {
+    provider = "DIRECT_UPI",
+    upiId,
     isEnabled = false,
     keyId,
     keySecret,
@@ -68,6 +72,72 @@ export async function POST(req: NextRequest) {
     cardTerminalEnabled = true,
     upiManualEnabled = true,
   } = body;
+
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: tenantId },
+    select: { name: true },
+  });
+
+  // Handle Option 2: Direct Dynamic UPI QR (0% Gateway Fee)
+  if (provider === "DIRECT_UPI" || upiId) {
+    const rawUpi = String(upiId || keyId || "9513008467@upi").trim();
+    const finalMerchantName = merchantName?.trim() || tenant?.name || "WAFFLE PLUM HOUSE";
+
+    const updated = await prisma.tenantPaymentGatewayConfig.upsert({
+      where: { tenantId },
+      create: {
+        tenantId,
+        provider: "DIRECT_UPI",
+        isEnabled: true,
+        keyId: rawUpi,
+        merchantName: finalMerchantName,
+        autoCapture: true,
+        cashEnabled: Boolean(cashEnabled),
+        cardTerminalEnabled: Boolean(cardTerminalEnabled),
+        upiManualEnabled: true,
+      },
+      update: {
+        provider: "DIRECT_UPI",
+        isEnabled: true,
+        keyId: rawUpi,
+        merchantName: finalMerchantName,
+        autoCapture: true,
+        cashEnabled: Boolean(cashEnabled),
+        cardTerminalEnabled: Boolean(cardTerminalEnabled),
+        upiManualEnabled: true,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        userId,
+        action: "PAYMENT_GATEWAY_CONFIG_UPDATED",
+        entity: "TenantPaymentGatewayConfig",
+        entityId: updated.id,
+        metadataJson: JSON.stringify({
+          provider: "DIRECT_UPI",
+          upiId: rawUpi,
+          merchantName: finalMerchantName,
+        }),
+      },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      message: "Direct Dynamic UPI QR (0% Fee) activated successfully!",
+      config: {
+        provider: "DIRECT_UPI",
+        isEnabled: true,
+        upiId: rawUpi,
+        keyId: rawUpi,
+        merchantName: finalMerchantName,
+        cashEnabled: updated.cashEnabled,
+        cardTerminalEnabled: updated.cardTerminalEnabled,
+        upiManualEnabled: true,
+      },
+    });
+  }
 
   const existing = await prisma.tenantPaymentGatewayConfig.findUnique({
     where: { tenantId },
