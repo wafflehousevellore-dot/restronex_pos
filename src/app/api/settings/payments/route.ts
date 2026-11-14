@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     keyIdMasked: config?.provider === "DIRECT_UPI" ? config?.keyId || "" : maskCredential(config?.keyId),
     hasSecret: !!config?.keySecretEncrypted,
     merchantName: config?.merchantName || tenant?.name || "WAFFLE PLUM HOUSE",
-    upiId: config?.provider === "DIRECT_UPI" ? config?.keyId : config?.keyId || "9513008467@upi",
+    upiId: config?.provider === "DIRECT_UPI" ? config?.keyId || "ajaydpi2005@ptyes" : config?.keyId || "ajaydpi2005@ptyes",
     autoCapture: config?.autoCapture ?? true,
     cashEnabled: config?.cashEnabled ?? true,
     cardTerminalEnabled: config?.cardTerminalEnabled ?? true,
@@ -79,8 +79,8 @@ export async function POST(req: NextRequest) {
   });
 
   // Handle Option 2: Direct Dynamic UPI QR (0% Gateway Fee)
-  if (provider === "DIRECT_UPI" || upiId) {
-    const rawUpi = String(upiId || keyId || "9513008467@upi").trim();
+  if (provider === "DIRECT_UPI" || (provider !== "RAZORPAY" && upiId)) {
+    const rawUpi = String(upiId || keyId || "ajaydpi2005@ptyes").trim();
     const finalMerchantName = merchantName?.trim() || tenant?.name || "WAFFLE PLUM HOUSE";
 
     const updated = await prisma.tenantPaymentGatewayConfig.upsert({

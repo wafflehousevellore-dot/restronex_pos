@@ -39,7 +39,7 @@ export default function PaymentsClient() {
 
   // Direct Dynamic UPI QR state (Option 2)
   const [gatewaySubTab, setGatewaySubTab] = useState<"DIRECT_UPI" | "RAZORPAY">("DIRECT_UPI");
-  const [upiId, setUpiId] = useState("9513008467@upi");
+  const [upiId, setUpiId] = useState("ajaydpi2005@ptyes");
   const [savingUpi, setSavingUpi] = useState(false);
 
   // Refund modal state
@@ -64,8 +64,9 @@ export default function PaymentsClient() {
       if (resConfig.ok) {
         const c = await resConfig.json();
         setGatewayConfig(c);
-        setGatewaySubTab(c.provider === "RAZORPAY" ? "RAZORPAY" : "DIRECT_UPI");
-        setUpiId(c.upiId || c.keyId || "9513008467@upi");
+        const isRzp = c.provider === "RAZORPAY" && c.keyId?.startsWith("rzp_");
+        setGatewaySubTab(isRzp ? "RAZORPAY" : "DIRECT_UPI");
+        setUpiId(c.upiId || c.keyId || "ajaydpi2005@ptyes");
         setKeyId(c.keyId || "");
         setMerchantName(c.merchantName || "WAFFLE PLUM HOUSE");
         setIsGatewayEnabled(c.isEnabled || false);
@@ -129,6 +130,7 @@ export default function PaymentsClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          provider: "RAZORPAY",
           keyId,
           keySecret: keySecret || undefined,
           merchantName,
@@ -512,10 +514,14 @@ export default function PaymentsClient() {
                   </span>
                 </div>
                 <p className="text-xs text-[#718078] mt-1">
-                  All customer payments go <b>100% directly into your bank account instantly</b> via Google Pay, PhonePe, Paytm, or BHIM. RestroNex generates dynamic UPI QR codes on the POS terminal and thermal printed bills with the exact bill amount. No merchant KYC or gateway fees!
+                  All customer payments go <b>100% directly into your bank account instantly</b> via Google Pay, PhonePe, Paytm, or BHIM. RestroNex powers <b>instant 1-tap mobile UPI payments for Table QR ordering</b>, customer while-dining bill settlement, POS dynamic QR codes, and 58mm thermal printed bills. Zero setup friction, 0% gateway fee!
                 </p>
               </CardHeader>
               <CardContent className="pt-6 space-y-5">
+                <div className="p-3 bg-[#E8F5EE] border border-[#16845B]/30 rounded-xl text-xs text-[#16845B] font-bold flex items-center justify-between">
+                  <span>🟢 Table QR Ordering & Dining Online Payment: ACTIVE</span>
+                  <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#16845B]/30">GPay • PhonePe • Paytm</span>
+                </div>
                 <form onSubmit={handleSaveDirectUpi} className="space-y-4">
                   <div className="space-y-1.5">
                     <Label className="text-xs font-bold text-[#172B25]">
