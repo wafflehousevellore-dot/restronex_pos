@@ -533,16 +533,15 @@ export default function POSClient({
               const prDone = !["QUEUED", "PRINTING"].includes(st?.printJob?.status || "");
               if (waDone && prDone) clearInterval(pollInterval);
             })
-            .catch(() => {});
+            .catch(() => { });
         }, 1200);
         setTimeout(() => clearInterval(pollInterval), 10000);
       }
       setLastOrder({ orderNumber, total: billedTotal });
       setMsg({
         type: "success",
-        text: `✓ Order ${orderNumber} billed via ${paymentMethod}! ${formatINR(billedTotal)} ${
-          discountPaise > 0 ? `(Saved ${formatINR(discountPaise)})` : ""
-        } — KOT sent to kitchen.`,
+        text: `✓ Order ${orderNumber} billed via ${paymentMethod}! ${formatINR(billedTotal)} ${discountPaise > 0 ? `(Saved ${formatINR(discountPaise)})` : ""
+          } — KOT sent to kitchen.`,
       });
       setCart([]);
       setAppliedCoupon(null);
@@ -747,18 +746,16 @@ export default function POSClient({
                           key={t.id}
                           type="button"
                           onClick={() => setSelectedTable(isSelected ? "" : t.id)}
-                          className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer ${
-                            isSelected
+                          className={`px-2 py-0.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer ${isSelected
                               ? "bg-[#16845B] text-white border-[#16845B] shadow-2xs"
                               : isOccupied
-                              ? "bg-amber-50 border-amber-200 text-amber-900"
-                              : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
-                          }`}
+                                ? "bg-amber-50 border-amber-200 text-amber-900"
+                                : "bg-white border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
+                            }`}
                         >
                           <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              isSelected ? "bg-white" : isOccupied ? "bg-amber-500" : "bg-emerald-500"
-                            }`}
+                            className={`h-1.5 w-1.5 rounded-full ${isSelected ? "bg-white" : isOccupied ? "bg-amber-500" : "bg-emerald-500"
+                              }`}
                           />
                           {t.number}
                         </button>
@@ -864,11 +861,10 @@ export default function POSClient({
                 <button
                   key={c}
                   onClick={() => setCategoryFilter(c)}
-                  className={`rounded-full px-4 py-1.5 text-xs font-bold border transition ${
-                    categoryFilter === c
+                  className={`rounded-full px-4 py-1.5 text-xs font-bold border transition ${categoryFilter === c
                       ? "bg-[#16845B] text-white border-[#16845B] shadow-xs"
                       : "bg-[#F8FAF9] border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
-                  }`}
+                    }`}
                 >
                   {c}
                 </button>
@@ -893,11 +889,10 @@ export default function POSClient({
                     key={it.id}
                     onClick={() => !it.isSoldOut && addToCart(it)}
                     disabled={it.isSoldOut}
-                    className={`rounded-2xl border border-[#E5EBE7] bg-white text-left transition group overflow-hidden flex flex-col justify-between ${
-                      it.isSoldOut
+                    className={`rounded-2xl border border-[#E5EBE7] bg-white text-left transition group overflow-hidden flex flex-col justify-between ${it.isSoldOut
                         ? "opacity-60 cursor-not-allowed bg-gray-50"
                         : "hover:border-[#16845B] hover:shadow-xs focus:outline-none focus:ring-2 focus:ring-[#16845B]/30"
-                    }`}
+                      }`}
                   >
                     {/* Consistent Aspect Ratio Image Container */}
                     <div className="relative aspect-[4/3] w-full bg-[#F8FAF9] overflow-hidden border-b border-[#E5EBE7]">
@@ -920,16 +915,14 @@ export default function POSClient({
                       {/* Veg / Non-Veg Indicator Badge */}
                       <div className="absolute top-2 left-2">
                         <span
-                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-black shadow-2xs backdrop-blur-xs ${
-                            it.isVeg
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-black shadow-2xs backdrop-blur-xs ${it.isVeg
                               ? "bg-white/95 text-emerald-700 border border-emerald-300"
                               : "bg-white/95 text-red-700 border border-red-300"
-                          }`}
+                            }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              it.isVeg ? "bg-emerald-600" : "bg-red-600"
-                            }`}
+                            className={`w-1.5 h-1.5 rounded-full ${it.isVeg ? "bg-emerald-600" : "bg-red-600"
+                              }`}
                           />
                           {it.isVeg ? "VEG" : "NON-VEG"}
                         </span>
@@ -1065,11 +1058,10 @@ export default function POSClient({
                     key={m}
                     type="button"
                     onClick={() => setPaymentMethod(m)}
-                    className={`rounded-xl py-2 px-2 text-xs font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer ${
-                      paymentMethod === m
+                    className={`rounded-xl py-2 px-2 text-xs font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer ${paymentMethod === m
                         ? "bg-[#16845B] text-white border-[#16845B] shadow-xs"
                         : "bg-[#F8FAF9] border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
-                    }`}
+                      }`}
                   >
                     {m === "UPI" && <QrCode className="h-3.5 w-3.5" />}
                     {m === "CASH" && <Banknote className="h-3.5 w-3.5" />}
@@ -1129,11 +1121,10 @@ export default function POSClient({
                     <button
                       type="button"
                       onClick={() => setRedeemPoints(!redeemPoints)}
-                      className={`rounded-full px-3 py-1 text-xs font-bold transition shadow-2xs cursor-pointer ${
-                        redeemPoints
+                      className={`rounded-full px-3 py-1 text-xs font-bold transition shadow-2xs cursor-pointer ${redeemPoints
                           ? "bg-[#16845B] text-white"
                           : "bg-white border border-[#E5EBE7] text-[#172B25] hover:bg-[#F8FAF9]"
-                      }`}
+                        }`}
                     >
                       {redeemPoints ? "Points Applied ✓" : "Redeem Points"}
                     </button>
@@ -1169,11 +1160,10 @@ export default function POSClient({
                     key={d.label}
                     type="button"
                     onClick={() => applyQuickDiscount(d.type, d.val, `${d.label} OFF`)}
-                    className={`rounded-lg px-2.5 py-1 text-[11px] font-bold border transition cursor-pointer ${
-                      appliedCoupon?.code === `${d.label} OFF`
+                    className={`rounded-lg px-2.5 py-1 text-[11px] font-bold border transition cursor-pointer ${appliedCoupon?.code === `${d.label} OFF`
                         ? "bg-[#16845B] text-white border-[#16845B]"
                         : "bg-white border-[#E5EBE7] text-[#172B25] hover:border-[#16845B]"
-                    }`}
+                      }`}
                   >
                     {d.label}
                   </button>
@@ -1277,13 +1267,12 @@ export default function POSClient({
             {msg && (
               <div
                 role="status"
-                className={`text-xs p-3 rounded-xl border flex gap-2 break-words ${
-                  msg.type === "success"
+                className={`text-xs p-3 rounded-xl border flex gap-2 break-words ${msg.type === "success"
                     ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
                     : msg.type === "error"
-                    ? "bg-red-50 border-red-200 text-red-700"
-                    : "bg-blue-50 border-blue-200 text-blue-700"
-                }`}
+                      ? "bg-red-50 border-red-200 text-red-700"
+                      : "bg-blue-50 border-blue-200 text-blue-700"
+                  }`}
               >
                 {msg.text}
               </div>
@@ -1411,9 +1400,8 @@ export default function POSClient({
             <div className="p-6 overflow-y-auto bg-[#F8FAF9]/50 flex justify-center">
               <div
                 id="thermal-receipt-printable"
-                className={`w-full ${
-                  printPaperWidth === "58mm" ? "max-w-[260px] text-[11px]" : "max-w-[340px] text-xs"
-                } bg-white p-5 rounded-2xl border border-[#E5EBE7] shadow-xs font-mono text-[#172B25] space-y-3`}
+                className={`w-full ${printPaperWidth === "58mm" ? "max-w-[260px] text-[11px]" : "max-w-[340px] text-xs"
+                  } bg-white p-5 rounded-2xl border border-[#E5EBE7] shadow-xs font-mono text-[#172B25] space-y-3`}
               >
                 {/* Header */}
                 <div className="text-center pb-2 border-b border-dashed border-[#718078]/40">
@@ -1519,17 +1507,16 @@ export default function POSClient({
                       <span className="text-xs font-bold text-[#172B25]">WhatsApp Invoice</span>
                     </div>
                     <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        whatsappDeliveryStatus === "DELIVERED" ||
-                        whatsappDeliveryStatus === "READ" ||
-                        whatsappDeliveryStatus === "SENT"
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${whatsappDeliveryStatus === "DELIVERED" ||
+                          whatsappDeliveryStatus === "READ" ||
+                          whatsappDeliveryStatus === "SENT"
                           ? "bg-[#16845B] text-white"
                           : whatsappDeliveryStatus === "FAILED" || whatsappDeliveryStatus === "OPTED_OUT"
-                          ? "bg-red-600 text-white"
-                          : whatsappDeliveryStatus === "NOT_CONFIGURED"
-                          ? "bg-slate-200 text-slate-800"
-                          : "bg-amber-100 text-amber-900 border border-amber-300"
-                      }`}
+                            ? "bg-red-600 text-white"
+                            : whatsappDeliveryStatus === "NOT_CONFIGURED"
+                              ? "bg-slate-200 text-slate-800"
+                              : "bg-amber-100 text-amber-900 border border-amber-300"
+                        }`}
                     >
                       {whatsappDeliveryStatus || "NOT_CONFIGURED"}
                     </span>
@@ -1579,15 +1566,14 @@ export default function POSClient({
                       </span>
                     </div>
                     <span
-                      className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${
-                        printJobStatus === "PRINTED"
+                      className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full border ${printJobStatus === "PRINTED"
                           ? "text-[#16845B] bg-[#E8F5EE] border-[#16845B]/20"
                           : printJobStatus === "OFFLINE" || printJobStatus === "FAILED"
-                          ? "text-red-700 bg-red-50 border-red-200"
-                          : printJobStatus === "NOT_CONFIGURED"
-                          ? "text-slate-700 bg-slate-100 border-slate-200"
-                          : "text-amber-900 bg-amber-50 border-amber-200"
-                      }`}
+                            ? "text-red-700 bg-red-50 border-red-200"
+                            : printJobStatus === "NOT_CONFIGURED"
+                              ? "text-slate-700 bg-slate-100 border-slate-200"
+                              : "text-amber-900 bg-amber-50 border-amber-200"
+                        }`}
                     >
                       {printJobStatus}
                     </span>

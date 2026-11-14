@@ -67,3 +67,4 @@ export async function POST(req: NextRequest) {
     message: `WhatsApp Business ${res.displayPhone} verified and connected via Meta.`,
   });
 }
+

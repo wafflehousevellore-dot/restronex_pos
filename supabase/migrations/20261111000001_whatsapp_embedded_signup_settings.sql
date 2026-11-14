@@ -27,3 +27,4 @@ UPDATE "OutletWhatsAppConfig"
 SET "connectedAt" = COALESCE("lastVerifiedAt", "createdAt")
 WHERE "status" = 'CONNECTED'
   AND "connectedAt" IS NULL;
+

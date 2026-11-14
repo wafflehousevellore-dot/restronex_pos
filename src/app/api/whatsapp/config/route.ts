@@ -6,6 +6,8 @@ import {
   verifyConnectedWhatsAppNumber,
 } from "@/lib/meta-whatsapp-onboarding";
 import { resolveWhatsAppConfig } from "@/lib/whatsapp-invoice";
+import { encryptSecret } from "@/lib/encryption";
+import { appCache } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -145,15 +147,113 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Strictly block manual API credential/token injection from UI
-  if (action === "SAVE" || body.accessToken || body.phoneNumberId || body.wabaId) {
-    return NextResponse.json(
-      {
-        error:
-          "Manual Meta API credentials cannot be entered manually. Connect securely using Meta Embedded Signup OTP verification.",
+  // Direct Meta Cloud API Connection (Option 1)
+  if (action === "SAVE_DIRECT" || (action === "SAVE" && (body.phoneNumberId || body.accessToken))) {
+    const phoneNumberId = String(body.phoneNumberId || "").trim();
+    const accessToken = String(body.accessToken || "").trim();
+    const wabaId = body.wabaId ? String(body.wabaId).trim() : null;
+    const displayPhone = body.displayPhone ? String(body.displayPhone).trim() : null;
+    const templateName = body.templateName ? String(body.templateName).trim() : "order_invoice_utility";
+
+    if (!phoneNumberId || !accessToken) {
+      return NextResponse.json(
+        { error: "Phone Number ID and Access Token are required for direct connection." },
+        { status: 400 }
+      );
+    }
+
+    const encToken = encryptSecret(accessToken);
+    const now = new Date();
+
+    if (outletId) {
+      await prisma.outletWhatsAppConfig.upsert({
+        where: { outletId },
+        create: {
+          tenantId,
+          outletId,
+          enabled: true,
+          isDefaultSender: true,
+          phoneNumberId,
+          wabaId,
+          displayPhone: displayPhone || phoneNumberId,
+          accessTokenEnc: encToken,
+          templateName,
+          connectionMode: "CLOUD_API",
+          isCoexistence: false,
+          status: "CONNECTED",
+          connectedAt: now,
+          lastVerifiedAt: now,
+        },
+        update: {
+          enabled: true,
+          phoneNumberId,
+          wabaId,
+          displayPhone: displayPhone || phoneNumberId,
+          accessTokenEnc: encToken,
+          templateName,
+          connectionMode: "CLOUD_API",
+          status: "CONNECTED",
+          verificationError: null,
+          connectedAt: now,
+          lastVerifiedAt: now,
+        },
+      });
+    } else {
+      await prisma.restaurantSetting.upsert({
+        where: { tenantId },
+        create: {
+          tenantId,
+          autoSendWhatsAppInvoice: true,
+          whatsappSendPdfTaxInvoice: true,
+          whatsappPhoneNumberId: phoneNumberId,
+          whatsappWabaId: wabaId,
+          whatsappDisplayPhone: displayPhone || phoneNumberId,
+          whatsappAccessToken: encToken,
+          whatsappTemplateName: templateName,
+          whatsappConnectionMode: "CLOUD_API",
+          whatsappConnectionStatus: "CONNECTED",
+          whatsappConnectedAt: now,
+          whatsappLastVerifiedAt: now,
+        },
+        update: {
+          autoSendWhatsAppInvoice: true,
+          whatsappPhoneNumberId: phoneNumberId,
+          whatsappWabaId: wabaId,
+          whatsappDisplayPhone: displayPhone || phoneNumberId,
+          whatsappAccessToken: encToken,
+          whatsappTemplateName: templateName,
+          whatsappConnectionMode: "CLOUD_API",
+          whatsappConnectionStatus: "CONNECTED",
+          whatsappConnectedAt: now,
+          whatsappLastVerifiedAt: now,
+        },
+      });
+    }
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        userId,
+        action: "WHATSAPP_CONFIG_CONNECTED_DIRECT",
+        entity: "WhatsAppConfig",
+        entityId: outletId || tenantId,
+        metadataJson: JSON.stringify({
+          phoneNumberId,
+          wabaId,
+          displayPhone,
+          connectionMode: "CLOUD_API",
+        }),
       },
-      { status: 400 }
-    );
+    });
+
+    appCache.delPrefix(`report_${tenantId}`);
+
+    return NextResponse.json({
+      ok: true,
+      status: "CONNECTED",
+      displayPhone: displayPhone || phoneNumberId,
+      message: "Direct Meta Cloud API connected successfully! Automatic WhatsApp billing is now active.",
+    });
   }
 
   if (action === "VERIFY_CONNECTION") {

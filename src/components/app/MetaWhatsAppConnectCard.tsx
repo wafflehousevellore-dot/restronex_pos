@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -132,6 +133,16 @@ export default function MetaWhatsAppConnectCard({
     defaultWhatsAppOutletId: "",
   });
 
+  const [connectionMode, setConnectionMode] = useState<"DIRECT" | "EMBEDDED">("DIRECT");
+  const [directForm, setDirectForm] = useState({
+    phoneNumberId: "",
+    wabaId: "",
+    displayPhone: "+91 9513008467",
+    accessToken: "",
+    templateName: "order_invoice_utility",
+  });
+  const [savingDirect, setSavingDirect] = useState(false);
+
   const sessionMetaRef = useRef<{
     wabaId?: string;
     phoneNumberId?: string;
@@ -200,6 +211,47 @@ export default function MetaWhatsAppConnectCard({
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, []);
+
+  async function handleDirectSave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!directForm.phoneNumberId.trim()) {
+      return setBanner({ type: "error", text: "Phone Number ID is required." });
+    }
+    if (!directForm.accessToken.trim()) {
+      return setBanner({ type: "error", text: "Meta Access Token is required." });
+    }
+    setSavingDirect(true);
+    setBanner(null);
+    try {
+      const res = await apiFetch("/api/whatsapp/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "SAVE_DIRECT",
+          outletId: outletId || undefined,
+          phoneNumberId: directForm.phoneNumberId.trim(),
+          wabaId: directForm.wabaId.trim() || undefined,
+          displayPhone: directForm.displayPhone.trim() || undefined,
+          accessToken: directForm.accessToken.trim(),
+          templateName: directForm.templateName.trim() || "order_invoice_utility",
+        }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setBanner({ type: "error", text: j.error || "Failed to save direct credentials." });
+      } else {
+        setBanner({
+          type: "success",
+          text: j.message || "Connected to Meta Cloud API! Automatic billing is active.",
+        });
+        await fetchConfig();
+      }
+    } catch (err: any) {
+      setBanner({ type: "error", text: err?.message || "Failed to save WhatsApp config." });
+    } finally {
+      setSavingDirect(false);
+    }
+  }
 
   async function launchEmbeddedSignup() {
     setBanner(null);
@@ -530,61 +582,201 @@ export default function MetaWhatsAppConnectCard({
                 </div>
               )}
 
-              <div className="grid sm:grid-cols-2 gap-3">
+              {/* Method Switcher */}
+              <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-md shadow-2xs">
                 <button
                   type="button"
-                  onClick={() => setCoexistenceRequested(true)}
-                  className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                    coexistenceRequested
-                      ? "bg-white border-[#16845B] ring-2 ring-[#16845B]/15"
-                      : "bg-white/70 border-[#E5EBE7] hover:bg-white"
+                  onClick={() => setConnectionMode("DIRECT")}
+                  className={`flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition cursor-pointer ${
+                    connectionMode === "DIRECT"
+                      ? "bg-[#16845B] text-white shadow-xs"
+                      : "text-[#718078] hover:text-[#172B25]"
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#172B25]">
-                    <Smartphone className="h-4 w-4 text-[#16845B]" />
-                    Use Existing WhatsApp Business App (Coexistence)
-                  </div>
-                  <p className="text-[11px] text-[#718078] mt-1 leading-relaxed">
-                    Keep using WhatsApp Business on your counter phone alongside RestroNex where supported by Meta. Never silently disconnects your app.
-                  </p>
+                  Direct Meta Cloud API (Instant)
                 </button>
-
                 <button
                   type="button"
-                  onClick={() => setCoexistenceRequested(false)}
-                  className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                    !coexistenceRequested
-                      ? "bg-white border-[#16845B] ring-2 ring-[#16845B]/15"
-                      : "bg-white/70 border-[#E5EBE7] hover:bg-white"
+                  onClick={() => setConnectionMode("EMBEDDED")}
+                  className={`flex-1 py-1.5 px-3 rounded-full text-xs font-bold transition cursor-pointer ${
+                    connectionMode === "EMBEDDED"
+                      ? "bg-[#16845B] text-white shadow-xs"
+                      : "text-[#718078] hover:text-[#172B25]"
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#172B25]">
-                    <MessageSquare className="h-4 w-4 text-[#16845B]" />
-                    Connect Dedicated Cloud Number
-                  </div>
-                  <p className="text-[11px] text-[#718078] mt-1 leading-relaxed">
-                    Select a Business Portfolio &amp; verify any dedicated phone number with Meta OTP verification.
-                  </p>
+                  Meta Embedded Signup (OTP)
                 </button>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4">
-                <button
-                  type="button"
-                  onClick={launchEmbeddedSignup}
-                  disabled={connecting}
-                  className="rounded-full bg-[#16845B] hover:bg-[#116B49] disabled:opacity-70 text-white px-7 py-3 text-sm font-black shadow-sm transition inline-flex items-center gap-2 cursor-pointer"
-                >
-                  {connecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageSquare className="h-4 w-4" />}
-                  {connecting ? "Connecting with Meta..." : status === "DISCONNECTED" ? "Reconnect WhatsApp" : "Connect WhatsApp"}
-                </button>
+              {connectionMode === "DIRECT" ? (
+                /* Direct Meta Cloud API Form */
+                <form onSubmit={handleDirectSave} className="space-y-4 pt-1">
+                  <div className="rounded-xl border border-[#16845B]/20 bg-[#E8F5EE]/40 p-3.5 text-xs text-[#172B25] space-y-1">
+                    <div className="font-bold flex items-center gap-1.5 text-[#16845B]">
+                      <CheckCircle2 className="h-4 w-4 shrink-0" />
+                      Instant Setup via Meta Cloud API
+                    </div>
+                    <p className="text-[11px] text-[#718078] leading-relaxed">
+                      Copy your credentials from <b>developers.facebook.com &gt; WhatsApp &gt; API Setup</b>. Access tokens are encrypted server-side with AES-256-GCM.
+                    </p>
+                  </div>
 
-                {!coexistenceRequested && (
-                  <span className="text-[11px] text-[#718078]">
-                    Coexistence unavailable? A dedicated Cloud number keeps your mobile WhatsApp untouched.
-                  </span>
-                )}
-              </div>
+                  <div className="grid sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        Phone Number ID *
+                      </label>
+                      <Input
+                        type="text"
+                        value={directForm.phoneNumberId}
+                        onChange={(e) => setDirectForm({ ...directForm, phoneNumberId: e.target.value })}
+                        placeholder="e.g. 104829104928172"
+                        required
+                        className="mt-1 bg-white border-[#E5EBE7] font-mono text-xs h-9 rounded-xl"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Found under WhatsApp &gt; API Setup in Meta developer portal.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        WhatsApp Business Account ID (WABA ID)
+                      </label>
+                      <Input
+                        type="text"
+                        value={directForm.wabaId}
+                        onChange={(e) => setDirectForm({ ...directForm, wabaId: e.target.value })}
+                        placeholder="e.g. 104829104928173"
+                        className="mt-1 bg-white border-[#E5EBE7] font-mono text-xs h-9 rounded-xl"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Your Meta Business Account WABA ID.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        Verified Business Display Phone *
+                      </label>
+                      <Input
+                        type="text"
+                        value={directForm.displayPhone}
+                        onChange={(e) => setDirectForm({ ...directForm, displayPhone: e.target.value })}
+                        placeholder="+91 9513008467"
+                        required
+                        className="mt-1 bg-white border-[#E5EBE7] text-xs h-9 rounded-xl font-bold"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Your registered WhatsApp sender number shown on customer receipts.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-bold text-[#172B25]">
+                        Utility Template Name
+                      </label>
+                      <Input
+                        type="text"
+                        value={directForm.templateName}
+                        onChange={(e) => setDirectForm({ ...directForm, templateName: e.target.value })}
+                        placeholder="order_invoice_utility"
+                        className="mt-1 bg-white border-[#E5EBE7] text-xs h-9 rounded-xl"
+                      />
+                      <span className="text-[10px] text-[#718078] mt-1 block">
+                        Approved utility message template name (default: order_invoice_utility).
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[#172B25]">
+                      Permanent System User Access Token *
+                    </label>
+                    <Input
+                      type="password"
+                      value={directForm.accessToken}
+                      onChange={(e) => setDirectForm({ ...directForm, accessToken: e.target.value })}
+                      placeholder="EAAG... (System User Token with whatsapp_business_messaging)"
+                      required
+                      className="mt-1 bg-white border-[#E5EBE7] font-mono text-xs h-9 rounded-xl"
+                    />
+                    <span className="text-[10px] text-[#718078] mt-1 block">
+                      Permanent system user token with whatsapp_business_messaging and whatsapp_business_management.
+                    </span>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={savingDirect}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-7 py-2.5 text-xs font-bold shadow-xs transition inline-flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {savingDirect ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ShieldCheck className="h-3.5 w-3.5" />}
+                      {savingDirect ? "Saving & Connecting..." : "Save & Activate WhatsApp Billing"}
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                /* Meta Embedded Signup Flow */
+                <div className="space-y-4 pt-1">
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setCoexistenceRequested(true)}
+                      className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                        coexistenceRequested
+                          ? "bg-white border-[#16845B] ring-2 ring-[#16845B]/15"
+                          : "bg-white/70 border-[#E5EBE7] hover:bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#172B25]">
+                        <Smartphone className="h-4 w-4 text-[#16845B]" />
+                        Use Existing WhatsApp Business App (Coexistence)
+                      </div>
+                      <p className="text-[11px] text-[#718078] mt-1 leading-relaxed">
+                        Keep using WhatsApp Business on your counter phone alongside RestroNex where supported by Meta. Never silently disconnects your app.
+                      </p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setCoexistenceRequested(false)}
+                      className={`p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                        !coexistenceRequested
+                          ? "bg-white border-[#16845B] ring-2 ring-[#16845B]/15"
+                          : "bg-white/70 border-[#E5EBE7] hover:bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#172B25]">
+                        <MessageSquare className="h-4 w-4 text-[#16845B]" />
+                        Connect Dedicated Cloud Number
+                      </div>
+                      <p className="text-[11px] text-[#718078] mt-1 leading-relaxed">
+                        Select a Business Portfolio &amp; verify any dedicated phone number with Meta OTP verification.
+                      </p>
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={launchEmbeddedSignup}
+                      disabled={connecting}
+                      className="rounded-full bg-[#16845B] hover:bg-[#116B49] disabled:opacity-70 text-white px-7 py-3 text-sm font-black shadow-sm transition inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      {connecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageSquare className="h-4 w-4" />}
+                      {connecting ? "Connecting with Meta..." : status === "DISCONNECTED" ? "Reconnect WhatsApp" : "Connect WhatsApp"}
+                    </button>
+
+                    {!coexistenceRequested && (
+                      <span className="text-[11px] text-[#718078]">
+                        Coexistence unavailable? A dedicated Cloud number keeps your mobile WhatsApp untouched.
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <ul className="space-y-1.5 text-xs text-[#172B25] pt-1 border-t border-[#E5EBE7]">
                 <li className="flex items-center gap-2">
@@ -703,3 +895,4 @@ export default function MetaWhatsAppConnectCard({
     </div>
   );
 }
+
