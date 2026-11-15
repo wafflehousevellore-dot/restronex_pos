@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input, Label } from "@/components/ui/input";
 import { formatINR } from "@/lib/money";
 import { QrCode, Plus, ArrowRightLeft, Check, X, Printer, RefreshCw, LayoutGrid, Map, UtensilsCrossed } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function TablesFloorPlanPage() {
   const [tables, setTables] = useState<any[]>([]);
@@ -639,14 +640,13 @@ export default function TablesFloorPlanPage() {
                 <div className="text-2xl font-black text-[#172B25]">TABLE {qrModalTable.number}</div>
                 <p className="text-[11px] text-[#718078]">Scan with any camera or UPI app to view menu & order</p>
 
-                <div className="h-44 w-44 mx-auto bg-white border border-[#E5EBE7] rounded-2xl grid place-items-center shadow-xs">
-                  {/* SVG QR Code Simulation with live target link */}
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
-                      `${typeof window !== "undefined" ? window.location.origin : "https://restronex.vercel.app"}/order/table/${qrModalTable.qrToken}`
-                    )}`}
-                    alt={`QR Code for Table ${qrModalTable.number}`}
-                    className="h-36 w-36 object-contain"
+                <div className="h-44 w-44 mx-auto bg-white border border-[#E5EBE7] rounded-2xl grid place-items-center shadow-xs p-2">
+                  <QRCodeSVG
+                    value={`${typeof window !== "undefined" ? window.location.origin : "https://restronexpos.com"}/order/table/${qrModalTable.qrToken}`}
+                    size={144}
+                    level="M"
+                    includeMargin={false}
+                    className="mx-auto"
                   />
                 </div>
 

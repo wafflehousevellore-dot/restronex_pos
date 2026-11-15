@@ -55,15 +55,19 @@ export async function GET(
         });
       }
 
-      // Fetch tenant payment configuration (Direct UPI / Automated Razorpay Gateway)
+      // Fetch tenant payment configuration (PhonePe / Direct UPI / Automated Razorpay Gateway)
       const gatewayConfig = await prisma.tenantPaymentGatewayConfig.findUnique({
         where: { tenantId: table.tenantId },
       });
       const gateway = await resolveTenantGateway(table.tenantId);
 
       const fallbackUpi = "ajaydpi2005@ptyes";
-      const upiId = gatewayConfig?.keyId || fallbackUpi;
+      const upiId =
+        (gatewayConfig?.provider === "DIRECT_UPI" ? gatewayConfig.keyId : null) ||
+        (gatewayConfig?.keyId && gatewayConfig.keyId.includes("@") ? gatewayConfig.keyId : null) ||
+        fallbackUpi;
       const merchantName = gateway.merchantName || gatewayConfig?.merchantName || table.tenant.name || "WAFFLE PLUM HOUSE";
+      const provider = gatewayConfig?.provider || (gateway.keyId ? "RAZORPAY" : "PHONEPE");
 
       return {
         table: {
@@ -84,11 +88,12 @@ export async function GET(
         },
         paymentConfig: {
           isOnlinePaymentEnabled: true,
-          provider: gateway.keyId ? "RAZORPAY" : "DIRECT_UPI",
+          provider,
           upiId,
           merchantName,
+          phonepeEnabled: provider === "PHONEPE" || true,
           razorpayKeyId: gateway.keyId || null,
-          cashEnabled: gateway.cashEnabled ?? true,
+          cashEnabled: gatewayConfig?.cashEnabled ?? gateway.cashEnabled ?? true,
         },
         activeOrder,
       };
@@ -530,6 +535,13 @@ export async function PATCH(
         reference: paymentRef?.trim() || `UPI-BILL-${Date.now().toString(36).toUpperCase()}`,
         isGatewayConfirmed: true,
         upiVpa: upiVpa?.trim() || null,
+      },
+    });
+
+    await tx.table.update({
+      where: { id: table.id },
+      data: {
+        orderTotalPaise: 0,
       },
     });
 

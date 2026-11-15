@@ -1180,14 +1180,14 @@ export default function POSClient({
                     </span>
                   </div>
                   <div className="mx-auto w-fit p-2 bg-white rounded-xl shadow-xs border border-[#E5EBE7]">
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
-                        `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
-                          outlets.find((o) => o.id === selectedOutlet)?.name || activeMerchantName || "WAFFLE PLUM HOUSE"
-                        )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for Order`)}`
-                      )}&margin=2`}
-                      alt="Customer UPI QR Code"
-                      className="w-28 h-28 object-contain rounded"
+                    <QRCodeSVG
+                      value={`upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                        outlets.find((o) => o.id === selectedOutlet)?.name || activeMerchantName || "WAFFLE PLUM HOUSE"
+                      )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for Order`)}`}
+                      size={112}
+                      level="M"
+                      includeMargin={false}
+                      className="mx-auto"
                     />
                   </div>
                   <div className="flex items-center justify-center gap-2 pt-0.5">
@@ -1851,14 +1851,14 @@ export default function POSClient({
             </div>
 
             <div className="mx-auto w-fit p-3 bg-white rounded-2xl border-2 border-[#16845B]/20 shadow-sm">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
-                  `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
-                    activeMerchantName
-                  )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${activeMerchantName}`)}`
-                )}&margin=2`}
-                alt="Fullscreen Dynamic UPI QR"
-                className="w-56 h-56 object-contain"
+              <QRCodeSVG
+                value={`upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                  activeMerchantName
+                )}&am=${(total / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${activeMerchantName}`)}`}
+                size={220}
+                level="M"
+                includeMargin={false}
+                className="mx-auto"
               />
             </div>
 

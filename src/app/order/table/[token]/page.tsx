@@ -17,6 +17,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function GuestQRTableOrderPage({
   params,
@@ -293,9 +294,6 @@ export default function GuestQRTableOrderPage({
   )}&am=${cartUpiAmount}&cu=INR&tn=${encodeURIComponent(
     `Table-${table.number}-Order`
   )}`;
-  const cartQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
-    cartUpiLink
-  )}`;
 
   const activeOrderAmount = activeOrder ? (activeOrder.totalPaise / 100).toFixed(2) : "0.00";
   const activeOrderUpiLink = activeOrder
@@ -303,11 +301,6 @@ export default function GuestQRTableOrderPage({
         merchantName
       )}&am=${activeOrderAmount}&cu=INR&tn=${encodeURIComponent(
         `Table-${table.number}-Bill-${activeOrder.orderNumber}`
-      )}`
-    : "";
-  const activeOrderQrUrl = activeOrder
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-        activeOrderUpiLink
       )}`
     : "";
 
@@ -803,11 +796,15 @@ export default function GuestQRTableOrderPage({
                   </button>
                   {showManualCartUpi && (
                     <div className="mt-2 p-3 bg-white border border-[#E5EBE7] rounded-xl flex flex-col items-center gap-2">
-                      <img
-                        src={cartQrUrl}
-                        alt="Staff UPI QR"
-                        className="w-36 h-36 object-contain border border-[#E5EBE7] rounded-lg"
-                      />
+                      <div className="p-1.5 bg-white border border-[#E5EBE7] rounded-lg shadow-2xs">
+                        <QRCodeSVG
+                          value={cartUpiLink}
+                          size={140}
+                          level="M"
+                          includeMargin={false}
+                          className="mx-auto"
+                        />
+                      </div>
                       <p className="text-[10px] text-[#718078]">
                         UPI: <b>{upiId}</b> ({merchantName})
                       </p>
@@ -961,11 +958,15 @@ export default function GuestQRTableOrderPage({
                       >
                         Click to Launch Direct UPI App
                       </a>
-                      <img
-                        src={activeOrderQrUrl}
-                        alt="Staff UPI QR"
-                        className="w-36 h-36 object-contain border border-[#E5EBE7] rounded-lg bg-white p-1"
-                      />
+                      <div className="p-1.5 bg-white border border-[#E5EBE7] rounded-lg shadow-2xs">
+                        <QRCodeSVG
+                          value={activeOrderUpiLink}
+                          size={140}
+                          level="M"
+                          includeMargin={false}
+                          className="mx-auto"
+                        />
+                      </div>
                       <p className="text-[10px] text-[#718078]">
                         Pay to: <b>{upiId}</b> ({merchantName})
                       </p>
