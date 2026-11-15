@@ -1,6 +1,7 @@
 "use client";
 
 import { apiFetch } from "./api";
+import QRCode from "qrcode";
 
 export type ClientPrintStatus =
   | "NOT_CONFIGURED"
@@ -45,6 +46,8 @@ let activeBleDevice: any = null;
 let activeBleCharacteristic: any = null;
 
 export const POPULAR_BLE_PRINTER_SERVICES = [
+  "0000ffe0-0000-1000-8000-00805f9b34fb", // HM-10 / CC2541 Serial (58mm POS standard)
+  "0000fff0-0000-1000-8000-00805f9b34fb", // POS-58 / Zjiang / Rongta serial service
   "000018f0-0000-1000-8000-00805f9b34fb", // Standard POS BLE service
   "49535343-fe7d-4ae5-8fa9-9fafd205e455", // ISSC transparent serial UART service
   "0000e781-0000-1000-8000-00805f9b34fb", // Xprinter / Zhuhai BLE
@@ -53,6 +56,11 @@ export const POPULAR_BLE_PRINTER_SERVICES = [
   "0000ae00-0000-1000-8000-00805f9b34fb", // Android BLE thermal profile
   "0000fee7-0000-1000-8000-00805f9b34fb", // Tencent / Chinese micro-printer profile
   "0000af30-0000-1000-8000-00805f9b34fb", // MPT-II / POS-58 custom service
+  "0000ff02-0000-1000-8000-00805f9b34fb", // Bluetooth POS UART 2
+  "0000fff1-0000-1000-8000-00805f9b34fb", // Rongta custom
+  "000018f1-0000-1000-8000-00805f9b34fb", // POS sub-service
+  "0000ff80-0000-1000-8000-00805f9b34fb", // Goojprt / Milestone custom
+  "0000180a-0000-1000-8000-00805f9b34fb", // Device Information Service
 ];
 
 export function isBlePrinterConnected(): boolean {
@@ -114,6 +122,7 @@ export async function getBleWriteCharacteristic(dev: any): Promise<any> {
   if (!dev || !dev.gatt?.connected) return null;
   if (activeBleCharacteristic) return activeBleCharacteristic;
 
+  // 1. Check known printer primary services
   for (const serviceUuid of POPULAR_BLE_PRINTER_SERVICES) {
     try {
       const service = await dev.gatt.getPrimaryService(serviceUuid);
@@ -129,6 +138,24 @@ export async function getBleWriteCharacteristic(dev: any): Promise<any> {
       // Continue to next service candidate
     }
   }
+
+  // 2. Fallback: discover any permitted primary service with write characteristic
+  try {
+    const allServices = await dev.gatt.getPrimaryServices();
+    for (const service of allServices) {
+      try {
+        const chars = await service.getCharacteristics();
+        const writeChar = chars.find(
+          (c: any) => c.properties.write || c.properties.writeWithoutResponse
+        );
+        if (writeChar) {
+          activeBleCharacteristic = writeChar;
+          return writeChar;
+        }
+      } catch {}
+    }
+  } catch {}
+
   return null;
 }
 
@@ -246,6 +273,61 @@ function base64ToUint8Array(b64: string): Uint8Array {
   return bytes;
 }
 
+export async function generateHtmlReceiptWithQr(
+  textLines: string[],
+  paperWidth: "58mm" | "80mm",
+  qrData?: string
+): Promise<string> {
+  const widthMm = paperWidth === "58mm" ? "58mm" : "80mm";
+  const fontSize = paperWidth === "58mm" ? "10px" : "12px";
+
+  let qrDataUrl = "";
+  if (qrData) {
+    try {
+      qrDataUrl = await QRCode.toDataURL(qrData, {
+        width: paperWidth === "58mm" ? 140 : 180,
+        margin: 1,
+        errorCorrectionLevel: "M",
+      });
+    } catch {}
+  }
+
+  // Find line position where QR should be embedded (after "SCAN TO PAY" or "Scan QR")
+  const qrHeaderIdx = textLines.findIndex(
+    (l) => l.includes("SCAN TO PAY") || l.includes("Scan QR")
+  );
+
+  let htmlBody = "";
+  if (qrDataUrl && qrHeaderIdx !== -1) {
+    const preQr = textLines
+      .slice(0, qrHeaderIdx + 3)
+      .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
+      .join("\n");
+    const postQr = textLines
+      .slice(qrHeaderIdx + 3)
+      .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
+      .join("\n");
+
+    htmlBody = `<pre>${preQr}</pre><div style="text-align:center;margin:6px 0;"><img src="${qrDataUrl}" style="width:${
+      paperWidth === "58mm" ? "130px" : "160px"
+    };height:${
+      paperWidth === "58mm" ? "130px" : "160px"
+    };image-rendering:pixelated;display:inline-block;" /></div><pre>${postQr}</pre>`;
+  } else if (qrDataUrl) {
+    const allText = textLines
+      .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
+      .join("\n");
+    htmlBody = `<pre>${allText}</pre><div style="text-align:center;margin:6px 0;"><img src="${qrDataUrl}" style="width:130px;height:130px;image-rendering:pixelated;display:inline-block;" /></div>`;
+  } else {
+    const allText = textLines
+      .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
+      .join("\n");
+    htmlBody = `<pre>${allText}</pre>`;
+  }
+
+  return `<!doctype html><html><head><style>@page{margin:2mm;size:${widthMm} auto;}body{font-family:monospace;font-size:${fontSize};margin:0;padding:2mm;width:${widthMm};color:#000;background:#fff;}pre{margin:0;white-space:pre-wrap;font-family:monospace;font-size:${fontSize};}</style></head><body>${htmlBody}</body></html>`;
+}
+
 /**
  * Triggers non-blocking browser/counter print dispatch for jobs that require client execution
  * (USB WebUSB, BLE, Localhost Print Bridge, or OS Print Service).
@@ -259,6 +341,7 @@ export async function dispatchClientPrintJob(params: {
   paperWidth: "58mm" | "80mm";
   escPosBase64?: string;
   textLines?: string[];
+  qrData?: string;
 }): Promise<{ status: ClientPrintStatus; error?: string }> {
   let finalStatus: ClientPrintStatus = "PRINT_REQUESTED";
   let errMsg: string | undefined;
@@ -361,22 +444,20 @@ export async function dispatchClientPrintJob(params: {
           iframe.style.position = "fixed";
           iframe.style.right = "0";
           iframe.style.bottom = "0";
-          iframe.style.width = "0";
-          iframe.style.height = "0";
+          iframe.style.width = "10px";
+          iframe.style.height = "10px";
           iframe.style.border = "0";
+          iframe.style.opacity = "0.01";
           document.body.appendChild(iframe);
           const doc = iframe.contentWindow?.document;
           if (doc) {
-            const widthMm = params.paperWidth === "58mm" ? "58mm" : "80mm";
-            const pre = params.textLines
-              .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
-              .join("\n");
-            doc.open();
-            doc.write(
-              `<!doctype html><html><head><style>@page{margin:2mm;size:${widthMm} auto;}body{font-family:monospace;font-size:${
-                params.paperWidth === "58mm" ? "10px" : "12px"
-              };white-space:pre;width:${widthMm};margin:0;}</style></head><body>${pre}</body></html>`
+            const html = await generateHtmlReceiptWithQr(
+              params.textLines,
+              params.paperWidth,
+              params.qrData
             );
+            doc.open();
+            doc.write(html);
             doc.close();
             iframe.contentWindow?.focus();
             iframe.contentWindow?.print();
@@ -404,22 +485,20 @@ export async function dispatchClientPrintJob(params: {
         iframe.style.position = "fixed";
         iframe.style.right = "0";
         iframe.style.bottom = "0";
-        iframe.style.width = "0";
-        iframe.style.height = "0";
+        iframe.style.width = "10px";
+        iframe.style.height = "10px";
         iframe.style.border = "0";
+        iframe.style.opacity = "0.01";
         document.body.appendChild(iframe);
         const doc = iframe.contentWindow?.document;
         if (doc) {
-          const widthMm = params.paperWidth === "58mm" ? "58mm" : "80mm";
-          const pre = params.textLines
-            .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
-            .join("\n");
-          doc.open();
-          doc.write(
-            `<!doctype html><html><head><style>@page{margin:2mm;size:${widthMm} auto;}body{font-family:monospace;font-size:${
-              params.paperWidth === "58mm" ? "10px" : "12px"
-            };white-space:pre;width:${widthMm};margin:0;}</style></head><body>${pre}</body></html>`
+          const html = await generateHtmlReceiptWithQr(
+            params.textLines,
+            params.paperWidth,
+            params.qrData
           );
+          doc.open();
+          doc.write(html);
           doc.close();
           iframe.contentWindow?.focus();
           iframe.contentWindow?.print();

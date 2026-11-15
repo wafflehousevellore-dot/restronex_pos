@@ -16,7 +16,9 @@ import {
   RotateCcw,
   QrCode,
   CheckCircle2,
+  Zap,
 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function PaymentsClient() {
   const [activeTab, setActiveTab] = useState<"TRANSACTIONS" | "GATEWAY_CONFIG">("TRANSACTIONS");
@@ -37,8 +39,14 @@ export default function PaymentsClient() {
   const [savingGateway, setSavingGateway] = useState(false);
   const [gatewayMsg, setGatewayMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // PhonePe Gateway state (Option 1)
+  const [gatewaySubTab, setGatewaySubTab] = useState<"PHONEPE" | "DIRECT_UPI" | "RAZORPAY">("PHONEPE");
+  const [phonepeMid, setPhonepeMid] = useState("PGTESTPAYUAT86");
+  const [phonepeSaltKey, setPhonepeSaltKey] = useState("");
+  const [phonepeSaltIndex, setPhonepeSaltIndex] = useState("1");
+  const [savingPhonePe, setSavingPhonePe] = useState(false);
+
   // Direct Dynamic UPI QR state (Option 2)
-  const [gatewaySubTab, setGatewaySubTab] = useState<"DIRECT_UPI" | "RAZORPAY">("DIRECT_UPI");
   const [upiId, setUpiId] = useState("ajaydpi2005@ptyes");
   const [savingUpi, setSavingUpi] = useState(false);
 
@@ -64,8 +72,12 @@ export default function PaymentsClient() {
       if (resConfig.ok) {
         const c = await resConfig.json();
         setGatewayConfig(c);
-        const isRzp = c.provider === "RAZORPAY" && c.keyId?.startsWith("rzp_");
-        setGatewaySubTab(isRzp ? "RAZORPAY" : "DIRECT_UPI");
+        const prov = c.provider || "PHONEPE";
+        setGatewaySubTab(
+          prov === "RAZORPAY" ? "RAZORPAY" : prov === "DIRECT_UPI" ? "DIRECT_UPI" : "PHONEPE"
+        );
+        setPhonepeMid(c.phonepeMid || "PGTESTPAYUAT86");
+        setPhonepeSaltIndex(c.phonepeSaltIndex || "1");
         setUpiId(c.upiId || c.keyId || "ajaydpi2005@ptyes");
         setKeyId(c.keyId || "");
         setMerchantName(c.merchantName || "WAFFLE PLUM HOUSE");
@@ -84,6 +96,44 @@ export default function PaymentsClient() {
   useEffect(() => {
     loadData();
   }, []);
+
+  async function handleSavePhonePe(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingPhonePe(true);
+    setGatewayMsg(null);
+
+    try {
+      const res = await fetch("/api/settings/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          provider: "PHONEPE",
+          phonepeMid: phonepeMid.trim() || "PGTESTPAYUAT86",
+          phonepeSaltKey: phonepeSaltKey.trim() || undefined,
+          phonepeSaltIndex: phonepeSaltIndex.trim() || "1",
+          merchantName: merchantName.trim() || "WAFFLE PLUM HOUSE",
+          isEnabled: true,
+          cashEnabled,
+          cardTerminalEnabled,
+          upiManualEnabled: true,
+        }),
+      });
+
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error || "Failed to save PhonePe settings");
+
+      setGatewayMsg({
+        type: "success",
+        text: "✓ PhonePe Payment Gateway (0% Fee, Auto-Verified) activated successfully!",
+      });
+      setPhonepeSaltKey("");
+      await loadData();
+    } catch (err: any) {
+      setGatewayMsg({ type: "error", text: err.message || "Failed to save PhonePe settings." });
+    } finally {
+      setSavingPhonePe(false);
+    }
+  }
 
   async function handleSaveDirectUpi(e: React.FormEvent) {
     e.preventDefault();
@@ -458,30 +508,42 @@ export default function PaymentsClient() {
       {activeTab === "GATEWAY_CONFIG" && (
         <div className="max-w-2xl mx-auto space-y-5">
           {/* Method Switcher */}
-          <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-md shadow-2xs">
+          <div className="flex rounded-full border border-[#E5EBE7] bg-white p-1 max-w-xl shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setGatewaySubTab("PHONEPE")}
+              className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
+                gatewaySubTab === "PHONEPE"
+                  ? "bg-[#16845B] text-white shadow-xs"
+                  : "text-[#718078] hover:text-[#172B25]"
+              }`}
+            >
+              <Zap className="h-3.5 w-3.5" />
+              ⚡ PhonePe Gateway (0% Fee - Auto Verified)
+            </button>
             <button
               type="button"
               onClick={() => setGatewaySubTab("DIRECT_UPI")}
-              className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
                 gatewaySubTab === "DIRECT_UPI"
                   ? "bg-[#16845B] text-white shadow-xs"
                   : "text-[#718078] hover:text-[#172B25]"
               }`}
             >
               <QrCode className="h-3.5 w-3.5" />
-              ⚡ Direct Dynamic UPI QR (0% Fee)
+              Direct UPI
             </button>
             <button
               type="button"
               onClick={() => setGatewaySubTab("RAZORPAY")}
-              className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`py-2 px-3 rounded-full text-xs font-bold transition cursor-pointer flex items-center justify-center gap-1.5 ${
                 gatewaySubTab === "RAZORPAY"
                   ? "bg-[#16845B] text-white shadow-xs"
                   : "text-[#718078] hover:text-[#172B25]"
               }`}
             >
               <Lock className="h-3.5 w-3.5" />
-              Razorpay Gateway
+              Razorpay
             </button>
           </div>
 
@@ -500,7 +562,134 @@ export default function PaymentsClient() {
             </div>
           )}
 
-          {gatewaySubTab === "DIRECT_UPI" ? (
+          {gatewaySubTab === "PHONEPE" ? (
+            /* Option 1: Official PhonePe Payment Gateway (0% Commission, Auto-Verified) */
+            <Card className="bg-white border-[#E5EBE7] shadow-sm">
+              <CardHeader className="border-b border-[#E5EBE7] pb-4 bg-gradient-to-r from-[#F8FAF9] to-[#E8F5EE]/40">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-[#16845B]" />
+                    PhonePe Payment Gateway (Official Hermes PG v1)
+                  </CardTitle>
+                  <span className="text-[11px] font-black px-3 py-1 rounded-full border bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]">
+                    0% COMMISSION • AUTO-VERIFIED
+                  </span>
+                </div>
+                <p className="text-xs text-[#718078] mt-1">
+                  100% automatic verification for <b>Table QR Ordering</b> and active dining bills with <b>0% middleman fees</b>. Diners pay seamlessly with PhonePe, Google Pay, Paytm, UPI Intent, or Cards, and payments verify automatically with PhonePe secure cryptographic callbacks.
+                </p>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-5">
+                <div className="p-3 bg-[#E8F5EE] border border-[#16845B]/30 rounded-xl text-xs text-[#16845B] font-bold flex items-center justify-between">
+                  <span>🟢 Table Ordering & Online Billing: AUTO-VERIFY ACTIVE</span>
+                  <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#16845B]/30">PhonePe PG v1</span>
+                </div>
+
+                <form onSubmit={handleSavePhonePe} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold text-[#172B25]">
+                      PhonePe Merchant ID (MID) <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      placeholder="e.g. PGTESTPAYUAT86 or your Production MID"
+                      value={phonepeMid}
+                      onChange={(e) => setPhonepeMid(e.target.value)}
+                      required
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono font-bold"
+                    />
+                    <div className="text-[10px] text-[#718078]">
+                      Default sandbox test MID: <code>PGTESTPAYUAT86</code>. Enter your live PhonePe Business MID when going live.
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-bold text-[#172B25]">PhonePe Salt Key / API Secret</Label>
+                    <Input
+                      type="password"
+                      placeholder={
+                        gatewayConfig?.hasPhonepeSecret
+                          ? "•••••••••••••••• (Encrypted on Server)"
+                          : "Enter Salt Key (or leave blank to use sandbox default)"
+                      }
+                      value={phonepeSaltKey}
+                      onChange={(e) => setPhonepeSaltKey(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
+                    />
+                    <div className="text-[10px] text-[#718078]">
+                      Encrypted with AES-256-GCM. Provided by PhonePe Business Dashboard.
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-bold text-[#172B25]">PhonePe Salt Index</Label>
+                      <Input
+                        value={phonepeSaltIndex}
+                        onChange={(e) => setPhonepeSaltIndex(e.target.value)}
+                        className="bg-white border-[#E5EBE7] text-xs h-9 font-bold"
+                      />
+                      <div className="text-[10px] text-[#718078]">Usually <code>1</code> for PhonePe PG.</div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-bold text-[#172B25]">Merchant Payee Name</Label>
+                      <Input
+                        value={merchantName}
+                        onChange={(e) => setMerchantName(e.target.value)}
+                        className="bg-white border-[#E5EBE7] text-xs h-9 font-bold"
+                      />
+                      <div className="text-[10px] text-[#718078]">Restaurant display name.</div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#E5EBE7] space-y-2.5">
+                    <div className="text-xs font-bold text-[#172B25]">Supported In-Person Tender Methods</div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cashEnabled}
+                          onChange={(e) => setCashEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Cash at Counter</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={cardTerminalEnabled}
+                          onChange={(e) => setCardTerminalEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Card Machine</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={upiManualEnabled}
+                          onChange={(e) => setUpiManualEnabled(e.target.checked)}
+                          className="accent-[#16845B]"
+                        />
+                        <span>Direct Dynamic UPI</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="pt-3">
+                    <Button
+                      type="submit"
+                      disabled={savingPhonePe}
+                      className="w-full bg-[#16845B] hover:bg-[#116B49] text-white rounded-full font-bold text-xs h-10 shadow-xs cursor-pointer"
+                    >
+                      {savingPhonePe ? "Activating PhonePe..." : "⚡ Save & Activate PhonePe (0% Fee, Auto-Verified)"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          ) : gatewaySubTab === "DIRECT_UPI" ? (
             /* Option 2: Direct Dynamic UPI QR */
             <Card className="bg-white border-[#E5EBE7] shadow-sm">
               <CardHeader className="border-b border-[#E5EBE7] pb-4 bg-gradient-to-r from-[#F8FAF9] to-[#E8F5EE]/40">
@@ -554,14 +743,14 @@ export default function PaymentsClient() {
 
                   <div className="p-4 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] flex flex-col sm:flex-row items-center gap-4">
                     <div className="bg-white p-2 rounded-xl border border-[#E5EBE7] shrink-0 shadow-xs">
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-                          `upi://pay?pa=${upiId || "9513008467@upi"}&pn=${encodeURIComponent(
-                            merchantName || "WAFFLE PLUM HOUSE"
-                          )}&am=100.00&cu=INR&tn=Sample%20Bill`
-                        )}`}
-                        alt="Test UPI QR Code"
-                        className="w-28 h-28 object-contain"
+                      <QRCodeSVG
+                        value={`upi://pay?pa=${upiId || "ajaydpi2005@ptyes"}&pn=${encodeURIComponent(
+                          merchantName || "WAFFLE PLUM HOUSE"
+                        )}&am=100.00&cu=INR&tn=Sample%20Bill`}
+                        size={112}
+                        level="M"
+                        includeMargin={false}
+                        className="mx-auto"
                       />
                     </div>
                     <div className="text-xs text-[#718078] space-y-1">

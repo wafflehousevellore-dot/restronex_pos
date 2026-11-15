@@ -11,6 +11,7 @@ import {
   getOrRestoreBleDevice,
 } from "@/lib/client-print";
 import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed, Bluetooth } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import Link from "next/link";
 
 function createCheckoutIdempotencyKey(): string {
@@ -593,6 +594,7 @@ export default function POSClient({
           paperWidth: resolvedPaperWidth,
           escPosBase64: pjInfo.escPosBase64,
           textLines: pjInfo.textLines,
+          qrData: pjInfo.qrData,
         }).then((clientRes) => {
           setPrintJobStatus(clientRes.status);
           if (clientRes.error) setPrintErrorMsg(clientRes.error);
@@ -681,6 +683,7 @@ export default function POSClient({
           paperWidth: printPaperWidth,
           escPosBase64: json.escPosBase64,
           textLines: json.textLines,
+          qrData: json.qrData,
         });
         setPrintJobStatus(clientRes.status);
         setPrintErrorMsg(clientRes.error || null);
@@ -1725,17 +1728,17 @@ export default function POSClient({
                   <div className="text-[10px] font-bold text-[#172B25] uppercase tracking-wide">
                     Scan with Any UPI App to Pay
                   </div>
-                  <div className="mx-auto w-fit p-1 bg-white border border-[#E5EBE7] rounded-xl shadow-2xs">
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
-                        `upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
-                          activeMerchantName || activeReceipt.outletName || "WAFFLE PLUM HOUSE"
-                        )}&am=${(activeReceipt.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(
-                          `Bill for ${activeReceipt.invoiceNumber}`
-                        )}`
-                      )}&margin=1`}
-                      alt="UPI Payment QR Code"
-                      className="w-24 h-24 object-contain mx-auto"
+                  <div className="mx-auto w-fit p-1.5 bg-white border border-[#E5EBE7] rounded-xl shadow-2xs">
+                    <QRCodeSVG
+                      value={`upi://pay?pa=${activeUpiId}&pn=${encodeURIComponent(
+                        activeMerchantName || activeReceipt.outletName || "WAFFLE PLUM HOUSE"
+                      )}&am=${(activeReceipt.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(
+                        `Bill for ${activeReceipt.invoiceNumber}`
+                      )}`}
+                      size={printPaperWidth === "58mm" ? 115 : 135}
+                      level="M"
+                      includeMargin={false}
+                      className="mx-auto"
                     />
                   </div>
                   <div className="text-[9px] font-mono text-[#718078]">
@@ -1766,6 +1769,21 @@ export default function POSClient({
                   <MessageSquare className="h-4 w-4" /> Send WhatsApp Bill
                 </a>
               )}
+
+              <button
+                type="button"
+                onClick={handleConnectBluetoothPrinter}
+                disabled={connectingBle}
+                className={`rounded-full border py-2.5 px-3 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+                  bleConnected
+                    ? "bg-[#E8F5EE] border-[#16845B]/30 text-[#16845B]"
+                    : "bg-amber-50 border-amber-200 text-amber-900"
+                }`}
+                title={bleConnected ? "Bluetooth printer connected" : "Click to wake / pair Bluetooth printer"}
+              >
+                <Bluetooth className="h-4 w-4" />
+                {connectingBle ? "Connecting..." : bleConnected ? "BT Ready" : "Pair BT"}
+              </button>
 
               <button
                 type="button"

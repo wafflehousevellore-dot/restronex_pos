@@ -131,7 +131,7 @@ export function buildEscPosQrRasterCentered(text: string, is58mm = true): Buffer
     const qr = QRCode.create(text, { errorCorrectionLevel: "M" });
     const size = qr.modules.size;
     const data = qr.modules.data;
-    const margin = 2; // quiet zone in modules
+    const margin = 1; // 1-module margin for compact thermal slip
     const scale = is58mm ? 4 : 5;
     const qrPixels = (size + margin * 2) * scale;
     const qrByteWidth = Math.ceil(qrPixels / 8);
@@ -140,7 +140,7 @@ export function buildEscPosQrRasterCentered(text: string, is58mm = true): Buffer
     // Line widths in bytes: 58mm = 48 bytes (384 dots), 80mm = 72 bytes (576 dots)
     const targetLineBytes = is58mm ? 48 : 72;
     const leftPaddingBytes = Math.max(0, Math.floor((targetLineBytes - qrByteWidth) / 2));
-    const totalLineBytes = Math.max(qrByteWidth, leftPaddingBytes + qrByteWidth);
+    const totalLineBytes = targetLineBytes;
 
     const totalRasterBytes = totalLineBytes * pixelHeight;
     const raster = Buffer.alloc(totalRasterBytes, 0);
@@ -309,23 +309,6 @@ export function formatThermalReceipt(
     if (rasterBuffer.length > 0) {
       chunks.push(rasterBuffer);
     }
-
-    // 3. Optional Epson native GS ( k command fallback
-    const qrBytes = Buffer.from(input.qrData, "utf8");
-    const len = qrBytes.length + 3;
-    const pL = len & 0xff;
-    const pH = (len >> 8) & 0xff;
-    chunks.push(
-      Buffer.from([0x1b, 0x61, 0x01]), // Center
-      Buffer.from([0x1d, 0x28, 0x6b, 0x04, 0x00, 0x31, 0x41, 0x32, 0x00]), // Model 2
-      Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x43, is58mm ? 0x04 : 0x05]), // Module size
-      Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x45, 0x31]), // Error correction M
-      Buffer.from([0x1d, 0x28, 0x6b, pL, pH, 0x31, 0x50, 0x30]), // Store data
-      qrBytes,
-      Buffer.from([0x1d, 0x28, 0x6b, 0x03, 0x00, 0x31, 0x51, 0x30]), // Print QR
-      Buffer.from("\n", "ascii"),
-      Buffer.from([0x1b, 0x61, 0x00])
-    );
   }
 
   // Footer & Cut
@@ -568,21 +551,31 @@ export async function queueAndDispatchBillPrintJob(
     const invoiceNumber =
       order.invoice?.invoiceNumber || `INV-${order.orderNumber.replace("ORD-", "")}`;
 
+    const orderDate = new Date(order.createdAt);
+    const payment = order.payments?.[0];
+    const isPaid = order.isPaid || payment?.status === "COMPLETED";
+
     const paymentGateway = await prisma.tenantPaymentGatewayConfig.findUnique({
       where: { tenantId: order.tenantId },
     });
-    const upiVpa = paymentGateway?.provider === "DIRECT_UPI" ? paymentGateway.keyId : null;
-    const upiQrString = upiVpa
-      ? `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent(
-          paymentGateway?.merchantName || setting?.receiptHeader || order.tenant.name
-        )}&am=${(order.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${invoiceNumber}`)}`
-      : null;
+    const upiVpa =
+      (paymentGateway?.provider === "DIRECT_UPI" ? paymentGateway.keyId : null) ||
+      (paymentGateway?.keyId && paymentGateway.keyId.includes("@") ? paymentGateway.keyId : null) ||
+      process.env.RESTAURANT_UPI_VPA ||
+      "ajaydpi2005@ptyes";
+    const merchantName =
+      paymentGateway?.merchantName || setting?.receiptHeader || order.tenant.name || "WAFFLE PLUM HOUSE";
+    const upiQrString =
+      `upi://pay?pa=${encodeURIComponent(upiVpa)}&pn=${encodeURIComponent(
+        merchantName
+      )}&am=${(order.totalPaise / 100).toFixed(2)}&cu=INR&tn=${encodeURIComponent(`Bill for ${invoiceNumber}`)}`;
 
     const qrData =
       printer.qrEnabled && setting?.qrFooterEnabled !== false
-        ? (upiQrString ||
-            order.invoice?.fileUrl ||
-            buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl))
+        ? (!isPaid
+            ? upiQrString
+            : (order.invoice?.fileUrl ||
+               buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, options?.baseUrl)))
         : null;
 
     if (existingJob) {
@@ -601,10 +594,6 @@ export async function queueAndDispatchBillPrintJob(
         error: existingJob.lastError || undefined,
       };
     }
-
-    const orderDate = new Date(order.createdAt);
-    const payment = order.payments?.[0];
-    const isPaid = order.isPaid || payment?.status === "COMPLETED";
 
     const receiptInput: ThermalReceiptInput = {
       restaurantName: setting?.receiptHeader || order.tenant.name,

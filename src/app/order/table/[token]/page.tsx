@@ -15,35 +15,8 @@ import {
   CheckCircle2,
   ShieldCheck,
   Loader2,
+  Sparkles,
 } from "lucide-react";
-
-declare global {
-  interface Window {
-    Razorpay?: any;
-  }
-}
-
-// Dynamically load Razorpay standard checkout SDK
-function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (typeof window !== "undefined" && window.Razorpay) {
-      resolve(true);
-      return;
-    }
-    const existing = document.getElementById("razorpay-checkout-js");
-    if (existing) {
-      resolve(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.id = "razorpay-checkout-js";
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-}
 
 export default function GuestQRTableOrderPage({
   params,
@@ -64,7 +37,6 @@ export default function GuestQRTableOrderPage({
   const [whatsappConsent, setWhatsappConsent] = useState(true);
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [verifyingPayment, setVerifyingPayment] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
 
   // Online Payment State for Cart Ordering
@@ -77,6 +49,10 @@ export default function GuestQRTableOrderPage({
   const [settlingBill, setSettlingBill] = useState(false);
   const [showManualSettleUpi, setShowManualSettleUpi] = useState(false);
   const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
+
+  // Post-PhonePe redirect verification state
+  const [verifyingPhonePe, setVerifyingPhonePe] = useState(false);
+  const [phonePeStatusMsg, setPhonePeStatusMsg] = useState<string | null>(null);
 
   async function fetchMenu() {
     try {
@@ -98,10 +74,50 @@ export default function GuestQRTableOrderPage({
     }
   }
 
+  // Check if returning from PhonePe payment redirect
   useEffect(() => {
     fetchMenu();
-    // Preload Razorpay SDK in the background for zero-delay payment launch
-    loadRazorpayScript();
+
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPhonePeCheck = urlParams.get("phonepe_check") === "1";
+      const returnOrderId = urlParams.get("orderId");
+
+      if (isPhonePeCheck && returnOrderId) {
+        setVerifyingPhonePe(true);
+        setPhonePeStatusMsg("Verifying payment with PhonePe…");
+
+        // Verify with PhonePe API
+        fetch(`/api/payments/phonepe/status?orderId=${returnOrderId}`)
+          .then((r) => r.json())
+          .then((res) => {
+            if (res.ok && res.isPaid) {
+              setPlacedOrder({
+                orderNumber: res.orderNumber,
+                totals: { total: res.totalPaise },
+                status: "BILLED",
+                isPaid: true,
+                utr: res.utr,
+                paymentMethod: "PhonePe UPI",
+              });
+              setSettleSuccessMsg("Payment verified successfully via PhonePe!");
+              // Clean URL query parameters
+              window.history.replaceState({}, document.title, window.location.pathname);
+              fetchMenu();
+            } else {
+              setPhonePeStatusMsg(
+                res.message || "Payment is pending or was cancelled. Staff can assist at the counter."
+              );
+            }
+          })
+          .catch(() => {
+            setPhonePeStatusMsg("Unable to verify payment status automatically. Please check with staff.");
+          })
+          .finally(() => {
+            setVerifyingPhonePe(false);
+          });
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -133,12 +149,12 @@ export default function GuestQRTableOrderPage({
     });
   }
 
-  // Submit Order with AUTOMATIC PAYMENT VERIFICATION
+  // Submit Order with PHONEPE PAYMENT GATEWAY AUTOMATIC VERIFICATION
   async function submitOrder() {
     if (cart.length === 0) return;
     setSubmitting(true);
     try {
-      // Step 1: Register Table Order (initially unpaid until verified by bank gateway)
+      // Step 1: Register Table Order
       const res = await fetch(`/api/qr/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -148,7 +164,7 @@ export default function GuestQRTableOrderPage({
           customerPhone,
           whatsappConsent,
           notes,
-          payOnline: false,
+          payOnline: false, // Initially unpaid until verified by PhonePe
         }),
       });
       const orderData = await res.json();
@@ -168,15 +184,23 @@ export default function GuestQRTableOrderPage({
         return;
       }
 
-      // Step 2: Automated Payment Gateway Verification (Google Pay, PhonePe, Paytm, Cards)
-      setVerifyingPayment(true);
-      const scriptReady = await loadRazorpayScript();
-      if (!scriptReady || !window.Razorpay) {
+      // Step 2: Initiate PhonePe Payment Gateway
+      const initiateRes = await fetch("/api/payments/phonepe/initiate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: orderData.orderId,
+          token,
+        }),
+      });
+      const initiateData = await initiateRes.json();
+
+      if (!initiateRes.ok || !initiateData.redirectUrl) {
         // Fallback: order is registered in kitchen, guest can pay at counter
         setPlacedOrder({
           ...orderData,
           isPaid: false,
-          fallbackNotice: "Secure gateway could not be loaded. Please pay at counter.",
+          fallbackNotice: initiateData.error || "PhonePe gateway offline. Order registered for counter payment.",
         });
         setCart([]);
         setIsCartOpen(false);
@@ -184,204 +208,37 @@ export default function GuestQRTableOrderPage({
         return;
       }
 
-      // Create gateway payment intent
-      const intentRes = await fetch("/api/payments/create-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: orderData.orderId }),
-      });
-      const intent = await intentRes.json();
-
-      if (!intentRes.ok || !intent.onlinePaymentAvailable) {
-        setPlacedOrder({
-          ...orderData,
-          isPaid: false,
-          fallbackNotice: intent.message || "Online gateway offline. Order registered for counter payment.",
-        });
-        setCart([]);
-        setIsCartOpen(false);
-        fetchMenu();
-        return;
-      }
-
-      // Open Razorpay Automated Checkout
-      const options = {
-        key: intent.keyId,
-        amount: intent.amountPaise,
-        currency: intent.currency || "INR",
-        name: data?.restaurant?.name || "WAFFLE PLUM HOUSE",
-        description: `Table ${data?.table?.number} Order #${orderData.orderNumber}`,
-        order_id: intent.razorpayOrderId,
-        prefill: {
-          name: customerName.trim() || "Table Guest",
-          contact: customerPhone.trim() || "",
-        },
-        theme: {
-          color: "#16845B",
-        },
-        handler: async function (response: any) {
-          // Step 3: Automatic Server-Side Cryptographic Signature Verification
-          try {
-            const verifyRes = await fetch("/api/payments/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderId: orderData.orderId,
-                attemptId: intent.attemptId,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-            const vData = await verifyRes.json();
-            if (verifyRes.ok && vData.ok) {
-              setPlacedOrder({
-                ...orderData,
-                status: "BILLED",
-                isPaid: true,
-                paymentId: response.razorpay_payment_id,
-                autoVerified: true,
-              });
-              setCart([]);
-              setIsCartOpen(false);
-              fetchMenu();
-            } else {
-              alert(vData.error || "Payment verification failed. Staff will check at counter.");
-              setPlacedOrder({ ...orderData, isPaid: false });
-              setCart([]);
-              setIsCartOpen(false);
-              fetchMenu();
-            }
-          } catch {
-            alert("Verification network error. Staff will check at counter.");
-            setPlacedOrder({ ...orderData, isPaid: false });
-            setCart([]);
-            setIsCartOpen(false);
-            fetchMenu();
-          } finally {
-            setVerifyingPayment(false);
-          }
-        },
-        modal: {
-          ondismiss: function () {
-            // User closed the modal without paying: order is in kitchen, unpaid
-            setVerifyingPayment(false);
-            setPlacedOrder({
-              ...orderData,
-              isPaid: false,
-              fallbackNotice: "Payment was not completed. You can pay at the counter.",
-            });
-            setCart([]);
-            setIsCartOpen(false);
-            fetchMenu();
-          },
-        },
-      };
-
-      const rzpInstance = new window.Razorpay(options);
-      rzpInstance.on("payment.failed", function (failResp: any) {
-        setVerifyingPayment(false);
-        const reason = failResp?.error?.description || "Payment failed";
-        alert(`Payment not completed: ${reason}. Order is sent to kitchen; pay at counter.`);
-        setPlacedOrder({ ...orderData, isPaid: false });
-        setCart([]);
-        setIsCartOpen(false);
-        fetchMenu();
-      });
-      rzpInstance.open();
+      // Redirect customer to PhonePe Pay Page (1-tap PhonePe, GPay, Paytm, Cards)
+      window.location.href = initiateData.redirectUrl;
     } catch (err: any) {
       alert(err.message || "Order submission failed. Please call your steward.");
-    } finally {
       setSubmitting(false);
     }
   }
 
-  // Settle active unpaid table bill with AUTOMATIC VERIFICATION
+  // Settle active unpaid table bill with PHONEPE PAYMENT GATEWAY
   async function handleSettleActiveBill() {
     if (!data?.activeOrder?.id) return;
     setSettlingBill(true);
     try {
-      const scriptReady = await loadRazorpayScript();
-      if (!scriptReady || !window.Razorpay) {
-        throw new Error("Unable to load secure payment gateway. Please scan QR or pay at counter.");
-      }
-
-      // Step 1: Create Payment Intent for existing active order
-      const intentRes = await fetch("/api/payments/create-intent", {
+      const initiateRes = await fetch("/api/payments/phonepe/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: data.activeOrder.id }),
+        body: JSON.stringify({
+          orderId: data.activeOrder.id,
+          token,
+        }),
       });
-      const intent = await intentRes.json();
+      const initiateData = await initiateRes.json();
 
-      if (!intentRes.ok || !intent.onlinePaymentAvailable) {
-        throw new Error(intent.error || "Online payment gateway is temporarily unavailable. Please pay at counter.");
+      if (!initiateRes.ok || !initiateData.redirectUrl) {
+        throw new Error(initiateData.error || "PhonePe gateway is currently unavailable. Please pay at counter.");
       }
 
-      // Step 2: Open Razorpay Automated Checkout
-      const options = {
-        key: intent.keyId,
-        amount: intent.amountPaise,
-        currency: intent.currency || "INR",
-        name: data?.restaurant?.name || "WAFFLE PLUM HOUSE",
-        description: `Table ${data?.table?.number} Bill #${data.activeOrder.orderNumber}`,
-        order_id: intent.razorpayOrderId,
-        prefill: {
-          name: customerName.trim() || data.activeOrder.customerName || "Table Guest",
-          contact: settlePhone.trim() || customerPhone.trim() || data.activeOrder.customerPhone || "",
-        },
-        theme: {
-          color: "#16845B",
-        },
-        handler: async function (response: any) {
-          try {
-            // Step 3: Automatic Cryptographic Signature Verification
-            const verifyRes = await fetch("/api/payments/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderId: data.activeOrder.id,
-                attemptId: intent.attemptId,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-            const vData = await verifyRes.json();
-            if (verifyRes.ok && vData.ok) {
-              setSettleSuccessMsg(
-                `✓ Payment of ${formatINR(data.activeOrder.totalPaise)} automatically verified! Ref: ${response.razorpay_payment_id}. Table bill is settled.`
-              );
-              setTimeout(() => {
-                setIsSettleModalOpen(false);
-                setSettleSuccessMsg(null);
-                fetchMenu();
-              }, 2500);
-            } else {
-              alert(vData.error || "Payment verification failed.");
-            }
-          } catch {
-            alert("Verification network error. Staff will confirm at counter.");
-          } finally {
-            setSettlingBill(false);
-          }
-        },
-        modal: {
-          ondismiss: function () {
-            setSettlingBill(false);
-          },
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", function (resp: any) {
-        setSettlingBill(false);
-        const reason = resp?.error?.description || "Payment failed or cancelled";
-        alert(`Payment error: ${reason}`);
-      });
-      rzp.open();
+      // Redirect diner to PhonePe Pay Page
+      window.location.href = initiateData.redirectUrl;
     } catch (err: any) {
-      alert(err.message || "Failed to initiate online payment.");
+      alert(err.message || "Failed to initiate PhonePe payment.");
       setSettlingBill(false);
     }
   }
@@ -484,6 +341,30 @@ export default function GuestQRTableOrderPage({
         </div>
       </header>
 
+      {/* Return from PhonePe Status Notification */}
+      {verifyingPhonePe && (
+        <div className="max-w-lg mx-auto px-4 pt-3">
+          <div className="rounded-2xl border border-[#5f259f]/30 bg-[#5f259f]/10 p-3.5 flex items-center gap-3 text-xs font-bold text-[#5f259f] animate-pulse">
+            <Loader2 className="h-5 w-5 animate-spin shrink-0 text-[#5f259f]" />
+            <span>{phonePeStatusMsg || "Verifying payment with PhonePe…"}</span>
+          </div>
+        </div>
+      )}
+
+      {phonePeStatusMsg && !verifyingPhonePe && !placedOrder?.isPaid && (
+        <div className="max-w-lg mx-auto px-4 pt-3">
+          <div className="rounded-2xl border border-amber-300 bg-amber-50 p-3 flex items-center justify-between text-xs text-amber-900">
+            <span>ℹ️ {phonePeStatusMsg}</span>
+            <button
+              onClick={() => setPhonePeStatusMsg(null)}
+              className="text-amber-800 font-black px-2 cursor-pointer"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* While Dining: Active Table Order Banner */}
       {activeOrder && (
         <div className="max-w-lg mx-auto px-4 pt-3">
@@ -502,15 +383,15 @@ export default function GuestQRTableOrderPage({
               </div>
               <p className="text-[11px] text-amber-800 leading-tight">
                 Order <b className="font-bold">#{activeOrder.orderNumber}</b> is dining.
-                Settle your bill online with <b>instant automatic verification</b> via Google Pay, PhonePe, Paytm, or Cards!
+                Settle your bill online with <b>instant automatic verification</b> via PhonePe, Google Pay, Paytm, or Cards!
               </p>
               <div className="flex items-center gap-2 pt-0.5">
                 <button
                   onClick={() => setIsSettleModalOpen(true)}
-                  className="flex-1 rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-3 text-xs font-extrabold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  className="flex-1 rounded-xl bg-[#5f259f] hover:bg-[#4d1d82] text-white py-2.5 px-3 text-xs font-extrabold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  ⚡ Pay Bill (Auto-Verified)
+                  ⚡ Pay via PhonePe (Auto-Verified)
                 </button>
                 <button
                   onClick={() => setIsSettleModalOpen(true)}
@@ -562,8 +443,8 @@ export default function GuestQRTableOrderPage({
               <div className="flex justify-between items-center pt-1 border-t border-[#E5EBE7]">
                 <span>Payment</span>
                 {placedOrder.isPaid ? (
-                  <span className="font-bold text-[#16845B] bg-[#E8F5EE] px-2 py-0.5 rounded-full border border-[#16845B]/20 text-[11px] flex items-center gap-1">
-                    <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" /> Auto-Verified Online
+                  <span className="font-bold text-[#5f259f] bg-[#5f259f]/10 px-2 py-0.5 rounded-full border border-[#5f259f]/20 text-[11px] flex items-center gap-1">
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#5f259f]" /> Verified via PhonePe UPI
                   </span>
                 ) : (
                   <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full text-[11px] font-semibold">
@@ -571,9 +452,9 @@ export default function GuestQRTableOrderPage({
                   </span>
                 )}
               </div>
-              {placedOrder.paymentId && (
+              {placedOrder.utr && (
                 <div className="text-[10px] text-[#718078] font-mono pt-1">
-                  Gateway Ref: {placedOrder.paymentId}
+                  Bank UTR: {placedOrder.utr}
                 </div>
               )}
               {placedOrder.fallbackNotice && (
@@ -612,7 +493,7 @@ export default function GuestQRTableOrderPage({
               className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition shadow-2xs cursor-pointer ${
                 activeCategory === c.id
                   ? "bg-[#16845B] text-white border border-[#16845B]"
-                : "bg-white text-[#718078] border border-[#E5EBE7] hover:bg-[#F8FAF9]"
+                  : "bg-white text-[#718078] border border-[#E5EBE7] hover:bg-[#F8FAF9]"
               }`}
             >
               {c.name} ({c.items.length})
@@ -727,7 +608,7 @@ export default function GuestQRTableOrderPage({
         </div>
       )}
 
-      {/* Cart Drawer with Automatic Payment Verification */}
+      {/* Cart Drawer with PhonePe Payment Gateway Verification */}
       {isCartOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs flex items-end justify-center">
           <div className="w-full max-w-lg bg-white rounded-t-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom">
@@ -866,18 +747,18 @@ export default function GuestQRTableOrderPage({
                   onClick={() => setPayOnline(true)}
                   className={`p-3 rounded-2xl border text-left transition cursor-pointer relative ${
                     payOnline
-                      ? "border-[#16845B] bg-[#E8F5EE]/60 text-[#172B25] ring-2 ring-[#16845B]/20"
+                      ? "border-[#5f259f] bg-[#5f259f]/10 text-[#172B25] ring-2 ring-[#5f259f]/20"
                       : "border-[#E5EBE7] bg-white text-[#718078] hover:bg-[#F8FAF9]"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <ShieldCheck className="h-4 w-4 text-[#16845B]" />
-                    <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full bg-[#16845B] text-white">
-                      Auto-Verify
+                    <ShieldCheck className="h-4 w-4 text-[#5f259f]" />
+                    <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full bg-[#5f259f] text-white">
+                      0% Fee
                     </span>
                   </div>
-                  <div className="text-xs font-black">⚡ Pay Online Now</div>
-                  <div className="text-[10px] text-[#718078]">GPay, PhonePe, Paytm, Cards</div>
+                  <div className="text-xs font-black text-[#172B25]">⚡ Pay with PhonePe</div>
+                  <div className="text-[10px] text-[#718078]">Auto-Verified UPI & Cards</div>
                 </button>
 
                 <button
@@ -898,18 +779,18 @@ export default function GuestQRTableOrderPage({
               </div>
 
               {payOnline && (
-                <div className="p-3 rounded-2xl bg-[#E8F5EE]/50 border border-[#16845B]/20 text-[11px] text-[#16845B] flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-[#5f259f]/10 border border-[#5f259f]/20 text-[11px] text-[#5f259f] flex items-center justify-between">
                   <div className="flex items-center gap-1.5 font-bold">
-                    <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                    <span>Bank Gateway Auto-Verification Active</span>
+                    <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                    <span>PhonePe Gateway: 0% Fee Auto-Verification</span>
                   </div>
-                  <span className="text-[9px] bg-white px-2 py-0.5 rounded-full font-extrabold border border-[#16845B]/30">
-                    GPay • PhonePe • Paytm
+                  <span className="text-[9px] bg-white px-2 py-0.5 rounded-full font-extrabold border border-[#5f259f]/30">
+                    PhonePe • GPay • Paytm
                   </span>
                 </div>
               )}
 
-              {/* Fallback Manual QR accordion for edge cases */}
+              {/* Fallback Manual QR accordion */}
               {payOnline && (
                 <div className="pt-1 text-center">
                   <button
@@ -939,21 +820,18 @@ export default function GuestQRTableOrderPage({
             {/* Submit / Pay Button */}
             <button
               onClick={submitOrder}
-              disabled={submitting || verifyingPayment}
-              className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 text-sm font-black shadow-sm transition disabled:opacity-50 cursor-pointer active:scale-98 flex items-center justify-center gap-2"
+              disabled={submitting}
+              className={`w-full rounded-full text-white py-3.5 text-sm font-black shadow-sm transition disabled:opacity-50 cursor-pointer active:scale-98 flex items-center justify-center gap-2 ${
+                payOnline ? "bg-[#5f259f] hover:bg-[#4d1d82]" : "bg-[#16845B] hover:bg-[#116B49]"
+              }`}
             >
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending Order to Kitchen…
-                </>
-              ) : verifyingPayment ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Opening Bank Gateway…
+                  Opening PhonePe Gateway…
                 </>
               ) : payOnline ? (
-                `Confirm & Pay ${formatINR(cartGrandTotalPaise)} Online →`
+                `🚀 Pay ${formatINR(cartGrandTotalPaise)} via PhonePe & Order →`
               ) : (
                 `Send Table ${table.number} Order to Kitchen →`
               )}
@@ -962,13 +840,13 @@ export default function GuestQRTableOrderPage({
         </div>
       )}
 
-      {/* Settle Active Table Bill Modal (While Dining) with Automatic Verification */}
+      {/* Settle Active Table Bill Modal (While Dining) with PhonePe Automatic Verification */}
       {isSettleModalOpen && activeOrder && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-5 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom">
             <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-3">
               <div className="flex items-center gap-2">
-                <Receipt className="h-5 w-5 text-[#16845B]" />
+                <Receipt className="h-5 w-5 text-[#5f259f]" />
                 <div>
                   <h3 className="font-black text-base text-[#172B25]">
                     Settle Table {table.number} Bill
@@ -1019,16 +897,16 @@ export default function GuestQRTableOrderPage({
                 </div>
 
                 {/* Bill Amount Card */}
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#E8F5EE]/60 to-[#F8FAF9] border border-[#16845B]/30 flex items-center justify-between">
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#5f259f]/10 to-[#F8FAF9] border border-[#5f259f]/20 flex items-center justify-between">
                   <div>
                     <span className="text-[11px] uppercase font-bold text-[#718078] block">
                       Total Bill Amount
                     </span>
-                    <span className="text-xl font-black text-[#16845B]">
+                    <span className="text-xl font-black text-[#5f259f]">
                       {formatINR(activeOrder.totalPaise)}
                     </span>
                   </div>
-                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-[#16845B] text-white flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-[#5f259f] text-white flex items-center gap-1">
                     <ShieldCheck className="h-3 w-3" /> Auto-Verified
                   </span>
                 </div>
@@ -1042,25 +920,25 @@ export default function GuestQRTableOrderPage({
                     value={settlePhone}
                     onChange={(e) => setSettlePhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs font-semibold text-[#172B25] focus:outline-none focus:border-[#16845B]"
+                    className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs font-semibold text-[#172B25] focus:outline-none focus:border-[#5f259f]"
                   />
                 </div>
 
-                {/* Automated Payment Gateway Button */}
+                {/* PhonePe Automated Payment Gateway Button */}
                 <button
                   onClick={handleSettleActiveBill}
                   disabled={settlingBill}
-                  className="w-full rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 px-4 text-xs font-black flex items-center justify-center gap-2 shadow-md transition active:scale-98 cursor-pointer disabled:opacity-50"
+                  className="w-full rounded-2xl bg-[#5f259f] hover:bg-[#4d1d82] text-white py-3.5 px-4 text-xs font-black flex items-center justify-center gap-2 shadow-md transition active:scale-98 cursor-pointer disabled:opacity-50"
                 >
                   {settlingBill ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Opening Secure Payment Gateway…
+                      Opening PhonePe Gateway…
                     </>
                   ) : (
                     <>
                       <ShieldCheck className="h-4 w-4" />
-                      🚀 Pay {formatINR(activeOrder.totalPaise)} via UPI / Cards (Auto-Verified)
+                      🚀 Pay {formatINR(activeOrder.totalPaise)} via PhonePe (Auto-Verified)
                     </>
                   )}
                 </button>

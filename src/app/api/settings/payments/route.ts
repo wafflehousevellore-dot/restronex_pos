@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { encryptSecret, maskCredential } from "@/lib/encryption";
+import { encryptSecret, decryptSecret, maskCredential } from "@/lib/encryption";
 import Razorpay from "razorpay";
 
 export async function GET(req: NextRequest) {
@@ -23,15 +23,23 @@ export async function GET(req: NextRequest) {
     select: { name: true },
   });
 
+  const isPhonePe = config?.provider === "PHONEPE";
+  const phonepeMid = isPhonePe ? config?.keyId : (process.env.PHONEPE_MERCHANT_ID || "PGTESTPAYUAT86");
+  const phonepeSaltIndex = isPhonePe ? (decryptSecret(config?.webhookSecretEncrypted) || "1") : "1";
+  const hasPhonepeSecret = isPhonePe ? !!config?.keySecretEncrypted : true;
+
   return NextResponse.json({
     tenantId,
-    provider: config?.provider || "DIRECT_UPI",
-    isEnabled: config?.isEnabled || false,
+    provider: config?.provider || "PHONEPE",
+    isEnabled: config?.isEnabled ?? true,
     keyId: config?.keyId || "",
     keyIdMasked: config?.provider === "DIRECT_UPI" ? config?.keyId || "" : maskCredential(config?.keyId),
     hasSecret: !!config?.keySecretEncrypted,
     merchantName: config?.merchantName || tenant?.name || "WAFFLE PLUM HOUSE",
-    upiId: config?.provider === "DIRECT_UPI" ? config?.keyId || "ajaydpi2005@ptyes" : config?.keyId || "ajaydpi2005@ptyes",
+    upiId: config?.provider === "DIRECT_UPI" ? config?.keyId || "ajaydpi2005@ptyes" : "ajaydpi2005@ptyes",
+    phonepeMid: phonepeMid || "PGTESTPAYUAT86",
+    phonepeSaltIndex: phonepeSaltIndex || "1",
+    hasPhonepeSecret,
     autoCapture: config?.autoCapture ?? true,
     cashEnabled: config?.cashEnabled ?? true,
     cardTerminalEnabled: config?.cardTerminalEnabled ?? true,
@@ -60,7 +68,7 @@ export async function POST(req: NextRequest) {
   }
 
   const {
-    provider = "DIRECT_UPI",
+    provider = "PHONEPE",
     upiId,
     isEnabled = false,
     keyId,
@@ -78,10 +86,90 @@ export async function POST(req: NextRequest) {
     select: { name: true },
   });
 
+  const existing = await prisma.tenantPaymentGatewayConfig.findUnique({
+    where: { tenantId },
+  });
+
+  const finalMerchantName = merchantName?.trim() || tenant?.name || "WAFFLE PLUM HOUSE";
+
+  // Handle Option 1: Official PhonePe Payment Gateway (0% Fee, Auto-Verified)
+  if (provider === "PHONEPE") {
+    const finalMid = String(body.phonepeMid || body.merchantId || body.keyId || "PGTESTPAYUAT86").trim();
+    const finalSaltIndex = String(body.phonepeSaltIndex || body.saltIndex || "1").trim();
+
+    let encryptedSecret = existing?.keySecretEncrypted;
+    if (body.phonepeSaltKey && typeof body.phonepeSaltKey === "string" && body.phonepeSaltKey.trim()) {
+      encryptedSecret = encryptSecret(body.phonepeSaltKey.trim());
+    } else if (!encryptedSecret) {
+      encryptedSecret = encryptSecret("96434309-7796-489d-8924-ab56988a6076");
+    }
+    const encryptedSaltIndex = encryptSecret(finalSaltIndex);
+
+    const updated = await prisma.tenantPaymentGatewayConfig.upsert({
+      where: { tenantId },
+      create: {
+        tenantId,
+        provider: "PHONEPE",
+        isEnabled: true,
+        keyId: finalMid,
+        keySecretEncrypted: encryptedSecret,
+        webhookSecretEncrypted: encryptedSaltIndex,
+        merchantName: finalMerchantName,
+        autoCapture: true,
+        cashEnabled: Boolean(cashEnabled),
+        cardTerminalEnabled: Boolean(cardTerminalEnabled),
+        upiManualEnabled: true,
+      },
+      update: {
+        provider: "PHONEPE",
+        isEnabled: true,
+        keyId: finalMid,
+        keySecretEncrypted: encryptedSecret,
+        webhookSecretEncrypted: encryptedSaltIndex,
+        merchantName: finalMerchantName,
+        autoCapture: true,
+        cashEnabled: Boolean(cashEnabled),
+        cardTerminalEnabled: Boolean(cardTerminalEnabled),
+        upiManualEnabled: true,
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        userId,
+        action: "PAYMENT_GATEWAY_CONFIG_UPDATED",
+        entity: "TenantPaymentGatewayConfig",
+        entityId: updated.id,
+        metadataJson: JSON.stringify({
+          provider: "PHONEPE",
+          merchantId: finalMid,
+          saltIndex: finalSaltIndex,
+          merchantName: finalMerchantName,
+        }),
+      },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      message: "PhonePe Payment Gateway (0% Fee, Auto-Verified) activated successfully!",
+      config: {
+        provider: "PHONEPE",
+        isEnabled: true,
+        phonepeMid: finalMid,
+        phonepeSaltIndex: finalSaltIndex,
+        hasPhonepeSecret: true,
+        merchantName: finalMerchantName,
+        cashEnabled: updated.cashEnabled,
+        cardTerminalEnabled: updated.cardTerminalEnabled,
+        upiManualEnabled: true,
+      },
+    });
+  }
+
   // Handle Option 2: Direct Dynamic UPI QR (0% Gateway Fee)
   if (provider === "DIRECT_UPI" || (provider !== "RAZORPAY" && upiId)) {
     const rawUpi = String(upiId || keyId || "ajaydpi2005@ptyes").trim();
-    const finalMerchantName = merchantName?.trim() || tenant?.name || "WAFFLE PLUM HOUSE";
 
     const updated = await prisma.tenantPaymentGatewayConfig.upsert({
       where: { tenantId },
@@ -138,10 +226,6 @@ export async function POST(req: NextRequest) {
       },
     });
   }
-
-  const existing = await prisma.tenantPaymentGatewayConfig.findUnique({
-    where: { tenantId },
-  });
 
   const finalKeyId = keyId ? String(keyId).trim() : existing?.keyId || null;
 

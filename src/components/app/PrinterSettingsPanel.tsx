@@ -136,6 +136,7 @@ export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOut
           paperWidth: printer.paperWidth === "58mm" ? "58mm" : "80mm",
           escPosBase64: j.escPosBase64,
           textLines: j.textLines,
+          qrData: j.qrData,
         });
         setStatusBanner({
           type: clientRes.status === "OFFLINE" || clientRes.status === "FAILED" ? "error" : "success",
@@ -452,6 +453,18 @@ export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOut
                       {p.autoPrintEnabled ? "ON" : "OFF"}
                     </button>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span>Print Payment QR:</span>
+                    <button
+                      type="button"
+                      onClick={() => updatePrinter(p.id, { qrEnabled: !p.qrEnabled })}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold cursor-pointer ${
+                        p.qrEnabled !== false ? "bg-[#16845B] text-white" : "bg-slate-200 text-slate-700"
+                      }`}
+                    >
+                      {p.qrEnabled !== false ? "ON" : "OFF"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 pt-1">
@@ -462,6 +475,23 @@ export default function PrinterSettingsPanel({ selectedOutletId }: { selectedOut
                   >
                     <Play className="h-3.5 w-3.5 fill-current" /> Test Print
                   </button>
+                  {isBT && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const r = await discoverBluetoothPrinter();
+                        if (r.ok) {
+                          setStatusBanner({ type: "success", text: `✓ Bluetooth printer '${r.name}' connected & active!` });
+                        } else {
+                          setStatusBanner({ type: "error", text: r.error || "Pairing cancelled" });
+                        }
+                      }}
+                      className="rounded-full border border-[#16845B]/30 bg-[#E8F5EE] px-3 py-2 text-[11px] font-bold text-[#16845B] hover:bg-[#d8ede1] cursor-pointer"
+                      title="Pair or re-connect Web Bluetooth in this browser"
+                    >
+                      Reconnect
+                    </button>
+                  )}
                   {!p.isDefaultBilling && (
                     <button
                       type="button"

@@ -145,6 +145,12 @@ html {
     visibility: visible !important;
   }
 
+  #thermal-receipt-printable svg {
+    visibility: visible !important;
+    display: block !important;
+    margin: 4px auto !important;
+  }
+
   #thermal-receipt-printable,
   #z-report-printable,
   #kot-printable {
