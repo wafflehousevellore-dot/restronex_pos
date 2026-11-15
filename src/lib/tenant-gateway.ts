@@ -76,7 +76,29 @@ export async function resolveTenantGateway(tenantId: string): Promise<ResolvedGa
     };
   }
 
-  // Case 3: Offline-only (Cash, External Card Terminal recorded by staff, Manual UPI)
+  // Case 3: Active Razorpay Gateway configured in environment (Default automated verification)
+  if (isRazorpayConfigured()) {
+    const platformKeyId = getRazorpayKeyId();
+    const platformKeySecret = getRazorpayKeySecret();
+    const client = new Razorpay({
+      key_id: platformKeyId,
+      key_secret: platformKeySecret,
+    });
+
+    return {
+      mode: "DIRECT",
+      keyId: platformKeyId,
+      keySecret: platformKeySecret,
+      merchantName,
+      autoCapture: config?.autoCapture ?? true,
+      cashEnabled: config ? config.cashEnabled : true,
+      cardTerminalEnabled: config ? config.cardTerminalEnabled : true,
+      upiManualEnabled: config ? config.upiManualEnabled : true,
+      client,
+    };
+  }
+
+  // Case 4: Offline-only (Cash, External Card Terminal recorded by staff, Manual UPI)
   return {
     mode: "OFFLINE_ONLY",
     keyId: null,

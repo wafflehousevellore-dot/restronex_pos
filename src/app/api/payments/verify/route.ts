@@ -3,6 +3,9 @@ import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { resolveTenantGateway } from "@/lib/tenant-gateway";
 import { appCache } from "@/lib/cache";
+import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
+import { queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
+import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 
 export async function POST(req: NextRequest) {
   let body: any;
@@ -152,7 +155,24 @@ export async function POST(req: NextRequest) {
     return { payment, order: updatedOrder };
   });
 
+  if (order.table?.qrToken) {
+    appCache.del(`qr_table_${order.table.qrToken}`);
+  }
   appCache.delPrefix(`report_${result.order.tenantId}`);
+
+  // Automated post-payment workflows (Invoice PDF, WhatsApp, Thermal Receipt Print)
+  const origin = req.nextUrl.origin;
+  generateAndPersistInvoicePdf(result.order.id, origin).catch((e) =>
+    console.error("[Razorpay Verify] PDF error:", e)
+  );
+  if (result.order.customerPhone) {
+    queueAndSendWhatsAppInvoice(result.order.id, { baseUrl: origin }).catch((e) =>
+      console.error("[Razorpay Verify] WhatsApp error:", e)
+    );
+  }
+  queueAndDispatchBillPrintJob(result.order.id, { baseUrl: origin }).catch((e) =>
+    console.error("[Razorpay Verify] Thermal print error:", e)
+  );
 
   return NextResponse.json({
     ok: true,

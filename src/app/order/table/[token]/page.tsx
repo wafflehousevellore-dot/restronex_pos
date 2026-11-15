@@ -11,10 +11,39 @@ import {
   ArrowRight,
   UtensilsCrossed,
   QrCode,
-  Smartphone,
   Receipt,
   CheckCircle2,
+  ShieldCheck,
+  Loader2,
 } from "lucide-react";
+
+declare global {
+  interface Window {
+    Razorpay?: any;
+  }
+}
+
+// Dynamically load Razorpay standard checkout SDK
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window !== "undefined" && window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const existing = document.getElementById("razorpay-checkout-js");
+    if (existing) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "razorpay-checkout-js";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
 
 export default function GuestQRTableOrderPage({
   params,
@@ -35,19 +64,18 @@ export default function GuestQRTableOrderPage({
   const [whatsappConsent, setWhatsappConsent] = useState(true);
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
 
   // Online Payment State for Cart Ordering
   const [payOnline, setPayOnline] = useState(true);
-  const [showCartQr, setShowCartQr] = useState(false);
-  const [paymentRef, setPaymentRef] = useState("");
+  const [showManualCartUpi, setShowManualCartUpi] = useState(false);
 
   // While Dining: Settle Active Table Bill State
   const [isSettleModalOpen, setIsSettleModalOpen] = useState(false);
   const [settlePhone, setSettlePhone] = useState("");
-  const [settleUtr, setSettleUtr] = useState("");
   const [settlingBill, setSettlingBill] = useState(false);
-  const [showSettleQr, setShowSettleQr] = useState(false);
+  const [showManualSettleUpi, setShowManualSettleUpi] = useState(false);
   const [settleSuccessMsg, setSettleSuccessMsg] = useState<string | null>(null);
 
   async function fetchMenu() {
@@ -72,6 +100,8 @@ export default function GuestQRTableOrderPage({
 
   useEffect(() => {
     fetchMenu();
+    // Preload Razorpay SDK in the background for zero-delay payment launch
+    loadRazorpayScript();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
@@ -103,11 +133,12 @@ export default function GuestQRTableOrderPage({
     });
   }
 
-  // Submit Order with optional Online Payment
+  // Submit Order with AUTOMATIC PAYMENT VERIFICATION
   async function submitOrder() {
     if (cart.length === 0) return;
     setSubmitting(true);
     try {
+      // Step 1: Register Table Order (initially unpaid until verified by bank gateway)
       const res = await fetch(`/api/qr/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,58 +148,240 @@ export default function GuestQRTableOrderPage({
           customerPhone,
           whatsappConsent,
           notes,
-          payOnline,
-          paymentMethod: "UPI",
-          paymentRef: paymentRef.trim() || undefined,
+          payOnline: false,
         }),
       });
-      const j = await res.json();
+      const orderData = await res.json();
       if (!res.ok) {
-        alert(j.error || "Failed to submit order");
-      } else {
-        setPlacedOrder(j);
+        throw new Error(orderData.error || "Failed to place order");
+      }
+
+      // If customer chose "Pay Later at Counter", finish immediately
+      if (!payOnline) {
+        setPlacedOrder({
+          ...orderData,
+          isPaid: false,
+        });
         setCart([]);
         setIsCartOpen(false);
         fetchMenu();
+        return;
       }
-    } catch {
-      alert("Submission failed. Please call your steward.");
+
+      // Step 2: Automated Payment Gateway Verification (Google Pay, PhonePe, Paytm, Cards)
+      setVerifyingPayment(true);
+      const scriptReady = await loadRazorpayScript();
+      if (!scriptReady || !window.Razorpay) {
+        // Fallback: order is registered in kitchen, guest can pay at counter
+        setPlacedOrder({
+          ...orderData,
+          isPaid: false,
+          fallbackNotice: "Secure gateway could not be loaded. Please pay at counter.",
+        });
+        setCart([]);
+        setIsCartOpen(false);
+        fetchMenu();
+        return;
+      }
+
+      // Create gateway payment intent
+      const intentRes = await fetch("/api/payments/create-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: orderData.orderId }),
+      });
+      const intent = await intentRes.json();
+
+      if (!intentRes.ok || !intent.onlinePaymentAvailable) {
+        setPlacedOrder({
+          ...orderData,
+          isPaid: false,
+          fallbackNotice: intent.message || "Online gateway offline. Order registered for counter payment.",
+        });
+        setCart([]);
+        setIsCartOpen(false);
+        fetchMenu();
+        return;
+      }
+
+      // Open Razorpay Automated Checkout
+      const options = {
+        key: intent.keyId,
+        amount: intent.amountPaise,
+        currency: intent.currency || "INR",
+        name: data?.restaurant?.name || "WAFFLE PLUM HOUSE",
+        description: `Table ${data?.table?.number} Order #${orderData.orderNumber}`,
+        order_id: intent.razorpayOrderId,
+        prefill: {
+          name: customerName.trim() || "Table Guest",
+          contact: customerPhone.trim() || "",
+        },
+        theme: {
+          color: "#16845B",
+        },
+        handler: async function (response: any) {
+          // Step 3: Automatic Server-Side Cryptographic Signature Verification
+          try {
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: orderData.orderId,
+                attemptId: intent.attemptId,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+            const vData = await verifyRes.json();
+            if (verifyRes.ok && vData.ok) {
+              setPlacedOrder({
+                ...orderData,
+                status: "BILLED",
+                isPaid: true,
+                paymentId: response.razorpay_payment_id,
+                autoVerified: true,
+              });
+              setCart([]);
+              setIsCartOpen(false);
+              fetchMenu();
+            } else {
+              alert(vData.error || "Payment verification failed. Staff will check at counter.");
+              setPlacedOrder({ ...orderData, isPaid: false });
+              setCart([]);
+              setIsCartOpen(false);
+              fetchMenu();
+            }
+          } catch {
+            alert("Verification network error. Staff will check at counter.");
+            setPlacedOrder({ ...orderData, isPaid: false });
+            setCart([]);
+            setIsCartOpen(false);
+            fetchMenu();
+          } finally {
+            setVerifyingPayment(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            // User closed the modal without paying: order is in kitchen, unpaid
+            setVerifyingPayment(false);
+            setPlacedOrder({
+              ...orderData,
+              isPaid: false,
+              fallbackNotice: "Payment was not completed. You can pay at the counter.",
+            });
+            setCart([]);
+            setIsCartOpen(false);
+            fetchMenu();
+          },
+        },
+      };
+
+      const rzpInstance = new window.Razorpay(options);
+      rzpInstance.on("payment.failed", function (failResp: any) {
+        setVerifyingPayment(false);
+        const reason = failResp?.error?.description || "Payment failed";
+        alert(`Payment not completed: ${reason}. Order is sent to kitchen; pay at counter.`);
+        setPlacedOrder({ ...orderData, isPaid: false });
+        setCart([]);
+        setIsCartOpen(false);
+        fetchMenu();
+      });
+      rzpInstance.open();
+    } catch (err: any) {
+      alert(err.message || "Order submission failed. Please call your steward.");
     } finally {
       setSubmitting(false);
     }
   }
 
-  // Settle active unpaid table bill while dining
+  // Settle active unpaid table bill with AUTOMATIC VERIFICATION
   async function handleSettleActiveBill() {
     if (!data?.activeOrder?.id) return;
     setSettlingBill(true);
     try {
-      const res = await fetch(`/api/qr/${token}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: data.activeOrder.id,
-          paymentMethod: "UPI",
-          paymentRef: settleUtr.trim() || undefined,
-          customerPhone: settlePhone.trim() || customerPhone.trim() || undefined,
-          customerName: customerName.trim() || undefined,
-          whatsappConsent: true,
-        }),
-      });
-      const j = await res.json();
-      if (!res.ok) {
-        alert(j.error || "Failed to settle bill");
-      } else {
-        setSettleSuccessMsg(j.message || "Bill settled successfully!");
-        setTimeout(() => {
-          setIsSettleModalOpen(false);
-          setSettleSuccessMsg(null);
-          fetchMenu();
-        }, 2200);
+      const scriptReady = await loadRazorpayScript();
+      if (!scriptReady || !window.Razorpay) {
+        throw new Error("Unable to load secure payment gateway. Please scan QR or pay at counter.");
       }
-    } catch {
-      alert("Failed to confirm payment. Please check your connection or notify staff.");
-    } finally {
+
+      // Step 1: Create Payment Intent for existing active order
+      const intentRes = await fetch("/api/payments/create-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: data.activeOrder.id }),
+      });
+      const intent = await intentRes.json();
+
+      if (!intentRes.ok || !intent.onlinePaymentAvailable) {
+        throw new Error(intent.error || "Online payment gateway is temporarily unavailable. Please pay at counter.");
+      }
+
+      // Step 2: Open Razorpay Automated Checkout
+      const options = {
+        key: intent.keyId,
+        amount: intent.amountPaise,
+        currency: intent.currency || "INR",
+        name: data?.restaurant?.name || "WAFFLE PLUM HOUSE",
+        description: `Table ${data?.table?.number} Bill #${data.activeOrder.orderNumber}`,
+        order_id: intent.razorpayOrderId,
+        prefill: {
+          name: customerName.trim() || data.activeOrder.customerName || "Table Guest",
+          contact: settlePhone.trim() || customerPhone.trim() || data.activeOrder.customerPhone || "",
+        },
+        theme: {
+          color: "#16845B",
+        },
+        handler: async function (response: any) {
+          try {
+            // Step 3: Automatic Cryptographic Signature Verification
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: data.activeOrder.id,
+                attemptId: intent.attemptId,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+            const vData = await verifyRes.json();
+            if (verifyRes.ok && vData.ok) {
+              setSettleSuccessMsg(
+                `✓ Payment of ${formatINR(data.activeOrder.totalPaise)} automatically verified! Ref: ${response.razorpay_payment_id}. Table bill is settled.`
+              );
+              setTimeout(() => {
+                setIsSettleModalOpen(false);
+                setSettleSuccessMsg(null);
+                fetchMenu();
+              }, 2500);
+            } else {
+              alert(vData.error || "Payment verification failed.");
+            }
+          } catch {
+            alert("Verification network error. Staff will confirm at counter.");
+          } finally {
+            setSettlingBill(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setSettlingBill(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function (resp: any) {
+        setSettlingBill(false);
+        const reason = resp?.error?.description || "Payment failed or cancelled";
+        alert(`Payment error: ${reason}`);
+      });
+      rzp.open();
+    } catch (err: any) {
+      alert(err.message || "Failed to initiate online payment.");
       setSettlingBill(false);
     }
   }
@@ -216,7 +429,7 @@ export default function GuestQRTableOrderPage({
   const upiId = paymentConfig?.upiId || "ajaydpi2005@ptyes";
   const merchantName = paymentConfig?.merchantName || restaurant?.name || "WAFFLE PLUM HOUSE";
 
-  // Dynamic UPI URL for Cart Ordering
+  // Manual fallback UPI link
   const cartUpiAmount = (cartGrandTotalPaise / 100).toFixed(2);
   const cartUpiLink = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(
     merchantName
@@ -227,7 +440,6 @@ export default function GuestQRTableOrderPage({
     cartUpiLink
   )}`;
 
-  // Dynamic UPI URL for Active Table Bill (While Dining)
   const activeOrderAmount = activeOrder ? (activeOrder.totalPaise / 100).toFixed(2) : "0.00";
   const activeOrderUpiLink = activeOrder
     ? `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(
@@ -289,16 +501,16 @@ export default function GuestQRTableOrderPage({
                 </span>
               </div>
               <p className="text-[11px] text-amber-800 leading-tight">
-                Order <b className="font-bold">#{activeOrder.orderNumber}</b> is currently dining.
-                You can settle your bill online instantly from your phone!
+                Order <b className="font-bold">#{activeOrder.orderNumber}</b> is dining.
+                Settle your bill online with <b>instant automatic verification</b> via Google Pay, PhonePe, Paytm, or Cards!
               </p>
               <div className="flex items-center gap-2 pt-0.5">
                 <button
                   onClick={() => setIsSettleModalOpen(true)}
-                  className="flex-1 rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2 px-3 text-xs font-extrabold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  className="flex-1 rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-3 text-xs font-extrabold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
                 >
-                  <Smartphone className="h-3.5 w-3.5" />
-                  ⚡ Pay Bill Online Now
+                  <ShieldCheck className="h-4 w-4" />
+                  ⚡ Pay Bill (Auto-Verified)
                 </button>
                 <button
                   onClick={() => setIsSettleModalOpen(true)}
@@ -315,8 +527,8 @@ export default function GuestQRTableOrderPage({
                 <CheckCircle2 className="h-4 w-4 shrink-0" />
                 <span>Table {table.number} bill is paid & settled ({formatINR(activeOrder.totalPaise)})</span>
               </div>
-              <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#16845B]/30">
-                PAID ONLINE
+              <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-[#16845B]/30 font-black">
+                🟢 VERIFIED PAID
               </span>
             </div>
           )}
@@ -331,7 +543,7 @@ export default function GuestQRTableOrderPage({
               <Check className="h-6 w-6 stroke-[3]" />
             </div>
             <h2 className="text-xl font-black text-[#172B25]">
-              {placedOrder.isPaid ? "Order Received & Paid Online!" : "Order Sent to Kitchen!"}
+              {placedOrder.isPaid ? "Payment Verified & Order Received!" : "Order Sent to Kitchen!"}
             </h2>
             <p className="text-xs text-[#718078] leading-relaxed">
               Order <b className="text-[#172B25] font-bold">{placedOrder.orderNumber}</b> has been received by the kitchen for <b>Table {table.number}</b>.
@@ -351,7 +563,7 @@ export default function GuestQRTableOrderPage({
                 <span>Payment</span>
                 {placedOrder.isPaid ? (
                   <span className="font-bold text-[#16845B] bg-[#E8F5EE] px-2 py-0.5 rounded-full border border-[#16845B]/20 text-[11px] flex items-center gap-1">
-                    <CheckCircle2 className="h-3 w-3" /> Paid Online (UPI)
+                    <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" /> Auto-Verified Online
                   </span>
                 ) : (
                   <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full text-[11px] font-semibold">
@@ -359,6 +571,16 @@ export default function GuestQRTableOrderPage({
                   </span>
                 )}
               </div>
+              {placedOrder.paymentId && (
+                <div className="text-[10px] text-[#718078] font-mono pt-1">
+                  Gateway Ref: {placedOrder.paymentId}
+                </div>
+              )}
+              {placedOrder.fallbackNotice && (
+                <div className="text-[11px] text-amber-700 bg-amber-50 p-2 rounded-xl border border-amber-200">
+                  ℹ️ {placedOrder.fallbackNotice}
+                </div>
+              )}
             </div>
             <button
               onClick={() => setPlacedOrder(null)}
@@ -390,7 +612,7 @@ export default function GuestQRTableOrderPage({
               className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition shadow-2xs cursor-pointer ${
                 activeCategory === c.id
                   ? "bg-[#16845B] text-white border border-[#16845B]"
-                  : "bg-white text-[#718078] border border-[#E5EBE7] hover:bg-[#F8FAF9]"
+                : "bg-white text-[#718078] border border-[#E5EBE7] hover:bg-[#F8FAF9]"
               }`}
             >
               {c.name} ({c.items.length})
@@ -505,7 +727,7 @@ export default function GuestQRTableOrderPage({
         </div>
       )}
 
-      {/* Cart Drawer / Modal with Online Payment Options */}
+      {/* Cart Drawer with Automatic Payment Verification */}
       {isCartOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs flex items-end justify-center">
           <div className="w-full max-w-lg bg-white rounded-t-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom">
@@ -613,7 +835,7 @@ export default function GuestQRTableOrderPage({
                   onChange={(e) => setWhatsappConsent(e.target.checked)}
                   className="h-4 w-4 rounded accent-[#16845B]"
                 />
-                <span>Send itemized tax invoice to WhatsApp upon bill settlement</span>
+                <span>Send itemized tax invoice to WhatsApp upon payment</span>
               </label>
             </div>
 
@@ -636,7 +858,7 @@ export default function GuestQRTableOrderPage({
             {/* Payment Method Selection */}
             <div className="space-y-2.5 pt-1">
               <label className="block text-[11px] font-bold text-[#172B25] uppercase tracking-wide">
-                Choose How to Pay
+                Choose Payment Method
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -649,13 +871,13 @@ export default function GuestQRTableOrderPage({
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <Smartphone className="h-4 w-4 text-[#16845B]" />
+                    <ShieldCheck className="h-4 w-4 text-[#16845B]" />
                     <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full bg-[#16845B] text-white">
-                      Instant
+                      Auto-Verify
                     </span>
                   </div>
                   <div className="text-xs font-black">⚡ Pay Online Now</div>
-                  <div className="text-[10px] text-[#718078]">GPay, PhonePe, Paytm, UPI</div>
+                  <div className="text-[10px] text-[#718078]">GPay, PhonePe, Paytm, Cards</div>
                 </button>
 
                 <button
@@ -675,80 +897,72 @@ export default function GuestQRTableOrderPage({
                 </button>
               </div>
 
-              {/* Online Payment Interactive Section */}
               {payOnline && (
-                <div className="p-3.5 rounded-2xl border border-[#16845B]/30 bg-[#F8FAF9] space-y-3">
-                  <div className="text-xs font-bold text-[#172B25] flex items-center justify-between">
-                    <span>UPI Payee: {merchantName}</span>
-                    <span className="text-[10px] font-mono font-bold text-[#16845B] bg-white px-2 py-0.5 rounded-full border border-[#E5EBE7]">
-                      {upiId}
-                    </span>
+                <div className="p-3 rounded-2xl bg-[#E8F5EE]/50 border border-[#16845B]/20 text-[11px] text-[#16845B] flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 font-bold">
+                    <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                    <span>Bank Gateway Auto-Verification Active</span>
                   </div>
+                  <span className="text-[9px] bg-white px-2 py-0.5 rounded-full font-extrabold border border-[#16845B]/30">
+                    GPay • PhonePe • Paytm
+                  </span>
+                </div>
+              )}
 
-                  {/* 1-Tap UPI Launch Button on Mobile */}
-                  <a
-                    href={cartUpiLink}
-                    className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 px-3 text-xs font-black flex items-center justify-center gap-2 shadow-xs transition active:scale-98"
+              {/* Fallback Manual QR accordion for edge cases */}
+              {payOnline && (
+                <div className="pt-1 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowManualCartUpi(!showManualCartUpi)}
+                    className="text-[10px] text-[#718078] hover:text-[#172B25] underline cursor-pointer inline-flex items-center gap-1"
                   >
-                    <Smartphone className="h-4 w-4" />
-                    🚀 Open UPI App to Pay {formatINR(cartGrandTotalPaise)}
-                  </a>
-
-                  {/* QR Code toggle */}
-                  <div className="text-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowCartQr(!showCartQr)}
-                      className="text-[11px] font-bold text-[#16845B] hover:underline inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      <QrCode className="h-3 w-3" />
-                      {showCartQr ? "Hide QR Code" : "Or Scan QR Code on Screen"}
-                    </button>
-                  </div>
-
-                  {showCartQr && (
-                    <div className="bg-white p-3 rounded-2xl border border-[#E5EBE7] flex flex-col items-center gap-2 animate-in fade-in duration-200">
+                    <QrCode className="h-3 w-3" />
+                    {showManualCartUpi ? "Hide Staff QR" : "Alternative: Scan Direct Staff UPI QR"}
+                  </button>
+                  {showManualCartUpi && (
+                    <div className="mt-2 p-3 bg-white border border-[#E5EBE7] rounded-xl flex flex-col items-center gap-2">
                       <img
                         src={cartQrUrl}
-                        alt="Dynamic UPI QR Code"
-                        className="w-40 h-40 object-contain rounded-lg border border-[#E5EBE7]"
+                        alt="Staff UPI QR"
+                        className="w-36 h-36 object-contain border border-[#E5EBE7] rounded-lg"
                       />
-                      <p className="text-[10px] text-[#718078] text-center">
-                        Scan using Google Pay, PhonePe, Paytm, CRED or BHIM
+                      <p className="text-[10px] text-[#718078]">
+                        UPI: <b>{upiId}</b> ({merchantName})
                       </p>
                     </div>
                   )}
-
-                  {/* Reference ID / UTR input */}
-                  <div>
-                    <input
-                      value={paymentRef}
-                      onChange={(e) => setPaymentRef(e.target.value)}
-                      placeholder="UPI Transaction ID / UTR (Optional, e.g. 4012...)"
-                      className="w-full bg-white border border-[#E5EBE7] rounded-xl px-3 py-2 text-[11px] text-[#172B25] focus:outline-none focus:border-[#16845B]"
-                    />
-                  </div>
                 </div>
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit / Pay Button */}
             <button
               onClick={submitOrder}
-              disabled={submitting}
-              className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 text-sm font-black shadow-sm transition disabled:opacity-50 cursor-pointer active:scale-98"
+              disabled={submitting || verifyingPayment}
+              className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 text-sm font-black shadow-sm transition disabled:opacity-50 cursor-pointer active:scale-98 flex items-center justify-center gap-2"
             >
-              {submitting
-                ? "Processing Table Order…"
-                : payOnline
-                ? `Confirm & Pay ${formatINR(cartGrandTotalPaise)} Online →`
-                : `Send Table ${table.number} Order to Kitchen →`}
+              {submitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Sending Order to Kitchen…
+                </>
+              ) : verifyingPayment ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Opening Bank Gateway…
+                </>
+              ) : payOnline ? (
+                `Confirm & Pay ${formatINR(cartGrandTotalPaise)} Online →`
+              ) : (
+                `Send Table ${table.number} Order to Kitchen →`
+              )}
             </button>
           </div>
         </div>
       )}
 
-      {/* Settle Active Table Bill Modal (While Dining) */}
+      {/* Settle Active Table Bill Modal (While Dining) with Automatic Verification */}
       {isSettleModalOpen && activeOrder && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-5 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl animate-in slide-in-from-bottom">
@@ -774,13 +988,13 @@ export default function GuestQRTableOrderPage({
 
             {/* Success Feedback Notification */}
             {settleSuccessMsg && (
-              <div className="p-4 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/40 text-[#16845B] text-center space-y-1 animate-in zoom-in-95">
+              <div className="p-4 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/40 text-[#16845B] text-center space-y-1.5 animate-in zoom-in-95">
                 <div className="h-10 w-10 rounded-full bg-[#16845B] text-white grid place-items-center mx-auto shadow-xs">
                   <Check className="h-5 w-5 stroke-[3]" />
                 </div>
                 <div className="font-black text-sm">{settleSuccessMsg}</div>
                 <div className="text-xs text-[#718078]">
-                  Table bill settled! Official invoice is being sent to your WhatsApp.
+                  Digital tax invoice sent to your WhatsApp. Thank you for dining with us!
                 </div>
               </div>
             )}
@@ -814,84 +1028,72 @@ export default function GuestQRTableOrderPage({
                       {formatINR(activeOrder.totalPaise)}
                     </span>
                   </div>
-                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-[#16845B] text-white">
-                    0% Convenience Fee
+                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-[#16845B] text-white flex items-center gap-1">
+                    <ShieldCheck className="h-3 w-3" /> Auto-Verified
                   </span>
                 </div>
 
-                {/* 1-Tap Mobile UPI App Launch */}
-                <div className="space-y-2.5">
-                  <a
-                    href={activeOrderUpiLink}
-                    className="w-full rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white py-3 px-4 text-xs font-black flex items-center justify-center gap-2 shadow-md transition active:scale-98"
+                {/* Phone for WhatsApp Receipt */}
+                <div>
+                  <label className="block text-[11px] font-semibold text-[#718078] uppercase mb-1">
+                    WhatsApp Phone for Bill PDF
+                  </label>
+                  <input
+                    value={settlePhone}
+                    onChange={(e) => setSettlePhone(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs font-semibold text-[#172B25] focus:outline-none focus:border-[#16845B]"
+                  />
+                </div>
+
+                {/* Automated Payment Gateway Button */}
+                <button
+                  onClick={handleSettleActiveBill}
+                  disabled={settlingBill}
+                  className="w-full rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white py-3.5 px-4 text-xs font-black flex items-center justify-center gap-2 shadow-md transition active:scale-98 cursor-pointer disabled:opacity-50"
+                >
+                  {settlingBill ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Opening Secure Payment Gateway…
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-4 w-4" />
+                      🚀 Pay {formatINR(activeOrder.totalPaise)} via UPI / Cards (Auto-Verified)
+                    </>
+                  )}
+                </button>
+
+                {/* Manual UPI fallback toggle */}
+                <div className="pt-1 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowManualSettleUpi(!showManualSettleUpi)}
+                    className="text-[10px] text-[#718078] hover:text-[#172B25] underline cursor-pointer inline-flex items-center gap-1"
                   >
-                    <Smartphone className="h-4 w-4" />
-                    🚀 Launch UPI App to Pay {formatINR(activeOrder.totalPaise)}
-                  </a>
-
-                  {/* QR Code toggle */}
-                  <div className="text-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowSettleQr(!showSettleQr)}
-                      className="text-xs font-bold text-[#16845B] hover:underline inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      <QrCode className="h-3.5 w-3.5" />
-                      {showSettleQr ? "Hide QR Code" : "Show UPI QR Code to Scan"}
-                    </button>
-                  </div>
-
-                  {showSettleQr && (
-                    <div className="bg-white p-3.5 rounded-2xl border border-[#E5EBE7] flex flex-col items-center gap-2 animate-in fade-in">
+                    <QrCode className="h-3 w-3" />
+                    {showManualSettleUpi ? "Hide Staff QR" : "Having issues? Show Direct Staff UPI QR"}
+                  </button>
+                  {showManualSettleUpi && (
+                    <div className="mt-2 p-3 bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl flex flex-col items-center gap-2">
+                      <a
+                        href={activeOrderUpiLink}
+                        className="text-xs font-bold text-[#16845B] underline"
+                      >
+                        Click to Launch Direct UPI App
+                      </a>
                       <img
                         src={activeOrderQrUrl}
-                        alt="Dynamic UPI QR Code"
-                        className="w-48 h-48 object-contain rounded-xl border border-[#E5EBE7]"
+                        alt="Staff UPI QR"
+                        className="w-36 h-36 object-contain border border-[#E5EBE7] rounded-lg bg-white p-1"
                       />
-                      <p className="text-[11px] text-[#718078] text-center font-semibold">
-                        Scan with Google Pay, PhonePe, Paytm, or BHIM
+                      <p className="text-[10px] text-[#718078]">
+                        Pay to: <b>{upiId}</b> ({merchantName})
                       </p>
                     </div>
                   )}
                 </div>
-
-                {/* WhatsApp & UTR Details */}
-                <div className="space-y-2 pt-2 border-t border-[#E5EBE7]">
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[#718078] uppercase mb-1">
-                      WhatsApp Phone for Digital Invoice
-                    </label>
-                    <input
-                      value={settlePhone}
-                      onChange={(e) => setSettlePhone(e.target.value)}
-                      placeholder="+91 98765 43210"
-                      className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs font-semibold text-[#172B25] focus:outline-none focus:border-[#16845B]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-semibold text-[#718078] uppercase mb-1">
-                      UPI UTR / Reference (Optional)
-                    </label>
-                    <input
-                      value={settleUtr}
-                      onChange={(e) => setSettleUtr(e.target.value)}
-                      placeholder="e.g. 401234567890"
-                      className="w-full bg-[#F8FAF9] border border-[#E5EBE7] rounded-xl px-3 py-2 text-xs text-[#172B25] focus:outline-none focus:border-[#16845B]"
-                    />
-                  </div>
-                </div>
-
-                {/* Confirm Button */}
-                <button
-                  onClick={handleSettleActiveBill}
-                  disabled={settlingBill}
-                  className="w-full rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-3 text-sm font-black shadow-sm transition disabled:opacity-50 cursor-pointer active:scale-98"
-                >
-                  {settlingBill
-                    ? "Settling Table Bill…"
-                    : `Confirm Payment & Settle Table Bill (${formatINR(activeOrder.totalPaise)}) →`}
-                </button>
               </>
             )}
           </div>

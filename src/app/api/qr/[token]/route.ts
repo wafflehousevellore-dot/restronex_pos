@@ -5,6 +5,7 @@ import { appCache, getOrSetCache } from "@/lib/cache";
 import { queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
+import { resolveTenantGateway } from "@/lib/tenant-gateway";
 
 export async function GET(
   _req: NextRequest,
@@ -54,14 +55,15 @@ export async function GET(
         });
       }
 
-      // Fetch tenant payment configuration (Direct UPI / Razorpay)
+      // Fetch tenant payment configuration (Direct UPI / Automated Razorpay Gateway)
       const gatewayConfig = await prisma.tenantPaymentGatewayConfig.findUnique({
         where: { tenantId: table.tenantId },
       });
+      const gateway = await resolveTenantGateway(table.tenantId);
 
       const fallbackUpi = "ajaydpi2005@ptyes";
       const upiId = gatewayConfig?.keyId || fallbackUpi;
-      const merchantName = gatewayConfig?.merchantName || table.tenant.name || "WAFFLE PLUM HOUSE";
+      const merchantName = gateway.merchantName || gatewayConfig?.merchantName || table.tenant.name || "WAFFLE PLUM HOUSE";
 
       return {
         table: {
@@ -82,14 +84,11 @@ export async function GET(
         },
         paymentConfig: {
           isOnlinePaymentEnabled: true,
-          provider: gatewayConfig?.provider || "DIRECT_UPI",
+          provider: gateway.keyId ? "RAZORPAY" : "DIRECT_UPI",
           upiId,
           merchantName,
-          razorpayKeyId:
-            gatewayConfig?.provider === "RAZORPAY" && gatewayConfig?.isEnabled
-              ? gatewayConfig.keyId
-              : null,
-          cashEnabled: gatewayConfig?.cashEnabled ?? true,
+          razorpayKeyId: gateway.keyId || null,
+          cashEnabled: gateway.cashEnabled ?? true,
         },
         activeOrder,
       };
