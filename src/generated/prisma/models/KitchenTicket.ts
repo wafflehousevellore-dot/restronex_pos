@@ -28,10 +28,12 @@ export type AggregateKitchenTicket = {
 
 export type KitchenTicketAvgAggregateOutputType = {
   priority: number | null
+  reprintCount: number | null
 }
 
 export type KitchenTicketSumAggregateOutputType = {
   priority: number | null
+  reprintCount: number | null
 }
 
 export type KitchenTicketMinAggregateOutputType = {
@@ -42,6 +44,9 @@ export type KitchenTicketMinAggregateOutputType = {
   station: string | null
   status: string | null
   priority: number | null
+  acknowledgedAt: Date | null
+  acknowledgedBy: string | null
+  reprintCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +59,9 @@ export type KitchenTicketMaxAggregateOutputType = {
   station: string | null
   status: string | null
   priority: number | null
+  acknowledgedAt: Date | null
+  acknowledgedBy: string | null
+  reprintCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +74,9 @@ export type KitchenTicketCountAggregateOutputType = {
   station: number
   status: number
   priority: number
+  acknowledgedAt: number
+  acknowledgedBy: number
+  reprintCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,10 +85,12 @@ export type KitchenTicketCountAggregateOutputType = {
 
 export type KitchenTicketAvgAggregateInputType = {
   priority?: true
+  reprintCount?: true
 }
 
 export type KitchenTicketSumAggregateInputType = {
   priority?: true
+  reprintCount?: true
 }
 
 export type KitchenTicketMinAggregateInputType = {
@@ -88,6 +101,9 @@ export type KitchenTicketMinAggregateInputType = {
   station?: true
   status?: true
   priority?: true
+  acknowledgedAt?: true
+  acknowledgedBy?: true
+  reprintCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +116,9 @@ export type KitchenTicketMaxAggregateInputType = {
   station?: true
   status?: true
   priority?: true
+  acknowledgedAt?: true
+  acknowledgedBy?: true
+  reprintCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +131,9 @@ export type KitchenTicketCountAggregateInputType = {
   station?: true
   status?: true
   priority?: true
+  acknowledgedAt?: true
+  acknowledgedBy?: true
+  reprintCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -211,6 +233,9 @@ export type KitchenTicketGroupByOutputType = {
   station: string
   status: string
   priority: number
+  acknowledgedAt: Date | null
+  acknowledgedBy: string | null
+  reprintCount: number
   createdAt: Date
   updatedAt: Date
   _count: KitchenTicketCountAggregateOutputType | null
@@ -246,6 +271,9 @@ export type KitchenTicketWhereInput = {
   station?: Prisma.StringFilter<"KitchenTicket"> | string
   status?: Prisma.StringFilter<"KitchenTicket"> | string
   priority?: Prisma.IntFilter<"KitchenTicket"> | number
+  acknowledgedAt?: Prisma.DateTimeNullableFilter<"KitchenTicket"> | Date | string | null
+  acknowledgedBy?: Prisma.StringNullableFilter<"KitchenTicket"> | string | null
+  reprintCount?: Prisma.IntFilter<"KitchenTicket"> | number
   createdAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -259,6 +287,9 @@ export type KitchenTicketOrderByWithRelationInput = {
   station?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  acknowledgedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  acknowledgedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
@@ -275,6 +306,9 @@ export type KitchenTicketWhereUniqueInput = Prisma.AtLeast<{
   station?: Prisma.StringFilter<"KitchenTicket"> | string
   status?: Prisma.StringFilter<"KitchenTicket"> | string
   priority?: Prisma.IntFilter<"KitchenTicket"> | number
+  acknowledgedAt?: Prisma.DateTimeNullableFilter<"KitchenTicket"> | Date | string | null
+  acknowledgedBy?: Prisma.StringNullableFilter<"KitchenTicket"> | string | null
+  reprintCount?: Prisma.IntFilter<"KitchenTicket"> | number
   createdAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
@@ -288,6 +322,9 @@ export type KitchenTicketOrderByWithAggregationInput = {
   station?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  acknowledgedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  acknowledgedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.KitchenTicketCountOrderByAggregateInput
@@ -308,6 +345,9 @@ export type KitchenTicketScalarWhereWithAggregatesInput = {
   station?: Prisma.StringWithAggregatesFilter<"KitchenTicket"> | string
   status?: Prisma.StringWithAggregatesFilter<"KitchenTicket"> | string
   priority?: Prisma.IntWithAggregatesFilter<"KitchenTicket"> | number
+  acknowledgedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"KitchenTicket"> | Date | string | null
+  acknowledgedBy?: Prisma.StringNullableWithAggregatesFilter<"KitchenTicket"> | string | null
+  reprintCount?: Prisma.IntWithAggregatesFilter<"KitchenTicket"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"KitchenTicket"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"KitchenTicket"> | Date | string
 }
@@ -319,6 +359,9 @@ export type KitchenTicketCreateInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutKotTicketsInput
@@ -332,6 +375,9 @@ export type KitchenTicketUncheckedCreateInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -343,6 +389,9 @@ export type KitchenTicketUpdateInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutKotTicketsNestedInput
@@ -356,6 +405,9 @@ export type KitchenTicketUncheckedUpdateInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -368,6 +420,9 @@ export type KitchenTicketCreateManyInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -379,6 +434,9 @@ export type KitchenTicketUpdateManyMutationInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -391,6 +449,9 @@ export type KitchenTicketUncheckedUpdateManyInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,12 +474,16 @@ export type KitchenTicketCountOrderByAggregateInput = {
   station?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  acknowledgedAt?: Prisma.SortOrder
+  acknowledgedBy?: Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type KitchenTicketAvgOrderByAggregateInput = {
   priority?: Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
 }
 
 export type KitchenTicketMaxOrderByAggregateInput = {
@@ -429,6 +494,9 @@ export type KitchenTicketMaxOrderByAggregateInput = {
   station?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  acknowledgedAt?: Prisma.SortOrder
+  acknowledgedBy?: Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -441,12 +509,16 @@ export type KitchenTicketMinOrderByAggregateInput = {
   station?: Prisma.SortOrder
   status?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+  acknowledgedAt?: Prisma.SortOrder
+  acknowledgedBy?: Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type KitchenTicketSumOrderByAggregateInput = {
   priority?: Prisma.SortOrder
+  reprintCount?: Prisma.SortOrder
 }
 
 export type KitchenTicketCreateNestedManyWithoutOrderInput = {
@@ -498,6 +570,9 @@ export type KitchenTicketCreateWithoutOrderInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -509,6 +584,9 @@ export type KitchenTicketUncheckedCreateWithoutOrderInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -550,6 +628,9 @@ export type KitchenTicketScalarWhereInput = {
   station?: Prisma.StringFilter<"KitchenTicket"> | string
   status?: Prisma.StringFilter<"KitchenTicket"> | string
   priority?: Prisma.IntFilter<"KitchenTicket"> | number
+  acknowledgedAt?: Prisma.DateTimeNullableFilter<"KitchenTicket"> | Date | string | null
+  acknowledgedBy?: Prisma.StringNullableFilter<"KitchenTicket"> | string | null
+  reprintCount?: Prisma.IntFilter<"KitchenTicket"> | number
   createdAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"KitchenTicket"> | Date | string
 }
@@ -561,6 +642,9 @@ export type KitchenTicketCreateManyOrderInput = {
   station?: string
   status?: string
   priority?: number
+  acknowledgedAt?: Date | string | null
+  acknowledgedBy?: string | null
+  reprintCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -572,6 +656,9 @@ export type KitchenTicketUpdateWithoutOrderInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -583,6 +670,9 @@ export type KitchenTicketUncheckedUpdateWithoutOrderInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -594,6 +684,9 @@ export type KitchenTicketUncheckedUpdateManyWithoutOrderInput = {
   station?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   priority?: Prisma.IntFieldUpdateOperationsInput | number
+  acknowledgedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acknowledgedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reprintCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -608,6 +701,9 @@ export type KitchenTicketSelect<ExtArgs extends runtime.Types.Extensions.Interna
   station?: boolean
   status?: boolean
   priority?: boolean
+  acknowledgedAt?: boolean
+  acknowledgedBy?: boolean
+  reprintCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -621,6 +717,9 @@ export type KitchenTicketSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   station?: boolean
   status?: boolean
   priority?: boolean
+  acknowledgedAt?: boolean
+  acknowledgedBy?: boolean
+  reprintCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -634,6 +733,9 @@ export type KitchenTicketSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   station?: boolean
   status?: boolean
   priority?: boolean
+  acknowledgedAt?: boolean
+  acknowledgedBy?: boolean
+  reprintCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -647,11 +749,14 @@ export type KitchenTicketSelectScalar = {
   station?: boolean
   status?: boolean
   priority?: boolean
+  acknowledgedAt?: boolean
+  acknowledgedBy?: boolean
+  reprintCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type KitchenTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "tenantId" | "outletId" | "station" | "status" | "priority" | "createdAt" | "updatedAt", ExtArgs["result"]["kitchenTicket"]>
+export type KitchenTicketOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "tenantId" | "outletId" | "station" | "status" | "priority" | "acknowledgedAt" | "acknowledgedBy" | "reprintCount" | "createdAt" | "updatedAt", ExtArgs["result"]["kitchenTicket"]>
 export type KitchenTicketInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -675,6 +780,9 @@ export type $KitchenTicketPayload<ExtArgs extends runtime.Types.Extensions.Inter
     station: string
     status: string
     priority: number
+    acknowledgedAt: Date | null
+    acknowledgedBy: string | null
+    reprintCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["kitchenTicket"]>
@@ -1108,6 +1216,9 @@ export interface KitchenTicketFieldRefs {
   readonly station: Prisma.FieldRef<"KitchenTicket", 'String'>
   readonly status: Prisma.FieldRef<"KitchenTicket", 'String'>
   readonly priority: Prisma.FieldRef<"KitchenTicket", 'Int'>
+  readonly acknowledgedAt: Prisma.FieldRef<"KitchenTicket", 'DateTime'>
+  readonly acknowledgedBy: Prisma.FieldRef<"KitchenTicket", 'String'>
+  readonly reprintCount: Prisma.FieldRef<"KitchenTicket", 'Int'>
   readonly createdAt: Prisma.FieldRef<"KitchenTicket", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"KitchenTicket", 'DateTime'>
 }

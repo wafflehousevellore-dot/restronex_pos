@@ -4770,6 +4770,10 @@ export const OrderScalarFieldEnum = {
   printStatus: 'printStatus',
   qrSessionId: 'qrSessionId',
   idempotencyKey: 'idempotencyKey',
+  aggregatorOrderId: 'aggregatorOrderId',
+  aggregatorStatus: 'aggregatorStatus',
+  channel: 'channel',
+  cancelReason: 'cancelReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4802,6 +4806,9 @@ export const KitchenTicketScalarFieldEnum = {
   station: 'station',
   status: 'status',
   priority: 'priority',
+  acknowledgedAt: 'acknowledgedAt',
+  acknowledgedBy: 'acknowledgedBy',
+  reprintCount: 'reprintCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

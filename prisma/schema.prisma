@@ -326,6 +326,10 @@ model Order {
   printStatus    String?
   qrSessionId String?
   idempotencyKey String?
+  aggregatorOrderId String?
+  aggregatorStatus  String?
+  channel           String?
+  cancelReason      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -348,6 +352,7 @@ model Order {
   @@index([outletId, createdAt])
   @@index([tenantId, status, createdAt])
   @@index([tableId])
+  @@index([tenantId, aggregatorOrderId])
 }
 
 model OrderItem {
@@ -369,17 +374,21 @@ model OrderItem {
 }
 
 model KitchenTicket {
-  id        String @id @default(cuid())
-  orderId   String
-  tenantId  String
-  outletId  String
-  station   String @default("MAIN")
-  status    String @default("RECEIVED")
-  priority  Int @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id             String    @id @default(cuid())
+  orderId        String
+  tenantId       String
+  outletId       String
+  station        String    @default("MAIN")
+  status         String    @default("RECEIVED")
+  priority       Int       @default(0)
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+  reprintCount   Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
   @@index([outletId, status])
+  @@index([tenantId, outletId, status])
 }
 
 model Payment {

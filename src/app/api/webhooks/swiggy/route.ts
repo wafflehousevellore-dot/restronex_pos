@@ -1,22 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { SwiggyAdapter } from "@/lib/aggregators/swiggy";
+import { ingestOrder, cancelOrder } from "@/lib/order-ingestion";
+
+export const dynamic = "force-dynamic";
 
 /**
  * Official Swiggy Partner POS Webhook Receiver
  * Handles incoming order dispatch, rider assignments, cancellations, and status updates.
  */
 export async function POST(req: NextRequest) {
+  let rawBody = "";
   let body: any;
   try {
-    body = await req.json();
+    rawBody = await req.text();
+    body = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ status: "FAILED", error: "Invalid JSON payload" }, { status: 400 });
   }
 
-  const { event_type, store_id, order_id, data } = body;
+  // 1. Signature Verification
+  const signature = req.headers.get("x-swiggy-signature") || req.headers.get("x-hub-signature-256");
+  const isValidSig = SwiggyAdapter.verifySignature(rawBody, signature);
+  if (!isValidSig) {
+    return NextResponse.json({ status: "FAILED", error: "Invalid webhook signature" }, { status: 401 });
+  }
+
+  const { event_type, store_id, order_id } = body;
   const eventId = `swiggy_${order_id || Date.now()}_${event_type || "event"}_${Date.now()}`;
 
-  // Idempotency: Check if this webhook event was already processed
+  // 2. Idempotency Check
   const existingEvent = await prisma.webhookEvent.findUnique({
     where: { eventId },
   });
@@ -24,7 +37,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: "SUCCESS", message: "Event already processed" });
   }
 
-  // Find the tenant & outlet mapped to this Swiggy Store ID
+  // 3. Resolve mapped Tenant & Outlet from Swiggy Store ID
   let targetTenantId: string | null = null;
   let targetOutletId: string | null = null;
 
@@ -63,127 +76,44 @@ export async function POST(req: NextRequest) {
 
   if (!targetTenantId || !targetOutletId) {
     return NextResponse.json(
-      { status: "FAILED", error: `Unmapped Swiggy store: ${store_id}` },
+      { status: "FAILED", error: `Unmapped Swiggy store ID: ${store_id}` },
       { status: 404 }
     );
   }
 
-  const orderNumber = `SWIGGY-${order_id || Date.now()}`;
-
   try {
+    // 4. Handle Cancellation vs New Order
     if (event_type === "ORDER_CANCELLED") {
-      await prisma.order.updateMany({
-        where: { tenantId: targetTenantId, orderNumber },
-        data: { status: "CANCELLED" },
+      const cancelInfo = SwiggyAdapter.normalizeCancellation(body);
+      const cancelRes = await cancelOrder({
+        tenantId: targetTenantId,
+        outletId: targetOutletId,
+        orderNumber: cancelInfo.orderNumber,
+        externalOrderId: cancelInfo.externalOrderId,
+        reason: cancelInfo.reason,
+        source: "SWIGGY",
       });
-      await prisma.kitchenTicket.updateMany({
-        where: { tenantId: targetTenantId },
-        data: { status: "CANCELLED" },
-      });
-    } else {
-      // ORDER_PLACED or incoming new order
-      const items = Array.isArray(data?.items) ? data.items : [];
-      const subtotalPaise = Math.round((Number(data?.billing?.subtotal) || 0) * 100);
-      const taxPaise = Math.round((Number(data?.billing?.tax) || 0) * 100);
-      const totalPaise = Math.round((Number(data?.billing?.total) || subtotalPaise + taxPaise) * 100) || 10000;
 
-      // Resolve or create a menu item for each order item
-      let defaultMenuItem = await prisma.menuItem.findFirst({
-        where: { tenantId: targetTenantId },
-      });
-      if (!defaultMenuItem) {
-        let defaultCat = await prisma.menuCategory.findFirst({
-          where: { tenantId: targetTenantId },
-        });
-        if (!defaultCat) {
-          defaultCat = await prisma.menuCategory.create({
-            data: {
-              tenantId: targetTenantId,
-              name: "Online Orders",
-              slug: `online-orders-${Date.now()}`,
-            },
-          });
-        }
-        defaultMenuItem = await prisma.menuItem.create({
-          data: {
-            tenantId: targetTenantId,
-            categoryId: defaultCat.id,
-            name: "Online Dish",
-            pricePaise: 25000,
-            isVeg: true,
-          },
-        });
+      if (!cancelRes.ok) {
+        console.warn("[Swiggy Webhook] Cancellation note:", cancelRes.error);
       }
+    } else {
+      // ORDER_PLACED or incoming dispatch
+      const normalizedPayload = SwiggyAdapter.normalizeOrder(body, targetTenantId, targetOutletId);
+      const ingestRes = await ingestOrder(normalizedPayload);
 
-      const orderItemsData = (items.length > 0 ? items : [{ name: "Swiggy Order Dish", quantity: 1, price: 100 }]).map(
-        (it: any) => ({
-          menuItemId: defaultMenuItem.id,
-          name: it.name || "Swiggy Dish",
-          quantity: Number(it.quantity) || 1,
-          unitPricePaise: Math.round((Number(it.price) || 0) * 100),
-          totalPaise: Math.round((Number(it.price) || 0) * (Number(it.quantity) || 1) * 100) || 10000,
-          notes: it.notes || null,
-        })
-      );
-
-      const _order = await prisma.order.upsert({
-        where: {
-          tenantId_orderNumber: {
-            tenantId: targetTenantId,
-            orderNumber,
-          },
-        },
-        create: {
-          tenantId: targetTenantId,
-          outletId: targetOutletId,
-          orderNumber,
-          type: "SWIGGY",
-          serviceMode: "DELIVERY",
-          status: "PLACED",
-          customerName: data?.customer?.name || "Swiggy Customer",
-          customerPhone: data?.customer?.phone || null,
-          notes: data?.delivery?.rider_name ? `Rider: ${data.delivery.rider_name}` : "Swiggy Online Order",
-          subtotalPaise,
-          taxPaise,
-          totalPaise,
-          isPaid: true,
-          paidAt: new Date(),
-          kotStatus: "SENT",
-          items: {
-            create: orderItemsData,
-          },
-          payments: {
-            create: {
-              tenantId: targetTenantId,
-              outletId: targetOutletId,
-              method: "SWIGGY_PAY",
-              amountPaise: totalPaise,
-              status: "COMPLETED",
-              reference: `Swiggy Payout #${order_id}`,
-            },
-          },
-          kotTickets: {
-            create: {
-              tenantId: targetTenantId,
-              outletId: targetOutletId,
-              station: "MAIN",
-              status: "RECEIVED",
-            },
-          },
-        },
-        update: {
-          status: "PLACED",
-        },
-      });
-
-      // Update last sync on Swiggy integration config
-      await prisma.integrationConfig.updateMany({
-        where: { tenantId: targetTenantId, provider: "swiggy" },
-        data: { lastSyncAt: new Date() },
-      });
+      if (!ingestRes.ok) {
+        throw new Error(ingestRes.error || "Failed to ingest Swiggy order");
+      }
     }
 
-    // Record webhook event for auditing
+    // 5. Update last sync timestamp on Swiggy integration config
+    await prisma.integrationConfig.updateMany({
+      where: { tenantId: targetTenantId, provider: "swiggy" },
+      data: { lastSyncAt: new Date() },
+    });
+
+    // 6. Record audit log
     await prisma.webhookEvent.upsert({
       where: { eventId },
       create: {
@@ -206,12 +136,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: "SUCCESS",
       orderId: order_id,
-      message: "Order successfully received and routed to RestroNex KDS.",
+      ack_id: `ack_swiggy_${order_id}_${Date.now()}`,
+      message: "Swiggy order successfully received and routed to RestroNex KDS with audio alert.",
     });
   } catch (err: any) {
-    console.error("Swiggy webhook error:", err);
+    console.error("[Swiggy Webhook] Processing error:", err);
     return NextResponse.json(
-      { status: "FAILED", error: err.message || "Failed to process order" },
+      { status: "FAILED", error: err.message || "Failed to process Swiggy webhook" },
       { status: 500 }
     );
   }

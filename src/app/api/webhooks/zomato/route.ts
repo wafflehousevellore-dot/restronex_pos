@@ -1,22 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { ZomatoAdapter } from "@/lib/aggregators/zomato";
+import { ingestOrder, cancelOrder } from "@/lib/order-ingestion";
+
+export const dynamic = "force-dynamic";
 
 /**
  * Official Zomato POS Webhook Receiver
  * Handles incoming online orders, cancellations, and rider dispatch updates.
  */
 export async function POST(req: NextRequest) {
+  let rawBody = "";
   let body: any;
   try {
-    body = await req.json();
+    rawBody = await req.text();
+    body = JSON.parse(rawBody);
   } catch {
-    return NextResponse.json({ status: "failed", error: "Invalid JSON" }, { status: 400 });
+    return NextResponse.json({ status: "failed", error: "Invalid JSON payload" }, { status: 400 });
   }
 
-  const { event = "order_created", res_id, order_id, order: orderData } = body;
+  // 1. Signature Verification
+  const signature = req.headers.get("x-zomato-signature") || req.headers.get("x-hub-signature-256");
+  const isValidSig = ZomatoAdapter.verifySignature(rawBody, signature);
+  if (!isValidSig) {
+    return NextResponse.json({ status: "failed", error: "Invalid webhook signature" }, { status: 401 });
+  }
+
+  const { event = "order_created", res_id, order_id } = body;
   const eventId = `zomato_${order_id || Date.now()}_${event}_${Date.now()}`;
 
-  // Idempotency check
+  // 2. Idempotency Check
   const existingEvent = await prisma.webhookEvent.findUnique({
     where: { eventId },
   });
@@ -24,7 +37,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: "success", message: "Event already processed" });
   }
 
-  // Map Zomato Restaurant ID to tenant & outlet
+  // 3. Map Zomato Restaurant ID to tenant & outlet
   let targetTenantId: string | null = null;
   let targetOutletId: string | null = null;
 
@@ -68,117 +81,39 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const orderNumber = `ZOMATO-${order_id || Date.now()}`;
-
   try {
+    // 4. Handle Cancellation vs New Order
     if (event === "order_cancelled") {
-      await prisma.order.updateMany({
-        where: { tenantId: targetTenantId, orderNumber },
-        data: { status: "CANCELLED" },
+      const cancelInfo = ZomatoAdapter.normalizeCancellation(body);
+      const cancelRes = await cancelOrder({
+        tenantId: targetTenantId,
+        outletId: targetOutletId,
+        orderNumber: cancelInfo.orderNumber,
+        externalOrderId: cancelInfo.externalOrderId,
+        reason: cancelInfo.reason,
+        source: "ZOMATO",
       });
-      await prisma.kitchenTicket.updateMany({
-        where: { tenantId: targetTenantId },
-        data: { status: "CANCELLED" },
-      });
-    } else {
-      const items = Array.isArray(orderData?.items) ? orderData.items : [];
-      const totalPaise = Math.round((Number(orderData?.total) || 250) * 100);
 
-      let defaultMenuItem = await prisma.menuItem.findFirst({
-        where: { tenantId: targetTenantId },
-      });
-      if (!defaultMenuItem) {
-        let defaultCat = await prisma.menuCategory.findFirst({
-          where: { tenantId: targetTenantId },
-        });
-        if (!defaultCat) {
-          defaultCat = await prisma.menuCategory.create({
-            data: {
-              tenantId: targetTenantId,
-              name: "Online Orders",
-              slug: `online-orders-${Date.now()}`,
-            },
-          });
-        }
-        defaultMenuItem = await prisma.menuItem.create({
-          data: {
-            tenantId: targetTenantId,
-            categoryId: defaultCat.id,
-            name: "Online Dish",
-            pricePaise: 25000,
-            isVeg: true,
-          },
-        });
+      if (!cancelRes.ok) {
+        console.warn("[Zomato Webhook] Cancellation note:", cancelRes.error);
       }
+    } else {
+      // order_created or incoming dispatch
+      const normalizedPayload = ZomatoAdapter.normalizeOrder(body, targetTenantId, targetOutletId);
+      const ingestRes = await ingestOrder(normalizedPayload);
 
-      const orderItemsData = (items.length > 0 ? items : [{ name: "Zomato Order Dish", quantity: 1, price: 100 }]).map(
-        (it: any) => ({
-          menuItemId: defaultMenuItem.id,
-          name: it.name || "Zomato Item",
-          quantity: Number(it.quantity) || 1,
-          unitPricePaise: Math.round((Number(it.price) || 0) * 100),
-          totalPaise: Math.round((Number(it.price) || 0) * (Number(it.quantity) || 1) * 100) || 10000,
-          notes: it.notes || null,
-        })
-      );
-
-      await prisma.order.upsert({
-        where: {
-          tenantId_orderNumber: {
-            tenantId: targetTenantId,
-            orderNumber,
-          },
-        },
-        create: {
-          tenantId: targetTenantId,
-          outletId: targetOutletId,
-          orderNumber,
-          type: "ZOMATO",
-          serviceMode: "DELIVERY",
-          status: "PLACED",
-          customerName: orderData?.customer?.name || "Zomato Customer",
-          customerPhone: orderData?.customer?.phone || null,
-          notes: "Zomato Online Order",
-          subtotalPaise: Math.round(totalPaise * 0.9),
-          taxPaise: Math.round(totalPaise * 0.1),
-          totalPaise,
-          isPaid: true,
-          paidAt: new Date(),
-          kotStatus: "SENT",
-          items: {
-            create: orderItemsData,
-          },
-          payments: {
-            create: {
-              tenantId: targetTenantId,
-              outletId: targetOutletId,
-              method: "ZOMATO_PAY",
-              amountPaise: totalPaise,
-              status: "COMPLETED",
-              reference: `Zomato Payout #${order_id}`,
-            },
-          },
-          kotTickets: {
-            create: {
-              tenantId: targetTenantId,
-              outletId: targetOutletId,
-              station: "MAIN",
-              status: "RECEIVED",
-            },
-          },
-        },
-        update: {
-          status: "PLACED",
-        },
-      });
-
-      await prisma.integrationConfig.updateMany({
-        where: { tenantId: targetTenantId, provider: "zomato" },
-        data: { lastSyncAt: new Date() },
-      });
+      if (!ingestRes.ok) {
+        throw new Error(ingestRes.error || "Failed to ingest Zomato order");
+      }
     }
 
-    // Audit log webhook
+    // 5. Update last sync on Zomato integration config
+    await prisma.integrationConfig.updateMany({
+      where: { tenantId: targetTenantId, provider: "zomato" },
+      data: { lastSyncAt: new Date() },
+    });
+
+    // 6. Record audit log
     await prisma.webhookEvent.upsert({
       where: { eventId },
       create: {
@@ -201,12 +136,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: "success",
       order_id,
-      message: "Order successfully received and routed to kitchen.",
+      ack_id: `ack_zomato_${order_id}_${Date.now()}`,
+      message: "Zomato order successfully received and routed to RestroNex KDS with audio alert.",
     });
   } catch (err: any) {
-    console.error("Zomato webhook error:", err);
+    console.error("[Zomato Webhook] Processing error:", err);
     return NextResponse.json(
-      { status: "failed", error: err.message || "Failed to process order" },
+      { status: "failed", error: err.message || "Failed to process Zomato order" },
       { status: 500 }
     );
   }

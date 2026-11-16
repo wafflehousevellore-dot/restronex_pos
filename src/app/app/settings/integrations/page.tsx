@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import WhatsAppSettingsPanel from "@/components/app/WhatsAppSettingsPanel";
 import PrinterSettingsPanel from "@/components/app/PrinterSettingsPanel";
-import { MessageSquare, Printer } from "lucide-react";
+import IntegrationsClient from "@/app/app/integrations/IntegrationsClient";
+import { MessageSquare, Printer, Bike } from "lucide-react";
 
 export default function WhatsAppAndPrintingSettingsPage() {
-  const [tab, setTab] = useState<"whatsapp" | "printing">("whatsapp");
+  const [tab, setTab] = useState<"aggregators" | "whatsapp" | "printing">("aggregators");
   const [outlets, setOutlets] = useState<any[]>([]);
   const [selectedOutletId, setSelectedOutletId] = useState<string>("");
 
@@ -25,10 +26,10 @@ export default function WhatsAppAndPrintingSettingsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#172B25]">
-            Integrations → WhatsApp &amp; Thermal Printing
+            Integrations Hub
           </h1>
           <p className="text-sm text-[#718078]">
-            Manage per-outlet WhatsApp Business invoice delivery, Meta Cloud credentials, and automatic 58mm/80mm thermal printers.
+            Manage Swiggy &amp; Zomato auto-order reception, official Meta WhatsApp billing, and automatic thermal receipt printers.
           </p>
         </div>
 
@@ -48,7 +49,18 @@ export default function WhatsAppAndPrintingSettingsPage() {
         )}
       </div>
 
-      <div className="flex gap-2 border-b border-[#E5EBE7] pb-3">
+      <div className="flex gap-2 border-b border-[#E5EBE7] pb-3 flex-wrap">
+        <button
+          type="button"
+          onClick={() => setTab("aggregators")}
+          className={`rounded-full px-5 py-2 text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
+            tab === "aggregators"
+              ? "bg-[#16845B] text-white shadow-xs"
+              : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
+          }`}
+        >
+          <Bike className="h-3.5 w-3.5" /> Swiggy, Zomato &amp; Online Orders
+        </button>
         <button
           type="button"
           onClick={() => setTab("whatsapp")}
@@ -73,7 +85,9 @@ export default function WhatsAppAndPrintingSettingsPage() {
         </button>
       </div>
 
-      {tab === "whatsapp" ? (
+      {tab === "aggregators" ? (
+        <IntegrationsClient />
+      ) : tab === "whatsapp" ? (
         <WhatsAppSettingsPanel selectedOutletId={selectedOutletId || undefined} />
       ) : (
         <PrinterSettingsPanel selectedOutletId={selectedOutletId || undefined} />
@@ -81,4 +95,3 @@ export default function WhatsAppAndPrintingSettingsPage() {
     </div>
   );
 }
-
