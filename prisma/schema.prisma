@@ -193,6 +193,7 @@ model StaffInvitation {
   outletIdsJson   String?
   permissionsJson String?
   tokenHash       String    @unique
+  rawToken        String?
   invitedBy       String?
   expiresAt       DateTime
   acceptedAt      DateTime?

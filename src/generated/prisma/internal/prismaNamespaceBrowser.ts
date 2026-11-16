@@ -257,6 +257,7 @@ export const StaffInvitationScalarFieldEnum = {
   outletIdsJson: 'outletIdsJson',
   permissionsJson: 'permissionsJson',
   tokenHash: 'tokenHash',
+  rawToken: 'rawToken',
   invitedBy: 'invitedBy',
   expiresAt: 'expiresAt',
   acceptedAt: 'acceptedAt',

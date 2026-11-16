@@ -23,6 +23,8 @@ import {
   Ban,
   CheckCircle,
   Lock,
+  Share2,
+  Send,
 } from "lucide-react";
 
 type StaffMember = {
@@ -54,6 +56,7 @@ type PendingInvitation = {
   email: string;
   fullName?: string | null;
   role: string;
+  rawToken?: string | null;
   expiresAt: string;
   createdAt: string;
   outlet?: { id: string; name: string } | null;
@@ -120,6 +123,17 @@ export default function StaffPage() {
   const [copiedLink, setCopiedLink] = useState(false);
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // Newly Created Invite Modal State
+  const [createdInvite, setCreatedInvite] = useState<{
+    email: string;
+    role: string;
+    url: string;
+    emailSent: boolean;
+  } | null>(null);
+  const [copiedCreatedLink, setCopiedCreatedLink] = useState(false);
+  const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+
   // Invite Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formName, setFormName] = useState("");
@@ -177,10 +191,20 @@ export default function StaffPage() {
       if (!res.ok) {
         setMsg({ type: "error", text: j.error || "Failed to add staff member" });
       } else {
+        if (j.inviteUrl) {
+          setCreatedInvite({
+            email: formEmail.trim(),
+            role: formRole,
+            url: j.inviteUrl,
+            emailSent: !!j.emailSent,
+          });
+        }
         setMsg({
           type: "success",
           text: sendInvitationMode
-            ? `Invitation sent to ${formEmail}. Copy the single-use invite link from the table below.`
+            ? (j.emailSent
+                ? `Invitation email dispatched to ${formEmail}. You can also copy the direct link below.`
+                : `Invitation created for ${formEmail}. Copy the single-use invite link below.`)
             : `${formName || formEmail} added successfully to team.`,
         });
         setIsModalOpen(false);
@@ -195,6 +219,40 @@ export default function StaffPage() {
       setMsg({ type: "error", text: "An error occurred adding staff member" });
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  function copyInviteLink(rawToken: string, id: string) {
+    const url = `https://www.restronexpos.com/staff/accept-invitation?token=${rawToken}`;
+    navigator.clipboard.writeText(url);
+    setCopiedInviteId(id);
+    setTimeout(() => setCopiedInviteId(null), 2500);
+  }
+
+  async function handleResendInvitation(id: string, email: string) {
+    setResendingId(id);
+    try {
+      const res = await apiFetch("/api/staff/invitations?action=resend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const j = await res.json();
+      if (res.ok) {
+        setMsg({
+          type: "success",
+          text: j.emailSent
+            ? `Invitation email successfully resent to ${email}`
+            : `Invitation link refreshed for ${email}`,
+        });
+        loadStaff();
+      } else {
+        setMsg({ type: "error", text: j.error || "Failed to resend invitation" });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Error resending invitation" });
+    } finally {
+      setResendingId(null);
     }
   }
 
@@ -403,12 +461,45 @@ export default function StaffPage() {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  {inv.rawToken && (
+                    <>
+                      <button
+                        onClick={() => copyInviteLink(inv.rawToken!, inv.id)}
+                        className="px-3 py-1.5 rounded-xl border border-[#16845B]/30 bg-white hover:bg-[#E8F5EE] text-xs font-semibold text-[#16845B] transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        title="Copy single-use invite link"
+                      >
+                        {copiedInviteId === inv.id ? <Check className="w-3.5 h-3.5 text-[#16845B]" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedInviteId === inv.id ? "Copied!" : "Copy Link"}</span>
+                      </button>
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(
+                          `Hello! You have been invited to join our restaurant team on RestroNex. Click here to accept your invitation: https://www.restronexpos.com/staff/accept-invitation?token=${inv.rawToken}`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 rounded-xl border border-[#25D366]/40 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-xs font-semibold text-[#128C7E] transition flex items-center gap-1.5 shadow-2xs"
+                        title="Share via WhatsApp"
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                        <span>WhatsApp</span>
+                      </a>
+                    </>
+                  )}
+                  <button
+                    onClick={() => handleResendInvitation(inv.id, inv.email)}
+                    disabled={resendingId === inv.id}
+                    className="px-3 py-1.5 rounded-xl border border-blue-200 bg-white hover:bg-blue-50 text-xs font-semibold text-blue-700 transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    title="Resend official Clerk invitation email"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>{resendingId === inv.id ? "Sending..." : "Resend Email"}</span>
+                  </button>
                   <button
                     onClick={() => handleRevokeInvitation(inv.id, inv.email)}
-                    className="px-3 py-1.5 rounded-xl border border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+                    className="px-3 py-1.5 rounded-xl border border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 transition cursor-pointer"
                   >
-                    Revoke Invite
+                    Revoke
                   </button>
                 </div>
               </div>
@@ -677,7 +768,7 @@ export default function StaffPage() {
                     onChange={(e) => setSendInvitationMode(e.target.checked)}
                     className="rounded border-[#D2DFD8] text-[#16845B] focus:ring-[#16845B]"
                   />
-                  <span>Generate single-use invite link (Clerk OTP / password creation)</span>
+                  <span>Generate single-use invite link &amp; dispatch Clerk email</span>
                 </label>
               </div>
 
@@ -699,6 +790,103 @@ export default function StaffPage() {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Invitation Created & Ready to Share Dialog */}
+      {createdInvite && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl border border-[#E5EBE7]">
+            <div className="flex justify-between items-start border-b border-[#E5EBE7] pb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 flex items-center justify-center text-[#16845B]">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-[#172B25]">
+                    Staff Invitation Ready!
+                  </h3>
+                  <p className="text-xs text-[#718078] mt-0.5">
+                    {createdInvite.email} • {createdInvite.role}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setCreatedInvite(null)}
+                className="h-8 w-8 rounded-full bg-[#F8FAF9] text-[#718078] hover:text-[#172B25] grid place-items-center cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {createdInvite.emailSent ? (
+              <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-3.5 text-xs text-emerald-900 flex items-start gap-2.5">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold">Official Clerk Invitation Email Dispatched</p>
+                  <p className="text-[11px] text-emerald-800 mt-0.5">
+                    An email has been delivered to <b>{createdInvite.email}</b>. You can also copy the link below or send it via WhatsApp.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl bg-blue-50 border border-blue-200 p-3.5 text-xs text-blue-900 flex items-start gap-2.5">
+                <Share2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold">Direct Staff Invitation Link Generated</p>
+                  <p className="text-[11px] text-blue-800 mt-0.5">
+                    Share the link below with your employee to grant them immediate access.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-bold text-[#718078] uppercase tracking-wider">
+                Single-Use Invite Link
+              </label>
+              <div className="flex items-center gap-2 p-2 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7]">
+                <input
+                  readOnly
+                  value={createdInvite.url}
+                  className="flex-1 bg-transparent text-xs text-[#172B25] font-mono px-2 outline-none select-all overflow-hidden text-ellipsis"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(createdInvite.url);
+                    setCopiedCreatedLink(true);
+                    setTimeout(() => setCopiedCreatedLink(false), 2500);
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer shadow-xs"
+                >
+                  {copiedCreatedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedCreatedLink ? "Copied!" : "Copy Link"}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `Hello! You have been invited to join our restaurant team on RestroNex. Click here to accept your staff invitation: ${createdInvite.url}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white py-3 text-xs font-bold transition shadow-xs"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Share on WhatsApp</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => setCreatedInvite(null)}
+                className="px-6 py-3 rounded-2xl border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-xs font-bold text-[#172B25] transition cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}

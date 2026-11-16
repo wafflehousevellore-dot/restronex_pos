@@ -35,6 +35,7 @@ export type StaffInvitationMinAggregateOutputType = {
   outletIdsJson: string | null
   permissionsJson: string | null
   tokenHash: string | null
+  rawToken: string | null
   invitedBy: string | null
   expiresAt: Date | null
   acceptedAt: Date | null
@@ -54,6 +55,7 @@ export type StaffInvitationMaxAggregateOutputType = {
   outletIdsJson: string | null
   permissionsJson: string | null
   tokenHash: string | null
+  rawToken: string | null
   invitedBy: string | null
   expiresAt: Date | null
   acceptedAt: Date | null
@@ -73,6 +75,7 @@ export type StaffInvitationCountAggregateOutputType = {
   outletIdsJson: number
   permissionsJson: number
   tokenHash: number
+  rawToken: number
   invitedBy: number
   expiresAt: number
   acceptedAt: number
@@ -94,6 +97,7 @@ export type StaffInvitationMinAggregateInputType = {
   outletIdsJson?: true
   permissionsJson?: true
   tokenHash?: true
+  rawToken?: true
   invitedBy?: true
   expiresAt?: true
   acceptedAt?: true
@@ -113,6 +117,7 @@ export type StaffInvitationMaxAggregateInputType = {
   outletIdsJson?: true
   permissionsJson?: true
   tokenHash?: true
+  rawToken?: true
   invitedBy?: true
   expiresAt?: true
   acceptedAt?: true
@@ -132,6 +137,7 @@ export type StaffInvitationCountAggregateInputType = {
   outletIdsJson?: true
   permissionsJson?: true
   tokenHash?: true
+  rawToken?: true
   invitedBy?: true
   expiresAt?: true
   acceptedAt?: true
@@ -224,6 +230,7 @@ export type StaffInvitationGroupByOutputType = {
   outletIdsJson: string | null
   permissionsJson: string | null
   tokenHash: string
+  rawToken: string | null
   invitedBy: string | null
   expiresAt: Date
   acceptedAt: Date | null
@@ -264,6 +271,7 @@ export type StaffInvitationWhereInput = {
   outletIdsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   permissionsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"StaffInvitation"> | string
+  rawToken?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   invitedBy?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"StaffInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"StaffInvitation"> | Date | string | null
@@ -285,6 +293,7 @@ export type StaffInvitationOrderByWithRelationInput = {
   outletIdsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   permissionsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  rawToken?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -309,6 +318,7 @@ export type StaffInvitationWhereUniqueInput = Prisma.AtLeast<{
   outletId?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   outletIdsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   permissionsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
+  rawToken?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   invitedBy?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"StaffInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"StaffInvitation"> | Date | string | null
@@ -330,6 +340,7 @@ export type StaffInvitationOrderByWithAggregationInput = {
   outletIdsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   permissionsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  rawToken?: Prisma.SortOrderInput | Prisma.SortOrder
   invitedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -355,6 +366,7 @@ export type StaffInvitationScalarWhereWithAggregatesInput = {
   outletIdsJson?: Prisma.StringNullableWithAggregatesFilter<"StaffInvitation"> | string | null
   permissionsJson?: Prisma.StringNullableWithAggregatesFilter<"StaffInvitation"> | string | null
   tokenHash?: Prisma.StringWithAggregatesFilter<"StaffInvitation"> | string
+  rawToken?: Prisma.StringNullableWithAggregatesFilter<"StaffInvitation"> | string | null
   invitedBy?: Prisma.StringNullableWithAggregatesFilter<"StaffInvitation"> | string | null
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"StaffInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StaffInvitation"> | Date | string | null
@@ -372,6 +384,7 @@ export type StaffInvitationCreateInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -393,6 +406,7 @@ export type StaffInvitationUncheckedCreateInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -410,6 +424,7 @@ export type StaffInvitationUpdateInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -431,6 +446,7 @@ export type StaffInvitationUncheckedUpdateInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -450,6 +466,7 @@ export type StaffInvitationCreateManyInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -467,6 +484,7 @@ export type StaffInvitationUpdateManyMutationInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -486,6 +504,7 @@ export type StaffInvitationUncheckedUpdateManyInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -515,6 +534,7 @@ export type StaffInvitationCountOrderByAggregateInput = {
   outletIdsJson?: Prisma.SortOrder
   permissionsJson?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  rawToken?: Prisma.SortOrder
   invitedBy?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -534,6 +554,7 @@ export type StaffInvitationMaxOrderByAggregateInput = {
   outletIdsJson?: Prisma.SortOrder
   permissionsJson?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  rawToken?: Prisma.SortOrder
   invitedBy?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -553,6 +574,7 @@ export type StaffInvitationMinOrderByAggregateInput = {
   outletIdsJson?: Prisma.SortOrder
   permissionsJson?: Prisma.SortOrder
   tokenHash?: Prisma.SortOrder
+  rawToken?: Prisma.SortOrder
   invitedBy?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   acceptedAt?: Prisma.SortOrder
@@ -654,6 +676,7 @@ export type StaffInvitationCreateWithoutTenantInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -673,6 +696,7 @@ export type StaffInvitationUncheckedCreateWithoutTenantInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -721,6 +745,7 @@ export type StaffInvitationScalarWhereInput = {
   outletIdsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   permissionsJson?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   tokenHash?: Prisma.StringFilter<"StaffInvitation"> | string
+  rawToken?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   invitedBy?: Prisma.StringNullableFilter<"StaffInvitation"> | string | null
   expiresAt?: Prisma.DateTimeFilter<"StaffInvitation"> | Date | string
   acceptedAt?: Prisma.DateTimeNullableFilter<"StaffInvitation"> | Date | string | null
@@ -738,6 +763,7 @@ export type StaffInvitationCreateWithoutOutletInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -757,6 +783,7 @@ export type StaffInvitationUncheckedCreateWithoutOutletInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -801,6 +828,7 @@ export type StaffInvitationCreateManyTenantInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -818,6 +846,7 @@ export type StaffInvitationUpdateWithoutTenantInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -837,6 +866,7 @@ export type StaffInvitationUncheckedUpdateWithoutTenantInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -855,6 +885,7 @@ export type StaffInvitationUncheckedUpdateManyWithoutTenantInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -873,6 +904,7 @@ export type StaffInvitationCreateManyOutletInput = {
   outletIdsJson?: string | null
   permissionsJson?: string | null
   tokenHash: string
+  rawToken?: string | null
   invitedBy?: string | null
   expiresAt: Date | string
   acceptedAt?: Date | string | null
@@ -890,6 +922,7 @@ export type StaffInvitationUpdateWithoutOutletInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -909,6 +942,7 @@ export type StaffInvitationUncheckedUpdateWithoutOutletInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -927,6 +961,7 @@ export type StaffInvitationUncheckedUpdateManyWithoutOutletInput = {
   outletIdsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tokenHash?: Prisma.StringFieldUpdateOperationsInput | string
+  rawToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invitedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -948,6 +983,7 @@ export type StaffInvitationSelect<ExtArgs extends runtime.Types.Extensions.Inter
   outletIdsJson?: boolean
   permissionsJson?: boolean
   tokenHash?: boolean
+  rawToken?: boolean
   invitedBy?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -969,6 +1005,7 @@ export type StaffInvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   outletIdsJson?: boolean
   permissionsJson?: boolean
   tokenHash?: boolean
+  rawToken?: boolean
   invitedBy?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -990,6 +1027,7 @@ export type StaffInvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   outletIdsJson?: boolean
   permissionsJson?: boolean
   tokenHash?: boolean
+  rawToken?: boolean
   invitedBy?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -1011,6 +1049,7 @@ export type StaffInvitationSelectScalar = {
   outletIdsJson?: boolean
   permissionsJson?: boolean
   tokenHash?: boolean
+  rawToken?: boolean
   invitedBy?: boolean
   expiresAt?: boolean
   acceptedAt?: boolean
@@ -1019,7 +1058,7 @@ export type StaffInvitationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StaffInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "email" | "fullName" | "phone" | "role" | "outletId" | "outletIdsJson" | "permissionsJson" | "tokenHash" | "invitedBy" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["staffInvitation"]>
+export type StaffInvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "email" | "fullName" | "phone" | "role" | "outletId" | "outletIdsJson" | "permissionsJson" | "tokenHash" | "rawToken" | "invitedBy" | "expiresAt" | "acceptedAt" | "revokedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["staffInvitation"]>
 export type StaffInvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.StaffInvitation$outletArgs<ExtArgs>
@@ -1050,6 +1089,7 @@ export type $StaffInvitationPayload<ExtArgs extends runtime.Types.Extensions.Int
     outletIdsJson: string | null
     permissionsJson: string | null
     tokenHash: string
+    rawToken: string | null
     invitedBy: string | null
     expiresAt: Date
     acceptedAt: Date | null
@@ -1491,6 +1531,7 @@ export interface StaffInvitationFieldRefs {
   readonly outletIdsJson: Prisma.FieldRef<"StaffInvitation", 'String'>
   readonly permissionsJson: Prisma.FieldRef<"StaffInvitation", 'String'>
   readonly tokenHash: Prisma.FieldRef<"StaffInvitation", 'String'>
+  readonly rawToken: Prisma.FieldRef<"StaffInvitation", 'String'>
   readonly invitedBy: Prisma.FieldRef<"StaffInvitation", 'String'>
   readonly expiresAt: Prisma.FieldRef<"StaffInvitation", 'DateTime'>
   readonly acceptedAt: Prisma.FieldRef<"StaffInvitation", 'DateTime'>

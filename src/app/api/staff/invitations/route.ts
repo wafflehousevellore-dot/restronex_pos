@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { requireStaffContext } from "@/lib/server-auth";
+import { clerkClient } from "@clerk/nextjs/server";
 
 /**
  * Hash a plain invitation token using SHA-256 for secure database storage.
@@ -91,12 +92,73 @@ export async function GET(req: NextRequest) {
 
 /**
  * POST /api/staff/invitations
- * Creates and dispatches a secure single-use staff invitation.
+ * Creates and dispatches a secure single-use staff invitation or resends an existing one.
  * Requires 'staff.invite' permission.
  */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const action = req.nextUrl.searchParams.get("action") || body.action;
+
+    // Require staff.invite permission
+    const { user, membership } = await requireStaffContext({
+      permission: "staff.invite",
+    });
+
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "www.restronexpos.com";
+    const proto = req.headers.get("x-forwarded-proto") || "https";
+
+    // Handle RESEND action
+    if (action === "resend") {
+      const invitationId = body.id || req.nextUrl.searchParams.get("id");
+      if (!invitationId) {
+        return NextResponse.json({ error: "Invitation ID required to resend" }, { status: 400 });
+      }
+
+      const inv = await prisma.staffInvitation.findFirst({
+        where: { id: invitationId, tenantId: membership.tenantId, acceptedAt: null, revokedAt: null },
+      });
+
+      if (!inv) {
+        return NextResponse.json({ error: "Active invitation not found" }, { status: 404 });
+      }
+
+      // Generate a fresh raw token if none exists
+      let tokenToUse = inv.rawToken;
+      if (!tokenToUse) {
+        tokenToUse = crypto.randomBytes(32).toString("hex");
+        const tokenHash = hashToken(tokenToUse);
+        await prisma.staffInvitation.update({
+          where: { id: inv.id },
+          data: { rawToken: tokenToUse, tokenHash, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
+        });
+      }
+
+      const inviteUrl = `${proto}://${host}/staff/accept-invitation?token=${tokenToUse}`;
+
+      let emailSent = false;
+      try {
+        const client = await clerkClient();
+        await client.invitations.createInvitation({
+          emailAddress: inv.email,
+          redirectUrl: inviteUrl,
+          ignoreExisting: true,
+        });
+        emailSent = true;
+      } catch (clerkErr: any) {
+        console.warn("[POST /api/staff/invitations/resend] Clerk notice:", clerkErr?.errors || clerkErr?.message);
+      }
+
+      return NextResponse.json({
+        ok: true,
+        emailSent,
+        inviteUrl,
+        message: emailSent
+          ? `Invitation email successfully resent to ${inv.email}`
+          : `Invitation link regenerated for ${inv.email}`,
+      });
+    }
+
     const { email, fullName, phone, role, outletId, outletIds, permissions } = body;
 
     if (!email || !role) {
@@ -105,11 +167,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Require staff.invite permission
-    const { user, membership } = await requireStaffContext({
-      permission: "staff.invite",
-    });
 
     // Managers cannot grant OWNER role
     if (role.toUpperCase() === "OWNER" && membership.role !== "OWNER") {
@@ -139,6 +196,7 @@ export async function POST(req: NextRequest) {
         outletIdsJson: Array.isArray(outletIds) ? JSON.stringify(outletIds) : null,
         permissionsJson: Array.isArray(permissions) ? JSON.stringify(permissions) : null,
         tokenHash,
+        rawToken,
         invitedBy: user.id,
         expiresAt,
       },
@@ -159,17 +217,32 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "www.restronexpos.com";
-    const proto = req.headers.get("x-forwarded-proto") || "https";
     const inviteUrl = `${proto}://${host}/staff/accept-invitation?token=${rawToken}`;
+
+    // Dispatch official email invitation via Clerk
+    let emailSent = false;
+    try {
+      const client = await clerkClient();
+      await client.invitations.createInvitation({
+        emailAddress: normalizedEmail,
+        redirectUrl: inviteUrl,
+        ignoreExisting: true,
+      });
+      emailSent = true;
+    } catch (clerkErr: any) {
+      console.warn("[POST /api/staff/invitations] Clerk email dispatch notice:", clerkErr?.errors || clerkErr?.message);
+    }
 
     return NextResponse.json({
       ok: true,
       invitationId: invitation.id,
       inviteUrl,
       rawToken,
+      emailSent,
       expiresAt,
-      message: `Invitation generated successfully for ${normalizedEmail}`,
+      message: emailSent
+        ? `Invitation email successfully sent to ${normalizedEmail}`
+        : `Invitation generated successfully for ${normalizedEmail}`,
     });
   } catch (err: any) {
     console.error("[POST /api/staff/invitations] error:", err);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import crypto from "crypto";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
         outletIdsJson: Array.isArray(outletIds) ? JSON.stringify(outletIds) : null,
         permissionsJson: Array.isArray(permissions) ? JSON.stringify(permissions) : null,
         tokenHash,
+        rawToken,
         invitedBy: userId,
         expiresAt,
       },
@@ -106,12 +108,28 @@ export async function POST(req: NextRequest) {
     const proto = req.headers.get("x-forwarded-proto") || "https";
     const inviteUrl = `${proto}://${host}/staff/accept-invitation?token=${rawToken}`;
 
+    let emailSent = false;
+    try {
+      const clerk = await clerkClient();
+      await clerk.invitations.createInvitation({
+        emailAddress: normalizedEmail,
+        redirectUrl: inviteUrl,
+        ignoreExisting: true,
+      });
+      emailSent = true;
+    } catch (clerkErr: any) {
+      console.warn("[POST /api/staff] Clerk email dispatch notice:", clerkErr?.errors || clerkErr?.message);
+    }
+
     return NextResponse.json({
       ok: true,
       invitation,
       inviteUrl,
       rawToken,
-      message: `Invitation generated successfully for ${normalizedEmail}`,
+      emailSent,
+      message: emailSent
+        ? `Invitation email sent to ${normalizedEmail}`
+        : `Invitation generated successfully for ${normalizedEmail}`,
     });
   }
 
