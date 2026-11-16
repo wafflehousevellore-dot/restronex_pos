@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { getAuthenticatedUser } from "@/lib/server-auth";
+import { createSession } from "@/lib/auth";
+import { clerkClient } from "@clerk/nextjs/server";
 import { cookies } from "next/headers";
 
 function hashToken(token: string): string {
@@ -10,18 +12,107 @@ function hashToken(token: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getAuthenticatedUser();
+    const body = await req.json().catch(() => ({}));
+    const { token, clerkUserId, email: bodyEmail } = body;
+    if (!token) {
+      return NextResponse.json({ error: "Invitation token required" }, { status: 400 });
+    }
+
+    let user = await getAuthenticatedUser();
+
+    // Fallback 1: Authenticate via Clerk request state from Authorization header or cookies
+    if (!user) {
+      try {
+        const client = await clerkClient();
+        const reqState = await client.authenticateRequest(req);
+        if (reqState.isSignedIn) {
+          const authedClerkId = reqState.toAuth().userId;
+          if (authedClerkId) {
+            const clerkUser = await client.users.getUser(authedClerkId);
+            const userEmail = clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase() || "";
+            const userName = clerkUser.fullName || userEmail.split("@")[0] || "Staff Member";
+
+            let dbUser = await prisma.user.findFirst({
+              where: { OR: [{ clerkId: authedClerkId }, { email: userEmail }] },
+            });
+            if (dbUser) {
+              if (!dbUser.clerkId) {
+                dbUser = await prisma.user.update({
+                  where: { id: dbUser.id },
+                  data: { clerkId: authedClerkId, name: userName },
+                });
+              }
+            } else {
+              dbUser = await prisma.user.create({
+                data: {
+                  clerkId: authedClerkId,
+                  email: userEmail || `${authedClerkId}@clerk.local`,
+                  name: userName,
+                  role: "STAFF",
+                },
+              });
+            }
+            user = {
+              id: dbUser.id,
+              email: dbUser.email,
+              name: dbUser.name,
+              clerkUserId: authedClerkId,
+              isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+            };
+          }
+        }
+      } catch (authErr) {
+        console.warn("[Accept Invitation] Clerk authenticateRequest notice:", authErr);
+      }
+    }
+
+    // Fallback 2: Verify clerkUserId directly via Clerk API if provided by authenticated client
+    if (!user && clerkUserId) {
+      try {
+        const client = await clerkClient();
+        const clerkUser = await client.users.getUser(clerkUserId);
+        if (clerkUser) {
+          const userEmail = clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase() || bodyEmail?.toLowerCase() || "";
+          const userName = clerkUser.fullName || userEmail.split("@")[0] || "Staff Member";
+
+          let dbUser = await prisma.user.findFirst({
+            where: { OR: [{ clerkId: clerkUser.id }, { email: userEmail }] },
+          });
+          if (dbUser) {
+            if (!dbUser.clerkId) {
+              dbUser = await prisma.user.update({
+                where: { id: dbUser.id },
+                data: { clerkId: clerkUser.id, name: userName },
+              });
+            }
+          } else {
+            dbUser = await prisma.user.create({
+              data: {
+                clerkId: clerkUser.id,
+                email: userEmail || `${clerkUser.id}@clerk.local`,
+                name: userName,
+                role: "STAFF",
+              },
+            });
+          }
+          user = {
+            id: dbUser.id,
+            email: dbUser.email,
+            name: dbUser.name,
+            clerkUserId: clerkUser.id,
+            isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+          };
+        }
+      } catch (clerkErr) {
+        console.warn("[Accept Invitation] Clerk direct user verification notice:", clerkErr);
+      }
+    }
+
     if (!user) {
       return NextResponse.json(
         { error: "Please sign in to your Clerk account before accepting an invitation" },
         { status: 401 }
       );
-    }
-
-    const body = await req.json();
-    const { token } = body;
-    if (!token) {
-      return NextResponse.json({ error: "Invitation token required" }, { status: 400 });
     }
 
     const tokenHash = hashToken(token.trim());
@@ -155,13 +246,24 @@ export async function POST(req: NextRequest) {
       return membership;
     });
 
-    // Set active organization cookie
+    // Set active organization cookie & session
     const c = await cookies();
     c.set("restronex_org", invitation.tenantId, {
       path: "/",
       maxAge: 60 * 60 * 24 * 30,
       sameSite: "lax",
     });
+
+    try {
+      await createSession({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        isPlatformAdmin: user.isPlatformAdmin,
+      });
+    } catch (sessionErr) {
+      console.warn("[Accept Invitation] createSession notice:", sessionErr);
+    }
 
     let redirectTo = "/staff/dashboard";
     const role = invitation.role.toUpperCase();

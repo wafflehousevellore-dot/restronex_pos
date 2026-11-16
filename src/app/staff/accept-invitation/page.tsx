@@ -4,15 +4,16 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { Utensils, CheckCircle, AlertCircle, ArrowRight, ShieldCheck, Building2, User } from "lucide-react";
-import { useUser, SignIn } from "@clerk/nextjs";
+import { useUser, useAuth, SignIn } from "@clerk/nextjs";
 
 function AcceptInvitationContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const rawToken = searchParams.get("token") || "";
+  const urlToken = searchParams.get("token") || "";
   const { isSignedIn, user, isLoaded } = useUser();
+  const { getToken } = useAuth();
 
-  const [tokenInput, setTokenInput] = useState(rawToken);
+  const [tokenInput, setTokenInput] = useState(urlToken);
   const [invitation, setInvitation] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,10 +21,26 @@ function AcceptInvitationContent() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    if (rawToken) {
-      verifyToken(rawToken);
+    let activeToken = urlToken;
+    if (urlToken) {
+      try {
+        sessionStorage.setItem("restronex_invite_token", urlToken);
+        localStorage.setItem("restronex_invite_token", urlToken);
+      } catch {}
+    } else {
+      try {
+        activeToken =
+          sessionStorage.getItem("restronex_invite_token") ||
+          localStorage.getItem("restronex_invite_token") ||
+          "";
+      } catch {}
     }
-  }, [rawToken]);
+
+    if (activeToken) {
+      setTokenInput(activeToken);
+      verifyToken(activeToken);
+    }
+  }, [urlToken]);
 
   async function verifyToken(t: string) {
     if (!t.trim()) return;
@@ -46,21 +63,49 @@ function AcceptInvitationContent() {
   }
 
   async function handleAccept() {
-    const tokenToUse = tokenInput.trim() || rawToken.trim();
-    if (!tokenToUse) return;
+    let tokenToUse = tokenInput.trim() || urlToken.trim();
+    if (!tokenToUse) {
+      try {
+        tokenToUse =
+          sessionStorage.getItem("restronex_invite_token") ||
+          localStorage.getItem("restronex_invite_token") ||
+          "";
+      } catch {}
+    }
+
+    if (!tokenToUse) {
+      setError("Invitation token missing. Please use your full invitation link.");
+      return;
+    }
 
     setAccepting(true);
     setError(null);
     try {
+      let clerkJwt = "";
+      try {
+        clerkJwt = (await getToken()) || "";
+      } catch {}
+
       const res = await fetch("/api/staff/invitations/accept", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: tokenToUse }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(clerkJwt ? { Authorization: `Bearer ${clerkJwt}` } : {}),
+        },
+        body: JSON.stringify({
+          token: tokenToUse,
+          clerkUserId: user?.id || null,
+          email: user?.primaryEmailAddress?.emailAddress || null,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Failed to accept invitation");
       } else {
+        try {
+          sessionStorage.removeItem("restronex_invite_token");
+          localStorage.removeItem("restronex_invite_token");
+        } catch {}
         setSuccess(data.message || "Invitation accepted! Redirecting to workspace...");
         setTimeout(() => {
           router.push(data.redirectTo || "/staff/dashboard");
@@ -109,7 +154,7 @@ function AcceptInvitationContent() {
             </div>
           )}
 
-          {!invitation && !loading && !rawToken && (
+          {!invitation && !loading && !urlToken && !tokenInput && (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
