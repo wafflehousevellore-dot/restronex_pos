@@ -61,6 +61,50 @@ export async function resolveUserCustomerJourney(
 
   // If user has at least one tenant
   if (memberships.length > 0) {
+    // Check if user is a staff member (non-owner)
+    const staffMembership = memberships.find((m) => m.role !== "OWNER");
+    const isOnlyStaff = memberships.every((m) => m.role !== "OWNER");
+
+    // If user only has staff roles, route to staff portal
+    if (isOnlyStaff && staffMembership) {
+      if (staffMembership.status === "SUSPENDED" || (staffMembership as any).status === "DEACTIVATED") {
+        return {
+          status: "CANCELLED",
+          redirectTo: "/staff/login?error=suspended",
+          tenantId: staffMembership.tenantId,
+          tenantName: staffMembership.tenant.name,
+          subscriptionId: null,
+          planSlug: null,
+          planName: null,
+          isPaid: true,
+          onboardingStep: 7,
+          onboardingComplete: true,
+          message: "Your staff access has been suspended by the restaurant administrator.",
+        };
+      }
+
+      const role = staffMembership.role.toUpperCase();
+      let staffDestination = "/staff/dashboard";
+      if (role === "CASHIER") staffDestination = "/staff/pos";
+      else if (role === "KITCHEN_STAFF") staffDestination = "/staff/kitchen";
+      else if (role === "WAITER") staffDestination = "/staff/tables";
+      else if (role === "INVENTORY_MANAGER") staffDestination = "/staff/inventory";
+
+      return {
+        status: "ACTIVE_PAID_ONBOARDED",
+        redirectTo: staffDestination,
+        tenantId: staffMembership.tenantId,
+        tenantName: staffMembership.tenant.name,
+        subscriptionId: staffMembership.tenant.subscriptions[0]?.id || null,
+        planSlug: staffMembership.tenant.subscriptions[0]?.plan?.slug || null,
+        planName: staffMembership.tenant.subscriptions[0]?.plan?.name || null,
+        isPaid: true,
+        onboardingStep: 7,
+        onboardingComplete: true,
+        message: `Welcome to ${staffMembership.tenant.name} staff portal.`,
+      };
+    }
+
     // Prioritize active paid tenant for returning customers so they are never prompted for payment
     const paidMembership = memberships.find((m) =>
       m.tenant.subscriptions?.some((s) => (s.status === "ACTIVE" || s.status === "PAST_DUE") && s.plan)

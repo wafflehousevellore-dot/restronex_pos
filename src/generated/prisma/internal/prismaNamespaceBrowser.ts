@@ -56,6 +56,9 @@ export const ModelName = {
   Tenant: 'Tenant',
   Membership: 'Membership',
   Outlet: 'Outlet',
+  StaffProfile: 'StaffProfile',
+  OutletMember: 'OutletMember',
+  StaffInvitation: 'StaffInvitation',
   RestaurantSetting: 'RestaurantSetting',
   OutletWhatsAppConfig: 'OutletWhatsAppConfig',
   TaxConfig: 'TaxConfig',
@@ -190,7 +193,10 @@ export const MembershipScalarFieldEnum = {
   tenantId: 'tenantId',
   role: 'role',
   outletId: 'outletId',
-  createdAt: 'createdAt'
+  status: 'status',
+  permissionsJson: 'permissionsJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type MembershipScalarFieldEnum = (typeof MembershipScalarFieldEnum)[keyof typeof MembershipScalarFieldEnum]
@@ -212,6 +218,54 @@ export const OutletScalarFieldEnum = {
 } as const
 
 export type OutletScalarFieldEnum = (typeof OutletScalarFieldEnum)[keyof typeof OutletScalarFieldEnum]
+
+
+export const StaffProfileScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  fullName: 'fullName',
+  phone: 'phone',
+  employeeCode: 'employeeCode',
+  jobTitle: 'jobTitle',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffProfileScalarFieldEnum = (typeof StaffProfileScalarFieldEnum)[keyof typeof StaffProfileScalarFieldEnum]
+
+
+export const OutletMemberScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  outletId: 'outletId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type OutletMemberScalarFieldEnum = (typeof OutletMemberScalarFieldEnum)[keyof typeof OutletMemberScalarFieldEnum]
+
+
+export const StaffInvitationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  email: 'email',
+  fullName: 'fullName',
+  phone: 'phone',
+  role: 'role',
+  outletId: 'outletId',
+  outletIdsJson: 'outletIdsJson',
+  permissionsJson: 'permissionsJson',
+  tokenHash: 'tokenHash',
+  invitedBy: 'invitedBy',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffInvitationScalarFieldEnum = (typeof StaffInvitationScalarFieldEnum)[keyof typeof StaffInvitationScalarFieldEnum]
 
 
 export const RestaurantSettingScalarFieldEnum = {

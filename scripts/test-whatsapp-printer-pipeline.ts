@@ -837,7 +837,10 @@ async function run15ScenarioWhatsAppAndPrinterSuite() {
       "80mm contains GSTIN"
     );
     const r80Bytes = Buffer.from(r80.escPosBase64, "base64");
-    assert(r80Bytes.includes(Buffer.from([0x1d, 0x28, 0x6b])), "ESC/POS binary includes GS ( k QR command");
+    assert(
+      r80Bytes.includes(Buffer.from([0x1d, 0x76, 0x30])) || r80Bytes.includes(Buffer.from([0x1d, 0x28, 0x6b])),
+      "ESC/POS binary includes universal QR command (GS v 0 raster or GS ( k)"
+    );
     assert(r80Bytes.includes(Buffer.from([0x1d, 0x56])), "ESC/POS binary includes paper cut command");
     const sampleMsg = formatWhatsAppBillMessage({
       restaurantName: "Demo",

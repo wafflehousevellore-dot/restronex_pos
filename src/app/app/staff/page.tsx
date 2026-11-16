@@ -11,19 +11,26 @@ import {
   Shield,
   Trash2,
   X,
-  Building2,
   ChefHat,
   CreditCard,
   Utensils,
   Boxes,
   Crown,
   Search,
+  Mail,
+  Copy,
+  Check,
+  Ban,
+  CheckCircle,
+  Lock,
 } from "lucide-react";
 
 type StaffMember = {
   id: string;
   role: string;
+  status: string;
   outletId?: string | null;
+  permissionsJson?: string | null;
   createdAt: string;
   user: {
     id: string;
@@ -37,6 +44,19 @@ type StaffMember = {
     id: string;
     name: string;
   } | null;
+  outletMembers?: {
+    outlet: { id: string; name: string };
+  }[];
+};
+
+type PendingInvitation = {
+  id: string;
+  email: string;
+  fullName?: string | null;
+  role: string;
+  expiresAt: string;
+  createdAt: string;
+  outlet?: { id: string; name: string } | null;
 };
 
 type Outlet = {
@@ -51,17 +71,11 @@ const ROLES_INFO: Record<string, { label: string; desc: string; icon: any; color
     icon: Crown,
     color: "bg-emerald-50 text-emerald-800 border-emerald-200",
   },
-  HEAD_OFFICE: {
-    label: "Head Office",
-    desc: "Central menu management, pricing, cross-outlet reports, and operations oversight.",
+  MANAGER: {
+    label: "Manager",
+    desc: "Operations oversight, order monitoring, staff coordination, and floor management.",
     icon: Shield,
     color: "bg-indigo-50 text-indigo-800 border-indigo-200",
-  },
-  OUTLET_MANAGER: {
-    label: "Outlet Manager",
-    desc: "Manage day-to-day operations, cash shifts, staff attendance, and local outlet menu.",
-    icon: Building2,
-    color: "bg-blue-50 text-blue-800 border-blue-200",
   },
   CASHIER: {
     label: "Cashier",
@@ -75,27 +89,35 @@ const ROLES_INFO: Record<string, { label: string; desc: string; icon: any; color
     icon: Utensils,
     color: "bg-teal-50 text-teal-800 border-teal-200",
   },
-  KITCHEN: {
+  KITCHEN_STAFF: {
     label: "Kitchen Chef",
     desc: "KDS screen access, prep status updates, station routing, and ticket bump workflows.",
     icon: ChefHat,
     color: "bg-rose-50 text-rose-800 border-rose-200",
   },
-  INVENTORY: {
-    label: "Inventory Clerk",
+  INVENTORY_MANAGER: {
+    label: "Inventory Manager",
     desc: "Stock tracking, raw ingredients receipt, supplier purchase orders, and waste logging.",
     icon: Boxes,
     color: "bg-purple-50 text-purple-800 border-purple-200",
+  },
+  ACCOUNTANT: {
+    label: "Accountant",
+    desc: "Authorized billing history, financial reconciliations, tax reports, and sales insights.",
+    icon: CreditCard,
+    color: "bg-sky-50 text-sky-800 border-sky-200",
   },
 };
 
 export default function StaffPage() {
   const [members, setMembers] = useState<StaffMember[]>([]);
+  const [pendingInvitations, setPendingInvitations] = useState<PendingInvitation[]>([]);
   const [outlets, setOutlets] = useState<Outlet[]>([]);
   const [currentRole, setCurrentRole] = useState<string>("OWNER");
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
+  const [copiedLink, setCopiedLink] = useState(false);
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Invite Modal
@@ -104,6 +126,8 @@ export default function StaffPage() {
   const [formEmail, setFormEmail] = useState("");
   const [formRole, setFormRole] = useState("CASHIER");
   const [formOutletId, setFormOutletId] = useState("");
+  const [formOutletIds, setFormOutletIds] = useState<string[]>([]);
+  const [sendInvitationMode, setSendInvitationMode] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   const loadStaff = useCallback(async () => {
@@ -112,6 +136,7 @@ export default function StaffPage() {
       if (res.ok) {
         const j = await res.json();
         setMembers(j.memberships || []);
+        setPendingInvitations(j.pendingInvitations || []);
         setOutlets(j.outlets || []);
         if (j.currentRole) setCurrentRole(j.currentRole);
       }
@@ -128,8 +153,8 @@ export default function StaffPage() {
 
   async function handleAddStaff(e: React.FormEvent) {
     e.preventDefault();
-    if (!formName.trim() || !formEmail.trim()) {
-      setMsg({ type: "error", text: "Please enter staff name and email" });
+    if (!formEmail.trim()) {
+      setMsg({ type: "error", text: "Please enter staff email" });
       return;
     }
 
@@ -144,24 +169,56 @@ export default function StaffPage() {
           email: formEmail.trim(),
           role: formRole,
           outletId: formOutletId || null,
+          outletIds: formOutletIds,
+          sendInvitation: sendInvitationMode,
         }),
       });
       const j = await res.json();
       if (!res.ok) {
         setMsg({ type: "error", text: j.error || "Failed to add staff member" });
       } else {
-        setMsg({ type: "success", text: `${formName} added successfully to team` });
+        setMsg({
+          type: "success",
+          text: sendInvitationMode
+            ? `Invitation sent to ${formEmail}. Copy the single-use invite link from the table below.`
+            : `${formName || formEmail} added successfully to team.`,
+        });
         setIsModalOpen(false);
         setFormName("");
         setFormEmail("");
         setFormRole("CASHIER");
         setFormOutletId("");
+        setFormOutletIds([]);
         loadStaff();
       }
     } catch {
       setMsg({ type: "error", text: "An error occurred adding staff member" });
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleToggleStatus(membershipId: string, currentStatus: string, name: string) {
+    const newStatus = currentStatus === "ACTIVE" ? "SUSPENDED" : "ACTIVE";
+    const actionLabel = newStatus === "SUSPENDED" ? "suspend" : "reactivate";
+
+    if (!confirm(`Are you sure you want to ${actionLabel} ${name}'s staff access?`)) return;
+
+    try {
+      const res = await apiFetch("/api/staff", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ membershipId, status: newStatus }),
+      });
+      if (res.ok) {
+        setMsg({ type: "success", text: `${name} has been ${newStatus.toLowerCase()}` });
+        loadStaff();
+      } else {
+        const j = await res.json();
+        setMsg({ type: "error", text: j.error || `Failed to ${actionLabel} staff` });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Status update failed" });
     }
   }
 
@@ -203,8 +260,26 @@ export default function StaffPage() {
     }
   }
 
+  async function handleRevokeInvitation(id: string, email: string) {
+    if (!confirm(`Are you sure you want to revoke the pending invitation for ${email}?`)) return;
+    try {
+      const res = await apiFetch(`/api/staff/invitations?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setMsg({ type: "success", text: `Invitation for ${email} has been revoked` });
+        loadStaff();
+      } else {
+        const j = await res.json();
+        setMsg({ type: "error", text: j.error || "Failed to revoke invitation" });
+      }
+    } catch {
+      setMsg({ type: "error", text: "Revoke failed" });
+    }
+  }
+
   async function handleRemoveMember(membershipId: string, name: string) {
-    if (!confirm(`Are you sure you want to remove ${name} from this restaurant?`)) return;
+    if (!confirm(`Are you sure you want to permanently remove ${name} from this restaurant?`)) return;
     try {
       const res = await apiFetch(`/api/staff?membershipId=${membershipId}`, {
         method: "DELETE",
@@ -219,6 +294,12 @@ export default function StaffPage() {
     } catch {
       setMsg({ type: "error", text: "Remove failed" });
     }
+  }
+
+  function copyStaffLoginUrl() {
+    navigator.clipboard.writeText("https://www.restronexpos.com/staff/login");
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   }
 
   const isOwnerOrHeadOffice = currentRole === "OWNER" || currentRole === "HEAD_OFFICE";
@@ -249,9 +330,37 @@ export default function StaffPage() {
             className="rounded-full bg-[#16845B] hover:bg-[#116B49] text-white px-5 py-2.5 text-xs font-bold shadow-xs cursor-pointer flex items-center gap-1.5"
           >
             <UserPlus className="h-4 w-4" />
-            Add Staff Member
+            Invite Staff Member
           </Button>
         )}
+      </div>
+
+      {/* Staff Login Portal URL Info Card */}
+      <div className="rounded-2xl border border-[#16845B]/30 bg-[#E8F5EE] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-white border border-[#16845B]/20 flex items-center justify-center text-[#16845B] shrink-0">
+            <Lock className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-xs font-bold text-[#16845B] uppercase tracking-wider">
+              Dedicated Staff Login Portal
+            </span>
+            <p className="text-xs text-[#172B25] font-semibold mt-0.5">
+              https://www.restronexpos.com/staff/login
+            </p>
+            <p className="text-[11px] text-[#2D5A47]">
+              Share this dedicated URL with your employees to access POS, KDS, and tables.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={copyStaffLoginUrl}
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-[#16845B]/30 text-xs font-bold text-[#16845B] hover:bg-[#F8FAF9] transition shadow-2xs self-start sm:self-auto cursor-pointer"
+        >
+          {copiedLink ? <Check className="w-3.5 h-3.5 text-[#16845B]" /> : <Copy className="w-3.5 h-3.5" />}
+          {copiedLink ? "Copied!" : "Copy Staff Login URL"}
+        </button>
       </div>
 
       {/* Notifications */}
@@ -270,6 +379,44 @@ export default function StaffPage() {
         </div>
       )}
 
+      {/* Pending Invitations Section */}
+      {pendingInvitations.length > 0 && (
+        <Card className="bg-white border-[#E5EBE7] shadow-sm">
+          <CardHeader className="pb-3 border-b border-[#E5EBE7]">
+            <CardTitle className="text-sm font-bold text-[#172B25] flex items-center gap-2">
+              <Mail className="w-4 h-4 text-[#16845B]" />
+              Pending Team Invitations ({pendingInvitations.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 divide-y divide-[#E5EBE7]">
+            {pendingInvitations.map((inv) => (
+              <div key={inv.id} className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-xs text-[#172B25]">{inv.email}</span>
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                      {inv.role}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#718078] mt-0.5">
+                    Invited {new Date(inv.createdAt).toLocaleDateString()} • Expires {new Date(inv.expiresAt).toLocaleDateString()}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleRevokeInvitation(inv.id, inv.email)}
+                    className="px-3 py-1.5 rounded-xl border border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+                  >
+                    Revoke Invite
+                  </button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Filters Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-[#E5EBE7] p-3 rounded-2xl shadow-2xs">
         <div className="relative flex-1 min-w-[220px] max-w-sm">
@@ -284,7 +431,7 @@ export default function StaffPage() {
 
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[11px] font-bold text-[#718078] uppercase px-1">Role:</span>
-          {["ALL", "OWNER", "OUTLET_MANAGER", "CASHIER", "WAITER", "KITCHEN", "INVENTORY"].map((r) => (
+          {["ALL", "OWNER", "MANAGER", "CASHIER", "WAITER", "KITCHEN_STAFF", "INVENTORY_MANAGER"].map((r) => (
             <button
               key={r}
               onClick={() => setRoleFilter(r)}
@@ -300,7 +447,7 @@ export default function StaffPage() {
         </div>
       </div>
 
-      {/* Staff Members List */}
+      {/* Active Staff Members List */}
       <Card className="bg-white border-[#E5EBE7] shadow-sm">
         <CardHeader className="pb-3 border-b border-[#E5EBE7]">
           <CardTitle className="text-base text-[#172B25] flex items-center justify-between">
@@ -316,17 +463,20 @@ export default function StaffPage() {
             <div className="py-12 text-center text-xs text-[#718078]">Loading staff team...</div>
           ) : filteredMembers.length === 0 ? (
             <div className="py-12 text-center text-xs text-[#718078]">
-              No staff members matching your filter. Click <b>Add Staff Member</b> above to invite your team.
+              No staff members matching your filter. Click <b>Invite Staff Member</b> above to invite your team.
             </div>
           ) : (
             filteredMembers.map((m) => {
               const roleMeta = ROLES_INFO[m.role] || ROLES_INFO.CASHIER;
               const RoleIcon = roleMeta.icon;
+              const isSuspended = m.status === "SUSPENDED";
 
               return (
                 <div
                   key={m.id}
-                  className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-[#F8FAF9]/60 transition"
+                  className={`p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition ${
+                    isSuspended ? "bg-amber-50/40 opacity-80" : "hover:bg-[#F8FAF9]/60"
+                  }`}
                 >
                   {/* Staff Info */}
                   <div className="flex items-center gap-3.5">
@@ -342,6 +492,12 @@ export default function StaffPage() {
                           <RoleIcon className="h-3 w-3" />
                           {roleMeta.label}
                         </span>
+
+                        {isSuspended && (
+                          <span className="rounded-full bg-red-100 text-red-800 border border-red-200 px-2 py-0.5 text-[9px] font-bold">
+                            SUSPENDED
+                          </span>
+                        )}
                       </div>
                       <div className="text-xs text-[#718078] mt-0.5 flex items-center gap-2 flex-wrap">
                         <span>{m.user?.email}</span>
@@ -382,6 +538,19 @@ export default function StaffPage() {
                             </option>
                           ))}
                       </select>
+
+                      {/* Suspend / Reactivate Button */}
+                      <button
+                        onClick={() => handleToggleStatus(m.id, m.status, m.user.name)}
+                        className={`p-1.5 rounded-lg border text-xs font-semibold transition ${
+                          isSuspended
+                            ? "bg-emerald-50 text-[#16845B] border-emerald-200 hover:bg-emerald-100"
+                            : "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
+                        }`}
+                        title={isSuspended ? "Reactivate Staff" : "Suspend Staff Access"}
+                      >
+                        {isSuspended ? <CheckCircle className="h-3.5 w-3.5" /> : <Ban className="h-3.5 w-3.5" />}
+                      </button>
 
                       {/* Remove Button */}
                       <button
@@ -427,14 +596,14 @@ export default function StaffPage() {
         </div>
       </div>
 
-      {/* Add Staff Modal */}
+      {/* Add Staff / Invite Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="w-full max-w-md bg-white rounded-3xl p-6 space-y-4 shadow-2xl border border-[#E5EBE7]">
             <div className="flex justify-between items-center border-b border-[#E5EBE7] pb-3">
               <h3 className="font-extrabold text-base text-[#172B25] flex items-center gap-2">
                 <UserPlus className="h-4 w-4 text-[#16845B]" />
-                Add Staff Member
+                Invite Staff Member
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -446,12 +615,11 @@ export default function StaffPage() {
 
             <form onSubmit={handleAddStaff} className="space-y-3.5">
               <div>
-                <Label className="text-xs font-bold text-[#172B25]">Full Name *</Label>
+                <Label className="text-xs font-bold text-[#172B25]">Full Name</Label>
                 <Input
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="e.g. Rahul Sharma"
-                  required
                   className="mt-1 bg-[#F8FAF9] border-[#E5EBE7] text-xs h-9 rounded-xl"
                 />
               </div>
@@ -492,7 +660,7 @@ export default function StaffPage() {
                   onChange={(e) => setFormOutletId(e.target.value)}
                   className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-3 py-2 text-xs text-[#172B25] font-semibold focus:border-[#16845B] focus:outline-none"
                 >
-                  <option value="">All Outlets (Global)</option>
+                  <option value="">All Outlets (Global Access)</option>
                   {outlets.map((o) => (
                     <option key={o.id} value={o.id}>
                       {o.name}
@@ -501,7 +669,19 @@ export default function StaffPage() {
                 </select>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="pt-2">
+                <label className="flex items-center gap-2 text-xs text-[#4A5D55] font-medium cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={sendInvitationMode}
+                    onChange={(e) => setSendInvitationMode(e.target.checked)}
+                    className="rounded border-[#D2DFD8] text-[#16845B] focus:ring-[#16845B]"
+                  />
+                  <span>Generate single-use invite link (Clerk OTP / password creation)</span>
+                </label>
+              </div>
+
+              <div className="flex gap-2 pt-3 border-t border-[#EEF3F0]">
                 <Button
                   type="button"
                   variant="outline"
@@ -515,7 +695,7 @@ export default function StaffPage() {
                   disabled={submitting}
                   className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold shadow-xs cursor-pointer"
                 >
-                  {submitting ? "Adding..." : "Add Staff Member"}
+                  {submitting ? "Processing..." : sendInvitationMode ? "Send Invitation" : "Add Staff Member"}
                 </Button>
               </div>
             </form>

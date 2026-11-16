@@ -30,7 +30,10 @@ export type MembershipMinAggregateOutputType = {
   tenantId: string | null
   role: string | null
   outletId: string | null
+  status: string | null
+  permissionsJson: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MembershipMaxAggregateOutputType = {
@@ -39,7 +42,10 @@ export type MembershipMaxAggregateOutputType = {
   tenantId: string | null
   role: string | null
   outletId: string | null
+  status: string | null
+  permissionsJson: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type MembershipCountAggregateOutputType = {
@@ -48,7 +54,10 @@ export type MembershipCountAggregateOutputType = {
   tenantId: number
   role: number
   outletId: number
+  status: number
+  permissionsJson: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -59,7 +68,10 @@ export type MembershipMinAggregateInputType = {
   tenantId?: true
   role?: true
   outletId?: true
+  status?: true
+  permissionsJson?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type MembershipMaxAggregateInputType = {
@@ -68,7 +80,10 @@ export type MembershipMaxAggregateInputType = {
   tenantId?: true
   role?: true
   outletId?: true
+  status?: true
+  permissionsJson?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type MembershipCountAggregateInputType = {
@@ -77,7 +92,10 @@ export type MembershipCountAggregateInputType = {
   tenantId?: true
   role?: true
   outletId?: true
+  status?: true
+  permissionsJson?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -159,7 +177,10 @@ export type MembershipGroupByOutputType = {
   tenantId: string
   role: string
   outletId: string | null
+  status: string
+  permissionsJson: string | null
   createdAt: Date
+  updatedAt: Date
   _count: MembershipCountAggregateOutputType | null
   _min: MembershipMinAggregateOutputType | null
   _max: MembershipMaxAggregateOutputType | null
@@ -189,10 +210,15 @@ export type MembershipWhereInput = {
   tenantId?: Prisma.StringFilter<"Membership"> | string
   role?: Prisma.StringFilter<"Membership"> | string
   outletId?: Prisma.StringNullableFilter<"Membership"> | string | null
+  status?: Prisma.StringFilter<"Membership"> | string
+  permissionsJson?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
+  staffProfile?: Prisma.XOR<Prisma.StaffProfileNullableScalarRelationFilter, Prisma.StaffProfileWhereInput> | null
+  outletMembers?: Prisma.OutletMemberListRelationFilter
 }
 
 export type MembershipOrderByWithRelationInput = {
@@ -201,10 +227,15 @@ export type MembershipOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   outletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  permissionsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   tenant?: Prisma.TenantOrderByWithRelationInput
   outlet?: Prisma.OutletOrderByWithRelationInput
+  staffProfile?: Prisma.StaffProfileOrderByWithRelationInput
+  outletMembers?: Prisma.OutletMemberOrderByRelationAggregateInput
 }
 
 export type MembershipWhereUniqueInput = Prisma.AtLeast<{
@@ -217,10 +248,15 @@ export type MembershipWhereUniqueInput = Prisma.AtLeast<{
   tenantId?: Prisma.StringFilter<"Membership"> | string
   role?: Prisma.StringFilter<"Membership"> | string
   outletId?: Prisma.StringNullableFilter<"Membership"> | string | null
+  status?: Prisma.StringFilter<"Membership"> | string
+  permissionsJson?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
+  staffProfile?: Prisma.XOR<Prisma.StaffProfileNullableScalarRelationFilter, Prisma.StaffProfileWhereInput> | null
+  outletMembers?: Prisma.OutletMemberListRelationFilter
 }, "id" | "userId_tenantId">
 
 export type MembershipOrderByWithAggregationInput = {
@@ -229,7 +265,10 @@ export type MembershipOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   outletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  permissionsJson?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.MembershipCountOrderByAggregateInput
   _max?: Prisma.MembershipMaxOrderByAggregateInput
   _min?: Prisma.MembershipMinOrderByAggregateInput
@@ -244,16 +283,24 @@ export type MembershipScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"Membership"> | string
   role?: Prisma.StringWithAggregatesFilter<"Membership"> | string
   outletId?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
+  status?: Prisma.StringWithAggregatesFilter<"Membership"> | string
+  permissionsJson?: Prisma.StringNullableWithAggregatesFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Membership"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Membership"> | Date | string
 }
 
 export type MembershipCreateInput = {
   id?: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   tenant: Prisma.TenantCreateNestedOneWithoutMembershipsInput
   outlet?: Prisma.OutletCreateNestedOneWithoutMembershipsInput
+  staffProfile?: Prisma.StaffProfileCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipUncheckedCreateInput = {
@@ -262,16 +309,26 @@ export type MembershipUncheckedCreateInput = {
   tenantId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
   tenant?: Prisma.TenantUpdateOneRequiredWithoutMembershipsNestedInput
   outlet?: Prisma.OutletUpdateOneWithoutMembershipsNestedInput
+  staffProfile?: Prisma.StaffProfileUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateInput = {
@@ -280,7 +337,12 @@ export type MembershipUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipCreateManyInput = {
@@ -289,13 +351,19 @@ export type MembershipCreateManyInput = {
   tenantId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MembershipUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MembershipUncheckedUpdateManyInput = {
@@ -304,7 +372,10 @@ export type MembershipUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MembershipListRelationFilter = {
@@ -328,7 +399,10 @@ export type MembershipCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  permissionsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MembershipMaxOrderByAggregateInput = {
@@ -337,7 +411,10 @@ export type MembershipMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  permissionsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type MembershipMinOrderByAggregateInput = {
@@ -346,7 +423,15 @@ export type MembershipMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   role?: Prisma.SortOrder
   outletId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  permissionsJson?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+}
+
+export type MembershipScalarRelationFilter = {
+  is?: Prisma.MembershipWhereInput
+  isNot?: Prisma.MembershipWhereInput
 }
 
 export type MembershipCreateNestedManyWithoutUserInput = {
@@ -475,12 +560,45 @@ export type MembershipUncheckedUpdateManyWithoutOutletNestedInput = {
   deleteMany?: Prisma.MembershipScalarWhereInput | Prisma.MembershipScalarWhereInput[]
 }
 
+export type MembershipCreateNestedOneWithoutStaffProfileInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutStaffProfileInput, Prisma.MembershipUncheckedCreateWithoutStaffProfileInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutStaffProfileInput
+  connect?: Prisma.MembershipWhereUniqueInput
+}
+
+export type MembershipUpdateOneRequiredWithoutStaffProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutStaffProfileInput, Prisma.MembershipUncheckedCreateWithoutStaffProfileInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutStaffProfileInput
+  upsert?: Prisma.MembershipUpsertWithoutStaffProfileInput
+  connect?: Prisma.MembershipWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MembershipUpdateToOneWithWhereWithoutStaffProfileInput, Prisma.MembershipUpdateWithoutStaffProfileInput>, Prisma.MembershipUncheckedUpdateWithoutStaffProfileInput>
+}
+
+export type MembershipCreateNestedOneWithoutOutletMembersInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutOutletMembersInput, Prisma.MembershipUncheckedCreateWithoutOutletMembersInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutOutletMembersInput
+  connect?: Prisma.MembershipWhereUniqueInput
+}
+
+export type MembershipUpdateOneRequiredWithoutOutletMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.MembershipCreateWithoutOutletMembersInput, Prisma.MembershipUncheckedCreateWithoutOutletMembersInput>
+  connectOrCreate?: Prisma.MembershipCreateOrConnectWithoutOutletMembersInput
+  upsert?: Prisma.MembershipUpsertWithoutOutletMembersInput
+  connect?: Prisma.MembershipWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MembershipUpdateToOneWithWhereWithoutOutletMembersInput, Prisma.MembershipUpdateWithoutOutletMembersInput>, Prisma.MembershipUncheckedUpdateWithoutOutletMembersInput>
+}
+
 export type MembershipCreateWithoutUserInput = {
   id?: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutMembershipsInput
   outlet?: Prisma.OutletCreateNestedOneWithoutMembershipsInput
+  staffProfile?: Prisma.StaffProfileCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipUncheckedCreateWithoutUserInput = {
@@ -488,7 +606,12 @@ export type MembershipUncheckedCreateWithoutUserInput = {
   tenantId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipCreateOrConnectWithoutUserInput = {
@@ -526,15 +649,23 @@ export type MembershipScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"Membership"> | string
   role?: Prisma.StringFilter<"Membership"> | string
   outletId?: Prisma.StringNullableFilter<"Membership"> | string | null
+  status?: Prisma.StringFilter<"Membership"> | string
+  permissionsJson?: Prisma.StringNullableFilter<"Membership"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Membership"> | Date | string
 }
 
 export type MembershipCreateWithoutTenantInput = {
   id?: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   outlet?: Prisma.OutletCreateNestedOneWithoutMembershipsInput
+  staffProfile?: Prisma.StaffProfileCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipUncheckedCreateWithoutTenantInput = {
@@ -542,7 +673,12 @@ export type MembershipUncheckedCreateWithoutTenantInput = {
   userId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipCreateOrConnectWithoutTenantInput = {
@@ -574,9 +710,14 @@ export type MembershipUpdateManyWithWhereWithoutTenantInput = {
 export type MembershipCreateWithoutOutletInput = {
   id?: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMembershipsInput
   tenant: Prisma.TenantCreateNestedOneWithoutMembershipsInput
+  staffProfile?: Prisma.StaffProfileCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipUncheckedCreateWithoutOutletInput = {
@@ -584,7 +725,12 @@ export type MembershipUncheckedCreateWithoutOutletInput = {
   userId: string
   tenantId: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedCreateNestedOneWithoutMembershipInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutMembershipInput
 }
 
 export type MembershipCreateOrConnectWithoutOutletInput = {
@@ -613,20 +759,164 @@ export type MembershipUpdateManyWithWhereWithoutOutletInput = {
   data: Prisma.XOR<Prisma.MembershipUpdateManyMutationInput, Prisma.MembershipUncheckedUpdateManyWithoutOutletInput>
 }
 
+export type MembershipCreateWithoutStaffProfileInput = {
+  id?: string
+  role?: string
+  status?: string
+  permissionsJson?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  tenant: Prisma.TenantCreateNestedOneWithoutMembershipsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutMembershipsInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutMembershipInput
+}
+
+export type MembershipUncheckedCreateWithoutStaffProfileInput = {
+  id?: string
+  userId: string
+  tenantId: string
+  role?: string
+  outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutMembershipInput
+}
+
+export type MembershipCreateOrConnectWithoutStaffProfileInput = {
+  where: Prisma.MembershipWhereUniqueInput
+  create: Prisma.XOR<Prisma.MembershipCreateWithoutStaffProfileInput, Prisma.MembershipUncheckedCreateWithoutStaffProfileInput>
+}
+
+export type MembershipUpsertWithoutStaffProfileInput = {
+  update: Prisma.XOR<Prisma.MembershipUpdateWithoutStaffProfileInput, Prisma.MembershipUncheckedUpdateWithoutStaffProfileInput>
+  create: Prisma.XOR<Prisma.MembershipCreateWithoutStaffProfileInput, Prisma.MembershipUncheckedCreateWithoutStaffProfileInput>
+  where?: Prisma.MembershipWhereInput
+}
+
+export type MembershipUpdateToOneWithWhereWithoutStaffProfileInput = {
+  where?: Prisma.MembershipWhereInput
+  data: Prisma.XOR<Prisma.MembershipUpdateWithoutStaffProfileInput, Prisma.MembershipUncheckedUpdateWithoutStaffProfileInput>
+}
+
+export type MembershipUpdateWithoutStaffProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutMembershipsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutMembershipsNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutMembershipNestedInput
+}
+
+export type MembershipUncheckedUpdateWithoutStaffProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutMembershipNestedInput
+}
+
+export type MembershipCreateWithoutOutletMembersInput = {
+  id?: string
+  role?: string
+  status?: string
+  permissionsJson?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutMembershipsInput
+  tenant: Prisma.TenantCreateNestedOneWithoutMembershipsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutMembershipsInput
+  staffProfile?: Prisma.StaffProfileCreateNestedOneWithoutMembershipInput
+}
+
+export type MembershipUncheckedCreateWithoutOutletMembersInput = {
+  id?: string
+  userId: string
+  tenantId: string
+  role?: string
+  outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedCreateNestedOneWithoutMembershipInput
+}
+
+export type MembershipCreateOrConnectWithoutOutletMembersInput = {
+  where: Prisma.MembershipWhereUniqueInput
+  create: Prisma.XOR<Prisma.MembershipCreateWithoutOutletMembersInput, Prisma.MembershipUncheckedCreateWithoutOutletMembersInput>
+}
+
+export type MembershipUpsertWithoutOutletMembersInput = {
+  update: Prisma.XOR<Prisma.MembershipUpdateWithoutOutletMembersInput, Prisma.MembershipUncheckedUpdateWithoutOutletMembersInput>
+  create: Prisma.XOR<Prisma.MembershipCreateWithoutOutletMembersInput, Prisma.MembershipUncheckedCreateWithoutOutletMembersInput>
+  where?: Prisma.MembershipWhereInput
+}
+
+export type MembershipUpdateToOneWithWhereWithoutOutletMembersInput = {
+  where?: Prisma.MembershipWhereInput
+  data: Prisma.XOR<Prisma.MembershipUpdateWithoutOutletMembersInput, Prisma.MembershipUncheckedUpdateWithoutOutletMembersInput>
+}
+
+export type MembershipUpdateWithoutOutletMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutMembershipsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutMembershipsNestedInput
+  staffProfile?: Prisma.StaffProfileUpdateOneWithoutMembershipNestedInput
+}
+
+export type MembershipUncheckedUpdateWithoutOutletMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedUpdateOneWithoutMembershipNestedInput
+}
+
 export type MembershipCreateManyUserInput = {
   id?: string
   tenantId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MembershipUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutMembershipsNestedInput
   outlet?: Prisma.OutletUpdateOneWithoutMembershipsNestedInput
+  staffProfile?: Prisma.StaffProfileUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutUserInput = {
@@ -634,7 +924,12 @@ export type MembershipUncheckedUpdateWithoutUserInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutUserInput = {
@@ -642,7 +937,10 @@ export type MembershipUncheckedUpdateManyWithoutUserInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MembershipCreateManyTenantInput = {
@@ -650,15 +948,23 @@ export type MembershipCreateManyTenantInput = {
   userId: string
   role?: string
   outletId?: string | null
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MembershipUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
   outlet?: Prisma.OutletUpdateOneWithoutMembershipsNestedInput
+  staffProfile?: Prisma.StaffProfileUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutTenantInput = {
@@ -666,7 +972,12 @@ export type MembershipUncheckedUpdateWithoutTenantInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutTenantInput = {
@@ -674,7 +985,10 @@ export type MembershipUncheckedUpdateManyWithoutTenantInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MembershipCreateManyOutletInput = {
@@ -682,15 +996,23 @@ export type MembershipCreateManyOutletInput = {
   userId: string
   tenantId: string
   role?: string
+  status?: string
+  permissionsJson?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type MembershipUpdateWithoutOutletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMembershipsNestedInput
   tenant?: Prisma.TenantUpdateOneRequiredWithoutMembershipsNestedInput
+  staffProfile?: Prisma.StaffProfileUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateWithoutOutletInput = {
@@ -698,7 +1020,12 @@ export type MembershipUncheckedUpdateWithoutOutletInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  staffProfile?: Prisma.StaffProfileUncheckedUpdateOneWithoutMembershipNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutMembershipNestedInput
 }
 
 export type MembershipUncheckedUpdateManyWithoutOutletInput = {
@@ -706,9 +1033,41 @@ export type MembershipUncheckedUpdateManyWithoutOutletInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  permissionsJson?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type MembershipCountOutputType
+ */
+
+export type MembershipCountOutputType = {
+  outletMembers: number
+}
+
+export type MembershipCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  outletMembers?: boolean | MembershipCountOutputTypeCountOutletMembersArgs
+}
+
+/**
+ * MembershipCountOutputType without action
+ */
+export type MembershipCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MembershipCountOutputType
+   */
+  select?: Prisma.MembershipCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MembershipCountOutputType without action
+ */
+export type MembershipCountOutputTypeCountOutletMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OutletMemberWhereInput
+}
 
 
 export type MembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -717,10 +1076,16 @@ export type MembershipSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   tenantId?: boolean
   role?: boolean
   outletId?: boolean
+  status?: boolean
+  permissionsJson?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.Membership$outletArgs<ExtArgs>
+  staffProfile?: boolean | Prisma.Membership$staffProfileArgs<ExtArgs>
+  outletMembers?: boolean | Prisma.Membership$outletMembersArgs<ExtArgs>
+  _count?: boolean | Prisma.MembershipCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["membership"]>
 
 export type MembershipSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -729,7 +1094,10 @@ export type MembershipSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tenantId?: boolean
   role?: boolean
   outletId?: boolean
+  status?: boolean
+  permissionsJson?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.Membership$outletArgs<ExtArgs>
@@ -741,7 +1109,10 @@ export type MembershipSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   tenantId?: boolean
   role?: boolean
   outletId?: boolean
+  status?: boolean
+  permissionsJson?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.Membership$outletArgs<ExtArgs>
@@ -753,14 +1124,20 @@ export type MembershipSelectScalar = {
   tenantId?: boolean
   role?: boolean
   outletId?: boolean
+  status?: boolean
+  permissionsJson?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type MembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tenantId" | "role" | "outletId" | "createdAt", ExtArgs["result"]["membership"]>
+export type MembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tenantId" | "role" | "outletId" | "status" | "permissionsJson" | "createdAt" | "updatedAt", ExtArgs["result"]["membership"]>
 export type MembershipInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   outlet?: boolean | Prisma.Membership$outletArgs<ExtArgs>
+  staffProfile?: boolean | Prisma.Membership$staffProfileArgs<ExtArgs>
+  outletMembers?: boolean | Prisma.Membership$outletMembersArgs<ExtArgs>
+  _count?: boolean | Prisma.MembershipCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MembershipIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -779,6 +1156,8 @@ export type $MembershipPayload<ExtArgs extends runtime.Types.Extensions.Internal
     user: Prisma.$UserPayload<ExtArgs>
     tenant: Prisma.$TenantPayload<ExtArgs>
     outlet: Prisma.$OutletPayload<ExtArgs> | null
+    staffProfile: Prisma.$StaffProfilePayload<ExtArgs> | null
+    outletMembers: Prisma.$OutletMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -786,7 +1165,10 @@ export type $MembershipPayload<ExtArgs extends runtime.Types.Extensions.Internal
     tenantId: string
     role: string
     outletId: string | null
+    status: string
+    permissionsJson: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["membership"]>
   composites: {}
 }
@@ -1184,6 +1566,8 @@ export interface Prisma__MembershipClient<T, Null = never, ExtArgs extends runti
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   outlet<T extends Prisma.Membership$outletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$outletArgs<ExtArgs>>): Prisma.Prisma__OutletClient<runtime.Types.Result.GetResult<Prisma.$OutletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  staffProfile<T extends Prisma.Membership$staffProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$staffProfileArgs<ExtArgs>>): Prisma.Prisma__StaffProfileClient<runtime.Types.Result.GetResult<Prisma.$StaffProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  outletMembers<T extends Prisma.Membership$outletMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Membership$outletMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutletMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1218,7 +1602,10 @@ export interface MembershipFieldRefs {
   readonly tenantId: Prisma.FieldRef<"Membership", 'String'>
   readonly role: Prisma.FieldRef<"Membership", 'String'>
   readonly outletId: Prisma.FieldRef<"Membership", 'String'>
+  readonly status: Prisma.FieldRef<"Membership", 'String'>
+  readonly permissionsJson: Prisma.FieldRef<"Membership", 'String'>
   readonly createdAt: Prisma.FieldRef<"Membership", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Membership", 'DateTime'>
 }
     
 
@@ -1636,6 +2023,49 @@ export type Membership$outletArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.OutletInclude<ExtArgs> | null
   where?: Prisma.OutletWhereInput
+}
+
+/**
+ * Membership.staffProfile
+ */
+export type Membership$staffProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffProfile
+   */
+  select?: Prisma.StaffProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffProfile
+   */
+  omit?: Prisma.StaffProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffProfileInclude<ExtArgs> | null
+  where?: Prisma.StaffProfileWhereInput
+}
+
+/**
+ * Membership.outletMembers
+ */
+export type Membership$outletMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OutletMember
+   */
+  select?: Prisma.OutletMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OutletMember
+   */
+  omit?: Prisma.OutletMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutletMemberInclude<ExtArgs> | null
+  where?: Prisma.OutletMemberWhereInput
+  orderBy?: Prisma.OutletMemberOrderByWithRelationInput | Prisma.OutletMemberOrderByWithRelationInput[]
+  cursor?: Prisma.OutletMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OutletMemberScalarFieldEnum | Prisma.OutletMemberScalarFieldEnum[]
 }
 
 /**

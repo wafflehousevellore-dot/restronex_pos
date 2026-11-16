@@ -96,20 +96,28 @@ model Tenant {
   paymentAttempts PaymentAttempt[]
   paymentRefunds PaymentRefund[]
   subscriptionNotifications SubscriptionNotification[]
+  staffInvitations StaffInvitation[]
 }
 
 model Membership {
-  id        String @id @default(cuid())
-  userId    String
-  tenantId  String
-  role      String @default("OUTLET_MANAGER")
-  outletId  String?
-  createdAt DateTime @default(now())
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  outlet    Outlet? @relation(fields: [outletId], references: [id])
+  id              String         @id @default(cuid())
+  userId          String
+  tenantId        String
+  role            String         @default("OUTLET_MANAGER")
+  outletId        String?
+  status          String         @default("ACTIVE")
+  permissionsJson String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet          Outlet?        @relation(fields: [outletId], references: [id])
+  staffProfile    StaffProfile?
+  outletMembers   OutletMember[]
+
   @@unique([userId, tenantId])
   @@index([tenantId])
+  @@index([tenantId, status])
 }
 
 model Outlet {
@@ -127,6 +135,8 @@ model Outlet {
   updatedAt   DateTime @updatedAt
   tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   memberships Membership[]
+  outletMembers OutletMember[]
+  staffInvitations StaffInvitation[]
   tables      Table[]
   orders      Order[]
   stockMovements StockMovement[]
@@ -141,6 +151,60 @@ model Outlet {
   whatsAppConfig OutletWhatsAppConfig?
   @@unique([tenantId, slug])
   @@index([tenantId])
+}
+
+model StaffProfile {
+  id           String     @id @default(cuid())
+  membershipId String     @unique
+  fullName     String
+  phone        String?
+  employeeCode String?
+  jobTitle     String?
+  status       String     @default("ACTIVE")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now()) @updatedAt
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
+}
+
+model OutletMember {
+  id           String     @id @default(cuid())
+  membershipId String
+  outletId     String
+  status       String     @default("ACTIVE")
+  createdAt    DateTime   @default(now())
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  outlet       Outlet     @relation(fields: [outletId], references: [id], onDelete: Cascade)
+
+  @@unique([membershipId, outletId])
+  @@index([membershipId])
+  @@index([outletId])
+}
+
+model StaffInvitation {
+  id              String    @id @default(cuid())
+  tenantId        String
+  email           String
+  fullName        String?
+  phone           String?
+  role            String
+  outletId        String?
+  outletIdsJson   String?
+  permissionsJson String?
+  tokenHash       String    @unique
+  invitedBy       String?
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet          Outlet?   @relation(fields: [outletId], references: [id])
+
+  @@index([tenantId])
+  @@index([email])
+  @@index([tokenHash])
 }
 
 model RestaurantSetting {

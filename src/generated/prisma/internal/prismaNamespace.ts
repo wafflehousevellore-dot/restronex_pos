@@ -402,6 +402,9 @@ export const ModelName = {
   Tenant: 'Tenant',
   Membership: 'Membership',
   Outlet: 'Outlet',
+  StaffProfile: 'StaffProfile',
+  OutletMember: 'OutletMember',
+  StaffInvitation: 'StaffInvitation',
   RestaurantSetting: 'RestaurantSetting',
   OutletWhatsAppConfig: 'OutletWhatsAppConfig',
   TaxConfig: 'TaxConfig',
@@ -466,7 +469,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
+    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "staffProfile" | "outletMember" | "staffInvitation" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -837,6 +840,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OutletCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OutletCountAggregateOutputType> | number
+        }
+      }
+    }
+    StaffProfile: {
+      payload: Prisma.$StaffProfilePayload<ExtArgs>
+      fields: Prisma.StaffProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StaffProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StaffProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.StaffProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StaffProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        findMany: {
+          args: Prisma.StaffProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        create: {
+          args: Prisma.StaffProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        createMany: {
+          args: Prisma.StaffProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StaffProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.StaffProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        update: {
+          args: Prisma.StaffProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.StaffProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StaffProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StaffProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        upsert: {
+          args: Prisma.StaffProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.StaffProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStaffProfile>
+        }
+        groupBy: {
+          args: Prisma.StaffProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StaffProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    OutletMember: {
+      payload: Prisma.$OutletMemberPayload<ExtArgs>
+      fields: Prisma.OutletMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OutletMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OutletMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.OutletMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OutletMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        findMany: {
+          args: Prisma.OutletMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>[]
+        }
+        create: {
+          args: Prisma.OutletMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        createMany: {
+          args: Prisma.OutletMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OutletMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.OutletMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        update: {
+          args: Prisma.OutletMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.OutletMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OutletMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OutletMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.OutletMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OutletMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.OutletMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOutletMember>
+        }
+        groupBy: {
+          args: Prisma.OutletMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutletMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OutletMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OutletMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    StaffInvitation: {
+      payload: Prisma.$StaffInvitationPayload<ExtArgs>
+      fields: Prisma.StaffInvitationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StaffInvitationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StaffInvitationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        findFirst: {
+          args: Prisma.StaffInvitationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StaffInvitationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        findMany: {
+          args: Prisma.StaffInvitationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>[]
+        }
+        create: {
+          args: Prisma.StaffInvitationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        createMany: {
+          args: Prisma.StaffInvitationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StaffInvitationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>[]
+        }
+        delete: {
+          args: Prisma.StaffInvitationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        update: {
+          args: Prisma.StaffInvitationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        deleteMany: {
+          args: Prisma.StaffInvitationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StaffInvitationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StaffInvitationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>[]
+        }
+        upsert: {
+          args: Prisma.StaffInvitationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffInvitationPayload>
+        }
+        aggregate: {
+          args: Prisma.StaffInvitationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStaffInvitation>
+        }
+        groupBy: {
+          args: Prisma.StaffInvitationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffInvitationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StaffInvitationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffInvitationCountAggregateOutputType> | number
         }
       }
     }
@@ -4572,7 +4797,10 @@ export const MembershipScalarFieldEnum = {
   tenantId: 'tenantId',
   role: 'role',
   outletId: 'outletId',
-  createdAt: 'createdAt'
+  status: 'status',
+  permissionsJson: 'permissionsJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type MembershipScalarFieldEnum = (typeof MembershipScalarFieldEnum)[keyof typeof MembershipScalarFieldEnum]
@@ -4594,6 +4822,54 @@ export const OutletScalarFieldEnum = {
 } as const
 
 export type OutletScalarFieldEnum = (typeof OutletScalarFieldEnum)[keyof typeof OutletScalarFieldEnum]
+
+
+export const StaffProfileScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  fullName: 'fullName',
+  phone: 'phone',
+  employeeCode: 'employeeCode',
+  jobTitle: 'jobTitle',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffProfileScalarFieldEnum = (typeof StaffProfileScalarFieldEnum)[keyof typeof StaffProfileScalarFieldEnum]
+
+
+export const OutletMemberScalarFieldEnum = {
+  id: 'id',
+  membershipId: 'membershipId',
+  outletId: 'outletId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type OutletMemberScalarFieldEnum = (typeof OutletMemberScalarFieldEnum)[keyof typeof OutletMemberScalarFieldEnum]
+
+
+export const StaffInvitationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  email: 'email',
+  fullName: 'fullName',
+  phone: 'phone',
+  role: 'role',
+  outletId: 'outletId',
+  outletIdsJson: 'outletIdsJson',
+  permissionsJson: 'permissionsJson',
+  tokenHash: 'tokenHash',
+  invitedBy: 'invitedBy',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffInvitationScalarFieldEnum = (typeof StaffInvitationScalarFieldEnum)[keyof typeof StaffInvitationScalarFieldEnum]
 
 
 export const RestaurantSettingScalarFieldEnum = {
@@ -5681,6 +5957,9 @@ export type GlobalOmitConfig = {
   tenant?: Prisma.TenantOmit
   membership?: Prisma.MembershipOmit
   outlet?: Prisma.OutletOmit
+  staffProfile?: Prisma.StaffProfileOmit
+  outletMember?: Prisma.OutletMemberOmit
+  staffInvitation?: Prisma.StaffInvitationOmit
   restaurantSetting?: Prisma.RestaurantSettingOmit
   outletWhatsAppConfig?: Prisma.OutletWhatsAppConfigOmit
   taxConfig?: Prisma.TaxConfigOmit

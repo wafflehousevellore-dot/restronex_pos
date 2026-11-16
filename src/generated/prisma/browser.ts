@@ -43,6 +43,21 @@ export type Membership = Prisma.MembershipModel
  */
 export type Outlet = Prisma.OutletModel
 /**
+ * Model StaffProfile
+ * 
+ */
+export type StaffProfile = Prisma.StaffProfileModel
+/**
+ * Model OutletMember
+ * 
+ */
+export type OutletMember = Prisma.OutletMemberModel
+/**
+ * Model StaffInvitation
+ * 
+ */
+export type StaffInvitation = Prisma.StaffInvitationModel
+/**
  * Model RestaurantSetting
  * 
  */

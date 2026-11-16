@@ -240,6 +240,8 @@ export type OutletWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Outlet"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   memberships?: Prisma.MembershipListRelationFilter
+  outletMembers?: Prisma.OutletMemberListRelationFilter
+  staffInvitations?: Prisma.StaffInvitationListRelationFilter
   tables?: Prisma.TableListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
@@ -269,6 +271,8 @@ export type OutletOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   memberships?: Prisma.MembershipOrderByRelationAggregateInput
+  outletMembers?: Prisma.OutletMemberOrderByRelationAggregateInput
+  staffInvitations?: Prisma.StaffInvitationOrderByRelationAggregateInput
   tables?: Prisma.TableOrderByRelationAggregateInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
@@ -302,6 +306,8 @@ export type OutletWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Outlet"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   memberships?: Prisma.MembershipListRelationFilter
+  outletMembers?: Prisma.OutletMemberListRelationFilter
+  staffInvitations?: Prisma.StaffInvitationListRelationFilter
   tables?: Prisma.TableListRelationFilter
   orders?: Prisma.OrderListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
@@ -366,6 +372,8 @@ export type OutletCreateInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -394,6 +402,8 @@ export type OutletUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -422,6 +432,8 @@ export type OutletUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -450,6 +462,8 @@ export type OutletUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -636,6 +650,36 @@ export type OutletUpdateOneWithoutMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutMembershipsInput, Prisma.OutletUpdateWithoutMembershipsInput>, Prisma.OutletUncheckedUpdateWithoutMembershipsInput>
 }
 
+export type OutletCreateNestedOneWithoutOutletMembersInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutOutletMembersInput, Prisma.OutletUncheckedCreateWithoutOutletMembersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutOutletMembersInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutOutletMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutOutletMembersInput, Prisma.OutletUncheckedCreateWithoutOutletMembersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutOutletMembersInput
+  upsert?: Prisma.OutletUpsertWithoutOutletMembersInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutOutletMembersInput, Prisma.OutletUpdateWithoutOutletMembersInput>, Prisma.OutletUncheckedUpdateWithoutOutletMembersInput>
+}
+
+export type OutletCreateNestedOneWithoutStaffInvitationsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutStaffInvitationsInput, Prisma.OutletUncheckedCreateWithoutStaffInvitationsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutStaffInvitationsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneWithoutStaffInvitationsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutStaffInvitationsInput, Prisma.OutletUncheckedCreateWithoutStaffInvitationsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutStaffInvitationsInput
+  upsert?: Prisma.OutletUpsertWithoutStaffInvitationsInput
+  disconnect?: Prisma.OutletWhereInput | boolean
+  delete?: Prisma.OutletWhereInput | boolean
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutStaffInvitationsInput, Prisma.OutletUpdateWithoutStaffInvitationsInput>, Prisma.OutletUncheckedUpdateWithoutStaffInvitationsInput>
+}
+
 export type OutletCreateNestedOneWithoutWhatsAppConfigInput = {
   create?: Prisma.XOR<Prisma.OutletCreateWithoutWhatsAppConfigInput, Prisma.OutletUncheckedCreateWithoutWhatsAppConfigInput>
   connectOrCreate?: Prisma.OutletCreateOrConnectWithoutWhatsAppConfigInput
@@ -819,6 +863,8 @@ export type OutletCreateWithoutTenantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -846,6 +892,8 @@ export type OutletUncheckedCreateWithoutTenantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -917,6 +965,8 @@ export type OutletCreateWithoutMembershipsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -944,6 +994,8 @@ export type OutletUncheckedCreateWithoutMembershipsInput = {
   openingHours?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -987,6 +1039,8 @@ export type OutletUpdateWithoutMembershipsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -1014,6 +1068,272 @@ export type OutletUncheckedUpdateWithoutMembershipsInput = {
   openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutOutletMembersInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutOutletMembersInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutOutletMembersInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutOutletMembersInput, Prisma.OutletUncheckedCreateWithoutOutletMembersInput>
+}
+
+export type OutletUpsertWithoutOutletMembersInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutOutletMembersInput, Prisma.OutletUncheckedUpdateWithoutOutletMembersInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutOutletMembersInput, Prisma.OutletUncheckedCreateWithoutOutletMembersInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutOutletMembersInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutOutletMembersInput, Prisma.OutletUncheckedUpdateWithoutOutletMembersInput>
+}
+
+export type OutletUpdateWithoutOutletMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutOutletMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutStaffInvitationsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutStaffInvitationsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutStaffInvitationsInput, Prisma.OutletUncheckedCreateWithoutStaffInvitationsInput>
+}
+
+export type OutletUpsertWithoutStaffInvitationsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutStaffInvitationsInput, Prisma.OutletUncheckedUpdateWithoutStaffInvitationsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutStaffInvitationsInput, Prisma.OutletUncheckedCreateWithoutStaffInvitationsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutStaffInvitationsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutStaffInvitationsInput, Prisma.OutletUncheckedUpdateWithoutStaffInvitationsInput>
+}
+
+export type OutletUpdateWithoutStaffInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -1042,6 +1362,8 @@ export type OutletCreateWithoutWhatsAppConfigInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -1069,6 +1391,8 @@ export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -1112,6 +1436,8 @@ export type OutletUpdateWithoutWhatsAppConfigInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -1139,6 +1465,8 @@ export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -1166,6 +1494,8 @@ export type OutletCreateWithoutTablesInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
@@ -1193,6 +1523,8 @@ export type OutletUncheckedCreateWithoutTablesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
@@ -1236,6 +1568,8 @@ export type OutletUpdateWithoutTablesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
@@ -1263,6 +1597,8 @@ export type OutletUncheckedUpdateWithoutTablesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
@@ -1290,6 +1626,8 @@ export type OutletCreateWithoutOrdersInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
@@ -1317,6 +1655,8 @@ export type OutletUncheckedCreateWithoutOrdersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
@@ -1360,6 +1700,8 @@ export type OutletUpdateWithoutOrdersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
@@ -1387,6 +1729,8 @@ export type OutletUncheckedUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
@@ -1414,6 +1758,8 @@ export type OutletCreateWithoutShiftsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -1441,6 +1787,8 @@ export type OutletUncheckedCreateWithoutShiftsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -1484,6 +1832,8 @@ export type OutletUpdateWithoutShiftsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -1511,6 +1861,8 @@ export type OutletUncheckedUpdateWithoutShiftsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -1538,6 +1890,8 @@ export type OutletCreateWithoutStockMovementsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
@@ -1565,6 +1919,8 @@ export type OutletUncheckedCreateWithoutStockMovementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
@@ -1608,6 +1964,8 @@ export type OutletUpdateWithoutStockMovementsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
@@ -1635,6 +1993,8 @@ export type OutletUncheckedUpdateWithoutStockMovementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
@@ -1662,6 +2022,8 @@ export type OutletCreateWithoutTokensInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -1689,6 +2051,8 @@ export type OutletUncheckedCreateWithoutTokensInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -1732,6 +2096,8 @@ export type OutletUpdateWithoutTokensInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -1759,6 +2125,8 @@ export type OutletUncheckedUpdateWithoutTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -1786,6 +2154,8 @@ export type OutletCreateWithoutReservationsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -1813,6 +2183,8 @@ export type OutletUncheckedCreateWithoutReservationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -1856,6 +2228,8 @@ export type OutletUpdateWithoutReservationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -1883,6 +2257,8 @@ export type OutletUncheckedUpdateWithoutReservationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -1910,6 +2286,8 @@ export type OutletCreateWithoutExpensesInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -1937,6 +2315,8 @@ export type OutletUncheckedCreateWithoutExpensesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -1980,6 +2360,8 @@ export type OutletUpdateWithoutExpensesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2007,6 +2389,8 @@ export type OutletUncheckedUpdateWithoutExpensesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2034,6 +2418,8 @@ export type OutletCreateWithoutDayEndsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -2061,6 +2447,8 @@ export type OutletUncheckedCreateWithoutDayEndsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -2104,6 +2492,8 @@ export type OutletUpdateWithoutDayEndsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2131,6 +2521,8 @@ export type OutletUncheckedUpdateWithoutDayEndsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2158,6 +2550,8 @@ export type OutletCreateWithoutQrSessionsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -2185,6 +2579,8 @@ export type OutletUncheckedCreateWithoutQrSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -2228,6 +2624,8 @@ export type OutletUpdateWithoutQrSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2255,6 +2653,8 @@ export type OutletUncheckedUpdateWithoutQrSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2282,6 +2682,8 @@ export type OutletCreateWithoutPrintersInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -2309,6 +2711,8 @@ export type OutletUncheckedCreateWithoutPrintersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -2352,6 +2756,8 @@ export type OutletUpdateWithoutPrintersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2379,6 +2785,8 @@ export type OutletUncheckedUpdateWithoutPrintersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2406,6 +2814,8 @@ export type OutletCreateWithoutPrintJobsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
   memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
@@ -2433,6 +2843,8 @@ export type OutletUncheckedCreateWithoutPrintJobsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
   tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
@@ -2476,6 +2888,8 @@ export type OutletUpdateWithoutPrintJobsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2503,6 +2917,8 @@ export type OutletUncheckedUpdateWithoutPrintJobsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2543,6 +2959,8 @@ export type OutletUpdateWithoutTenantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
@@ -2570,6 +2988,8 @@ export type OutletUncheckedUpdateWithoutTenantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
   tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
   orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
@@ -2605,6 +3025,8 @@ export type OutletUncheckedUpdateManyWithoutTenantInput = {
 
 export type OutletCountOutputType = {
   memberships: number
+  outletMembers: number
+  staffInvitations: number
   tables: number
   orders: number
   stockMovements: number
@@ -2620,6 +3042,8 @@ export type OutletCountOutputType = {
 
 export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | OutletCountOutputTypeCountMembershipsArgs
+  outletMembers?: boolean | OutletCountOutputTypeCountOutletMembersArgs
+  staffInvitations?: boolean | OutletCountOutputTypeCountStaffInvitationsArgs
   tables?: boolean | OutletCountOutputTypeCountTablesArgs
   orders?: boolean | OutletCountOutputTypeCountOrdersArgs
   stockMovements?: boolean | OutletCountOutputTypeCountStockMovementsArgs
@@ -2648,6 +3072,20 @@ export type OutletCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
  */
 export type OutletCountOutputTypeCountMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MembershipWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountOutletMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OutletMemberWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountStaffInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StaffInvitationWhereInput
 }
 
 /**
@@ -2743,6 +3181,8 @@ export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   memberships?: boolean | Prisma.Outlet$membershipsArgs<ExtArgs>
+  outletMembers?: boolean | Prisma.Outlet$outletMembersArgs<ExtArgs>
+  staffInvitations?: boolean | Prisma.Outlet$staffInvitationsArgs<ExtArgs>
   tables?: boolean | Prisma.Outlet$tablesArgs<ExtArgs>
   orders?: boolean | Prisma.Outlet$ordersArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Outlet$stockMovementsArgs<ExtArgs>
@@ -2809,6 +3249,8 @@ export type OutletOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type OutletInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   memberships?: boolean | Prisma.Outlet$membershipsArgs<ExtArgs>
+  outletMembers?: boolean | Prisma.Outlet$outletMembersArgs<ExtArgs>
+  staffInvitations?: boolean | Prisma.Outlet$staffInvitationsArgs<ExtArgs>
   tables?: boolean | Prisma.Outlet$tablesArgs<ExtArgs>
   orders?: boolean | Prisma.Outlet$ordersArgs<ExtArgs>
   stockMovements?: boolean | Prisma.Outlet$stockMovementsArgs<ExtArgs>
@@ -2835,6 +3277,8 @@ export type $OutletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     memberships: Prisma.$MembershipPayload<ExtArgs>[]
+    outletMembers: Prisma.$OutletMemberPayload<ExtArgs>[]
+    staffInvitations: Prisma.$StaffInvitationPayload<ExtArgs>[]
     tables: Prisma.$TablePayload<ExtArgs>[]
     orders: Prisma.$OrderPayload<ExtArgs>[]
     stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
@@ -3257,6 +3701,8 @@ export interface Prisma__OutletClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   memberships<T extends Prisma.Outlet$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  outletMembers<T extends Prisma.Outlet$outletMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$outletMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OutletMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  staffInvitations<T extends Prisma.Outlet$staffInvitationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$staffInvitationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StaffInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tables<T extends Prisma.Outlet$tablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   orders<T extends Prisma.Outlet$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stockMovements<T extends Prisma.Outlet$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3732,6 +4178,54 @@ export type Outlet$membershipsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.MembershipScalarFieldEnum | Prisma.MembershipScalarFieldEnum[]
+}
+
+/**
+ * Outlet.outletMembers
+ */
+export type Outlet$outletMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OutletMember
+   */
+  select?: Prisma.OutletMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OutletMember
+   */
+  omit?: Prisma.OutletMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutletMemberInclude<ExtArgs> | null
+  where?: Prisma.OutletMemberWhereInput
+  orderBy?: Prisma.OutletMemberOrderByWithRelationInput | Prisma.OutletMemberOrderByWithRelationInput[]
+  cursor?: Prisma.OutletMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OutletMemberScalarFieldEnum | Prisma.OutletMemberScalarFieldEnum[]
+}
+
+/**
+ * Outlet.staffInvitations
+ */
+export type Outlet$staffInvitationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StaffInvitation
+   */
+  select?: Prisma.StaffInvitationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StaffInvitation
+   */
+  omit?: Prisma.StaffInvitationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StaffInvitationInclude<ExtArgs> | null
+  where?: Prisma.StaffInvitationWhereInput
+  orderBy?: Prisma.StaffInvitationOrderByWithRelationInput | Prisma.StaffInvitationOrderByWithRelationInput[]
+  cursor?: Prisma.StaffInvitationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StaffInvitationScalarFieldEnum | Prisma.StaffInvitationScalarFieldEnum[]
 }
 
 /**
