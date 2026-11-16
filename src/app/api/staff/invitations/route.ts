@@ -12,23 +12,42 @@ function hashToken(token: string): string {
 }
 
 /**
- * GET /api/staff/invitations?token=...
- * Validates an invitation token and returns tenant and role metadata.
+ * GET /api/staff/invitations?token=... or ?email=...
+ * Validates an invitation token or retrieves active pending invitation for an authenticated email.
  */
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
-  if (!token) {
-    return NextResponse.json({ error: "Invitation token required" }, { status: 400 });
+  const email = req.nextUrl.searchParams.get("email");
+
+  if (!token && !email) {
+    return NextResponse.json({ error: "Invitation token or email required" }, { status: 400 });
   }
 
-  const tokenHash = hashToken(token.trim());
-  const invitation = await prisma.staffInvitation.findUnique({
-    where: { tokenHash },
-    include: {
-      tenant: { select: { id: true, name: true, slug: true, logoUrl: true } },
-      outlet: { select: { id: true, name: true } },
-    },
-  });
+  let invitation = null;
+  if (token) {
+    const tokenHash = hashToken(token.trim());
+    invitation = await prisma.staffInvitation.findUnique({
+      where: { tokenHash },
+      include: {
+        tenant: { select: { id: true, name: true, slug: true, logoUrl: true } },
+        outlet: { select: { id: true, name: true } },
+      },
+    });
+  } else if (email) {
+    invitation = await prisma.staffInvitation.findFirst({
+      where: {
+        email: email.trim().toLowerCase(),
+        acceptedAt: null,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        tenant: { select: { id: true, name: true, slug: true, logoUrl: true } },
+        outlet: { select: { id: true, name: true } },
+      },
+    });
+  }
 
   if (!invitation) {
     return NextResponse.json(
@@ -79,6 +98,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     valid: true,
+    token: invitation.rawToken || token || null,
     email: invitation.email,
     fullName: invitation.fullName,
     role: invitation.role,
@@ -134,7 +154,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const inviteUrl = `${proto}://${host}/staff/accept-invitation?token=${tokenToUse}`;
+      const inviteUrl = `${proto}://${host}/staff/accept-invitation/${tokenToUse}`;
 
       let emailSent = false;
       try {
@@ -217,7 +237,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const inviteUrl = `${proto}://${host}/staff/accept-invitation?token=${rawToken}`;
+    const inviteUrl = `${proto}://${host}/staff/accept-invitation/${rawToken}`;
 
     // Dispatch official email invitation via Clerk
     let emailSent = false;

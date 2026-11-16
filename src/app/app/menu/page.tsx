@@ -16,7 +16,9 @@ import {
   Plus,
   AlertCircle,
   CheckCircle2,
+  Layers,
 } from "lucide-react";
+import { ProductAddonManager } from "@/components/app/ProductAddonManager";
 
 interface MenuItemType {
   id: string;
@@ -29,6 +31,17 @@ interface MenuItemType {
   isSoldOut?: boolean;
   isActive?: boolean;
   category?: { id: string; name: string };
+  addonLinks?: Array<{
+    id: string;
+    addonGroupId: string;
+    addonGroup: {
+      id: string;
+      name: string;
+      selectionType: string;
+      isRequired: boolean;
+      options: Array<{ id: string; name: string; pricePaise: number }>;
+    };
+  }>;
 }
 
 interface CategoryType {
@@ -57,6 +70,7 @@ export default function MenuPage() {
     isVeg: boolean;
     description: string;
     imageUrl: string | null;
+    addonGroupIds: string[];
   }>({
     name: "",
     price: "",
@@ -64,6 +78,7 @@ export default function MenuPage() {
     isVeg: true,
     description: "",
     imageUrl: null,
+    addonGroupIds: [],
   });
   const [creatingItem, setCreatingItem] = useState(false);
 
@@ -77,6 +92,7 @@ export default function MenuPage() {
     description: string;
     imageUrl: string | null;
     isSoldOut: boolean;
+    addonGroupIds: string[];
   }>({
     name: "",
     price: "",
@@ -85,6 +101,7 @@ export default function MenuPage() {
     description: "",
     imageUrl: null,
     isSoldOut: false,
+    addonGroupIds: [],
   });
   const [savingEdit, setSavingEdit] = useState(false);
 
@@ -164,6 +181,7 @@ export default function MenuPage() {
           isVeg: newItem.isVeg,
           description: newItem.description.trim() || undefined,
           imageUrl: newItem.imageUrl || undefined,
+          addonGroupIds: newItem.addonGroupIds,
         }),
       });
 
@@ -175,6 +193,7 @@ export default function MenuPage() {
           isVeg: true,
           description: "",
           imageUrl: null,
+          addonGroupIds: [],
         });
         await load();
         setMsg({ text: "Item created successfully with image", type: "success" });
@@ -199,6 +218,7 @@ export default function MenuPage() {
       description: item.description || "",
       imageUrl: item.imageUrl || null,
       isSoldOut: !!item.isSoldOut,
+      addonGroupIds: item.addonLinks?.map((l: any) => l.addonGroupId) || [],
     });
   }
 
@@ -225,6 +245,7 @@ export default function MenuPage() {
           description: editForm.description.trim() || null,
           imageUrl: editForm.imageUrl || null,
           isSoldOut: editForm.isSoldOut,
+          addonGroupIds: editForm.addonGroupIds,
         }),
       });
 
@@ -497,6 +518,15 @@ export default function MenuPage() {
                 />
               </div>
 
+              {/* Product Add-on Groups Configuration */}
+              <div className="pt-2 border-t border-[#E5EBE7]">
+                <ProductAddonManager
+                  menuItemId={null}
+                  assignedGroupIds={newItem.addonGroupIds}
+                  onChangeAssignedGroupIds={(ids) => setNewItem({ ...newItem, addonGroupIds: ids })}
+                />
+              </div>
+
               <button
                 onClick={createItem}
                 disabled={creatingItem || !newItem.name.trim() || !newItem.categoryId}
@@ -622,6 +652,21 @@ export default function MenuPage() {
                             <p className="text-xs text-[#718078] mt-1 line-clamp-2 leading-relaxed">
                               {it.description}
                             </p>
+                          )}
+
+                          {/* Add-on Groups Badges */}
+                          {it.addonLinks && it.addonLinks.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {it.addonLinks.map((link) => (
+                                <span
+                                  key={link.id}
+                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-[#E8F5EE] text-[#16845B] border border-[#16845B]/20"
+                                >
+                                  <Layers className="w-2.5 h-2.5" />
+                                  {link.addonGroup?.name || "Add-on"}
+                                </span>
+                              ))}
+                            </div>
                           )}
                         </div>
 
@@ -781,6 +826,15 @@ export default function MenuPage() {
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                   rows={2}
                   className="mt-1 w-full rounded-xl border border-[#E5EBE7] bg-white p-2.5 text-sm text-[#172B25] focus:border-[#16845B] focus:outline-none"
+                />
+              </div>
+
+              {/* Product Add-on Groups Configuration */}
+              <div className="pt-2 border-t border-[#E5EBE7]">
+                <ProductAddonManager
+                  menuItemId={editingItem?.id}
+                  assignedGroupIds={editForm.addonGroupIds}
+                  onChangeAssignedGroupIds={(ids) => setEditForm({ ...editForm, addonGroupIds: ids })}
                 />
               </div>
             </div>

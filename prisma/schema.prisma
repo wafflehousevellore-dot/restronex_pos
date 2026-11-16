@@ -97,6 +97,9 @@ model Tenant {
   paymentRefunds PaymentRefund[]
   subscriptionNotifications SubscriptionNotification[]
   staffInvitations StaffInvitation[]
+  addonGroups   AddonGroup[]
+  addonOptions  AddonOption[]
+  productAddonGroups ProductAddonGroup[]
 }
 
 model Membership {
@@ -149,6 +152,7 @@ model Outlet {
   printJobs   PrintJob[]
   qrSessions  QrOrderingSession[]
   whatsAppConfig OutletWhatsAppConfig?
+  productAddonGroups ProductAddonGroup[]
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -315,6 +319,7 @@ model MenuItem {
   modifiers   MenuModifier[]
   orderItems  OrderItem[]
   recipe      Recipe?
+  addonLinks  ProductAddonGroup[]
   @@index([tenantId])
   @@index([categoryId])
   @@index([tenantId, isActive])
@@ -337,6 +342,86 @@ model MenuModifier {
   pricePaise Int @default(0)
   isActive  Boolean @default(true)
   item      MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model AddonGroup {
+  id              String              @id @default(cuid())
+  tenantId        String
+  name            String
+  description     String?
+  selectionType   String              @default("MULTIPLE") // "SINGLE" | "MULTIPLE"
+  minSelections   Int                 @default(0)
+  maxSelections   Int?
+  isRequired      Boolean             @default(false)
+  isActive        Boolean             @default(true)
+  sortOrder       Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @default(now()) @updatedAt
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  options         AddonOption[]
+  productLinks    ProductAddonGroup[]
+  orderItemAddons OrderItemAddon[]
+
+  @@index([tenantId])
+  @@index([tenantId, isActive])
+}
+
+model AddonOption {
+  id              String           @id @default(cuid())
+  tenantId        String
+  addonGroupId    String
+  name            String
+  pricePaise      Int              @default(0)
+  isDefault       Boolean          @default(false)
+  isActive        Boolean          @default(true)
+  sortOrder       Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now()) @updatedAt
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  addonGroup      AddonGroup       @relation(fields: [addonGroupId], references: [id], onDelete: Cascade)
+  orderItemAddons OrderItemAddon[]
+
+  @@index([tenantId])
+  @@index([addonGroupId])
+  @@index([addonGroupId, isActive])
+}
+
+model ProductAddonGroup {
+  id           String      @id @default(cuid())
+  tenantId     String
+  menuItemId   String
+  addonGroupId String
+  outletId     String?
+  isActive     Boolean     @default(true)
+  sortOrder    Int         @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  menuItem     MenuItem    @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  addonGroup   AddonGroup  @relation(fields: [addonGroupId], references: [id], onDelete: Cascade)
+  outlet       Outlet?     @relation(fields: [outletId], references: [id], onDelete: Cascade)
+
+  @@unique([menuItemId, addonGroupId, outletId])
+  @@index([menuItemId])
+  @@index([addonGroupId])
+  @@index([tenantId])
+}
+
+model OrderItemAddon {
+  id                 String       @id @default(cuid())
+  orderItemId        String
+  addonGroupId       String?
+  addonOptionId      String?
+  groupNameSnapshot  String
+  optionNameSnapshot String
+  pricePaiseSnapshot Int
+  quantity           Int          @default(1)
+  createdAt          DateTime     @default(now())
+  orderItem          OrderItem    @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  addonGroup         AddonGroup?  @relation(fields: [addonGroupId], references: [id], onDelete: SetNull)
+  addonOption        AddonOption? @relation(fields: [addonOptionId], references: [id], onDelete: SetNull)
+
+  @@index([orderItemId])
 }
 
 model Table {
@@ -434,6 +519,7 @@ model OrderItem {
   totalPaise  Int
   order       Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   menuItem    MenuItem @relation(fields: [menuItemId], references: [id])
+  addons      OrderItemAddon[]
   @@index([orderId])
   @@index([orderId, menuItemId])
 }

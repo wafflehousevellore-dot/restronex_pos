@@ -14,13 +14,58 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const { token, clerkUserId, email: bodyEmail } = body;
-    if (!token) {
-      return NextResponse.json({ error: "Invitation token required" }, { status: 400 });
-    }
 
     let user = await getAuthenticatedUser();
 
-    // Fallback 1: Authenticate via Clerk request state from Authorization header or cookies
+    // Strategy 1: Clerk verifyToken from Authorization header
+    const authHeader = req.headers.get("authorization") || "";
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+
+    if (!user && bearerToken) {
+      try {
+        const { verifyToken } = await import("@clerk/nextjs/server");
+        const payload: any = await verifyToken(bearerToken, {
+          secretKey: process.env.CLERK_SECRET_KEY,
+        });
+        if (payload?.sub) {
+          const clerkId = payload.sub;
+          const userEmail = (payload.email || payload.primary_email || bodyEmail || "").toLowerCase();
+          const userName = payload.name || (userEmail ? userEmail.split("@")[0] : "Staff Member");
+
+          let dbUser = await prisma.user.findFirst({
+            where: { OR: [{ clerkId }, ...(userEmail ? [{ email: userEmail }] : [])] },
+          });
+          if (dbUser) {
+            if (!dbUser.clerkId) {
+              dbUser = await prisma.user.update({
+                where: { id: dbUser.id },
+                data: { clerkId, name: userName },
+              });
+            }
+          } else {
+            dbUser = await prisma.user.create({
+              data: {
+                clerkId,
+                email: userEmail || `${clerkId}@clerk.local`,
+                name: userName,
+                role: "STAFF",
+              },
+            });
+          }
+          user = {
+            id: dbUser.id,
+            email: dbUser.email,
+            name: dbUser.name,
+            clerkUserId: clerkId,
+            isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+          };
+        }
+      } catch (jwtErr) {
+        console.warn("[Accept Invitation] verifyToken notice:", jwtErr);
+      }
+    }
+
+    // Strategy 2: Authenticate via Clerk request state from Authorization header or cookies
     if (!user) {
       try {
         const client = await clerkClient();
@@ -33,7 +78,7 @@ export async function POST(req: NextRequest) {
             const userName = clerkUser.fullName || userEmail.split("@")[0] || "Staff Member";
 
             let dbUser = await prisma.user.findFirst({
-              where: { OR: [{ clerkId: authedClerkId }, { email: userEmail }] },
+              where: { OR: [{ clerkId: authedClerkId }, ...(userEmail ? [{ email: userEmail }] : [])] },
             });
             if (dbUser) {
               if (!dbUser.clerkId) {
@@ -66,7 +111,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Fallback 2: Verify clerkUserId directly via Clerk API if provided by authenticated client
+    // Strategy 3: Verify clerkUserId directly via Clerk API if provided by authenticated client
     if (!user && clerkUserId) {
       try {
         const client = await clerkClient();
@@ -76,7 +121,7 @@ export async function POST(req: NextRequest) {
           const userName = clerkUser.fullName || userEmail.split("@")[0] || "Staff Member";
 
           let dbUser = await prisma.user.findFirst({
-            where: { OR: [{ clerkId: clerkUser.id }, { email: userEmail }] },
+            where: { OR: [{ clerkId: clerkUser.id }, ...(userEmail ? [{ email: userEmail }] : [])] },
           });
           if (dbUser) {
             if (!dbUser.clerkId) {
@@ -108,6 +153,38 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Strategy 4: If clerkUserId and bodyEmail are provided and match a pending invitation or existing user
+    if (!user && clerkUserId && bodyEmail) {
+      const normalizedEmail = bodyEmail.toLowerCase().trim();
+      let dbUser = await prisma.user.findFirst({
+        where: { OR: [{ clerkId: clerkUserId }, { email: normalizedEmail }] },
+      });
+      if (dbUser) {
+        if (!dbUser.clerkId) {
+          dbUser = await prisma.user.update({
+            where: { id: dbUser.id },
+            data: { clerkId: clerkUserId },
+          });
+        }
+      } else {
+        dbUser = await prisma.user.create({
+          data: {
+            clerkId: clerkUserId,
+            email: normalizedEmail,
+            name: normalizedEmail.split("@")[0] || "Staff Member",
+            role: "STAFF",
+          },
+        });
+      }
+      user = {
+        id: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        clerkUserId,
+        isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+      };
+    }
+
     if (!user) {
       return NextResponse.json(
         { error: "Please sign in to your Clerk account before accepting an invitation" },
@@ -115,15 +192,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const tokenHash = hashToken(token.trim());
+    let invitation = null;
+    if (token) {
+      const tokenHash = hashToken(token.trim());
+      invitation = await prisma.staffInvitation.findUnique({
+        where: { tokenHash },
+        include: {
+          tenant: true,
+          outlet: true,
+        },
+      });
+    }
 
-    const invitation = await prisma.staffInvitation.findUnique({
-      where: { tokenHash },
-      include: {
-        tenant: true,
-        outlet: true,
-      },
-    });
+    // Fallback: If token is missing/stripped by Clerk redirect, find active pending invitation for this user
+    if (!invitation && (user.email || bodyEmail)) {
+      const targetEmail = (user.email || bodyEmail).toLowerCase().trim();
+      invitation = await prisma.staffInvitation.findFirst({
+        where: {
+          email: targetEmail,
+          acceptedAt: null,
+          revokedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+        include: {
+          tenant: true,
+          outlet: true,
+        },
+      });
+    }
 
     if (!invitation) {
       return NextResponse.json(

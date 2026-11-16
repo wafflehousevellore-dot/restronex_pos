@@ -6,10 +6,10 @@ import Link from "next/link";
 import { Utensils, CheckCircle, AlertCircle, ArrowRight, ShieldCheck, Building2, User } from "lucide-react";
 import { useUser, useAuth, SignIn } from "@clerk/nextjs";
 
-function AcceptInvitationContent() {
+function AcceptInvitationContent({ initialToken }: { initialToken?: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const urlToken = searchParams.get("token") || "";
+  const urlToken = initialToken || searchParams.get("token") || "";
   const { isSignedIn, user, isLoaded } = useUser();
   const { getToken } = useAuth();
 
@@ -39,8 +39,38 @@ function AcceptInvitationContent() {
     if (activeToken) {
       setTokenInput(activeToken);
       verifyToken(activeToken);
+      return;
     }
-  }, [urlToken]);
+
+    // Auto-detect invitation by email when user is signed into Clerk
+    if (isLoaded && isSignedIn && user?.primaryEmailAddress?.emailAddress) {
+      verifyByEmail(user.primaryEmailAddress.emailAddress);
+    }
+  }, [urlToken, isLoaded, isSignedIn, user?.primaryEmailAddress?.emailAddress]);
+
+  async function verifyByEmail(email: string) {
+    if (!email.trim()) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/staff/invitations?email=${encodeURIComponent(email.trim().toLowerCase())}`);
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setInvitation(data);
+        if (data.token) {
+          setTokenInput(data.token);
+          try {
+            sessionStorage.setItem("restronex_invite_token", data.token);
+            localStorage.setItem("restronex_invite_token", data.token);
+          } catch {}
+        }
+      }
+    } catch {
+      // ignore network errors for background email detection
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function verifyToken(t: string) {
     if (!t.trim()) return;
@@ -63,7 +93,7 @@ function AcceptInvitationContent() {
   }
 
   async function handleAccept() {
-    let tokenToUse = tokenInput.trim() || urlToken.trim();
+    let tokenToUse = tokenInput.trim() || urlToken.trim() || invitation?.token || "";
     if (!tokenToUse) {
       try {
         tokenToUse =
@@ -71,11 +101,6 @@ function AcceptInvitationContent() {
           localStorage.getItem("restronex_invite_token") ||
           "";
       } catch {}
-    }
-
-    if (!tokenToUse) {
-      setError("Invitation token missing. Please use your full invitation link.");
-      return;
     }
 
     setAccepting(true);
@@ -93,9 +118,9 @@ function AcceptInvitationContent() {
           ...(clerkJwt ? { Authorization: `Bearer ${clerkJwt}` } : {}),
         },
         body: JSON.stringify({
-          token: tokenToUse,
+          token: tokenToUse || null,
           clerkUserId: user?.id || null,
-          email: user?.primaryEmailAddress?.emailAddress || null,
+          email: user?.primaryEmailAddress?.emailAddress || invitation?.email || null,
         }),
       });
       const data = await res.json();
@@ -273,10 +298,10 @@ function AcceptInvitationContent() {
   );
 }
 
-export default function AcceptInvitationPage() {
+export default function AcceptInvitationPage({ initialToken }: { initialToken?: string } = {}) {
   return (
     <Suspense fallback={<div className="min-h-screen bg-[#F8FAF9] flex items-center justify-center text-sm text-[#4A5D55]">Loading invitation...</div>}>
-      <AcceptInvitationContent />
+      <AcceptInvitationContent initialToken={initialToken} />
     </Suspense>
   );
 }

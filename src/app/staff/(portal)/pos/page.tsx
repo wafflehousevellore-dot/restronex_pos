@@ -77,7 +77,23 @@ export default async function StaffPOSPage() {
     }),
     prisma.menuItem.findMany({
       where: { tenantId, isActive: true },
-      include: { category: true },
+      include: {
+        category: true,
+        addonLinks: {
+          where: { isActive: true },
+          include: {
+            addonGroup: {
+              include: {
+                options: {
+                  where: { isActive: true },
+                  orderBy: { sortOrder: "asc" },
+                },
+              },
+            },
+          },
+          orderBy: { sortOrder: "asc" },
+        },
+      },
       orderBy: { name: "asc" },
     }),
   ]);
@@ -92,6 +108,7 @@ export default async function StaffPOSPage() {
     description: m.description,
     isSoldOut: m.isSoldOut,
     category: m.category ? { name: m.category.name } : undefined,
+    addonLinks: m.addonLinks,
   }));
 
   const tableData = tables.map((t) => ({

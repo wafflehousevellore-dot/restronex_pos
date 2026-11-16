@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
 import { orderCreateSchema } from "@/lib/validators";
 import { calcOrderTotals } from "@/lib/money";
+import { validateAndPriceCartItems } from "@/lib/addon-pricing";
 import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
 import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
@@ -105,13 +106,27 @@ export async function POST(req: NextRequest) {
   const outlet = await prisma.outlet.findFirst({ where: { id: d.outletId, tenantId } });
   if (!outlet) return NextResponse.json({ error: "Invalid outlet for tenant" }, { status: 400 });
 
-  // Calculate accurate minor-unit totals (paise)
-  const lineTotals = d.items.map((it) => {
-    const mods = (it as any).modifiers?.reduce((s: number, m: any) => s + (m.pricePaise || 0), 0) || 0;
-    return (it.unitPricePaise + mods) * it.quantity;
+  // Authoritative Server-Side Product & Add-on Pricing Verification
+  const pricingResult = await validateAndPriceCartItems({
+    tenantId,
+    outletId: d.outletId,
+    items: d.items.map((it) => ({
+      menuItemId: it.menuItemId,
+      quantity: it.quantity,
+      variantName: (it as any).variantName,
+      notes: (it as any).notes,
+      selectedAddons: (it as any).selectedAddons || (it as any).modifiers,
+      modifiers: (it as any).modifiers,
+    })),
   });
+
+  if (!pricingResult.ok) {
+    return NextResponse.json({ error: pricingResult.error || "Order validation failed" }, { status: 400 });
+  }
+
+  // Calculate accurate minor-unit totals (paise) using trusted database prices
   const totals = calcOrderTotals({
-    lineTotalsPaise: lineTotals,
+    lineTotalsPaise: pricingResult.items.map((it) => it.lineTotalPaise),
     discountPaise: d.discountPaise || 0,
     taxRateBps: 1800, // 9% CGST + 9% SGST = 18%
     serviceChargeBps: 0,
@@ -161,23 +176,37 @@ export async function POST(req: NextRequest) {
         },
       });
 
-    // 2. High-performance batch create of all order items in single SQL query
-    const orderItemsData = d.items.map((it) => {
-      const modsPrice = (it as any).modifiers?.reduce((s: number, m: any) => s + (m.pricePaise || 0), 0) || 0;
-      return {
-        orderId: o.id,
-        menuItemId: it.menuItemId,
-        name: it.name,
-        quantity: it.quantity,
-        unitPricePaise: it.unitPricePaise,
-        variantName: (it as any).variantName || null,
-        modifiersJson: (it as any).modifiers ? JSON.stringify((it as any).modifiers) : null,
-        notes: (it as any).notes || null,
-        totalPaise: (it.unitPricePaise + modsPrice) * it.quantity,
-        kotStatus: "SENT",
-      };
-    });
-    await tx.orderItem.createMany({ data: orderItemsData });
+    // 2. High-performance create of order items with immutable add-on snapshots
+    for (const it of pricingResult.items) {
+      const orderItem = await tx.orderItem.create({
+        data: {
+          orderId: o.id,
+          menuItemId: it.menuItemId,
+          name: it.name,
+          quantity: it.quantity,
+          unitPricePaise: it.unitPricePaise,
+          variantName: it.variantName || null,
+          modifiersJson: it.modifiersJson || null,
+          notes: it.notes || null,
+          totalPaise: it.lineTotalPaise,
+          kotStatus: "SENT",
+        },
+      });
+
+      if (it.addons && it.addons.length > 0) {
+        await tx.orderItemAddon.createMany({
+          data: it.addons.map((a) => ({
+            orderItemId: orderItem.id,
+            addonGroupId: a.groupId,
+            addonOptionId: a.optionId,
+            groupNameSnapshot: a.groupName,
+            optionNameSnapshot: a.name,
+            pricePaiseSnapshot: a.pricePaise,
+            quantity: a.quantity || 1,
+          })),
+        });
+      }
+    }
 
     // 3. Create Kitchen Tickets (KOT)
     await tx.kitchenTicket.create({

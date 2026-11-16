@@ -497,14 +497,6 @@ export type CashierShiftUncheckedUpdateManyWithoutOutletNestedInput = {
   deleteMany?: Prisma.CashierShiftScalarWhereInput | Prisma.CashierShiftScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CashierShiftCreateWithoutOutletInput = {
   id?: string
   tenantId: string

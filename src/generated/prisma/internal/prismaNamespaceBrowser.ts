@@ -66,6 +66,10 @@ export const ModelName = {
   MenuItem: 'MenuItem',
   MenuVariant: 'MenuVariant',
   MenuModifier: 'MenuModifier',
+  AddonGroup: 'AddonGroup',
+  AddonOption: 'AddonOption',
+  ProductAddonGroup: 'ProductAddonGroup',
+  OrderItemAddon: 'OrderItemAddon',
   Table: 'Table',
   Order: 'Order',
   OrderItem: 'OrderItem',
@@ -395,6 +399,70 @@ export const MenuModifierScalarFieldEnum = {
 } as const
 
 export type MenuModifierScalarFieldEnum = (typeof MenuModifierScalarFieldEnum)[keyof typeof MenuModifierScalarFieldEnum]
+
+
+export const AddonGroupScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  name: 'name',
+  description: 'description',
+  selectionType: 'selectionType',
+  minSelections: 'minSelections',
+  maxSelections: 'maxSelections',
+  isRequired: 'isRequired',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AddonGroupScalarFieldEnum = (typeof AddonGroupScalarFieldEnum)[keyof typeof AddonGroupScalarFieldEnum]
+
+
+export const AddonOptionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  addonGroupId: 'addonGroupId',
+  name: 'name',
+  pricePaise: 'pricePaise',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AddonOptionScalarFieldEnum = (typeof AddonOptionScalarFieldEnum)[keyof typeof AddonOptionScalarFieldEnum]
+
+
+export const ProductAddonGroupScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  menuItemId: 'menuItemId',
+  addonGroupId: 'addonGroupId',
+  outletId: 'outletId',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductAddonGroupScalarFieldEnum = (typeof ProductAddonGroupScalarFieldEnum)[keyof typeof ProductAddonGroupScalarFieldEnum]
+
+
+export const OrderItemAddonScalarFieldEnum = {
+  id: 'id',
+  orderItemId: 'orderItemId',
+  addonGroupId: 'addonGroupId',
+  addonOptionId: 'addonOptionId',
+  groupNameSnapshot: 'groupNameSnapshot',
+  optionNameSnapshot: 'optionNameSnapshot',
+  pricePaiseSnapshot: 'pricePaiseSnapshot',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderItemAddonScalarFieldEnum = (typeof OrderItemAddonScalarFieldEnum)[keyof typeof OrderItemAddonScalarFieldEnum]
 
 
 export const TableScalarFieldEnum = {

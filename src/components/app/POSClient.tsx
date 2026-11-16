@@ -10,7 +10,7 @@ import {
   discoverBluetoothPrinter,
   getOrRestoreBleDevice,
 } from "@/lib/client-print";
-import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed, Bluetooth } from "lucide-react";
+import { Tag, Check, X, CreditCard, Banknote, QrCode, Printer, MessageSquare, Receipt, Share2, Sparkles, ShieldAlert, UtensilsCrossed, Bluetooth, Edit2, Layers, AlertCircle } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import Link from "next/link";
 
@@ -21,7 +21,26 @@ function createCheckoutIdempotencyKey(): string {
   return `pos_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-type MenuItem = {
+export type AddonOption = {
+  id: string;
+  name: string;
+  pricePaise: number;
+  isDefault?: boolean;
+  isActive?: boolean;
+};
+
+export type AddonGroup = {
+  id: string;
+  name: string;
+  description?: string | null;
+  selectionType: "SINGLE" | "MULTIPLE" | string;
+  minSelections: number;
+  maxSelections?: number | null;
+  isRequired: boolean;
+  options: AddonOption[];
+};
+
+export type MenuItem = {
   id: string;
   name: string;
   pricePaise: number;
@@ -31,7 +50,33 @@ type MenuItem = {
   description?: string | null;
   isSoldOut?: boolean;
   category?: { name: string };
+  addonLinks?: Array<{
+    id: string;
+    addonGroupId: string;
+    addonGroup: AddonGroup;
+  }>;
 };
+
+export type POSCartAddon = {
+  groupId: string;
+  groupName: string;
+  optionId: string;
+  name: string;
+  pricePaise: number;
+};
+
+export type POSCartItem = {
+  cartItemId: string;
+  menuItemId: string;
+  name: string;
+  quantity: number;
+  unitPricePaise: number;
+  selectedAddons: POSCartAddon[];
+  effectiveUnitPricePaise: number;
+  totalPaise: number;
+  notes?: string;
+};
+
 type Table = {
   id: string;
   number: string;
@@ -52,7 +97,12 @@ export type ReceiptData = {
   customerName?: string;
   customerPhone?: string;
   paymentMethod: string;
-  items: { name: string; quantity: number; unitPricePaise: number }[];
+  items: {
+    name: string;
+    quantity: number;
+    unitPricePaise: number;
+    modifiers?: { name: string; pricePaise: number }[];
+  }[];
   subtotalPaise: number;
   discountPaise: number;
   cgstPaise: number;
@@ -72,10 +122,13 @@ function buildWhatsAppShareUrl(receipt: ReceiptData): string {
   const to = digits.length === 10 ? `91${digits}` : digits;
   const restaurant = receipt.outletName || "Waffle Plum House";
   const itemsText = (receipt.items || [])
-    .map(
-      (item) =>
-        `• ${item.name} x${item.quantity} — ₹${((item.unitPricePaise * item.quantity) / 100).toFixed(2)}`
-    )
+    .map((item) => {
+      const mods =
+        item.modifiers && item.modifiers.length > 0
+          ? `\n   ${item.modifiers.map((m) => `+ ${m.name}`).join(", ")}`
+          : "";
+      return `• ${item.name} x${item.quantity} — ₹${((item.unitPricePaise * item.quantity) / 100).toFixed(2)}${mods}`;
+    })
     .join("\n");
   const pdfUrl = receipt.invoicePdfUrl
     ? receipt.invoicePdfUrl.startsWith("http")
@@ -152,9 +205,19 @@ export default function POSClient({
   const [selectedOutlet, setSelectedOutlet] = useState<string>(initialOutlets[0]?.id || "");
   const [selectedTable, setSelectedTable] = useState<string>("");
   const [orderType, setOrderType] = useState<"DINE_IN" | "TAKEAWAY" | "DELIVERY">("DINE_IN");
-  const [cart, setCart] = useState<
-    { menuItemId: string; name: string; quantity: number; unitPricePaise: number }[]
-  >([]);
+  const [cart, setCart] = useState<POSCartItem[]>([]);
+
+  // Product Add-on Customization Modal State
+  const [customizingItem, setCustomizingItem] = useState<{
+    product: MenuItem;
+    editingCartItemId: string | null;
+    initialQuantity: number;
+    step: "PROMPT" | "SELECTING";
+  } | null>(null);
+
+  // Group selections: Map of groupId -> array of selected optionIds
+  const [modalSelections, setModalSelections] = useState<Record<string, string[]>>({});
+  const [modalValidationNotice, setModalValidationNotice] = useState<string | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [countryCode, setCountryCode] = useState("+91");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -247,12 +310,26 @@ export default function POSClient({
       const ord = Array.isArray(orders) ? orders[0] : orders;
       if (ord && Array.isArray(ord.items)) {
         setCart(
-          ord.items.map((it: any) => ({
-            menuItemId: it.menuItemId,
-            name: it.name,
-            quantity: it.quantity,
-            unitPricePaise: it.unitPricePaise,
-          }))
+          ord.items.map((it: any, idx: number) => {
+            let parsedMods: POSCartAddon[] = [];
+            if (it.modifiersJson) {
+              try {
+                parsedMods = JSON.parse(it.modifiersJson);
+              } catch {}
+            }
+            const modsPrice = parsedMods.reduce((s, m) => s + (m.pricePaise || 0), 0);
+            return {
+              cartItemId: `ord_item_${it.id || idx}_${Date.now()}`,
+              menuItemId: it.menuItemId,
+              name: it.name,
+              quantity: it.quantity,
+              unitPricePaise: it.unitPricePaise,
+              selectedAddons: parsedMods,
+              effectiveUnitPricePaise: it.unitPricePaise + modsPrice,
+              totalPaise: (it.unitPricePaise + modsPrice) * it.quantity,
+              notes: it.notes || undefined,
+            };
+          })
         );
         if (ord.customerName && ord.customerName !== "Table Guest") {
           setCustomerName(ord.customerName);
@@ -322,36 +399,268 @@ export default function POSClient({
     [items, categoryFilter]
   );
 
-  function addToCart(it: MenuItem) {
-    if (!it?.id || typeof it.pricePaise !== "number") return;
+  // Helper to compare add-on configurations for merging identical cart lines
+  function areAddonsIdentical(a: POSCartAddon[], b: POSCartAddon[]): boolean {
+    if ((!a || a.length === 0) && (!b || b.length === 0)) return true;
+    if (!a || !b || a.length !== b.length) return false;
+    const aIds = [...a.map((x) => x.optionId)].sort();
+    const bIds = [...b.map((x) => x.optionId)].sort();
+    return aIds.every((id, idx) => id === bIds[idx]);
+  }
+
+  // Case B: Direct add for products with NO add-ons
+  function addDirectToCart(it: MenuItem) {
+    if (!it?.id || typeof it.pricePaise !== "number" || it.isSoldOut) return;
     checkoutKeyRef.current = "";
     setCart((c) => {
-      const idx = c.findIndex((x) => x.menuItemId === it.id);
+      const idx = c.findIndex((x) => x.menuItemId === it.id && (!x.selectedAddons || x.selectedAddons.length === 0));
       if (idx >= 0) {
         const copy = [...c];
-        copy[idx] = { ...copy[idx], quantity: (copy[idx].quantity || 0) + 1 };
+        const newQty = (copy[idx].quantity || 0) + 1;
+        copy[idx] = {
+          ...copy[idx],
+          quantity: newQty,
+          totalPaise: copy[idx].effectiveUnitPricePaise * newQty,
+        };
         return copy;
       }
-      return [...c, { menuItemId: it.id, name: it.name, quantity: 1, unitPricePaise: it.pricePaise }];
+      const newItem: POSCartItem = {
+        cartItemId: `cart_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        menuItemId: it.id,
+        name: it.name,
+        quantity: 1,
+        unitPricePaise: it.pricePaise,
+        selectedAddons: [],
+        effectiveUnitPricePaise: it.pricePaise,
+        totalPaise: it.pricePaise,
+      };
+      return [...c, newItem];
     });
     setMsg(null);
   }
 
-  function decQty(idx: number) {
+  // Add customized item or update existing cart line
+  function addCustomizedToCart(
+    product: MenuItem,
+    selectedAddons: POSCartAddon[],
+    quantity: number = 1,
+    editingCartItemId: string | null = null
+  ) {
     checkoutKeyRef.current = "";
+    const addonsSum = selectedAddons.reduce((s, a) => s + (a.pricePaise || 0), 0);
+    const effectiveUnitPricePaise = product.pricePaise + addonsSum;
+
     setCart((c) => {
-      const copy = [...c];
-      const q = Math.max(1, (copy[idx]?.quantity || 1) - 1);
-      copy[idx] = { ...copy[idx], quantity: q };
-      return copy;
+      // Case C: If editing an existing cart line, update in-place without duplicating
+      if (editingCartItemId) {
+        return c.map((line) => {
+          if (line.cartItemId === editingCartItemId) {
+            return {
+              ...line,
+              selectedAddons,
+              effectiveUnitPricePaise,
+              totalPaise: effectiveUnitPricePaise * line.quantity,
+            };
+          }
+          return line;
+        });
+      }
+
+      // Check if identical item with identical add-ons already in cart (merging rule)
+      const existingIdx = c.findIndex(
+        (x) => x.menuItemId === product.id && areAddonsIdentical(x.selectedAddons || [], selectedAddons)
+      );
+
+      if (existingIdx >= 0) {
+        const copy = [...c];
+        const newQty = copy[existingIdx].quantity + quantity;
+        copy[existingIdx] = {
+          ...copy[existingIdx],
+          quantity: newQty,
+          totalPaise: effectiveUnitPricePaise * newQty,
+        };
+        return copy;
+      }
+
+      // Add as new cart line
+      const newItem: POSCartItem = {
+        cartItemId: `cart_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        menuItemId: product.id,
+        name: product.name,
+        quantity,
+        unitPricePaise: product.pricePaise,
+        selectedAddons,
+        effectiveUnitPricePaise,
+        totalPaise: effectiveUnitPricePaise * quantity,
+      };
+      return [...c, newItem];
     });
+    setMsg(null);
+  }
+
+  // Product Selection Entry Point (Phase 4)
+  function handleProductClick(it: MenuItem) {
+    if (!it?.id || it.isSoldOut) return;
+
+    const activeGroups = (it.addonLinks || [])
+      .map((l) => l.addonGroup)
+      .filter((g) => g && g.options && g.options.length > 0);
+
+    // CASE B: Product has NO add-ons -> direct insertion
+    if (activeGroups.length === 0) {
+      addDirectToCart(it);
+      return;
+    }
+
+    // CASE A: Product HAS add-ons -> open customization popup
+    const initialSelections: Record<string, string[]> = {};
+    activeGroups.forEach((g) => {
+      const defaults = g.options.filter((o) => o.isDefault).map((o) => o.id);
+      if (defaults.length > 0) {
+        initialSelections[g.id] = defaults;
+      }
+    });
+
+    const hasMandatoryGroup = activeGroups.some((g) => g.isRequired || g.minSelections > 0);
+
+    setModalSelections(initialSelections);
+    setModalValidationNotice(null);
+    setCustomizingItem({
+      product: it,
+      editingCartItemId: null,
+      initialQuantity: 1,
+      // If any group is mandatory, open straight to SELECTING so cashier cannot bypass required choices
+      step: hasMandatoryGroup ? "SELECTING" : "PROMPT",
+    });
+  }
+
+  // Cashier clicks "NO – Continue Without Add-ons"
+  function handleSelectNoAddons() {
+    if (!customizingItem) return;
+    const { product } = customizingItem;
+    const activeGroups = (product.addonLinks || [])
+      .map((l) => l.addonGroup)
+      .filter((g) => g && g.options && g.options.length > 0);
+
+    const hasMandatory = activeGroups.some((g) => g.isRequired || g.minSelections > 0);
+    if (hasMandatory) {
+      // Mandatory group exists: Cannot bypass! Show selection checklist and alert
+      setCustomizingItem({ ...customizingItem, step: "SELECTING" });
+      setModalValidationNotice("This product requires mandatory customizations. Please select required options.");
+      return;
+    }
+
+    // All groups are optional: add base product to cart
+    addCustomizedToCart(product, [], 1, null);
+    setCustomizingItem(null);
+  }
+
+  // Cashier clicks "YES – Add Extras"
+  function handleSelectYesAddons() {
+    if (!customizingItem) return;
+    setCustomizingItem({ ...customizingItem, step: "SELECTING" });
+  }
+
+  // Case C: Edit Existing Cart Item
+  function handleEditCartItem(line: POSCartItem) {
+    const product = items.find((i) => i.id === line.menuItemId);
+    if (!product) return;
+
+    const initialSelections: Record<string, string[]> = {};
+    for (const addon of line.selectedAddons || []) {
+      if (!initialSelections[addon.groupId]) {
+        initialSelections[addon.groupId] = [];
+      }
+      initialSelections[addon.groupId].push(addon.optionId);
+    }
+
+    setModalSelections(initialSelections);
+    setModalValidationNotice(null);
+    setCustomizingItem({
+      product,
+      editingCartItemId: line.cartItemId,
+      initialQuantity: line.quantity,
+      step: "SELECTING",
+    });
+  }
+
+  // Confirm and Add to Cart from Customization Modal
+  function handleSaveCustomization() {
+    if (!customizingItem) return;
+    const { product, editingCartItemId } = customizingItem;
+    const activeGroups = (product.addonLinks || [])
+      .map((l) => l.addonGroup)
+      .filter((g) => g && g.options && g.options.length > 0);
+
+    // Validate all group rules
+    for (const group of activeGroups) {
+      const selected = modalSelections[group.id] || [];
+      const count = selected.length;
+
+      if (group.isRequired && count === 0) {
+        setModalValidationNotice(`Please select required option(s) for "${group.name}".`);
+        return;
+      }
+      if (group.minSelections > 0 && count < group.minSelections) {
+        setModalValidationNotice(`Please select at least ${group.minSelections} option(s) for "${group.name}".`);
+        return;
+      }
+      if (group.selectionType === "SINGLE" && count > 1) {
+        setModalValidationNotice(`Only 1 choice permitted for "${group.name}".`);
+        return;
+      }
+      if (group.maxSelections && count > group.maxSelections) {
+        setModalValidationNotice(`Maximum ${group.maxSelections} choice(s) permitted for "${group.name}".`);
+        return;
+      }
+    }
+
+    // Build selected add-on list
+    const finalAddons: POSCartAddon[] = [];
+    for (const group of activeGroups) {
+      const selectedOptionIds = modalSelections[group.id] || [];
+      for (const optId of selectedOptionIds) {
+        const opt = group.options.find((o) => o.id === optId);
+        if (opt) {
+          finalAddons.push({
+            groupId: group.id,
+            groupName: group.name,
+            optionId: opt.id,
+            name: opt.name,
+            pricePaise: opt.pricePaise,
+          });
+        }
+      }
+    }
+
+    addCustomizedToCart(product, finalAddons, customizingItem.initialQuantity || 1, editingCartItemId);
+    setCustomizingItem(null);
   }
 
   function incQty(idx: number) {
     checkoutKeyRef.current = "";
     setCart((c) => {
       const copy = [...c];
-      copy[idx] = { ...copy[idx], quantity: (copy[idx].quantity || 0) + 1 };
+      const newQty = (copy[idx].quantity || 0) + 1;
+      copy[idx] = {
+        ...copy[idx],
+        quantity: newQty,
+        totalPaise: (copy[idx].effectiveUnitPricePaise || copy[idx].unitPricePaise) * newQty,
+      };
+      return copy;
+    });
+  }
+
+  function decQty(idx: number) {
+    checkoutKeyRef.current = "";
+    setCart((c) => {
+      const copy = [...c];
+      const newQty = Math.max(1, (copy[idx]?.quantity || 1) - 1);
+      copy[idx] = {
+        ...copy[idx],
+        quantity: newQty,
+        totalPaise: (copy[idx].effectiveUnitPricePaise || copy[idx].unitPricePaise) * newQty,
+      };
       return copy;
     });
   }
@@ -362,7 +671,7 @@ export default function POSClient({
   }
 
   const subtotal = cart.reduce(
-    (s, c) => s + (Number(c.unitPricePaise) || 0) * (Number(c.quantity) || 0),
+    (s, c) => s + (Number(c.effectiveUnitPricePaise || c.unitPricePaise) || 0) * (Number(c.quantity) || 0),
     0
   );
   const couponDiscountPaise = appliedCoupon ? Math.min(appliedCoupon.discountPaise, subtotal) : 0;
@@ -499,6 +808,18 @@ export default function POSClient({
             name: c.name,
             quantity: c.quantity,
             unitPricePaise: c.unitPricePaise,
+            selectedAddons: (c.selectedAddons || []).map((a) => ({
+              optionId: a.optionId,
+              groupId: a.groupId,
+              name: a.name,
+              pricePaise: a.pricePaise,
+            })),
+            modifiers: (c.selectedAddons || []).map((a) => ({
+              optionId: a.optionId,
+              groupId: a.groupId,
+              name: a.name,
+              pricePaise: a.pricePaise,
+            })),
           })),
           discountPaise,
           loyaltyPointsRedeemed: redeemPoints ? maxPointsCanRedeem : 0,
@@ -557,7 +878,11 @@ export default function POSClient({
         items: cart.map((c) => ({
           name: c.name,
           quantity: c.quantity,
-          unitPricePaise: c.unitPricePaise,
+          unitPricePaise: c.effectiveUnitPricePaise || c.unitPricePaise,
+          modifiers: (c.selectedAddons || []).map((a) => ({
+            name: a.name,
+            pricePaise: a.pricePaise,
+          })),
         })),
         subtotalPaise: subtotal,
         discountPaise,
@@ -985,7 +1310,7 @@ export default function POSClient({
                 {filtered.map((it) => (
                   <button
                     key={it.id}
-                    onClick={() => !it.isSoldOut && addToCart(it)}
+                    onClick={() => !it.isSoldOut && handleProductClick(it)}
                     disabled={it.isSoldOut}
                     className={`rounded-2xl border border-[#E5EBE7] bg-white text-left transition group overflow-hidden flex flex-col justify-between ${it.isSoldOut
                         ? "opacity-60 cursor-not-allowed bg-gray-50"
@@ -1055,10 +1380,16 @@ export default function POSClient({
                         <span className="text-[#718078] truncate max-w-[80px]">
                           {it.category?.name || "Menu"}
                         </span>
-                        {!it.isSoldOut && (
-                          <span className="text-[#16845B] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                            + Add
+                        {it.addonLinks && it.addonLinks.length > 0 ? (
+                          <span className="text-[#16845B] font-bold text-[10px] bg-[#E8F5EE] px-1.5 py-0.5 rounded border border-[#16845B]/20">
+                            + Extras
                           </span>
+                        ) : (
+                          !it.isSoldOut && (
+                            <span className="text-[#16845B] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                              + Add
+                            </span>
+                          )
                         )}
                       </div>
                     </div>
@@ -1101,19 +1432,62 @@ export default function POSClient({
               <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
                 {cart.map((c, i) => (
                   <div
-                    key={`${c.menuItemId}-${i}`}
-                    className="flex items-center justify-between rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] px-3 py-2.5"
+                    key={c.cartItemId || `${c.menuItemId}-${i}`}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-3 gap-2"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-bold text-[#172B25] truncate" title={c.name}>
-                        {c.name}
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-[#172B25] truncate" title={c.name}>
+                          {c.name}
+                        </span>
+                        <span className="text-xs font-black text-[#16845B] sm:hidden">
+                          {formatINR((c.effectiveUnitPricePaise || c.unitPricePaise) * c.quantity)}
+                        </span>
                       </div>
-                      <div className="text-xs text-[#718078]">
-                        {formatINR(c.unitPricePaise)} × {c.quantity} ={" "}
-                        {formatINR((c.unitPricePaise || 0) * c.quantity)}
+
+                      {/* Selected Add-ons List */}
+                      {c.selectedAddons && c.selectedAddons.length > 0 && (
+                        <div className="mt-1 space-y-0.5 pl-2 border-l-2 border-[#16845B]/30">
+                          {c.selectedAddons.map((addon, aIdx) => (
+                            <div key={aIdx} className="text-[11px] text-[#16845B] font-medium flex items-center justify-between">
+                              <span>+ {addon.name}</span>
+                              {addon.pricePaise > 0 && (
+                                <span className="text-[10px] text-[#718078] font-mono">
+                                  {formatINR(addon.pricePaise)}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="text-[11px] text-[#718078] mt-1 flex items-center gap-1.5">
+                        <span>Base: {formatINR(c.unitPricePaise)}</span>
+                        <span>•</span>
+                        <span>
+                          {formatINR(c.effectiveUnitPricePaise || c.unitPricePaise)} × {c.quantity}
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 ml-2">
+
+                    <div className="flex items-center justify-between sm:justify-end gap-1.5 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-[#E5EBE7]">
+                      <span className="text-xs font-black text-[#172B25] hidden sm:inline mr-1">
+                        {formatINR((c.effectiveUnitPricePaise || c.unitPricePaise) * c.quantity)}
+                      </span>
+
+                      {/* Edit Customization Button */}
+                      {items.find((it) => it.id === c.menuItemId)?.addonLinks?.length ? (
+                        <button
+                          type="button"
+                          onClick={() => handleEditCartItem(c)}
+                          title="Edit customizations"
+                          className="h-7 px-2 rounded-xl border border-[#E5EBE7] bg-white text-[#16845B] hover:bg-[#E8F5EE] flex items-center gap-1 text-[11px] font-bold shadow-2xs cursor-pointer"
+                        >
+                          <Edit2 className="w-3 h-3" />
+                          <span>Edit</span>
+                        </button>
+                      ) : null}
+
                       <button
                         aria-label="Decrease quantity"
                         onClick={() => decQty(i)}
@@ -1132,7 +1506,7 @@ export default function POSClient({
                       <button
                         aria-label="Remove item"
                         onClick={() => removeItem(i)}
-                        className="ml-1 h-7 w-7 rounded-full bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 flex items-center justify-center text-xs cursor-pointer"
+                        className="ml-0.5 h-7 w-7 rounded-full bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 flex items-center justify-center text-xs cursor-pointer"
                       >
                         ✕
                       </button>
@@ -1489,6 +1863,283 @@ export default function POSClient({
         </div>
       )}
 
+      {/* Product Add-on Customization Modal (Phase 4) */}
+      {customizingItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-[#E5EBE7] overflow-hidden flex flex-col max-h-[92vh]">
+            {/* Modal Header */}
+            <div className="p-4 border-b border-[#E5EBE7] flex justify-between items-center bg-[#F8FAF9]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#E8F5EE] border border-[#16845B]/20 flex items-center justify-center text-[#16845B]">
+                  <Layers className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm text-[#172B25]">
+                    {customizingItem.editingCartItemId ? "Edit Customization" : "Product Customization"}
+                  </h3>
+                  <p className="text-[11px] text-[#718078] truncate max-w-[280px]">
+                    {customizingItem.product.name} • Base: {formatINR(customizingItem.product.pricePaise)}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCustomizingItem(null)}
+                className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-white text-[#718078] hover:text-[#172B25] flex items-center justify-center cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Product Summary Banner */}
+            <div className="p-4 bg-white border-b border-[#E5EBE7] flex items-center gap-3">
+              <div className="w-16 h-16 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] overflow-hidden shrink-0">
+                {customizingItem.product.imageUrl ? (
+                  <img
+                    src={customizingItem.product.imageUrl}
+                    alt={customizingItem.product.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full grid place-items-center text-[#16845B]/40">
+                    <UtensilsCrossed className="w-6 h-6" />
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-extrabold text-sm text-[#172B25] truncate">
+                    {customizingItem.product.name}
+                  </h4>
+                  <span
+                    className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-black ${
+                      customizingItem.product.isVeg
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
+                    }`}
+                  >
+                    {customizingItem.product.isVeg ? "VEG" : "NON-VEG"}
+                  </span>
+                </div>
+                {customizingItem.product.description && (
+                  <p className="text-[11px] text-[#718078] mt-0.5 line-clamp-1">
+                    {customizingItem.product.description}
+                  </p>
+                )}
+                <div className="text-xs font-black text-[#16845B] mt-1">
+                  Base: {formatINR(customizingItem.product.pricePaise)}
+                </div>
+              </div>
+            </div>
+
+            {/* Step 1: Prompt "Would you like to add extras?" (if product has optional add-ons) */}
+            {customizingItem.step === "PROMPT" && (
+              <div className="p-6 text-center space-y-5 my-auto">
+                <div className="w-14 h-14 rounded-2xl bg-[#E8F5EE] border border-[#16845B]/20 text-[#16845B] grid place-items-center mx-auto shadow-sm">
+                  <Sparkles className="w-7 h-7" />
+                </div>
+                <div>
+                  <h4 className="text-base font-black text-[#172B25]">
+                    Would you like to add extras or custom instructions?
+                  </h4>
+                  <p className="text-xs text-[#718078] mt-1 max-w-sm mx-auto">
+                    Extra toppings, ice creams, sauces, or zero-price cooking instructions are available for this item.
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto">
+                  <button
+                    type="button"
+                    onClick={handleSelectYesAddons}
+                    className="flex-1 py-3 px-4 rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>YES – Add Add-ons</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSelectNoAddons}
+                    className="flex-1 py-3 px-4 rounded-2xl border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-[#172B25] text-xs font-bold transition cursor-pointer"
+                  >
+                    <span>NO – Continue Without Add-ons</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Full Add-on Selection List */}
+            {customizingItem.step === "SELECTING" && (
+              <>
+                <div className="p-5 overflow-y-auto space-y-5 flex-1 bg-[#F8FAF9]/50">
+                  {modalValidationNotice && (
+                    <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-semibold flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                      <span>{modalValidationNotice}</span>
+                    </div>
+                  )}
+
+                  {(customizingItem.product.addonLinks || [])
+                    .map((l) => l.addonGroup)
+                    .filter((g) => g && g.options && g.options.length > 0)
+                    .map((group) => {
+                      const selectedOptions = modalSelections[group.id] || [];
+                      const isSingle = group.selectionType === "SINGLE";
+
+                      return (
+                        <div
+                          key={group.id}
+                          className="p-4 rounded-2xl bg-white border border-[#E5EBE7] shadow-2xs space-y-3"
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-1 border-b border-[#E5EBE7] pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-extrabold text-xs text-[#172B25]">{group.name}</span>
+                              {group.isRequired ? (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                                  Required
+                                </span>
+                              ) : (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-700">
+                                  Optional
+                                </span>
+                              )}
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                {isSingle ? "Single Choice" : "Multi-Choice"}
+                              </span>
+                            </div>
+                            <span className="text-[11px] text-[#718078]">
+                              {selectedOptions.length} selected
+                              {group.maxSelections ? ` (Max ${group.maxSelections})` : ""}
+                            </span>
+                          </div>
+
+                          {/* Options grid */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {group.options.map((opt) => {
+                              const isChecked = selectedOptions.includes(opt.id);
+
+                              return (
+                                <button
+                                  key={opt.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setModalValidationNotice(null);
+                                    if (isSingle) {
+                                      setModalSelections({
+                                        ...modalSelections,
+                                        [group.id]: isChecked ? [] : [opt.id],
+                                      });
+                                    } else {
+                                      if (isChecked) {
+                                        setModalSelections({
+                                          ...modalSelections,
+                                          [group.id]: selectedOptions.filter((id) => id !== opt.id),
+                                        });
+                                      } else {
+                                        if (group.maxSelections && selectedOptions.length >= group.maxSelections) {
+                                          setModalValidationNotice(
+                                            `You can select at most ${group.maxSelections} option(s) for "${group.name}".`
+                                          );
+                                          return;
+                                        }
+                                        setModalSelections({
+                                          ...modalSelections,
+                                          [group.id]: [...selectedOptions, opt.id],
+                                        });
+                                      }
+                                    }
+                                  }}
+                                  className={`p-2.5 rounded-xl border text-left transition flex items-center justify-between gap-2 cursor-pointer ${
+                                    isChecked
+                                      ? "bg-[#E8F5EE] border-[#16845B] shadow-2xs"
+                                      : "bg-white border-[#E5EBE7] hover:bg-[#F8FAF9]"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <div
+                                      className={`w-4 h-4 rounded-${isSingle ? "full" : "md"} border flex items-center justify-center shrink-0 ${
+                                        isChecked
+                                          ? "bg-[#16845B] border-[#16845B] text-white"
+                                          : "border-gray-300 bg-white"
+                                      }`}
+                                    >
+                                      {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                                    </div>
+                                    <span
+                                      className={`text-xs truncate ${
+                                        isChecked ? "font-bold text-[#172B25]" : "text-[#4A5D55]"
+                                      }`}
+                                    >
+                                      {opt.name}
+                                    </span>
+                                  </div>
+                                  <span
+                                    className={`text-xs font-bold shrink-0 ${
+                                      opt.pricePaise > 0 ? "text-[#16845B]" : "text-[#718078]"
+                                    }`}
+                                  >
+                                    {opt.pricePaise > 0 ? `+${formatINR(opt.pricePaise)}` : "Free"}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Footer with Dynamic Live Price Calculation and Add to Cart */}
+                <div className="p-4 bg-white border-t border-[#E5EBE7] flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div>
+                    {(() => {
+                      let extrasSum = 0;
+                      (customizingItem.product.addonLinks || []).forEach((l) => {
+                        const sel = modalSelections[l.addonGroup.id] || [];
+                        sel.forEach((sId) => {
+                          const o = l.addonGroup.options.find((opt) => opt.id === sId);
+                          if (o) extrasSum += o.pricePaise;
+                        });
+                      });
+                      const totalPerItem = customizingItem.product.pricePaise + extrasSum;
+                      return (
+                        <div>
+                          <div className="text-[11px] text-[#718078]">
+                            Base: {formatINR(customizingItem.product.pricePaise)} + Extras: {formatINR(extrasSum)}
+                          </div>
+                          <div className="text-base font-black text-[#172B25]">
+                            Item Total: <span className="text-[#16845B]">{formatINR(totalPerItem)}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => setCustomizingItem(null)}
+                      className="flex-1 sm:flex-none px-4 py-2.5 rounded-full border border-[#E5EBE7] text-xs font-bold text-[#718078] hover:bg-[#F8FAF9] cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSaveCustomization}
+                      className="flex-1 sm:flex-none px-6 py-2.5 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>
+                        {customizingItem.editingCartItemId ? "Update Cart Item" : "Add to Cart"}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Thermal Bill Receipt Modal */}
       {showReceipt && activeReceipt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
@@ -1568,12 +2219,19 @@ export default function POSClient({
                   </div>
                   <div className="divide-y divide-slate-100 mt-1">
                     {activeReceipt.items.map((it, idx) => (
-                      <div key={idx} className="grid grid-cols-[24px_1fr_60px] py-1.5 text-[11px]">
-                        <span className="font-bold text-[#172B25]">{it.quantity}</span>
-                        <span className="truncate pr-1 text-[#172B25]">{it.name}</span>
-                        <span className="text-right font-medium text-[#172B25]">
-                          {formatINR(it.quantity * it.unitPricePaise)}
-                        </span>
+                      <div key={idx} className="py-1.5 text-[11px]">
+                        <div className="grid grid-cols-[24px_1fr_60px]">
+                          <span className="font-bold text-[#172B25]">{it.quantity}</span>
+                          <span className="truncate pr-1 text-[#172B25]">{it.name}</span>
+                          <span className="text-right font-medium text-[#172B25]">
+                            {formatINR(it.quantity * it.unitPricePaise)}
+                          </span>
+                        </div>
+                        {it.modifiers && it.modifiers.length > 0 && (
+                          <div className="pl-6 text-[10px] text-[#16845B]">
+                            {it.modifiers.map((m) => `+ ${m.name}`).join(", ")}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

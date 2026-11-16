@@ -254,6 +254,7 @@ export type OutletWhereInput = {
   printJobs?: Prisma.PrintJobListRelationFilter
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
   whatsAppConfig?: Prisma.XOR<Prisma.OutletWhatsAppConfigNullableScalarRelationFilter, Prisma.OutletWhatsAppConfigWhereInput> | null
+  productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
 }
 
 export type OutletOrderByWithRelationInput = {
@@ -285,6 +286,7 @@ export type OutletOrderByWithRelationInput = {
   printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
   qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigOrderByWithRelationInput
+  productAddonGroups?: Prisma.ProductAddonGroupOrderByRelationAggregateInput
 }
 
 export type OutletWhereUniqueInput = Prisma.AtLeast<{
@@ -320,6 +322,7 @@ export type OutletWhereUniqueInput = Prisma.AtLeast<{
   printJobs?: Prisma.PrintJobListRelationFilter
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
   whatsAppConfig?: Prisma.XOR<Prisma.OutletWhatsAppConfigNullableScalarRelationFilter, Prisma.OutletWhatsAppConfigWhereInput> | null
+  productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
 }, "id" | "tenantId_slug">
 
 export type OutletOrderByWithAggregationInput = {
@@ -386,6 +389,7 @@ export type OutletCreateInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateInput = {
@@ -416,6 +420,7 @@ export type OutletUncheckedCreateInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUpdateInput = {
@@ -446,6 +451,7 @@ export type OutletUpdateInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateInput = {
@@ -476,6 +482,7 @@ export type OutletUncheckedUpdateInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyInput = {
@@ -694,6 +701,22 @@ export type OutletUpdateOneRequiredWithoutWhatsAppConfigNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutWhatsAppConfigInput, Prisma.OutletUpdateWithoutWhatsAppConfigInput>, Prisma.OutletUncheckedUpdateWithoutWhatsAppConfigInput>
 }
 
+export type OutletCreateNestedOneWithoutProductAddonGroupsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedCreateWithoutProductAddonGroupsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutProductAddonGroupsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneWithoutProductAddonGroupsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedCreateWithoutProductAddonGroupsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutProductAddonGroupsInput
+  upsert?: Prisma.OutletUpsertWithoutProductAddonGroupsInput
+  disconnect?: Prisma.OutletWhereInput | boolean
+  delete?: Prisma.OutletWhereInput | boolean
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutProductAddonGroupsInput, Prisma.OutletUpdateWithoutProductAddonGroupsInput>, Prisma.OutletUncheckedUpdateWithoutProductAddonGroupsInput>
+}
+
 export type OutletCreateNestedOneWithoutTablesInput = {
   create?: Prisma.XOR<Prisma.OutletCreateWithoutTablesInput, Prisma.OutletUncheckedCreateWithoutTablesInput>
   connectOrCreate?: Prisma.OutletCreateOrConnectWithoutTablesInput
@@ -877,6 +900,7 @@ export type OutletCreateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTenantInput = {
@@ -906,6 +930,7 @@ export type OutletUncheckedCreateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTenantInput = {
@@ -979,6 +1004,7 @@ export type OutletCreateWithoutMembershipsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutMembershipsInput = {
@@ -1008,6 +1034,7 @@ export type OutletUncheckedCreateWithoutMembershipsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutMembershipsInput = {
@@ -1053,6 +1080,7 @@ export type OutletUpdateWithoutMembershipsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutMembershipsInput = {
@@ -1082,6 +1110,7 @@ export type OutletUncheckedUpdateWithoutMembershipsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutOutletMembersInput = {
@@ -1111,6 +1140,7 @@ export type OutletCreateWithoutOutletMembersInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOutletMembersInput = {
@@ -1140,6 +1170,7 @@ export type OutletUncheckedCreateWithoutOutletMembersInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOutletMembersInput = {
@@ -1185,6 +1216,7 @@ export type OutletUpdateWithoutOutletMembersInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOutletMembersInput = {
@@ -1214,6 +1246,7 @@ export type OutletUncheckedUpdateWithoutOutletMembersInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutStaffInvitationsInput = {
@@ -1243,6 +1276,7 @@ export type OutletCreateWithoutStaffInvitationsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
@@ -1272,6 +1306,7 @@ export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStaffInvitationsInput = {
@@ -1317,6 +1352,7 @@ export type OutletUpdateWithoutStaffInvitationsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
@@ -1346,6 +1382,7 @@ export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutWhatsAppConfigInput = {
@@ -1375,6 +1412,7 @@ export type OutletCreateWithoutWhatsAppConfigInput = {
   printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
@@ -1404,6 +1442,7 @@ export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
   printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutWhatsAppConfigInput = {
@@ -1449,6 +1488,7 @@ export type OutletUpdateWithoutWhatsAppConfigInput = {
   printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
@@ -1478,6 +1518,143 @@ export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
   printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutProductAddonGroupsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutProductAddonGroupsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutProductAddonGroupsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedCreateWithoutProductAddonGroupsInput>
+}
+
+export type OutletUpsertWithoutProductAddonGroupsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedUpdateWithoutProductAddonGroupsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedCreateWithoutProductAddonGroupsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutProductAddonGroupsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutProductAddonGroupsInput, Prisma.OutletUncheckedUpdateWithoutProductAddonGroupsInput>
+}
+
+export type OutletUpdateWithoutProductAddonGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutProductAddonGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTablesInput = {
@@ -1507,6 +1684,7 @@ export type OutletCreateWithoutTablesInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTablesInput = {
@@ -1536,6 +1714,7 @@ export type OutletUncheckedCreateWithoutTablesInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTablesInput = {
@@ -1581,6 +1760,7 @@ export type OutletUpdateWithoutTablesInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTablesInput = {
@@ -1610,6 +1790,7 @@ export type OutletUncheckedUpdateWithoutTablesInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutOrdersInput = {
@@ -1639,6 +1820,7 @@ export type OutletCreateWithoutOrdersInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOrdersInput = {
@@ -1668,6 +1850,7 @@ export type OutletUncheckedCreateWithoutOrdersInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOrdersInput = {
@@ -1713,6 +1896,7 @@ export type OutletUpdateWithoutOrdersInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOrdersInput = {
@@ -1742,6 +1926,7 @@ export type OutletUncheckedUpdateWithoutOrdersInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutShiftsInput = {
@@ -1771,6 +1956,7 @@ export type OutletCreateWithoutShiftsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutShiftsInput = {
@@ -1800,6 +1986,7 @@ export type OutletUncheckedCreateWithoutShiftsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutShiftsInput = {
@@ -1845,6 +2032,7 @@ export type OutletUpdateWithoutShiftsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutShiftsInput = {
@@ -1874,6 +2062,7 @@ export type OutletUncheckedUpdateWithoutShiftsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutStockMovementsInput = {
@@ -1903,6 +2092,7 @@ export type OutletCreateWithoutStockMovementsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStockMovementsInput = {
@@ -1932,6 +2122,7 @@ export type OutletUncheckedCreateWithoutStockMovementsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStockMovementsInput = {
@@ -1977,6 +2168,7 @@ export type OutletUpdateWithoutStockMovementsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStockMovementsInput = {
@@ -2006,6 +2198,7 @@ export type OutletUncheckedUpdateWithoutStockMovementsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTokensInput = {
@@ -2035,6 +2228,7 @@ export type OutletCreateWithoutTokensInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTokensInput = {
@@ -2064,6 +2258,7 @@ export type OutletUncheckedCreateWithoutTokensInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTokensInput = {
@@ -2109,6 +2304,7 @@ export type OutletUpdateWithoutTokensInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTokensInput = {
@@ -2138,6 +2334,7 @@ export type OutletUncheckedUpdateWithoutTokensInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutReservationsInput = {
@@ -2167,6 +2364,7 @@ export type OutletCreateWithoutReservationsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutReservationsInput = {
@@ -2196,6 +2394,7 @@ export type OutletUncheckedCreateWithoutReservationsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutReservationsInput = {
@@ -2241,6 +2440,7 @@ export type OutletUpdateWithoutReservationsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutReservationsInput = {
@@ -2270,6 +2470,7 @@ export type OutletUncheckedUpdateWithoutReservationsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutExpensesInput = {
@@ -2299,6 +2500,7 @@ export type OutletCreateWithoutExpensesInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutExpensesInput = {
@@ -2328,6 +2530,7 @@ export type OutletUncheckedCreateWithoutExpensesInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutExpensesInput = {
@@ -2373,6 +2576,7 @@ export type OutletUpdateWithoutExpensesInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutExpensesInput = {
@@ -2402,6 +2606,7 @@ export type OutletUncheckedUpdateWithoutExpensesInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutDayEndsInput = {
@@ -2431,6 +2636,7 @@ export type OutletCreateWithoutDayEndsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutDayEndsInput = {
@@ -2460,6 +2666,7 @@ export type OutletUncheckedCreateWithoutDayEndsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutDayEndsInput = {
@@ -2505,6 +2712,7 @@ export type OutletUpdateWithoutDayEndsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutDayEndsInput = {
@@ -2534,6 +2742,7 @@ export type OutletUncheckedUpdateWithoutDayEndsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutQrSessionsInput = {
@@ -2563,6 +2772,7 @@ export type OutletCreateWithoutQrSessionsInput = {
   printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutQrSessionsInput = {
@@ -2592,6 +2802,7 @@ export type OutletUncheckedCreateWithoutQrSessionsInput = {
   printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutQrSessionsInput = {
@@ -2637,6 +2848,7 @@ export type OutletUpdateWithoutQrSessionsInput = {
   printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutQrSessionsInput = {
@@ -2666,6 +2878,7 @@ export type OutletUncheckedUpdateWithoutQrSessionsInput = {
   printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintersInput = {
@@ -2695,6 +2908,7 @@ export type OutletCreateWithoutPrintersInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintersInput = {
@@ -2724,6 +2938,7 @@ export type OutletUncheckedCreateWithoutPrintersInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintersInput = {
@@ -2769,6 +2984,7 @@ export type OutletUpdateWithoutPrintersInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintersInput = {
@@ -2798,6 +3014,7 @@ export type OutletUncheckedUpdateWithoutPrintersInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintJobsInput = {
@@ -2827,6 +3044,7 @@ export type OutletCreateWithoutPrintJobsInput = {
   printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintJobsInput = {
@@ -2856,6 +3074,7 @@ export type OutletUncheckedCreateWithoutPrintJobsInput = {
   printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintJobsInput = {
@@ -2901,6 +3120,7 @@ export type OutletUpdateWithoutPrintJobsInput = {
   printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintJobsInput = {
@@ -2930,6 +3150,7 @@ export type OutletUncheckedUpdateWithoutPrintJobsInput = {
   printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyTenantInput = {
@@ -2973,6 +3194,7 @@ export type OutletUpdateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTenantInput = {
@@ -3002,6 +3224,7 @@ export type OutletUncheckedUpdateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateManyWithoutTenantInput = {
@@ -3038,6 +3261,7 @@ export type OutletCountOutputType = {
   printers: number
   printJobs: number
   qrSessions: number
+  productAddonGroups: number
 }
 
 export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3055,6 +3279,7 @@ export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   printers?: boolean | OutletCountOutputTypeCountPrintersArgs
   printJobs?: boolean | OutletCountOutputTypeCountPrintJobsArgs
   qrSessions?: boolean | OutletCountOutputTypeCountQrSessionsArgs
+  productAddonGroups?: boolean | OutletCountOutputTypeCountProductAddonGroupsArgs
 }
 
 /**
@@ -3165,6 +3390,13 @@ export type OutletCountOutputTypeCountQrSessionsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.QrOrderingSessionWhereInput
 }
 
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountProductAddonGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductAddonGroupWhereInput
+}
+
 
 export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3195,6 +3427,7 @@ export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   printJobs?: boolean | Prisma.Outlet$printJobsArgs<ExtArgs>
   qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   whatsAppConfig?: boolean | Prisma.Outlet$whatsAppConfigArgs<ExtArgs>
+  productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outlet"]>
 
@@ -3263,6 +3496,7 @@ export type OutletInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   printJobs?: boolean | Prisma.Outlet$printJobsArgs<ExtArgs>
   qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   whatsAppConfig?: boolean | Prisma.Outlet$whatsAppConfigArgs<ExtArgs>
+  productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OutletIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3291,6 +3525,7 @@ export type $OutletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
     qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
     whatsAppConfig: Prisma.$OutletWhatsAppConfigPayload<ExtArgs> | null
+    productAddonGroups: Prisma.$ProductAddonGroupPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3715,6 +3950,7 @@ export interface Prisma__OutletClient<T, Null = never, ExtArgs extends runtime.T
   printJobs<T extends Prisma.Outlet$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   qrSessions<T extends Prisma.Outlet$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppConfig<T extends Prisma.Outlet$whatsAppConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$whatsAppConfigArgs<ExtArgs>>): Prisma.Prisma__OutletWhatsAppConfigClient<runtime.Types.Result.GetResult<Prisma.$OutletWhatsAppConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  productAddonGroups<T extends Prisma.Outlet$productAddonGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$productAddonGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductAddonGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4509,6 +4745,30 @@ export type Outlet$whatsAppConfigArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.OutletWhatsAppConfigInclude<ExtArgs> | null
   where?: Prisma.OutletWhatsAppConfigWhereInput
+}
+
+/**
+ * Outlet.productAddonGroups
+ */
+export type Outlet$productAddonGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductAddonGroup
+   */
+  select?: Prisma.ProductAddonGroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductAddonGroup
+   */
+  omit?: Prisma.ProductAddonGroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductAddonGroupInclude<ExtArgs> | null
+  where?: Prisma.ProductAddonGroupWhereInput
+  orderBy?: Prisma.ProductAddonGroupOrderByWithRelationInput | Prisma.ProductAddonGroupOrderByWithRelationInput[]
+  cursor?: Prisma.ProductAddonGroupWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductAddonGroupScalarFieldEnum | Prisma.ProductAddonGroupScalarFieldEnum[]
 }
 
 /**

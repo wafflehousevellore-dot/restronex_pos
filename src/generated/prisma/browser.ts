@@ -93,6 +93,26 @@ export type MenuVariant = Prisma.MenuVariantModel
  */
 export type MenuModifier = Prisma.MenuModifierModel
 /**
+ * Model AddonGroup
+ * 
+ */
+export type AddonGroup = Prisma.AddonGroupModel
+/**
+ * Model AddonOption
+ * 
+ */
+export type AddonOption = Prisma.AddonOptionModel
+/**
+ * Model ProductAddonGroup
+ * 
+ */
+export type ProductAddonGroup = Prisma.ProductAddonGroupModel
+/**
+ * Model OrderItemAddon
+ * 
+ */
+export type OrderItemAddon = Prisma.OrderItemAddonModel
+/**
  * Model Table
  * 
  */

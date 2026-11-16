@@ -25,7 +25,25 @@ export async function GET(req: NextRequest) {
         }),
         prisma.menuItem.findMany({
           where: { tenantId },
-          include: { variants: true, modifiers: true, category: true },
+          include: {
+            variants: true,
+            modifiers: true,
+            category: true,
+            addonLinks: {
+              where: { isActive: true },
+              include: {
+                addonGroup: {
+                  include: {
+                    options: {
+                      where: { isActive: true },
+                      orderBy: { sortOrder: "asc" },
+                    },
+                  },
+                },
+              },
+              orderBy: { sortOrder: "asc" },
+            },
+          },
           orderBy: { name: "asc" },
         }),
       ]);
@@ -77,8 +95,33 @@ export async function POST(req: NextRequest) {
         description: body.description || null,
         imageUrl: body.imageUrl || null,
         isSoldOut: body.isSoldOut ?? false,
+        ...(Array.isArray(body.addonGroupIds) && body.addonGroupIds.length > 0
+          ? {
+              addonLinks: {
+                create: body.addonGroupIds.map((gId: string, idx: number) => ({
+                  tenantId,
+                  addonGroupId: gId,
+                  sortOrder: idx,
+                  isActive: true,
+                })),
+              },
+            }
+          : {}),
       },
-      include: { category: true, variants: true, modifiers: true },
+      include: {
+        category: true,
+        variants: true,
+        modifiers: true,
+        addonLinks: {
+          include: {
+            addonGroup: {
+              include: {
+                options: { where: { isActive: true }, orderBy: { sortOrder: "asc" } },
+              },
+            },
+          },
+        },
+      },
     });
     return NextResponse.json(item);
   }
@@ -119,6 +162,27 @@ export async function PUT(req: NextRequest) {
     }
   }
 
+  // Sync addonGroupIds if provided
+  if (Array.isArray(body.addonGroupIds)) {
+    await prisma.$transaction(async (tx) => {
+      await tx.productAddonGroup.deleteMany({
+        where: { tenantId, menuItemId: body.id },
+      });
+      if (body.addonGroupIds.length > 0) {
+        await tx.productAddonGroup.createMany({
+          data: body.addonGroupIds.map((gId: string, idx: number) => ({
+            tenantId,
+            menuItemId: body.id,
+            addonGroupId: gId,
+            sortOrder: idx,
+            isActive: true,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    });
+  }
+
   const updatedItem = await prisma.menuItem.update({
     where: { id: body.id },
     data: {
@@ -131,7 +195,20 @@ export async function PUT(req: NextRequest) {
       isSoldOut: body.isSoldOut !== undefined ? body.isSoldOut : existingItem.isSoldOut,
       isActive: body.isActive !== undefined ? body.isActive : existingItem.isActive,
     },
-    include: { category: true, variants: true, modifiers: true },
+    include: {
+      category: true,
+      variants: true,
+      modifiers: true,
+      addonLinks: {
+        include: {
+          addonGroup: {
+            include: {
+              options: { where: { isActive: true }, orderBy: { sortOrder: "asc" } },
+            },
+          },
+        },
+      },
+    },
   });
 
   // Invalidate caches

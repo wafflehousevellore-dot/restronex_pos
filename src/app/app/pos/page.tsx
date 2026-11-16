@@ -134,7 +134,27 @@ export default async function POSPage(){
   const [outlets, tables, menuItems] = await Promise.all([
     prisma.outlet.findMany({ where:{ tenantId }, orderBy:{ createdAt:"asc" }}),
     prisma.table.findMany({ where:{ tenantId }, orderBy:{ number:"asc" }}),
-    prisma.menuItem.findMany({ where:{ tenantId, isActive:true }, include:{ category:true }, orderBy:{ name:"asc" }}),
+    prisma.menuItem.findMany({
+      where: { tenantId, isActive: true },
+      include: {
+        category: true,
+        addonLinks: {
+          where: { isActive: true },
+          include: {
+            addonGroup: {
+              include: {
+                options: {
+                  where: { isActive: true },
+                  orderBy: { sortOrder: "asc" },
+                },
+              },
+            },
+          },
+          orderBy: { sortOrder: "asc" },
+        },
+      },
+      orderBy: { name: "asc" },
+    }),
   ]);
   const items = menuItems.map(m=> ({
     id: m.id,
@@ -146,6 +166,7 @@ export default async function POSPage(){
     description: m.description,
     isSoldOut: m.isSoldOut,
     category: m.category ? { name: m.category.name } : undefined,
+    addonLinks: m.addonLinks,
   }));
   const tableData = tables.map(t=> ({
     id: t.id,

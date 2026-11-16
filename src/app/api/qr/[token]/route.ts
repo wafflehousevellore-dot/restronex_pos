@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { calcOrderTotals } from "@/lib/money";
 import { appCache, getOrSetCache } from "@/lib/cache";
+import { validateAndPriceCartItems } from "@/lib/addon-pricing";
 import { queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
@@ -126,6 +127,23 @@ export async function GET(
             include: {
               variants: { where: { isActive: true } },
               modifiers: { where: { isActive: true } },
+              addonLinks: {
+                where: {
+                  isActive: true,
+                  OR: [{ outletId: null }, { outletId: cachedTableData.table.outletId }],
+                },
+                include: {
+                  addonGroup: {
+                    include: {
+                      options: {
+                        where: { isActive: true },
+                        orderBy: { sortOrder: "asc" },
+                      },
+                    },
+                  },
+                },
+                orderBy: { sortOrder: "asc" },
+              },
             },
           },
         },
@@ -235,58 +253,26 @@ export async function POST(
     }
   }
 
-  const missingItemIds = itemIds.filter((id: string) => !menuMap.has(id));
-  if (missingItemIds.length > 0) {
-    const dbMenuItems = await prisma.menuItem.findMany({
-      where: { id: { in: missingItemIds }, tenantId },
-      include: { variants: true, modifiers: true },
-    });
-    for (const m of dbMenuItems) {
-      menuMap.set(m.id, m);
-    }
-  }
+  // Authoritative server-side pricing and add-on validation
+  const pricingResult = await validateAndPriceCartItems({
+    tenantId,
+    outletId,
+    items: items.map((it: any) => ({
+      menuItemId: it.menuItemId,
+      quantity: it.quantity,
+      variantName: it.variantName,
+      notes: it.notes,
+      selectedAddons: it.selectedAddons || it.modifiers,
+      modifiers: it.modifiers,
+    })),
+  });
 
-  const lineTotals: number[] = [];
-  const validatedItems: any[] = [];
-
-  for (const it of items) {
-    const menuItem = menuMap.get(it.menuItemId);
-    if (!menuItem) {
-      return NextResponse.json({ error: `Dish not found or unavailable: ${it.name}` }, { status: 400 });
-    }
-
-    let unitPrice = menuItem.pricePaise;
-    if (it.variantId) {
-      const v = menuItem.variants.find((x: any) => x.id === it.variantId);
-      if (v) unitPrice = v.pricePaise;
-    }
-
-    let modsPrice = 0;
-    if (Array.isArray(it.modifierIds)) {
-      for (const mId of it.modifierIds) {
-        const m = menuItem.modifiers.find((x: any) => x.id === mId);
-        if (m) modsPrice += m.pricePaise;
-      }
-    }
-
-    const qty = Math.max(1, parseInt(it.quantity, 10) || 1);
-    const itemTotal = (unitPrice + modsPrice) * qty;
-    lineTotals.push(itemTotal);
-    validatedItems.push({
-      menuItemId: menuItem.id,
-      name: menuItem.name,
-      quantity: qty,
-      unitPricePaise: unitPrice,
-      variantName: it.variantName || null,
-      modifiersJson: it.modifiers ? JSON.stringify(it.modifiers) : null,
-      notes: it.notes || null,
-      totalPaise: itemTotal,
-      kotStatus: "PENDING",
-    });
+  if (!pricingResult.ok) {
+    return NextResponse.json({ error: pricingResult.error || "Order validation failed" }, { status: 400 });
   }
 
   const totals = calcOrderTotals({
-    lineTotalsPaise: lineTotals,
+    lineTotalsPaise: pricingResult.items.map((it) => it.lineTotalPaise),
     discountPaise: 0,
     taxRateBps: 1800,
     serviceChargeBps: 0,
@@ -328,13 +314,37 @@ export async function POST(
         },
       });
 
-      // 2. High-performance batch create of all order items
-      await tx.orderItem.createMany({
-        data: validatedItems.map((v) => ({
-          ...v,
-          orderId: o.id,
-        })),
-      });
+      // 2. High-performance create of order items with immutable add-on snapshots
+      for (const it of pricingResult.items) {
+        const orderItem = await tx.orderItem.create({
+          data: {
+            orderId: o.id,
+            menuItemId: it.menuItemId,
+            name: it.name,
+            quantity: it.quantity,
+            unitPricePaise: it.unitPricePaise,
+            variantName: it.variantName || null,
+            modifiersJson: it.modifiersJson || null,
+            notes: it.notes || null,
+            totalPaise: it.lineTotalPaise,
+            kotStatus: "PENDING",
+          },
+        });
+
+        if (it.addons && it.addons.length > 0) {
+          await tx.orderItemAddon.createMany({
+            data: it.addons.map((a) => ({
+              orderItemId: orderItem.id,
+              addonGroupId: a.groupId,
+              addonOptionId: a.optionId,
+              groupNameSnapshot: a.groupName,
+              optionNameSnapshot: a.name,
+              pricePaiseSnapshot: a.pricePaise,
+              quantity: a.quantity || 1,
+            })),
+          });
+        }
+      }
 
       // 3. Record Payment record if paid online
       if (isPaid) {
@@ -398,10 +408,11 @@ export async function POST(
             table: tableId,
             isPaid,
             paymentMethod: isPaid ? paymentMethod || "UPI" : "UNPAID",
-            items: validatedItems.map((i) => ({
+            items: pricingResult.items.map((i) => ({
               name: i.name,
               quantity: i.quantity,
               notes: i.notes,
+              addons: i.addons,
             })),
           }),
           status: "PENDING",
