@@ -275,7 +275,7 @@ export const defaultMetaGraphTransport: MetaGraphTransport = {
             },
             {
               type: "BODY",
-              text: "Hello {{1}}, Thank you for visiting {{2}}! Your bill {{3}} has been generated. Amount: ₹{{4}}, Payment: {{5}}. Your invoice is attached as a PDF. Powered by RestroNex.",
+              text: "Hello {{1}},\n\nThank you for visiting {{2}}!\n\nYour bill {{3}} has been generated.\n\nAmount: ₹{{4}}\nPayment: {{5}}\n\nYour invoice is attached as a PDF.\n\nThank you for choosing us!\n\nPowered by RestroNex.",
               example: {
                 body_text: [["Aarav", "Waffle House", "INV-2026-001", "330.40", "PAID (UPI)"]],
               },
