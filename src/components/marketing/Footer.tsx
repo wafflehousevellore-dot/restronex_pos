@@ -36,6 +36,8 @@ export default function Footer() {
               <li><Link href="/integrations" className="hover:text-[#16845B] transition-colors">Integrations</Link></li>
               <li><Link href="/pricing" className="hover:text-[#16845B] transition-colors">Pricing</Link></li>
               <li><Link href="/solutions" className="hover:text-[#16845B] transition-colors">Solutions</Link></li>
+              <li><Link href="/owner/login" className="hover:text-[#16845B] transition-colors font-medium">Owner Portal</Link></li>
+              <li><Link href="/staff/login" className="hover:text-[#16845B] transition-colors font-medium">Staff Portal</Link></li>
             </ul>
           </div>
           <div>
@@ -88,6 +90,12 @@ export default function Footer() {
             <Link href="/refund-policy" className="hover:text-[#16845B] transition-colors">Refund Policy</Link>
             <Link href="/faq" className="hover:text-[#16845B] transition-colors">FAQ</Link>
             <span className="text-[#E5EBE7]" aria-hidden="true">|</span>
+            <Link href="/owner/login" className="text-[#718078] hover:text-[#16845B] transition-colors font-medium">
+              Owner Login
+            </Link>
+            <Link href="/staff/login" className="text-[#718078] hover:text-[#16845B] transition-colors font-medium">
+              Staff Login
+            </Link>
             <Link href="/platform" className="text-[#718078]/80 hover:text-[#16845B] transition-colors font-medium">
               Platform Admin
             </Link>
