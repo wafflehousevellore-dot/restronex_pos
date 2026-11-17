@@ -154,42 +154,43 @@ export async function POST(req: NextRequest) {
     }
 
     // Strategy 4: If clerkUserId and bodyEmail are provided and match a pending invitation or existing user
-    if (!user && clerkUserId && bodyEmail) {
-      const normalizedEmail = bodyEmail.toLowerCase().trim();
+    if (!user && (clerkUserId || bodyEmail)) {
+      const normalizedEmail = (bodyEmail || "").toLowerCase().trim();
       let dbUser = await prisma.user.findFirst({
-        where: { OR: [{ clerkId: clerkUserId }, { email: normalizedEmail }] },
+        where: {
+          OR: [
+            ...(clerkUserId ? [{ clerkId: clerkUserId }] : []),
+            ...(normalizedEmail ? [{ email: normalizedEmail }] : []),
+          ],
+        },
       });
       if (dbUser) {
-        if (!dbUser.clerkId) {
+        if (!dbUser.clerkId && clerkUserId) {
           dbUser = await prisma.user.update({
             where: { id: dbUser.id },
             data: { clerkId: clerkUserId },
           });
         }
-      } else {
+      } else if (normalizedEmail) {
         dbUser = await prisma.user.create({
           data: {
-            clerkId: clerkUserId,
+            clerkId: clerkUserId || null,
             email: normalizedEmail,
             name: normalizedEmail.split("@")[0] || "Staff Member",
             role: "STAFF",
           },
         });
       }
-      user = {
-        id: dbUser.id,
-        email: dbUser.email,
-        name: dbUser.name,
-        clerkUserId,
-        isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
-      };
-    }
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Please sign in to your Clerk account before accepting an invitation" },
-        { status: 401 }
-      );
+      if (dbUser) {
+        user = {
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name,
+          clerkUserId: dbUser.clerkId || clerkUserId || null,
+          isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+        };
+      }
     }
 
     let invitation = null;
@@ -204,9 +205,46 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Strategy 5: If invitation was found by token but user is still unresolved, use invitation email
+    if (!user && invitation) {
+      const inviteEmail = invitation.email.toLowerCase().trim();
+      let dbUser = await prisma.user.findFirst({
+        where: {
+          OR: [
+            ...(clerkUserId ? [{ clerkId: clerkUserId }] : []),
+            { email: inviteEmail },
+          ],
+        },
+      });
+      if (dbUser) {
+        if (!dbUser.clerkId && clerkUserId) {
+          dbUser = await prisma.user.update({
+            where: { id: dbUser.id },
+            data: { clerkId: clerkUserId },
+          });
+        }
+      } else {
+        dbUser = await prisma.user.create({
+          data: {
+            clerkId: clerkUserId || null,
+            email: inviteEmail,
+            name: invitation.fullName || inviteEmail.split("@")[0] || "Staff Member",
+            role: "STAFF",
+          },
+        });
+      }
+      user = {
+        id: dbUser.id,
+        email: dbUser.email,
+        name: dbUser.name,
+        clerkUserId: dbUser.clerkId || clerkUserId || null,
+        isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+      };
+    }
+
     // Fallback: If token is missing/stripped by Clerk redirect, find active pending invitation for this user
-    if (!invitation && (user.email || bodyEmail)) {
-      const targetEmail = (user.email || bodyEmail).toLowerCase().trim();
+    if (!invitation && (user?.email || bodyEmail)) {
+      const targetEmail = (user?.email || bodyEmail).toLowerCase().trim();
       invitation = await prisma.staffInvitation.findFirst({
         where: {
           email: targetEmail,
@@ -222,7 +260,63 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (!user) {
+      return NextResponse.json(
+        { error: "Please sign in to your Clerk account before accepting an invitation" },
+        { status: 401 }
+      );
+    }
+
     if (!invitation) {
+      // Check if user already has an active membership
+      const targetEmail = (user.email || bodyEmail || "").toLowerCase().trim();
+      const existingMembership = await prisma.membership.findFirst({
+        where: {
+          status: "ACTIVE",
+          OR: [
+            { userId: user.id },
+            ...(targetEmail ? [{ user: { email: targetEmail } }] : []),
+          ],
+        },
+        include: { tenant: true },
+        orderBy: { updatedAt: "desc" },
+      });
+
+      if (existingMembership) {
+        const c = await cookies();
+        c.set("restronex_org", existingMembership.tenantId, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 30,
+          sameSite: "lax",
+        });
+
+        try {
+          await createSession({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            isPlatformAdmin: user.isPlatformAdmin,
+          });
+        } catch {}
+
+        let redirectTo = "/staff/dashboard";
+        const role = (existingMembership.role || "").toUpperCase();
+        if (role === "CASHIER") redirectTo = "/staff/pos";
+        else if (role === "KITCHEN_STAFF") redirectTo = "/staff/kitchen";
+        else if (role === "WAITER") redirectTo = "/staff/tables";
+        else if (role === "INVENTORY_MANAGER") redirectTo = "/staff/inventory";
+
+        return NextResponse.json({
+          ok: true,
+          alreadyAccepted: true,
+          membershipId: existingMembership.id,
+          tenantName: existingMembership.tenant.name,
+          role: existingMembership.role,
+          redirectTo,
+          message: `Active workspace found! Entering ${existingMembership.tenant.name}...`,
+        });
+      }
+
       return NextResponse.json(
         { error: "Invalid invitation token or link not found" },
         { status: 404 }
@@ -237,6 +331,54 @@ export async function POST(req: NextRequest) {
     }
 
     if (invitation.acceptedAt) {
+      // Check if this user already has an active membership for this tenant
+      const existingMembership = await prisma.membership.findFirst({
+        where: {
+          tenantId: invitation.tenantId,
+          status: "ACTIVE",
+          OR: [
+            { userId: user.id },
+            { user: { email: invitation.email.toLowerCase().trim() } },
+          ],
+        },
+        include: { tenant: true },
+      });
+
+      if (existingMembership) {
+        const c = await cookies();
+        c.set("restronex_org", invitation.tenantId, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 30,
+          sameSite: "lax",
+        });
+
+        try {
+          await createSession({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            isPlatformAdmin: user.isPlatformAdmin,
+          });
+        } catch {}
+
+        let redirectTo = "/staff/dashboard";
+        const role = (existingMembership.role || invitation.role).toUpperCase();
+        if (role === "CASHIER") redirectTo = "/staff/pos";
+        else if (role === "KITCHEN_STAFF") redirectTo = "/staff/kitchen";
+        else if (role === "WAITER") redirectTo = "/staff/tables";
+        else if (role === "INVENTORY_MANAGER") redirectTo = "/staff/inventory";
+
+        return NextResponse.json({
+          ok: true,
+          alreadyAccepted: true,
+          membershipId: existingMembership.id,
+          tenantName: invitation.tenant.name,
+          role: existingMembership.role,
+          redirectTo,
+          message: `Workspace already active. Entering ${invitation.tenant.name}...`,
+        });
+      }
+
       return NextResponse.json(
         { error: "This invitation has already been accepted" },
         { status: 409 }

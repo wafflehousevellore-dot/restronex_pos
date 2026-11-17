@@ -55,6 +55,13 @@ function AcceptInvitationContent({ initialToken }: { initialToken?: string }) {
     try {
       const res = await fetch(`/api/staff/invitations?email=${encodeURIComponent(email.trim().toLowerCase())}`);
       const data = await res.json();
+      if (res.ok && data.alreadyMember) {
+        setSuccess("Active workspace found! Entering your station...");
+        setTimeout(() => {
+          router.replace(data.redirectTo || "/staff/auth-callback");
+        }, 600);
+        return;
+      }
       if (res.ok && data.valid) {
         setInvitation(data);
         if (data.token) {
@@ -79,6 +86,13 @@ function AcceptInvitationContent({ initialToken }: { initialToken?: string }) {
     try {
       const res = await fetch(`/api/staff/invitations?token=${encodeURIComponent(t.trim())}`);
       const data = await res.json();
+      if (res.ok && data.alreadyMember) {
+        setSuccess("Active workspace found! Entering your station...");
+        setTimeout(() => {
+          router.replace(data.redirectTo || "/staff/auth-callback");
+        }, 600);
+        return;
+      }
       if (!res.ok) {
         setError(data.error || "Failed to verify invitation token");
         setInvitation(null);
@@ -251,8 +265,6 @@ function AcceptInvitationContent({ initialToken }: { initialToken?: string }) {
                     appearance={{
                       elements: {
                         card: "shadow-none border-0 p-0 w-full",
-                        headerTitle: "hidden",
-                        headerSubtitle: "hidden",
                       },
                     }}
                   />

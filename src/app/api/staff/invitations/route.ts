@@ -50,6 +50,30 @@ export async function GET(req: NextRequest) {
   }
 
   if (!invitation) {
+    if (email) {
+      const normalizedEmail = email.trim().toLowerCase();
+      const existingUser = await prisma.user.findFirst({
+        where: { email: normalizedEmail },
+        include: {
+          memberships: {
+            where: { status: "ACTIVE" },
+            include: { tenant: { select: { id: true, name: true, slug: true, logoUrl: true } } },
+          },
+        },
+      });
+
+      if (existingUser && existingUser.memberships.length > 0) {
+        const m = existingUser.memberships[0];
+        return NextResponse.json({
+          valid: true,
+          alreadyMember: true,
+          tenantName: m.tenant.name,
+          role: m.role,
+          redirectTo: "/staff/auth-callback",
+        });
+      }
+    }
+
     return NextResponse.json(
       { error: "Invalid invitation token or link not found" },
       { status: 404 }
@@ -64,6 +88,24 @@ export async function GET(req: NextRequest) {
   }
 
   if (invitation.acceptedAt) {
+    const activeMembership = await prisma.membership.findFirst({
+      where: {
+        tenantId: invitation.tenantId,
+        user: { email: invitation.email.toLowerCase().trim() },
+        status: "ACTIVE",
+      },
+    });
+
+    if (activeMembership) {
+      return NextResponse.json({
+        valid: true,
+        alreadyMember: true,
+        tenantName: invitation.tenant.name,
+        role: activeMembership.role,
+        redirectTo: "/staff/auth-callback",
+      });
+    }
+
     return NextResponse.json(
       { error: "This invitation has already been accepted" },
       { status: 409 }
