@@ -6,6 +6,8 @@ export interface InvoicePDFItem {
   quantity: number;
   unitPricePaise: number;
   totalPaise: number;
+  modifiers?: Array<{ name: string; pricePaise?: number }>;
+  notes?: string | null;
 }
 
 export interface InvoicePDFData {
@@ -141,16 +143,33 @@ export async function generateInvoicePDF(data: InvoicePDFData): Promise<Buffer> 
       doc.font("Helvetica").fontSize(8.5);
 
       data.items.forEach((item, index) => {
+        const extraLines = (item.modifiers?.length || 0) + (item.notes ? 1 : 0);
+        const rowHeight = 20 + extraLines * 11;
         const rowBg = index % 2 === 0 ? "#FFFFFF" : "#F8FAF9";
-        doc.rect(36, currentY, 523, 20).fillAndStroke(rowBg, borderColor);
+        doc.rect(36, currentY, 523, rowHeight).fillAndStroke(rowBg, borderColor);
 
-        doc.fillColor(mutedColor).text(String(index + 1), 45, currentY + 6);
-        doc.fillColor(textColor).font("Helvetica-Bold").text(item.name, 75, currentY + 6, { width: 245, ellipsis: true });
+        doc.fillColor(mutedColor).fontSize(8).font("Helvetica").text(String(index + 1), 45, currentY + 6);
+        doc.fillColor(textColor).fontSize(8.5).font("Helvetica-Bold").text(item.name, 75, currentY + 6, { width: 245, ellipsis: true });
         doc.font("Helvetica").text(String(item.quantity), 330, currentY + 6, { width: 40, align: "center" });
         doc.text(formatINR(item.unitPricePaise), 380, currentY + 6, { width: 75, align: "right" });
         doc.font("Helvetica-Bold").text(formatINR(item.totalPaise), 465, currentY + 6, { width: 80, align: "right" });
 
-        currentY += 20;
+        let subLineY = currentY + 18;
+        if (item.modifiers && item.modifiers.length > 0) {
+          doc.fillColor(primaryColor).fontSize(7).font("Helvetica");
+          item.modifiers.forEach((m) => {
+            const modPriceStr = m.pricePaise ? ` (+${formatINR(m.pricePaise)})` : "";
+            doc.text(`+ ${m.name}${modPriceStr}`, 85, subLineY, { width: 235, ellipsis: true });
+            subLineY += 11;
+          });
+        }
+        if (item.notes) {
+          doc.fillColor(mutedColor).fontSize(7).font("Helvetica-Oblique");
+          doc.text(`Note: ${item.notes}`, 85, subLineY, { width: 235, ellipsis: true });
+          subLineY += 11;
+        }
+
+        currentY += rowHeight;
       });
 
       // 4. Totals & Tax Calculation Breakdown

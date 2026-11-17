@@ -77,6 +77,15 @@ export function getPrinterCompatibility(protocol: string): PrinterCompatibilityI
   }
 }
 
+export interface ThermalReceiptItem {
+  name: string;
+  quantity: number;
+  unitPricePaise: number;
+  totalPaise: number;
+  modifiers?: Array<{ name: string; pricePaise?: number }>;
+  notes?: string | null;
+}
+
 export interface ThermalReceiptInput {
   restaurantName: string;
   logoUrl?: string | null;
@@ -94,7 +103,7 @@ export interface ThermalReceiptInput {
   tableName?: string | null;
   customerName?: string | null;
   customerPhone?: string | null;
-  items: { name: string; quantity: number; unitPricePaise: number; totalPaise: number }[];
+  items: ThermalReceiptItem[];
   subtotalPaise: number;
   discountPaise: number;
   cgstPaise: number;
@@ -235,6 +244,15 @@ export function formatThermalReceipt(
   for (const it of input.items) {
     const label = `${it.quantity}x ${it.name}`;
     lines.push(twoColLine(label, formatReceiptMoney(it.totalPaise), cols));
+    if (it.modifiers && it.modifiers.length > 0) {
+      for (const m of it.modifiers) {
+        const modPrice = m.pricePaise ? ` (+${formatReceiptMoney(m.pricePaise)})` : "";
+        lines.push(`  + ${m.name}${modPrice}`);
+      }
+    }
+    if (it.notes) {
+      lines.push(`  Note: ${it.notes}`);
+    }
   }
 
   lines.push(dash);
@@ -480,7 +498,11 @@ export async function queueAndDispatchBillPrintJob(
       include: {
         tenant: { include: { settings: true } },
         outlet: true,
-        items: true,
+        items: {
+          include: {
+            addons: true,
+          },
+        },
         invoice: true,
         table: true,
         payments: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -620,12 +642,28 @@ export async function queueAndDispatchBillPrintJob(
       tableName: order.table?.number || null,
       customerName: order.customerName || "Walk-in Guest",
       customerPhone: order.customerPhone || null,
-      items: order.items.map((it) => ({
-        name: it.name,
-        quantity: it.quantity,
-        unitPricePaise: it.unitPricePaise,
-        totalPaise: it.totalPaise,
-      })),
+      items: order.items.map((it: any) => {
+        let modifiers: any[] = [];
+        if (Array.isArray(it.addons) && it.addons.length > 0) {
+          modifiers = it.addons.map((a: any) => ({
+            name: a.optionNameSnapshot,
+            pricePaise: a.pricePaiseSnapshot,
+          }));
+        } else if (it.modifiersJson) {
+          try {
+            const parsed = JSON.parse(it.modifiersJson);
+            if (Array.isArray(parsed)) modifiers = parsed;
+          } catch {}
+        }
+        return {
+          name: it.name,
+          quantity: it.quantity,
+          unitPricePaise: it.unitPricePaise,
+          totalPaise: it.totalPaise,
+          modifiers,
+          notes: it.notes || null,
+        };
+      }),
       subtotalPaise: order.subtotalPaise,
       discountPaise: order.discountPaise,
       cgstPaise: Math.floor(order.taxPaise / 2),

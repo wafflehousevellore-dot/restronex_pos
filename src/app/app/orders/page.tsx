@@ -67,7 +67,23 @@ export default function OrdersPage(){
                     </span>
                   </div>
                   <div className="text-xs text-[#718078] mt-1">{o.customerName||"Walk-in"} {o.customerPhone ? `• ${o.customerPhone}` : ""} • {new Date(o.createdAt).toLocaleString()}</div>
-                  <div className="text-xs text-[#172B25] mt-1 font-medium">{o.items?.map((it:any)=> `${it.quantity}× ${it.name}`).join(", ")}</div>
+                  <div className="text-xs text-[#172B25] mt-1 font-medium">
+                    {o.items?.map((it: any) => {
+                      const addonNames = it.addons?.map((a: any) => a.optionNameSnapshot).filter(Boolean);
+                      let modStr = "";
+                      if (addonNames && addonNames.length > 0) {
+                        modStr = ` (${addonNames.join(", ")})`;
+                      } else if (it.modifiersJson) {
+                        try {
+                          const parsed = JSON.parse(it.modifiersJson);
+                          if (Array.isArray(parsed) && parsed.length > 0) {
+                            modStr = ` (${parsed.map((p: any) => p.name).join(", ")})`;
+                          }
+                        } catch {}
+                      }
+                      return `${it.quantity}× ${it.name}${modStr}`;
+                    }).join(" • ")}
+                  </div>
                 </div>
                 <div className="text-right sm:self-center">
                   <div className="text-base font-black text-[#16845B]">{formatINR(o.totalPaise)}</div>

@@ -36,7 +36,11 @@ export async function GET(req: NextRequest) {
     take: limit,
     ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
     include: {
-      items: true,
+      items: {
+        include: {
+          addons: true,
+        },
+      },
       payments: true,
       kotTickets: true,
       invoice: true,

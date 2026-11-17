@@ -736,30 +736,57 @@ export default function KitchenPage() {
                         </div>
                       )}
 
-                      {/* Items List with Large Bold Quantities */}
-                      <div className="border-t border-[#E5EBE7] pt-2 space-y-1.5">
-                        {order?.items?.map((it: any) => (
-                          <div key={it.id} className="text-xs text-[#172B25] flex justify-between items-start">
-                            <div>
-                              <div className="font-bold flex items-center gap-1">
-                                <span className="h-5 w-5 rounded bg-[#172B25] text-white text-[11px] font-black grid place-items-center shrink-0">
-                                  {it.quantity}
-                                </span>
-                                <span className="font-bold text-sm">{it.name}</span>
+                      {/* Items List with Large Bold Quantities & Add-ons */}
+                      <div className="border-t border-[#E5EBE7] pt-2 space-y-2">
+                        {order?.items?.map((it: any) => {
+                          let parsedModifiers: any[] = [];
+                          if (Array.isArray(it.addons) && it.addons.length > 0) {
+                            parsedModifiers = it.addons.map((a: any) => ({
+                              name: a.optionNameSnapshot || a.name,
+                              group: a.groupNameSnapshot || a.groupName,
+                            }));
+                          } else if (it.modifiersJson) {
+                            try {
+                              const parsed = JSON.parse(it.modifiersJson);
+                              if (Array.isArray(parsed)) parsedModifiers = parsed;
+                            } catch {}
+                          }
+
+                          return (
+                            <div key={it.id} className="text-xs text-[#172B25] flex justify-between items-start">
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold flex items-center gap-1.5">
+                                  <span className="h-5 w-5 rounded bg-[#172B25] text-white text-[11px] font-black grid place-items-center shrink-0">
+                                    {it.quantity}
+                                  </span>
+                                  <span className="font-bold text-sm leading-snug">{it.name}</span>
+                                </div>
+                                {it.variantName && (
+                                  <div className="text-[11px] text-[#718078] ml-6 font-semibold">
+                                    ↳ {it.variantName}
+                                  </div>
+                                )}
+                                {parsedModifiers.length > 0 && (
+                                  <div className="ml-6 space-y-0.5 mt-1">
+                                    {parsedModifiers.map((mod: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#16845B] bg-[#E8F5EE] border border-[#16845B]/20 rounded-md px-1.5 py-0.5 mr-1 mb-0.5"
+                                      >
+                                        <span>+ {mod.name}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {it.notes && (
+                                  <div className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200/60 rounded px-1.5 py-0.5 ml-6 mt-1 font-medium inline-block">
+                                    ↳ Note: {it.notes}
+                                  </div>
+                                )}
                               </div>
-                              {it.variantName && (
-                                <div className="text-[11px] text-[#718078] ml-6 font-semibold">
-                                  ↳ {it.variantName}
-                                </div>
-                              )}
-                              {it.notes && (
-                                <div className="text-[10px] text-amber-800 ml-6 font-medium">
-                                  ↳ {it.notes}
-                                </div>
-                              )}
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
 
                       {/* Payment Status & KOT Print */}
@@ -911,12 +938,40 @@ export default function KitchenPage() {
                   <span>ITEM</span>
                   <span>QTY</span>
                 </div>
-                {kotModalTicket.order?.items?.map((it: any) => (
-                  <div key={it.id} className="flex justify-between text-xs">
-                    <span className="font-semibold">{it.name}</span>
-                    <span className="font-bold">×{it.quantity}</span>
-                  </div>
-                ))}
+                {kotModalTicket.order?.items?.map((it: any) => {
+                  let parsedModifiers: any[] = [];
+                  if (Array.isArray(it.addons) && it.addons.length > 0) {
+                    parsedModifiers = it.addons.map((a: any) => ({
+                      name: a.optionNameSnapshot || a.name,
+                    }));
+                  } else if (it.modifiersJson) {
+                    try {
+                      const parsed = JSON.parse(it.modifiersJson);
+                      if (Array.isArray(parsed)) parsedModifiers = parsed;
+                    } catch {}
+                  }
+
+                  return (
+                    <div key={it.id} className="text-xs space-y-0.5">
+                      <div className="flex justify-between">
+                        <span className="font-semibold">{it.name}</span>
+                        <span className="font-bold">×{it.quantity}</span>
+                      </div>
+                      {parsedModifiers.length > 0 && (
+                        <div className="text-[10px] text-gray-700 pl-2">
+                          {parsedModifiers.map((m: any, idx: number) => (
+                            <div key={idx}>+ {m.name}</div>
+                          ))}
+                        </div>
+                      )}
+                      {it.notes && (
+                        <div className="text-[10px] text-gray-600 italic pl-2">
+                          ↳ Note: {it.notes}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="text-center text-[10px] text-gray-500 pt-1">

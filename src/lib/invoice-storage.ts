@@ -66,7 +66,11 @@ export async function loadInvoicePdfPayload(invoiceNumber: string, tenantId?: st
       tenant: { include: { settings: true } },
       order: {
         include: {
-          items: true,
+          items: {
+            include: {
+              addons: true,
+            },
+          },
           outlet: true,
           table: true,
           payments: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -114,12 +118,28 @@ export async function loadInvoicePdfPayload(invoiceNumber: string, tenantId?: st
     staffName: "Staff POS",
     customerName: invoice.customerName || order.customerName || "Valued Guest",
     customerPhone: invoice.customerPhone || order.customerPhone || null,
-    items: order.items.map((it) => ({
-      name: it.name,
-      quantity: it.quantity,
-      unitPricePaise: it.unitPricePaise,
-      totalPaise: it.totalPaise,
-    })),
+    items: order.items.map((it: any) => {
+      let modifiers: any[] = [];
+      if (Array.isArray(it.addons) && it.addons.length > 0) {
+        modifiers = it.addons.map((a: any) => ({
+          name: a.optionNameSnapshot,
+          pricePaise: a.pricePaiseSnapshot,
+        }));
+      } else if (it.modifiersJson) {
+        try {
+          const parsed = JSON.parse(it.modifiersJson);
+          if (Array.isArray(parsed)) modifiers = parsed;
+        } catch {}
+      }
+      return {
+        name: it.name,
+        quantity: it.quantity,
+        unitPricePaise: it.unitPricePaise,
+        totalPaise: it.totalPaise,
+        modifiers,
+        notes: it.notes || null,
+      };
+    }),
     subtotalPaise: invoice.subtotalPaise,
     discountPaise: invoice.discountPaise,
     cgstPaise: Math.floor(invoice.taxPaise / 2),

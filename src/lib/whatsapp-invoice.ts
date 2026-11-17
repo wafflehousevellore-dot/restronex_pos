@@ -14,7 +14,13 @@ export interface FormattedWhatsAppBillParams {
   tableNumber?: string | null;
   invoiceDate: string;
   invoiceTime: string;
-  items: { name: string; quantity: number; unitPricePaise: number; totalPaise: number }[];
+  items: {
+    name: string;
+    quantity: number;
+    unitPricePaise: number;
+    totalPaise: number;
+    modifiers?: Array<{ name: string; pricePaise?: number }>;
+  }[];
   subtotalPaise: number;
   discountPaise: number;
   cgstPaise: number;
@@ -400,7 +406,11 @@ export async function queueAndSendWhatsAppInvoice(
       include: {
         tenant: { include: { settings: true } },
         outlet: true,
-        items: true,
+        items: {
+          include: {
+            addons: true,
+          },
+        },
         invoice: true,
         table: true,
         payments: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -574,12 +584,27 @@ export async function queueAndSendWhatsAppInvoice(
       tableNumber: order.table?.number || null,
       invoiceDate: dateStr,
       invoiceTime: timeStr,
-      items: order.items.map((it) => ({
-        name: it.name,
-        quantity: it.quantity,
-        unitPricePaise: it.unitPricePaise,
-        totalPaise: it.totalPaise,
-      })),
+      items: order.items.map((it: any) => {
+        let modifiers: any[] = [];
+        if (Array.isArray(it.addons) && it.addons.length > 0) {
+          modifiers = it.addons.map((a: any) => ({
+            name: a.optionNameSnapshot,
+            pricePaise: a.pricePaiseSnapshot,
+          }));
+        } else if (it.modifiersJson) {
+          try {
+            const parsed = JSON.parse(it.modifiersJson);
+            if (Array.isArray(parsed)) modifiers = parsed;
+          } catch {}
+        }
+        return {
+          name: it.name,
+          quantity: it.quantity,
+          unitPricePaise: it.unitPricePaise,
+          totalPaise: it.totalPaise,
+          modifiers,
+        };
+      }),
       subtotalPaise: order.subtotalPaise,
       discountPaise: order.discountPaise,
       cgstPaise: Math.floor(order.taxPaise / 2),

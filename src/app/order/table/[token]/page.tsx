@@ -19,6 +19,25 @@ import {
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
+export type QRCartAddon = {
+  groupId: string;
+  groupName: string;
+  optionId: string;
+  name: string;
+  pricePaise: number;
+};
+
+export type QRCartItem = {
+  lineId: string;
+  menuItemId: string;
+  name: string;
+  pricePaise: number;
+  basePricePaise: number;
+  quantity: number;
+  notes?: string;
+  selectedAddons: QRCartAddon[];
+};
+
 export default function GuestQRTableOrderPage({
   params,
 }: {
@@ -29,9 +48,7 @@ export default function GuestQRTableOrderPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
-  const [cart, setCart] = useState<
-    { menuItemId: string; name: string; pricePaise: number; quantity: number }[]
-  >([]);
+  const [cart, setCart] = useState<QRCartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -39,6 +56,12 @@ export default function GuestQRTableOrderPage({
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<any>(null);
+
+  // Add-on & Modifier Customizer Modal State
+  const [customizingItem, setCustomizingItem] = useState<any | null>(null);
+  const [selectedAddons, setSelectedAddons] = useState<QRCartAddon[]>([]);
+  const [itemNotes, setItemNotes] = useState<string>("");
+  const [customizingQty, setCustomizingQty] = useState<number>(1);
 
   // Online Payment State for Cart Ordering
   const [payOnline, setPayOnline] = useState(true);
@@ -122,9 +145,44 @@ export default function GuestQRTableOrderPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  function addToCart(item: any) {
+  function getActiveAddonGroups(item: any) {
+    return (item?.addonLinks || [])
+      .map((l: any) => l.addonGroup)
+      .filter((g: any) => g && g.isActive !== false && Array.isArray(g.options) && g.options.length > 0);
+  }
+
+  function handleProductAddClick(item: any) {
+    const activeGroups = getActiveAddonGroups(item);
+    if (activeGroups.length > 0) {
+      // Pre-select default options if any
+      const defaults: QRCartAddon[] = [];
+      for (const group of activeGroups) {
+        for (const opt of group.options) {
+          if (opt.isDefault && opt.isActive !== false) {
+            defaults.push({
+              groupId: group.id,
+              groupName: group.name,
+              optionId: opt.id,
+              name: opt.name,
+              pricePaise: opt.pricePaise || 0,
+            });
+          }
+        }
+      }
+      setSelectedAddons(defaults);
+      setItemNotes("");
+      setCustomizingQty(1);
+      setCustomizingItem(item);
+    } else {
+      addDirectToCart(item);
+    }
+  }
+
+  function addDirectToCart(item: any) {
     setCart((prev) => {
-      const idx = prev.findIndex((i) => i.menuItemId === item.id);
+      const idx = prev.findIndex(
+        (i) => i.menuItemId === item.id && (!i.selectedAddons || i.selectedAddons.length === 0)
+      );
       if (idx >= 0) {
         const copy = [...prev];
         copy[idx].quantity += 1;
@@ -132,9 +190,121 @@ export default function GuestQRTableOrderPage({
       }
       return [
         ...prev,
-        { menuItemId: item.id, name: item.name, pricePaise: item.pricePaise, quantity: 1 },
+        {
+          lineId: `${item.id}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+          menuItemId: item.id,
+          name: item.name,
+          basePricePaise: item.pricePaise,
+          pricePaise: item.pricePaise,
+          quantity: 1,
+          selectedAddons: [],
+        },
       ];
     });
+  }
+
+  function toggleAddonOption(group: any, option: any) {
+    setSelectedAddons((prev) => {
+      const isSingle = group.selectionType === "SINGLE";
+      const existingInGroup = prev.filter((a) => a.groupId === group.id);
+      const isAlreadySelected = existingInGroup.some((a) => a.optionId === option.id);
+
+      if (isSingle) {
+        if (isAlreadySelected) {
+          return group.isRequired ? prev : prev.filter((a) => a.optionId !== option.id);
+        }
+        const withoutGroup = prev.filter((a) => a.groupId !== group.id);
+        return [
+          ...withoutGroup,
+          {
+            groupId: group.id,
+            groupName: group.name,
+            optionId: option.id,
+            name: option.name,
+            pricePaise: option.pricePaise || 0,
+          },
+        ];
+      }
+
+      if (isAlreadySelected) {
+        return prev.filter((a) => a.optionId !== option.id);
+      }
+
+      if (group.maxSelections && existingInGroup.length >= group.maxSelections) {
+        return prev;
+      }
+
+      return [
+        ...prev,
+        {
+          groupId: group.id,
+          groupName: group.name,
+          optionId: option.id,
+          name: option.name,
+          pricePaise: option.pricePaise || 0,
+        },
+      ];
+    });
+  }
+
+  function handleSaveCustomizedItem() {
+    if (!customizingItem) return;
+    const activeGroups = getActiveAddonGroups(customizingItem);
+
+    for (const group of activeGroups) {
+      const selected = selectedAddons.filter((a) => a.groupId === group.id);
+      if (group.isRequired && selected.length === 0) {
+        alert(`Please select required option(s) for "${group.name}".`);
+        return;
+      }
+      if (group.minSelections > 0 && selected.length < group.minSelections) {
+        alert(`Please select at least ${group.minSelections} option(s) for "${group.name}".`);
+        return;
+      }
+    }
+
+    const addonsSum = selectedAddons.reduce((s, a) => s + (a.pricePaise || 0), 0);
+    const effectiveUnitPricePaise = customizingItem.pricePaise + addonsSum;
+
+    setCart((prev) => [
+      ...prev,
+      {
+        lineId: `${customizingItem.id}_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+        menuItemId: customizingItem.id,
+        name: customizingItem.name,
+        basePricePaise: customizingItem.pricePaise,
+        pricePaise: effectiveUnitPricePaise,
+        quantity: Math.max(1, customizingQty),
+        notes: itemNotes.trim() || undefined,
+        selectedAddons,
+      },
+    ]);
+
+    setCustomizingItem(null);
+    setSelectedAddons([]);
+    setItemNotes("");
+    setCustomizingQty(1);
+  }
+
+  function incrementCartLine(lineId: string) {
+    setCart((prev) =>
+      prev.map((l) => (l.lineId === lineId ? { ...l, quantity: l.quantity + 1 } : l))
+    );
+  }
+
+  function decrementCartLine(lineId: string) {
+    setCart((prev) => {
+      const line = prev.find((l) => l.lineId === lineId);
+      if (!line) return prev;
+      if (line.quantity <= 1) {
+        return prev.filter((l) => l.lineId !== lineId);
+      }
+      return prev.map((l) => (l.lineId === lineId ? { ...l, quantity: l.quantity - 1 } : l));
+    });
+  }
+
+  function removeCartLine(lineId: string) {
+    setCart((prev) => prev.filter((l) => l.lineId !== lineId));
   }
 
   function decrementItem(itemId: string) {
@@ -142,7 +312,7 @@ export default function GuestQRTableOrderPage({
       const idx = prev.findIndex((i) => i.menuItemId === itemId);
       if (idx < 0) return prev;
       if (prev[idx].quantity <= 1) {
-        return prev.filter((i) => i.menuItemId !== itemId);
+        return prev.filter((_, i) => i !== idx);
       }
       const copy = [...prev];
       copy[idx].quantity -= 1;
@@ -160,7 +330,13 @@ export default function GuestQRTableOrderPage({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: cart,
+          items: cart.map((line) => ({
+            menuItemId: line.menuItemId,
+            quantity: line.quantity,
+            notes: line.notes || undefined,
+            selectedAddons: line.selectedAddons || [],
+            modifiers: line.selectedAddons || [],
+          })),
           customerName,
           customerPhone,
           whatsappConsent,
@@ -498,7 +674,10 @@ export default function GuestQRTableOrderPage({
       {/* Menu List */}
       <main className="max-w-lg mx-auto px-4 pt-4 space-y-3">
         {displayedItems.map((item: any) => {
-          const inCart = cart.find((i) => i.menuItemId === item.id);
+          const itemInCartCount = cart
+            .filter((i) => i.menuItemId === item.id)
+            .reduce((sum, i) => sum + i.quantity, 0);
+          const hasAddons = getActiveAddonGroups(item).length > 0;
           return (
             <div
               key={item.id}
@@ -518,8 +697,15 @@ export default function GuestQRTableOrderPage({
                     {item.description}
                   </p>
                 )}
-                <div className="text-xs font-extrabold text-[#16845B] pt-0.5">
-                  {formatINR(item.pricePaise)}
+                <div className="flex items-center gap-2 pt-0.5">
+                  <span className="text-xs font-extrabold text-[#16845B]">
+                    {formatINR(item.pricePaise)}
+                  </span>
+                  {hasAddons && (
+                    <span className="text-[10px] text-[#16845B] bg-[#E8F5EE] border border-[#16845B]/20 font-bold px-1.5 py-0.5 rounded-full">
+                      Customisable
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -541,7 +727,24 @@ export default function GuestQRTableOrderPage({
                 </div>
 
                 {/* Add / Qty Control */}
-                {inCart ? (
+                {hasAddons ? (
+                  itemInCartCount > 0 ? (
+                    <button
+                      onClick={() => handleProductAddClick(item)}
+                      className="rounded-full bg-[#E8F5EE] border border-[#16845B] text-[#16845B] px-2.5 py-1 text-xs font-bold flex items-center gap-1 shadow-2xs hover:bg-[#16845B] hover:text-white transition cursor-pointer"
+                    >
+                      <span>{itemInCartCount} added</span>
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleProductAddClick(item)}
+                      className="rounded-full bg-white border border-[#16845B] text-[#16845B] hover:bg-[#16845B] hover:text-white px-3 py-1 text-xs font-bold transition shadow-2xs w-full text-center cursor-pointer"
+                    >
+                      + Add
+                    </button>
+                  )
+                ) : itemInCartCount > 0 ? (
                   <div className="flex items-center gap-1.5 bg-[#E8F5EE] border border-[#16845B]/30 rounded-full px-2 py-0.5">
                     <button
                       onClick={() => decrementItem(item.id)}
@@ -550,10 +753,10 @@ export default function GuestQRTableOrderPage({
                       <Minus className="h-2.5 w-2.5" />
                     </button>
                     <span className="font-extrabold text-xs text-[#16845B] min-w-[12px] text-center">
-                      {inCart.quantity}
+                      {itemInCartCount}
                     </span>
                     <button
-                      onClick={() => addToCart(item)}
+                      onClick={() => handleProductAddClick(item)}
                       className="h-5 w-5 rounded-full bg-[#16845B] text-white font-black text-xs flex items-center justify-center shadow-2xs cursor-pointer"
                     >
                       <Plus className="h-2.5 w-2.5" />
@@ -561,7 +764,7 @@ export default function GuestQRTableOrderPage({
                   </div>
                 ) : (
                   <button
-                    onClick={() => addToCart(item)}
+                    onClick={() => handleProductAddClick(item)}
                     className="rounded-full bg-white border border-[#16845B] text-[#16845B] hover:bg-[#16845B] hover:text-white px-3 py-1 text-xs font-bold transition shadow-2xs w-full text-center cursor-pointer"
                   >
                     + Add
@@ -621,22 +824,39 @@ export default function GuestQRTableOrderPage({
             </div>
 
             {/* Cart Items */}
-            <div className="space-y-2 divide-y divide-[#E5EBE7]/60">
+            <div className="space-y-2.5 divide-y divide-[#E5EBE7]/60">
               {cart.map((item) => (
                 <div
-                  key={item.menuItemId}
-                  className="pt-2 flex items-center justify-between text-sm"
+                  key={item.lineId}
+                  className="pt-2 flex items-start justify-between text-sm gap-2"
                 >
-                  <div>
-                    <div className="font-bold text-[#172B25]">{item.name}</div>
-                    <div className="text-xs text-[#718078]">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-[#172B25] text-sm leading-tight">{item.name}</div>
+                    {item.selectedAddons && item.selectedAddons.length > 0 && (
+                      <div className="text-[11px] text-[#16845B] mt-0.5 space-y-0.5">
+                        {item.selectedAddons.map((addon) => (
+                          <div key={addon.optionId} className="flex items-center gap-1">
+                            <span>+ {addon.name}</span>
+                            {addon.pricePaise > 0 && (
+                              <span className="text-[#718078]">({formatINR(addon.pricePaise)})</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {item.notes && (
+                      <div className="text-[10px] text-amber-800 italic mt-0.5">
+                        ↳ Note: {item.notes}
+                      </div>
+                    )}
+                    <div className="text-xs text-[#718078] mt-1">
                       {formatINR(item.pricePaise)} each
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
-                      onClick={() => decrementItem(item.menuItemId)}
-                      className="h-6 w-6 rounded-full bg-[#F8FAF9] text-[#172B25] font-black text-xs grid place-items-center cursor-pointer"
+                      onClick={() => decrementCartLine(item.lineId)}
+                      className="h-6 w-6 rounded-full bg-[#F8FAF9] text-[#172B25] font-black text-xs grid place-items-center cursor-pointer hover:bg-gray-200 transition"
                     >
                       -
                     </button>
@@ -644,18 +864,12 @@ export default function GuestQRTableOrderPage({
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() =>
-                        addToCart({
-                          id: item.menuItemId,
-                          name: item.name,
-                          pricePaise: item.pricePaise,
-                        })
-                      }
-                      className="h-6 w-6 rounded-full bg-[#16845B] text-white font-black text-xs grid place-items-center cursor-pointer"
+                      onClick={() => incrementCartLine(item.lineId)}
+                      className="h-6 w-6 rounded-full bg-[#16845B] text-white font-black text-xs grid place-items-center cursor-pointer hover:bg-[#116B49] transition"
                     >
                       +
                     </button>
-                    <span className="text-xs font-extrabold text-[#172B25] ml-2 min-w-[60px] text-right">
+                    <span className="text-xs font-extrabold text-[#172B25] ml-2 min-w-[65px] text-right">
                       {formatINR(item.pricePaise * item.quantity)}
                     </span>
                   </div>
@@ -975,6 +1189,159 @@ export default function GuestQRTableOrderPage({
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Product Add-on & Customizer Bottom-Sheet Modal */}
+      {customizingItem && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-5 space-y-4 max-h-[90vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-[#E5EBE7] pb-3 shrink-0">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full shrink-0 ${
+                      customizingItem.isVeg ? "bg-emerald-600" : "bg-red-600"
+                    }`}
+                  />
+                  <h3 className="font-extrabold text-base text-[#172B25] leading-snug">
+                    {customizingItem.name}
+                  </h3>
+                </div>
+                <div className="text-xs font-black text-[#16845B]">
+                  Base Price: {formatINR(customizingItem.pricePaise)}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setCustomizingItem(null)}
+                className="h-8 w-8 rounded-full bg-[#F8FAF9] text-[#718078] grid place-items-center cursor-pointer hover:bg-[#E5EBE7]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Scrollable Groups & Options Body */}
+            <div className="overflow-y-auto pr-1 space-y-4 flex-1">
+              {getActiveAddonGroups(customizingItem).map((group: any) => {
+                const isSingle = group.selectionType === "SINGLE";
+                const groupSelected = selectedAddons.filter((a) => a.groupId === group.id);
+                return (
+                  <div key={group.id} className="rounded-2xl border border-[#E5EBE7] p-3.5 bg-[#F8FAF9] space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-extrabold text-xs text-[#172B25] uppercase tracking-wide">
+                          {group.name}
+                        </span>
+                        <div className="text-[11px] text-[#718078]">
+                          {isSingle
+                            ? "Select 1 option"
+                            : group.maxSelections
+                            ? `Choose up to ${group.maxSelections}`
+                            : "Multiple options allowed"}
+                        </div>
+                      </div>
+                      {group.isRequired ? (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">
+                          Required
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                          Optional
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {group.options?.filter((o: any) => o.isActive !== false).map((opt: any) => {
+                        const isChecked = selectedAddons.some((a) => a.optionId === opt.id);
+                        return (
+                          <div
+                            key={opt.id}
+                            onClick={() => toggleAddonOption(group, opt)}
+                            className={`flex items-center justify-between p-2.5 rounded-xl border text-xs cursor-pointer transition select-none ${
+                              isChecked
+                                ? "bg-[#E8F5EE] border-[#16845B] text-[#172B25] font-semibold"
+                                : "bg-white border-[#E5EBE7] text-[#4A5D55] hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div
+                                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 border ${
+                                  isChecked
+                                    ? "bg-[#16845B] border-[#16845B] text-white"
+                                    : "border-gray-300 bg-white"
+                                }`}
+                              >
+                                {isChecked && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                              </div>
+                              <span>{opt.name}</span>
+                            </div>
+                            <span className="font-bold text-[#16845B]">
+                              {opt.pricePaise > 0 ? `+ ${formatINR(opt.pricePaise)}` : "Free"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Special Cooking Instructions Note */}
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-[#172B25]">
+                  Special Instructions
+                </label>
+                <textarea
+                  value={itemNotes}
+                  onChange={(e) => setItemNotes(e.target.value)}
+                  placeholder="e.g. Less spicy, extra crunchy, no cutlery, allergic to nuts..."
+                  rows={2}
+                  className="w-full text-xs p-2.5 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] focus:outline-none focus:border-[#16845B] text-[#172B25]"
+                />
+              </div>
+            </div>
+
+            {/* Bottom Add Action Bar */}
+            <div className="pt-3 border-t border-[#E5EBE7] flex items-center gap-3 shrink-0">
+              <div className="flex items-center border border-[#D2DFD8] rounded-full p-1 bg-white">
+                <button
+                  type="button"
+                  onClick={() => setCustomizingQty((q) => Math.max(1, q - 1))}
+                  className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="w-8 text-center text-xs font-black text-[#172B25]">
+                  {customizingQty}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCustomizingQty((q) => q + 1)}
+                  className="w-7 h-7 rounded-full bg-[#16845B] text-white flex items-center justify-center font-bold text-xs"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSaveCustomizedItem}
+                className="flex-1 rounded-full bg-[#16845B] hover:bg-[#116B49] text-white py-3 px-4 font-bold text-xs flex items-center justify-between shadow-sm cursor-pointer transition active:scale-98"
+              >
+                <span>Add Item to Order</span>
+                <span>
+                  {formatINR(
+                    (customizingItem.pricePaise +
+                      selectedAddons.reduce((s, a) => s + (a.pricePaise || 0), 0)) *
+                      customizingQty
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       )}

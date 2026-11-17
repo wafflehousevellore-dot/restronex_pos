@@ -249,12 +249,28 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
         "----------------------------------------",
         "ITEM                              QTY   ",
         "----------------------------------------",
-        ...items.map(
-          (it) =>
-            `${(it.name.length > 28 ? it.name.slice(0, 26) + ".." : it.name).padEnd(30, " ")} ×${String(it.quantity).padStart(2, " ")}${
-              it.variantName ? `\n   [${it.variantName}]` : ""
-            }${it.notes ? `\n   Note: ${it.notes}` : ""}`
-        ),
+        ...items.map((it) => {
+          const itemLines = [
+            `${(it.name.length > 28 ? it.name.slice(0, 26) + ".." : it.name).padEnd(30, " ")} ×${String(it.quantity).padStart(2, " ")}`,
+          ];
+          if (it.variantName) {
+            itemLines.push(`   [${it.variantName}]`);
+          }
+          if (it.modifiersJson) {
+            try {
+              const mods = JSON.parse(it.modifiersJson);
+              if (Array.isArray(mods)) {
+                for (const m of mods) {
+                  itemLines.push(`   + ${m.name || m.optionNameSnapshot}`);
+                }
+              }
+            } catch {}
+          }
+          if (it.notes) {
+            itemLines.push(`   Note: ${it.notes}`);
+          }
+          return itemLines.join("\n");
+        }),
         "----------------------------------------",
         ...(combinedNotes ? [`SPECIAL INSTRUCTIONS:\n"${combinedNotes}"`, "----------------------------------------"] : []),
         `Ticket ID: ${ticket.id.slice(-8)}`,

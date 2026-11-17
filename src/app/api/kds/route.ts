@@ -32,7 +32,11 @@ export async function GET(req: NextRequest) {
     include: {
       order: {
         include: {
-          items: true,
+          items: {
+            include: {
+              addons: true,
+            },
+          },
           table: { select: { id: true, number: true, area: true } },
           payments: { orderBy: { createdAt: "desc" }, take: 1 },
         },
@@ -81,7 +85,14 @@ export async function PATCH(req: NextRequest) {
       where: { id: ticketId, tenantId },
       include: {
         order: {
-          include: { items: true, table: true },
+          include: {
+            items: {
+              include: {
+                addons: true,
+              },
+            },
+            table: true,
+          },
         },
       },
     });
