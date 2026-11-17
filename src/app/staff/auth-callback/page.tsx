@@ -12,7 +12,58 @@ export default async function StaffAuthCallbackPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const sp = await searchParams;
-  const user = await getAuthenticatedUser();
+  let user = await getAuthenticatedUser();
+
+  // Robust Clerk session fallback if local session cookie is not yet initialized
+  if (!user) {
+    try {
+      const { auth, currentUser } = await import("@clerk/nextjs/server");
+      const { userId: clerkUserId } = await auth();
+      if (clerkUserId) {
+        const clerkUser = await currentUser();
+        const email =
+          clerkUser?.emailAddresses?.[0]?.emailAddress ||
+          clerkUser?.primaryEmailAddress?.emailAddress ||
+          "";
+        const name = clerkUser?.fullName || (email ? email.split("@")[0] : "Staff Member");
+        let dbUser = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { clerkId: clerkUserId },
+              ...(email ? [{ email: email.toLowerCase() }] : []),
+            ],
+          },
+        });
+        if (!dbUser && email) {
+          dbUser = await prisma.user.create({
+            data: {
+              clerkId: clerkUserId,
+              email: email.toLowerCase(),
+              name,
+              role: "STAFF",
+            },
+          });
+        } else if (dbUser && !dbUser.clerkId) {
+          dbUser = await prisma.user.update({
+            where: { id: dbUser.id },
+            data: { clerkId: clerkUserId },
+          });
+        }
+        if (dbUser) {
+          user = {
+            id: dbUser.id,
+            email: dbUser.email,
+            name: dbUser.name,
+            avatarUrl: dbUser.avatarUrl,
+            clerkUserId: clerkUserId,
+            isPlatformAdmin: Boolean(dbUser.isPlatformAdmin),
+          };
+        }
+      }
+    } catch (clerkErr) {
+      console.warn("[Staff Auth Callback] Clerk session fallback notice:", clerkErr);
+    }
+  }
 
   if (!user) {
     redirect("/staff/login");
@@ -22,13 +73,35 @@ export default async function StaffAuthCallbackPage({
   const selectedOrgParam = sp.org || c.get("restronex_org")?.value;
 
   // 1. Fetch all active memberships for this authenticated user
-  const allActiveMemberships = await prisma.membership.findMany({
+  let allActiveMemberships = await prisma.membership.findMany({
     where: { userId: user.id, status: "ACTIVE" },
     include: {
       tenant: { select: { id: true, name: true, slug: true, clerkOrgId: true, status: true } },
     },
     orderBy: { createdAt: "asc" },
   });
+
+  // 1b. If no active memberships found by userId, check by user email to ensure mapping
+  if (allActiveMemberships.length === 0 && user.email) {
+    const emailMembership = await prisma.membership.findFirst({
+      where: {
+        user: { email: user.email.toLowerCase() },
+        status: "ACTIVE",
+      },
+      include: {
+        tenant: { select: { id: true, name: true, slug: true, clerkOrgId: true, status: true } },
+      },
+    });
+    if (emailMembership) {
+      if (emailMembership.userId !== user.id) {
+        await prisma.membership.update({
+          where: { id: emailMembership.id },
+          data: { userId: user.id },
+        });
+      }
+      allActiveMemberships = [emailMembership];
+    }
+  }
 
   // 2. Handle zero active memberships
   if (allActiveMemberships.length === 0) {
@@ -63,9 +136,10 @@ export default async function StaffAuthCallbackPage({
   }
 
   // 4. Resolve the target membership: explicitly selected org param -> cookie -> single active membership
-  const targetMembership = (selectedOrgParam
-    ? allActiveMemberships.find((m) => m.tenantId === selectedOrgParam)
-    : null) || allActiveMemberships[0];
+  const targetMembership =
+    (selectedOrgParam
+      ? allActiveMemberships.find((m) => m.tenantId === selectedOrgParam)
+      : null) || allActiveMemberships[0];
 
   if (!targetMembership) {
     redirect("/staff/choose-organization");
@@ -75,25 +149,33 @@ export default async function StaffAuthCallbackPage({
     redirect("/staff/login?error=suspended");
   }
 
-  // 5. Securely persist active organization cookie
-  c.set("restronex_org", targetMembership.tenantId, {
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-    sameSite: "lax",
-  });
-
-  // 6. Retroactive synchronization with Clerk Organization
+  // 5. Retroactive synchronization with Clerk Organization (safe, non-blocking)
   if (targetMembership.tenant.clerkOrgId && user.clerkUserId) {
     try {
       const client = await clerkClient();
-      await client.organizations.createOrganizationMembership({
-        organizationId: targetMembership.tenant.clerkOrgId,
-        userId: user.clerkUserId,
-        role: "org:member",
-      }).catch(() => null);
+      await client.organizations
+        .createOrganizationMembership({
+          organizationId: targetMembership.tenant.clerkOrgId,
+          userId: user.clerkUserId,
+          role: "org:member",
+        })
+        .catch(() => null);
     } catch {
       // non-blocking
     }
+  }
+
+  // 6. Role-based immediate landing station routing
+  const role = targetMembership.role.toUpperCase();
+  let destination = "/staff/dashboard";
+  if (role === "CASHIER") {
+    destination = "/staff/pos";
+  } else if (role === "KITCHEN_STAFF" || role === "KITCHEN") {
+    destination = "/staff/kitchen";
+  } else if (role === "WAITER") {
+    destination = "/staff/tables";
+  } else if (role === "INVENTORY_MANAGER" || role === "INVENTORY") {
+    destination = "/staff/inventory";
   }
 
   // 7. Respect safe next redirect parameter
@@ -105,20 +187,8 @@ export default async function StaffAuthCallbackPage({
     nextParam !== "/staff/auth-callback" &&
     nextParam !== "/staff/choose-organization"
   ) {
-    redirect(nextParam);
+    destination = nextParam;
   }
 
-  // 8. Role-based immediate landing station routing
-  const role = targetMembership.role.toUpperCase();
-  if (role === "CASHIER") {
-    redirect("/staff/pos");
-  } else if (role === "KITCHEN_STAFF") {
-    redirect("/staff/kitchen");
-  } else if (role === "WAITER") {
-    redirect("/staff/tables");
-  } else if (role === "INVENTORY_MANAGER") {
-    redirect("/staff/inventory");
-  }
-
-  redirect("/staff/dashboard");
+  redirect(destination);
 }
