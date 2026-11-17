@@ -42,23 +42,42 @@ export async function POST(req: NextRequest) {
   let targetOutletId: string | null = null;
 
   if (res_id) {
-    const allConfigs = await prisma.integrationConfig.findMany({
-      where: { provider: "zomato" },
+    // 3a. Primary lookup: AggregatorOutletMapping table
+    const outletMapping = await prisma.aggregatorOutletMapping.findFirst({
+      where: {
+        provider: "zomato",
+        providerStoreId: String(res_id),
+      },
     });
 
-    for (const c of allConfigs) {
-      if (!c.configJson) continue;
-      try {
-        const parsed = JSON.parse(c.configJson);
-        if (
-          parsed.providerStoreId === String(res_id) ||
-          parsed.outletMappings?.some((m: any) => m.providerStoreId === String(res_id))
-        ) {
-          targetTenantId = c.tenantId;
-          targetOutletId = parsed.outletId || parsed.outletMappings?.[0]?.localOutletId;
-          break;
-        }
-      } catch {}
+    if (outletMapping) {
+      targetTenantId = outletMapping.tenantId;
+      targetOutletId = outletMapping.restroOutletId;
+    } else {
+      // 3b. Secondary lookup: IntegrationConfig configJson
+      const allConfigs = await prisma.integrationConfig.findMany({
+        where: { provider: "zomato" },
+      });
+
+      for (const c of allConfigs) {
+        if (!c.configJson) continue;
+        try {
+          const parsed = JSON.parse(c.configJson);
+          if (parsed.providerStoreId === String(res_id)) {
+            targetTenantId = c.tenantId;
+            targetOutletId = parsed.outletId;
+            break;
+          }
+          const matchedMapping = parsed.outletMappings?.find(
+            (m: any) => m.providerStoreId === String(res_id)
+          );
+          if (matchedMapping) {
+            targetTenantId = c.tenantId;
+            targetOutletId = matchedMapping.localOutletId || matchedMapping.restroOutletId;
+            break;
+          }
+        } catch {}
+      }
     }
   }
 

@@ -4,6 +4,7 @@ import { broadcastKdsEvent } from "./kds-events";
 export type OrderSource = "POS" | "SWIGGY" | "ZOMATO" | "WEBSITE" | "TABLE_QR";
 
 export interface NormalizedOrderItem {
+  id?: string;
   name: string;
   quantity: number;
   unitPricePaise: number;
@@ -112,6 +113,17 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
 
     if (existingOrder) {
       const existingTicket = existingOrder.kotTickets?.[0];
+      await prisma.aggregatorOrderLog.create({
+        data: {
+          tenantId,
+          provider: source.toLowerCase(),
+          providerOrderId: String(externalOrderId || orderNumber),
+          orderId: existingOrder.id,
+          status: "DUPLICATE",
+          payloadJson: JSON.stringify(payload),
+        },
+      }).catch(() => null);
+
       return {
         ok: true,
         isDuplicate: true,
@@ -152,20 +164,74 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
       });
     }
 
+    // 2b. Map items using AggregatorMenuMapping with automatic name matching fallback
+    const providerKey = source.toLowerCase();
+    const existingMenuMappings = await prisma.aggregatorMenuMapping.findMany({
+      where: { tenantId, provider: providerKey },
+    });
+
+    const tenantMenuItems = await prisma.menuItem.findMany({
+      where: { tenantId },
+      select: { id: true, name: true, pricePaise: true },
+    });
+
+    const resolvedItems = items.map((it) => {
+      // 1) Match by explicit providerItemId or providerItemName
+      const mapping = existingMenuMappings.find(
+        (m) =>
+          (it.id && m.providerItemId === String(it.id)) ||
+          m.providerItemName.toLowerCase() === it.name.trim().toLowerCase()
+      );
+
+      let matchedMenuItemId = mapping?.restroMenuItemId;
+      let isUnmapped = false;
+
+      // 2) Fallback: match by tenant menu item name (case-insensitive)
+      if (!matchedMenuItemId) {
+        const directNameMatch = tenantMenuItems.find(
+          (m) => m.name.toLowerCase().trim() === it.name.toLowerCase().trim()
+        );
+        if (directNameMatch) {
+          matchedMenuItemId = directNameMatch.id;
+        }
+      }
+
+      // 3) Fallback to default menuItem with unmapped warning
+      if (!matchedMenuItemId) {
+        matchedMenuItemId = fallbackMenuItem!.id;
+        isUnmapped = true;
+      }
+
+      const itemNotes = [
+        it.notes,
+        isUnmapped ? "[UNMAPPED ITEM - REQUIRES ATTENTION]" : null,
+      ]
+        .filter(Boolean)
+        .join(" • ");
+
+      return {
+        ...it,
+        menuItemId: matchedMenuItemId,
+        notes: itemNotes || null,
+        isUnmapped,
+      };
+    });
+
     // 3. Compile special notes including rider details and cooking instructions
     const combinedNotes = [
       cookingInstructions ? `Instructions: ${cookingInstructions}` : null,
       notes ? `Note: ${notes}` : null,
       riderDetails?.name ? `Rider: ${riderDetails.name}${riderDetails.phone ? ` (${riderDetails.phone})` : ""}` : null,
+      resolvedItems.some((i) => i.isUnmapped) ? "⚠️ Contains unmapped aggregator items" : null,
     ]
       .filter(Boolean)
       .join(" • ") || undefined;
 
     // 4. Transform items data
-    const orderItemsCreate = items.map((it) => {
+    const orderItemsCreate = resolvedItems.map((it) => {
       const itTotal = it.totalPaise || it.quantity * it.unitPricePaise;
       return {
-        menuItemId: fallbackMenuItem!.id,
+        menuItemId: it.menuItemId,
         name: it.name,
         quantity: Math.max(1, it.quantity),
         unitPricePaise: it.unitPricePaise,
@@ -331,6 +397,18 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
       },
     });
 
+    // 7. Persist to AggregatorOrderLog
+    await prisma.aggregatorOrderLog.create({
+      data: {
+        tenantId,
+        provider: source.toLowerCase(),
+        providerOrderId: String(externalOrderId || orderNumber),
+        orderId: result.order.id,
+        status: "SUCCESS",
+        payloadJson: JSON.stringify(payload),
+      },
+    }).catch(() => null);
+
     return {
       ok: true,
       isDuplicate: false,
@@ -342,6 +420,17 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
     };
   } catch (err: any) {
     console.error("[OrderIngestion] Ingestion error:", err);
+    await prisma.aggregatorOrderLog.create({
+      data: {
+        tenantId: payload.tenantId,
+        provider: (payload.source || "aggregator").toLowerCase(),
+        providerOrderId: String(payload.externalOrderId || payload.orderNumber || "unknown"),
+        status: "FAILED",
+        payloadJson: JSON.stringify(payload),
+        errorMessage: err?.message || "Ingestion error",
+      },
+    }).catch(() => null);
+
     return {
       ok: false,
       status: "FAILED",
