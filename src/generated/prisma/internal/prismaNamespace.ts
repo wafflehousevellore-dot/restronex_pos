@@ -457,7 +457,10 @@ export const ModelName = {
   WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
   InvoiceRecord: 'InvoiceRecord',
   FeatureUsage: 'FeatureUsage',
-  WhatsAppMessageQueue: 'WhatsAppMessageQueue'
+  WhatsAppMessageQueue: 'WhatsAppMessageQueue',
+  MarketplaceService: 'MarketplaceService',
+  OrganizationServiceActivation: 'OrganizationServiceActivation',
+  ServiceActivationEvent: 'ServiceActivationEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -473,7 +476,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "staffProfile" | "outletMember" | "staffInvitation" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "addonGroup" | "addonOption" | "productAddonGroup" | "orderItemAddon" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue"
+    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "staffProfile" | "outletMember" | "staffInvitation" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "addonGroup" | "addonOption" | "productAddonGroup" | "orderItemAddon" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue" | "marketplaceService" | "organizationServiceActivation" | "serviceActivationEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -4991,6 +4994,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MarketplaceService: {
+      payload: Prisma.$MarketplaceServicePayload<ExtArgs>
+      fields: Prisma.MarketplaceServiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MarketplaceServiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MarketplaceServiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        findFirst: {
+          args: Prisma.MarketplaceServiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MarketplaceServiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        findMany: {
+          args: Prisma.MarketplaceServiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>[]
+        }
+        create: {
+          args: Prisma.MarketplaceServiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        createMany: {
+          args: Prisma.MarketplaceServiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MarketplaceServiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>[]
+        }
+        delete: {
+          args: Prisma.MarketplaceServiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        update: {
+          args: Prisma.MarketplaceServiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        deleteMany: {
+          args: Prisma.MarketplaceServiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MarketplaceServiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MarketplaceServiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>[]
+        }
+        upsert: {
+          args: Prisma.MarketplaceServiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketplaceServicePayload>
+        }
+        aggregate: {
+          args: Prisma.MarketplaceServiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMarketplaceService>
+        }
+        groupBy: {
+          args: Prisma.MarketplaceServiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceServiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MarketplaceServiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketplaceServiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrganizationServiceActivation: {
+      payload: Prisma.$OrganizationServiceActivationPayload<ExtArgs>
+      fields: Prisma.OrganizationServiceActivationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrganizationServiceActivationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrganizationServiceActivationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        findFirst: {
+          args: Prisma.OrganizationServiceActivationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrganizationServiceActivationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        findMany: {
+          args: Prisma.OrganizationServiceActivationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>[]
+        }
+        create: {
+          args: Prisma.OrganizationServiceActivationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        createMany: {
+          args: Prisma.OrganizationServiceActivationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrganizationServiceActivationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>[]
+        }
+        delete: {
+          args: Prisma.OrganizationServiceActivationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        update: {
+          args: Prisma.OrganizationServiceActivationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        deleteMany: {
+          args: Prisma.OrganizationServiceActivationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrganizationServiceActivationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrganizationServiceActivationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>[]
+        }
+        upsert: {
+          args: Prisma.OrganizationServiceActivationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationServiceActivationPayload>
+        }
+        aggregate: {
+          args: Prisma.OrganizationServiceActivationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganizationServiceActivation>
+        }
+        groupBy: {
+          args: Prisma.OrganizationServiceActivationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationServiceActivationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrganizationServiceActivationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationServiceActivationCountAggregateOutputType> | number
+        }
+      }
+    }
+    ServiceActivationEvent: {
+      payload: Prisma.$ServiceActivationEventPayload<ExtArgs>
+      fields: Prisma.ServiceActivationEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ServiceActivationEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ServiceActivationEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        findFirst: {
+          args: Prisma.ServiceActivationEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ServiceActivationEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        findMany: {
+          args: Prisma.ServiceActivationEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>[]
+        }
+        create: {
+          args: Prisma.ServiceActivationEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        createMany: {
+          args: Prisma.ServiceActivationEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ServiceActivationEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>[]
+        }
+        delete: {
+          args: Prisma.ServiceActivationEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        update: {
+          args: Prisma.ServiceActivationEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.ServiceActivationEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ServiceActivationEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ServiceActivationEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.ServiceActivationEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ServiceActivationEventPayload>
+        }
+        aggregate: {
+          args: Prisma.ServiceActivationEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateServiceActivationEvent>
+        }
+        groupBy: {
+          args: Prisma.ServiceActivationEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceActivationEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ServiceActivationEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ServiceActivationEventCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -6074,6 +6299,55 @@ export const WhatsAppMessageQueueScalarFieldEnum = {
 export type WhatsAppMessageQueueScalarFieldEnum = (typeof WhatsAppMessageQueueScalarFieldEnum)[keyof typeof WhatsAppMessageQueueScalarFieldEnum]
 
 
+export const MarketplaceServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  iconName: 'iconName',
+  badge: 'badge',
+  implementationStatus: 'implementationStatus',
+  requiredPlanTier: 'requiredPlanTier',
+  targetRoute: 'targetRoute',
+  configRoute: 'configRoute',
+  isCoreDefault: 'isCoreDefault',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketplaceServiceScalarFieldEnum = (typeof MarketplaceServiceScalarFieldEnum)[keyof typeof MarketplaceServiceScalarFieldEnum]
+
+
+export const OrganizationServiceActivationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  serviceId: 'serviceId',
+  status: 'status',
+  applicableOutletId: 'applicableOutletId',
+  configJson: 'configJson',
+  activatedAt: 'activatedAt',
+  activatedByUserId: 'activatedByUserId',
+  deactivatedAt: 'deactivatedAt'
+} as const
+
+export type OrganizationServiceActivationScalarFieldEnum = (typeof OrganizationServiceActivationScalarFieldEnum)[keyof typeof OrganizationServiceActivationScalarFieldEnum]
+
+
+export const ServiceActivationEventScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  serviceId: 'serviceId',
+  eventType: 'eventType',
+  actorUserId: 'actorUserId',
+  actorEmail: 'actorEmail',
+  detailsJson: 'detailsJson',
+  createdAt: 'createdAt'
+} as const
+
+export type ServiceActivationEventScalarFieldEnum = (typeof ServiceActivationEventScalarFieldEnum)[keyof typeof ServiceActivationEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -6378,6 +6652,9 @@ export type GlobalOmitConfig = {
   invoiceRecord?: Prisma.InvoiceRecordOmit
   featureUsage?: Prisma.FeatureUsageOmit
   whatsAppMessageQueue?: Prisma.WhatsAppMessageQueueOmit
+  marketplaceService?: Prisma.MarketplaceServiceOmit
+  organizationServiceActivation?: Prisma.OrganizationServiceActivationOmit
+  serviceActivationEvent?: Prisma.ServiceActivationEventOmit
 }
 
 /* Types for Logging */

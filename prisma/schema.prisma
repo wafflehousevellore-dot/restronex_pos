@@ -100,6 +100,8 @@ model Tenant {
   addonGroups   AddonGroup[]
   addonOptions  AddonOption[]
   productAddonGroups ProductAddonGroup[]
+  serviceActivations OrganizationServiceActivation[]
+  serviceActivationEvents ServiceActivationEvent[]
 }
 
 model Membership {
@@ -1187,3 +1189,53 @@ model WhatsAppMessageQueue {
   @@index([recipientPhone])
   @@index([status, nextRetryAt])
 }
+
+model MarketplaceService {
+  id                   String   @id // unique slug, e.g. "kds", "loyalty_wallet"
+  name                 String
+  category             String   // crm, analytics, service, operations
+  description          String
+  iconName             String   @default("Plug")
+  badge                String?
+  implementationStatus String   @default("OPERATIONAL") // OPERATIONAL, CONFIG_REQUIRED, PLANNED
+  requiredPlanTier     String   @default("STARTER")     // STARTER, GROWTH, SCALE
+  targetRoute          String?  // primary working dashboard/page link, e.g. "/app/kitchen"
+  configRoute          String?  // setup/settings link if configuration required, e.g. "/app/settings/printers"
+  isCoreDefault        Boolean  @default(false)
+  sortOrder            Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  activations          OrganizationServiceActivation[]
+}
+
+model OrganizationServiceActivation {
+  id                 String             @id @default(cuid())
+  tenantId           String
+  serviceId          String
+  status             String             @default("ACTIVE") // ACTIVE, CONFIGURATION_REQUIRED, SUSPENDED, DEACTIVATED
+  applicableOutletId String?            // Null means all outlets in tenant
+  configJson         String?            // JSON configuration payload
+  activatedAt        DateTime           @default(now())
+  activatedByUserId  String?
+  deactivatedAt      DateTime?
+  tenant             Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  service            MarketplaceService @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, serviceId])
+  @@index([tenantId, status])
+}
+
+model ServiceActivationEvent {
+  id          String   @id @default(cuid())
+  tenantId    String
+  serviceId   String
+  eventType   String   // ACTIVATED, DEACTIVATED, CONFIG_UPDATED, PLAN_BLOCKED
+  actorUserId String?
+  actorEmail  String?
+  detailsJson String?
+  createdAt   DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, createdAt])
+}
+

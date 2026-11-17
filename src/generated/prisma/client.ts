@@ -346,3 +346,18 @@ export type FeatureUsage = Prisma.FeatureUsageModel
  * 
  */
 export type WhatsAppMessageQueue = Prisma.WhatsAppMessageQueueModel
+/**
+ * Model MarketplaceService
+ * 
+ */
+export type MarketplaceService = Prisma.MarketplaceServiceModel
+/**
+ * Model OrganizationServiceActivation
+ * 
+ */
+export type OrganizationServiceActivation = Prisma.OrganizationServiceActivationModel
+/**
+ * Model ServiceActivationEvent
+ * 
+ */
+export type ServiceActivationEvent = Prisma.ServiceActivationEventModel

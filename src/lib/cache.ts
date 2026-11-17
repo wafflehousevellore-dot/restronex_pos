@@ -97,6 +97,7 @@ export async function getOrSetCache<T>(
       if (fresh !== null && fresh !== undefined) {
         appCache.set(key, fresh, ttlSeconds);
       }
+
       return fresh;
     } finally {
       inFlightRequests.delete(key);

@@ -42,7 +42,7 @@ const nav = [
   { label: "Staff & Team", href: "/app/staff", icon: UserCog },
   { label: "Integrations", href: "/app/integrations", icon: Plug },
   { label: "Subscription", href: "/app/subscription", icon: CreditCard },
-  { label: "Marketplace", href: "/app/marketplace", icon: Plug },
+  { label: "Marketplace", href: "/app/marketplace", icon: Plug, badge: "Hub" },
   { label: "Tokens", href: "/app/tokens", icon: FileText },
   { label: "Reservations", href: "/app/reservations", icon: Table2 },
   { label: "Feedback", href: "/app/feedback", icon: Users },
@@ -142,7 +142,12 @@ export default function AppShell({
                     active ? "text-[#16845B]" : "text-[#718078]"
                   }`}
                 />
-                <span className="truncate">{n.label}</span>
+                <span className="truncate flex-1">{n.label}</span>
+                {(n as any).badge && (
+                  <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#E8F5EE] text-[#16845B] border border-[#16845B]/20">
+                    {(n as any).badge}
+                  </span>
+                )}
               </Link>
             );
           })}

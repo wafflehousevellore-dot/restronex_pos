@@ -111,7 +111,10 @@ export const ModelName = {
   WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
   InvoiceRecord: 'InvoiceRecord',
   FeatureUsage: 'FeatureUsage',
-  WhatsAppMessageQueue: 'WhatsAppMessageQueue'
+  WhatsAppMessageQueue: 'WhatsAppMessageQueue',
+  MarketplaceService: 'MarketplaceService',
+  OrganizationServiceActivation: 'OrganizationServiceActivation',
+  ServiceActivationEvent: 'ServiceActivationEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1172,6 +1175,55 @@ export const WhatsAppMessageQueueScalarFieldEnum = {
 } as const
 
 export type WhatsAppMessageQueueScalarFieldEnum = (typeof WhatsAppMessageQueueScalarFieldEnum)[keyof typeof WhatsAppMessageQueueScalarFieldEnum]
+
+
+export const MarketplaceServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  category: 'category',
+  description: 'description',
+  iconName: 'iconName',
+  badge: 'badge',
+  implementationStatus: 'implementationStatus',
+  requiredPlanTier: 'requiredPlanTier',
+  targetRoute: 'targetRoute',
+  configRoute: 'configRoute',
+  isCoreDefault: 'isCoreDefault',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MarketplaceServiceScalarFieldEnum = (typeof MarketplaceServiceScalarFieldEnum)[keyof typeof MarketplaceServiceScalarFieldEnum]
+
+
+export const OrganizationServiceActivationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  serviceId: 'serviceId',
+  status: 'status',
+  applicableOutletId: 'applicableOutletId',
+  configJson: 'configJson',
+  activatedAt: 'activatedAt',
+  activatedByUserId: 'activatedByUserId',
+  deactivatedAt: 'deactivatedAt'
+} as const
+
+export type OrganizationServiceActivationScalarFieldEnum = (typeof OrganizationServiceActivationScalarFieldEnum)[keyof typeof OrganizationServiceActivationScalarFieldEnum]
+
+
+export const ServiceActivationEventScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  serviceId: 'serviceId',
+  eventType: 'eventType',
+  actorUserId: 'actorUserId',
+  actorEmail: 'actorEmail',
+  detailsJson: 'detailsJson',
+  createdAt: 'createdAt'
+} as const
+
+export type ServiceActivationEventScalarFieldEnum = (typeof ServiceActivationEventScalarFieldEnum)[keyof typeof ServiceActivationEventScalarFieldEnum]
 
 
 export const SortOrder = {
