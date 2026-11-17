@@ -46,20 +46,19 @@ function getPrisma(): PrismaClient {
   let prisma: PrismaClient;
 
   if (rawDbUrl.startsWith("postgres://") || rawDbUrl.startsWith("postgresql://")) {
-    // Optimize connection routing: port 5432 provides session pooling without the 200 proxy connection cap
-    const dbUrl = rawDbUrl.includes(":6543/")
-      ? rawDbUrl.replace(":6543/", ":5432/").replace("?pgbouncer=true", "")
-      : rawDbUrl;
+    // Respect Supavisor transaction pooler on port 6543 (?pgbouncer=true) for high-concurrency scaling.
+    // Port 5432 enforces a strict 15-client session mode limit in Supavisor (EMAXCONNSESSION).
+    const dbUrl = rawDbUrl;
 
     const poolMax = isServerless
-      ? Number(process.env.PG_POOL_MAX || 2)
+      ? Number(process.env.PG_POOL_MAX || 1)
       : Number(process.env.PG_POOL_MAX || 10);
 
     const pool = new pg.Pool({
       connectionString: dbUrl,
       max: poolMax,
-      idleTimeoutMillis: isServerless ? 2000 : 30000,
-      connectionTimeoutMillis: 15000,
+      idleTimeoutMillis: isServerless ? 1000 : 30000,
+      connectionTimeoutMillis: 10000,
     });
 
     pool.on("error", (err) => {

@@ -186,11 +186,25 @@ export default function KitchenPage() {
     audioEngine.volume = newVol;
   };
 
-  // Main Ticket Loader
+  const lastEtag = useRef<string | null>(null);
+
+  // Main Ticket Loader with ETag 304 conditional evaluation
   const loadTickets = useCallback(async () => {
     try {
       const qs = activeOutletId ? `?outletId=${encodeURIComponent(activeOutletId)}` : "";
-      const res = await apiFetch(`/api/kds${qs}`);
+      const headers: Record<string, string> = {};
+      if (lastEtag.current) {
+        headers["If-None-Match"] = lastEtag.current;
+      }
+      const res = await apiFetch(`/api/kds${qs}`, { headers });
+      if (res.status === 304) {
+        // Tickets unchanged: zero re-render, zero bandwidth overhead
+        return;
+      }
+      const etagHeader = res.headers.get("etag");
+      if (etagHeader) {
+        lastEtag.current = etagHeader;
+      }
       const list = await res.json();
       if (!Array.isArray(list)) return;
 
@@ -235,10 +249,24 @@ export default function KitchenPage() {
     }
   }, [activeOutletId, soundEnabled]);
 
-  // Polling interval (3 seconds) + SSE listener
+  // Polling interval with Visibility Change Backoff + SSE listener
   useEffect(() => {
     loadTickets();
-    const intervalId = setInterval(loadTickets, 3000);
+    let intervalId = setInterval(loadTickets, 3000);
+
+    const handleVisibility = () => {
+      clearInterval(intervalId);
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+        intervalId = setInterval(loadTickets, 15000); // 15s backoff when minimized/backgrounded
+      } else {
+        loadTickets();
+        intervalId = setInterval(loadTickets, 3000);
+      }
+    };
+
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibility);
+    }
 
     // Setup Server-Sent Events (SSE) stream for zero-latency instant updates
     let evtSource: EventSource | null = null;
@@ -260,6 +288,9 @@ export default function KitchenPage() {
 
     return () => {
       clearInterval(intervalId);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibility);
+      }
       evtSource?.close();
     };
   }, [loadTickets, activeOutletId, soundEnabled]);

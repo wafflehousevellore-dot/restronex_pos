@@ -41,20 +41,17 @@ export const options = {
 };
 
 const QR_TOKENS = [
-  "tbl_koramangala_01",
-  "tbl_koramangala_t02",
-  "tbl_koramangala_t03",
-  "tbl_koramangala_t04",
-  "tbl_koramangala_t05",
-  "tbl_koramangala_t06",
-  "tbl_koramangala_t07",
-  "tbl_koramangala_t08",
+  "qr_ny3u_t01_b29199d8",
+  "qr_ny3u_t02_a6ec6d4b",
+  "qr_ny3u_t03_0144f473",
+  "qr_ny3u_t04_b2a684a3",
+  "qr_ny3u_t05_7418d42b",
 ];
 
 const MENU_ITEMS = [
-  { id: "016f2d74-508d-4823-9a65-38784e495c15", name: "Dal Makhani" },
-  { id: "645609ee-9f51-45b8-b5a7-2871291402b4", name: "Paneer Butter Masala" },
-  { id: "e2b37ca9-4435-43ca-9b92-414e52418be4", name: "Butter Chicken" },
+  { id: "cmw4x4sfj000a4blqf3tstmpk", name: "Honey Butter Waffle" },
+  { id: "cmw4x4skf000b4blq80tf2rs4", name: "Nutella Blast Waffle" },
+  { id: "cmw4x4spb000c4blqnzuavo61", name: "Belgian Dark Chocolate Waffle" },
 ];
 
 export default function runBenchmark() {

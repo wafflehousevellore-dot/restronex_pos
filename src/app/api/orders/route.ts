@@ -5,7 +5,7 @@ import { orderCreateSchema } from "@/lib/validators";
 import { calcOrderTotals } from "@/lib/money";
 import { validateAndPriceCartItems } from "@/lib/addon-pricing";
 import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
-import { generateAndPersistInvoicePdf } from "@/lib/invoice-storage";
+import { generateAndPersistInvoicePdf, buildSignedInvoicePdfUrl } from "@/lib/invoice-storage";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 import { appCache } from "@/lib/cache";
 
@@ -360,30 +360,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 7. Auto-Deduct Inventory via Recipe Bill of Materials (BOM)
-    for (const it of d.items) {
-      if (!it.menuItemId) continue;
-      const recipe = await tx.recipe.findUnique({
-        where: { menuItemId: it.menuItemId },
+    // 7. Auto-Deduct Inventory via Recipe Bill of Materials (BOM) — Batched single-query lookup
+    const recipeItemIds = d.items.map((it) => it.menuItemId).filter(Boolean) as string[];
+    if (recipeItemIds.length > 0) {
+      const recipes = await tx.recipe.findMany({
+        where: { menuItemId: { in: recipeItemIds } },
         include: { ingredients: true },
       });
-      if (recipe && recipe.ingredients.length > 0) {
-        for (const ing of recipe.ingredients) {
-          const deductQty = (ing.quantity * it.quantity) / (recipe.yieldQty || 1);
-          await tx.inventoryItem.update({
-            where: { id: ing.inventoryItemId },
-            data: { currentStock: { decrement: deductQty } },
-          });
-          await tx.stockMovement.create({
-            data: {
-              tenantId,
-              outletId: d.outletId,
-              inventoryItemId: ing.inventoryItemId,
-              quantity: -deductQty,
-              type: "SALE_CONSUMPTION",
-              reference: `Order #${orderNumber}: ${it.name} ×${it.quantity}`,
-            },
-          });
+      const recipeMap = new Map(recipes.map((r) => [r.menuItemId, r]));
+
+      for (const it of d.items) {
+        if (!it.menuItemId) continue;
+        const recipe = recipeMap.get(it.menuItemId);
+        if (recipe && recipe.ingredients.length > 0) {
+          for (const ing of recipe.ingredients) {
+            const deductQty = (ing.quantity * it.quantity) / (recipe.yieldQty || 1);
+            await tx.inventoryItem.update({
+              where: { id: ing.inventoryItemId },
+              data: { currentStock: { decrement: deductQty } },
+            });
+            await tx.stockMovement.create({
+              data: {
+                tenantId,
+                outletId: d.outletId,
+                inventoryItemId: ing.inventoryItemId,
+                quantity: -deductQty,
+                type: "SALE_CONSUMPTION",
+                reference: `Order #${orderNumber}: ${it.name} ×${it.quantity}`,
+              },
+            });
+          }
         }
       }
     }
@@ -491,38 +497,43 @@ export async function POST(req: NextRequest) {
     throw txErr;
   }
 
-  // Non-blocking independent workflows after atomic DB finalization:
-  // 1) Persist private Invoice PDF to Supabase Storage
-  // 2) Independently dispatch WhatsApp invoice + Thermal bill printing via Promise.allSettled
+  // High-Performance Asynchronous Dispatch:
+  // 1) Compute HMAC signed invoice PDF URL immediately (0ms latency, zero DB or Storage calls)
+  // 2) Persist PDF to Supabase Storage in background without holding POS cashier connection
+  // 3) Queue WhatsApp bill delivery to durable queue with background worker execution
+  // 4) Queue thermal print job
   const origin = req.nextUrl.origin;
-  let invoicePdfUrl: string | null = null;
-  try {
-    const persisted = await generateAndPersistInvoicePdf(order.id, origin);
-    if (persisted?.signedPdfUrl) {
-      invoicePdfUrl = persisted.signedPdfUrl;
-    }
-  } catch (pdfErr) {
-    console.error("[Orders] Non-fatal PDF storage error:", pdfErr);
+  const invoicePdfUrl = buildSignedInvoicePdfUrl(order.tenantId, invoiceNumber, origin);
+
+  // Background non-blocking persistence of PDF
+  generateAndPersistInvoicePdf(order.id, origin).catch((pdfErr) => {
+    console.warn("[Orders] Non-fatal background PDF persistence notice:", pdfErr);
+  });
+
+  // Durable non-blocking queueing of WhatsApp invoice
+  let whatsappResult: any = { queued: false, status: "NOT_CONFIGURED", reason: "No customer mobile number entered" };
+  if (order.customerPhone) {
+    whatsappResult = await queueAndSendWhatsAppInvoice(order.id, {
+      baseUrl: origin,
+      skipImmediateDispatch: true,
+    }).catch((waErr) => {
+      console.warn("[Orders] Non-fatal background WhatsApp queue notice:", waErr);
+      return { queued: false, status: "FAILED", reason: "WhatsApp queue notice" };
+    });
   }
 
-  const [waSettled, printSettled] = await Promise.allSettled([
-    order.customerPhone
-      ? queueAndSendWhatsAppInvoice(order.id, { baseUrl: origin })
-      : Promise.resolve({ queued: false, status: "NOT_CONFIGURED", reason: "No customer mobile number entered" }),
-    queueAndDispatchBillPrintJob(order.id, { baseUrl: origin }),
-  ]);
+  // Non-blocking print job dispatch
+  const printResult = await queueAndDispatchBillPrintJob(order.id, { baseUrl: origin }).catch((printErr) => {
+    console.warn("[Orders] Non-fatal background print job notice:", printErr);
+    return { jobId: null, status: "FAILED", requiresClientDispatch: false, error: "Print dispatch notice" };
+  });
 
-  const whatsappResult =
-    waSettled.status === "fulfilled"
-      ? waSettled.value
-      : { queued: false, status: "FAILED", reason: "WhatsApp dispatch failure" };
-
-  const printResult =
-    printSettled.status === "fulfilled"
-      ? printSettled.value
-      : { jobId: null, status: "FAILED", requiresClientDispatch: false, error: "Print dispatch failure" };
-
+  // Invalidate read caches immediately so KDS, Reports, and Tables reflect this order
   appCache.delPrefix(`report_${tenantId}`);
+  appCache.delPrefix(`kds_${tenantId}`);
+  if (d.tableId) {
+    appCache.delPrefix(`table_`);
+  }
 
   return NextResponse.json({
     ok: true,

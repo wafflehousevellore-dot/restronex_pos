@@ -429,6 +429,7 @@ export async function POST(
 
   // Invalidate cache immediately so new state is reflected
   appCache.del(`qr_table_${token}`);
+  appCache.delPrefix(`kds_${order.tenantId}`);
   appCache.delPrefix(`report_${order.tenantId}`);
 
   // Non-blocking async jobs if paid online

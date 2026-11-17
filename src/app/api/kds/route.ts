@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { prisma } from "@/lib/db";
 import { getSession, resolveTenantId } from "@/lib/auth";
+import { appCache, getOrSetCache } from "@/lib/cache";
 import {
   acknowledgeKitchenTicket,
   updateKitchenTicketStatus,
@@ -27,29 +29,57 @@ export async function GET(req: NextRequest) {
   if (station && station !== "ALL") whereClause.station = station;
   if (status && status !== "ALL") whereClause.status = status;
 
-  const tickets = await prisma.kitchenTicket.findMany({
-    where: whereClause,
-    include: {
-      order: {
+  // Single-flight coalescing cache (3s TTL) across all KDS screens in this outlet/station
+  const cacheKey = `kds_${tenantId}_${outletId || "ALL"}_${station || "ALL"}_${status || "ALL"}`;
+  const tickets = await getOrSetCache(
+    cacheKey,
+    async () => {
+      return prisma.kitchenTicket.findMany({
+        where: whereClause,
         include: {
-          items: {
+          order: {
             include: {
-              addons: true,
+              items: {
+                include: {
+                  addons: true,
+                },
+              },
+              table: { select: { id: true, number: true, area: true } },
+              payments: { orderBy: { createdAt: "desc" }, take: 1 },
             },
           },
-          table: { select: { id: true, number: true, area: true } },
-          payments: { orderBy: { createdAt: "desc" }, take: 1 },
         },
-      },
+        orderBy: [
+          { priority: "desc" },
+          { createdAt: "desc" },
+        ],
+        take: 80,
+      });
     },
-    orderBy: [
-      { priority: "desc" },
-      { createdAt: "desc" },
-    ],
-    take: 80,
-  });
+    3
+  );
 
-  return NextResponse.json(tickets);
+  // ETag conditional check (prevents redundant JSON serialization & payload bandwidth if unchanged)
+  const hashPayload = tickets
+    .map((t: any) => `${t.id}:${t.status}:${t.updatedAt instanceof Date ? t.updatedAt.getTime() : t.updatedAt || ""}`)
+    .join(";");
+  const etag = `"${crypto.createHash("md5").update(hashPayload).digest("hex")}"`;
+
+  const clientEtag = req.headers.get("if-none-match");
+  if (clientEtag && clientEtag === etag) {
+    return new Response(null, {
+      status: 304,
+      headers: {
+        ETag: etag,
+        "Cache-Control": "private, no-cache",
+      },
+    });
+  }
+
+  const res = NextResponse.json(tickets);
+  res.headers.set("ETag", etag);
+  res.headers.set("Cache-Control", "private, no-cache");
+  return res;
 }
 
 export async function PATCH(req: NextRequest) {
@@ -76,6 +106,7 @@ export async function PATCH(req: NextRequest) {
     if (!res.ok) {
       return NextResponse.json({ error: res.error }, { status: 400 });
     }
+    appCache.delPrefix(`kds_${tenantId}`);
     return NextResponse.json(res.ticket);
   }
 
@@ -157,6 +188,7 @@ export async function PATCH(req: NextRequest) {
     if (!res.ok) {
       return NextResponse.json({ error: res.error }, { status: 400 });
     }
+    appCache.delPrefix(`kds_${tenantId}`);
     return NextResponse.json(res.ticket);
   }
 
