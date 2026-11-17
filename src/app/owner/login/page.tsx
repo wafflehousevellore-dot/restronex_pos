@@ -1,14 +1,39 @@
 "use client";
 
 import { PageShell } from "@/components/marketing/PageShell";
-import { SignIn as ClerkSignIn } from "@clerk/nextjs";
+import { SignIn as ClerkSignIn, useAuth } from "@clerk/nextjs";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense, useEffect } from "react";
 
 function OwnerLoginContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
   const next = searchParams.get("next") || "/app/auth-callback";
+
+  // Automatically redirect already-authenticated owners to their dashboard
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace(next.startsWith("/app") ? next : "/app/auth-callback");
+    }
+  }, [isLoaded, isSignedIn, next, router]);
+
+  if (isLoaded && isSignedIn) {
+    return (
+      <PageShell
+        title="Restaurant Owner Portal"
+        subtitle="Sign in to manage your restaurant, subscriptions, outlets, and staff."
+        badge="RestroNex • Owner Login"
+      >
+        <div className="max-w-md mx-auto text-center py-12">
+          <div className="w-12 h-12 border-4 border-[#16845B] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <h2 className="text-lg font-bold text-[#0F1E19]">Redirecting to Owner Workspace...</h2>
+          <p className="text-xs text-[#4A5D55] mt-1">Resolving your restaurant business dashboard</p>
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell

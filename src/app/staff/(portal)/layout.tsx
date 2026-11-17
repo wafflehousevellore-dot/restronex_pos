@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import { getAuthenticatedUser, getOrganizationMembership } from "@/lib/server-auth";
 import { StaffShell } from "@/components/staff/StaffShell";
+import { ClerkActiveOrgSync } from "@/components/staff/ClerkActiveOrgSync";
 
 export const metadata = {
   title: "RestroNex Staff Workspace",
@@ -46,34 +47,37 @@ export default async function StaffLayout({
     : membership.authorizedOutlets[0]?.id || null;
 
   return (
-    <StaffShell
-      user={{
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatarUrl: user.avatarUrl,
-      }}
-      membership={{
-        id: membership.id,
-        role: membership.role,
-        permissions: membership.permissions,
-        tenant: {
-          id: membership.tenant.id,
-          name: membership.tenant.name,
-        },
-        authorizedOutlets: membership.authorizedOutlets,
-      }}
-      activeOutletId={activeOutletId}
-      allMemberships={allMemberships.map((m) => ({
-        id: m.id,
-        role: m.role,
-        tenant: {
-          id: m.tenant.id,
-          name: m.tenant.name,
-        },
-      }))}
-    >
-      {children}
-    </StaffShell>
+    <>
+      <ClerkActiveOrgSync clerkOrgId={membership.tenant.clerkOrgId} />
+      <StaffShell
+        user={{
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatarUrl: user.avatarUrl,
+        }}
+        membership={{
+          id: membership.id,
+          role: membership.role,
+          permissions: membership.permissions,
+          tenant: {
+            id: membership.tenant.id,
+            name: membership.tenant.name,
+          },
+          authorizedOutlets: membership.authorizedOutlets,
+        }}
+        activeOutletId={activeOutletId}
+        allMemberships={allMemberships.map((m) => ({
+          id: m.id,
+          role: m.role,
+          tenant: {
+            id: m.tenant.id,
+            name: m.tenant.name,
+          },
+        }))}
+      >
+        {children}
+      </StaffShell>
+    </>
   );
 }

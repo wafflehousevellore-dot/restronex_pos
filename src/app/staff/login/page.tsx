@@ -1,15 +1,34 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { SignIn as ClerkSignIn } from "@clerk/nextjs";
+import { useSearchParams, useRouter } from "next/navigation";
+import { SignIn as ClerkSignIn, useAuth } from "@clerk/nextjs";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ShieldCheck, AlertCircle, Mail, UserCheck, Utensils } from "lucide-react";
 
 function StaffLoginContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
   const error = searchParams.get("error");
   const next = searchParams.get("next") || "/staff/dashboard";
+
+  // Automatically redirect already-authenticated staff members to their workspace callback
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace(`/staff/auth-callback?next=${encodeURIComponent(next)}`);
+    }
+  }, [isLoaded, isSignedIn, next, router]);
+
+  if (isLoaded && isSignedIn) {
+    return (
+      <div className="min-h-screen bg-[#F8FAF9] flex flex-col justify-center items-center py-12 px-4">
+        <div className="w-12 h-12 border-4 border-[#16845B] border-t-transparent rounded-full animate-spin mb-4" />
+        <h2 className="text-lg font-bold text-[#0F1E19]">Redirecting to Staff Workspace...</h2>
+        <p className="text-xs text-[#4A5D55] mt-1">Verifying your restaurant station assignments</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAF9] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -74,8 +93,6 @@ function StaffLoginContent() {
               appearance={{
                 elements: {
                   card: "shadow-none border-0 p-0 w-full",
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
                   footerAction: "hidden", // Disallow public self-registration from staff page
                   formButtonPrimary:
                     "bg-[#16845B] hover:bg-[#126B49] text-white font-semibold py-2.5 px-4 rounded-xl transition duration-150",

@@ -343,6 +343,20 @@ export async function POST(req: NextRequest) {
       return membership;
     });
 
+    // Sync Clerk Organization Membership if tenant has a clerkOrgId and user has a clerkUserId
+    if (invitation.tenant.clerkOrgId && user.clerkUserId) {
+      try {
+        const client = await clerkClient();
+        await client.organizations.createOrganizationMembership({
+          organizationId: invitation.tenant.clerkOrgId,
+          userId: user.clerkUserId,
+          role: "org:member",
+        });
+      } catch (clerkOrgErr: any) {
+        console.warn("[Accept Invitation] Clerk Org membership sync notice:", clerkOrgErr?.errors || clerkOrgErr?.message);
+      }
+    }
+
     // Set active organization cookie & session
     const c = await cookies();
     c.set("restronex_org", invitation.tenantId, {

@@ -19,6 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="h-full light" style={{ colorScheme: "light" }}>
       <body className="min-h-full flex flex-col antialiased bg-[#F8FAF9] text-[#172B25]">
         <ClerkProvider
+          taskUrls={{
+            "choose-organization": "/staff/auth-callback",
+          }}
           appearance={{
             variables: {
               colorPrimary: "#16845B",

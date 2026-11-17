@@ -33,6 +33,7 @@ export interface OrganizationMembership {
     slug: string;
     status: string;
     onboardingComplete: boolean;
+    clerkOrgId?: string | null;
   };
   staffProfile?: {
     id: string;
@@ -94,8 +95,12 @@ export async function getOrganizationMembership(
   // Determine active tenantId: explicit parameter -> cookie -> user's first active membership
   let targetTenantId = tenantId;
   if (!targetTenantId) {
-    const c = await cookies();
-    targetTenantId = c.get("restronex_org")?.value || c.get("restronex_tenant")?.value || null;
+    try {
+      const c = await cookies();
+      targetTenantId = c.get("restronex_org")?.value || c.get("restronex_tenant")?.value || null;
+    } catch {
+      targetTenantId = null;
+    }
   }
 
   const membershipWhere = targetTenantId
@@ -115,6 +120,7 @@ export async function getOrganizationMembership(
           slug: true,
           status: true,
           onboardingComplete: true,
+          clerkOrgId: true,
         },
       },
       staffProfile: true,

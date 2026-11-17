@@ -169,6 +169,20 @@ export async function POST(req: NextRequest) {
         console.warn("[POST /api/staff/invitations/resend] Clerk notice:", clerkErr?.errors || clerkErr?.message);
       }
 
+      if (membership.tenant.clerkOrgId) {
+        try {
+          const client = await clerkClient();
+          await client.organizations.createOrganizationInvitation({
+            organizationId: membership.tenant.clerkOrgId,
+            emailAddress: inv.email,
+            role: "org:member",
+            redirectUrl: inviteUrl,
+          });
+        } catch (orgInvErr: any) {
+          console.warn("[POST /api/staff/invitations/resend] Clerk org invitation notice:", orgInvErr?.errors || orgInvErr?.message);
+        }
+      }
+
       return NextResponse.json({
         ok: true,
         emailSent,
@@ -251,6 +265,20 @@ export async function POST(req: NextRequest) {
       emailSent = true;
     } catch (clerkErr: any) {
       console.warn("[POST /api/staff/invitations] Clerk email dispatch notice:", clerkErr?.errors || clerkErr?.message);
+    }
+
+    if (membership.tenant.clerkOrgId) {
+      try {
+        const client = await clerkClient();
+        await client.organizations.createOrganizationInvitation({
+          organizationId: membership.tenant.clerkOrgId,
+          emailAddress: normalizedEmail,
+          role: "org:member",
+          redirectUrl: inviteUrl,
+        });
+      } catch (orgInvErr: any) {
+        console.warn("[POST /api/staff/invitations] Clerk org invitation notice:", orgInvErr?.errors || orgInvErr?.message);
+      }
     }
 
     return NextResponse.json({
