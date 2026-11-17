@@ -1,26 +1,27 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { SignIn as ClerkSignIn, useAuth } from "@clerk/nextjs";
+import { SignIn as ClerkSignIn, useAuth, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { Suspense, useEffect } from "react";
-import { ShieldCheck, AlertCircle, Mail, UserCheck, Utensils } from "lucide-react";
+import { ShieldCheck, AlertCircle, Mail, UserCheck, Utensils, LogOut, ArrowRight } from "lucide-react";
 
 function StaffLoginContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
+  const { signOut } = useClerk();
   const error = searchParams.get("error");
   const next = searchParams.get("next") || "/staff/dashboard";
 
-  // Automatically redirect already-authenticated staff members to their workspace callback
+  // Automatically redirect already-authenticated staff members ONLY if there is no error state
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    if (isLoaded && isSignedIn && !error) {
       router.replace(`/staff/auth-callback?next=${encodeURIComponent(next)}`);
     }
-  }, [isLoaded, isSignedIn, next, router]);
+  }, [isLoaded, isSignedIn, error, next, router]);
 
-  if (isLoaded && isSignedIn) {
+  if (isLoaded && isSignedIn && !error) {
     return (
       <div className="min-h-screen bg-[#F8FAF9] flex flex-col justify-center items-center py-12 px-4">
         <div className="w-12 h-12 border-4 border-[#16845B] border-t-transparent rounded-full animate-spin mb-4" />
@@ -51,11 +52,22 @@ function StaffLoginContent() {
           {error === "suspended" && (
             <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold">Account Access Suspended</p>
-                <p className="mt-0.5 text-xs text-amber-800">
-                  Your employee account is currently inactive or suspended. Please contact your restaurant owner or manager to restore access.
-                </p>
+              <div className="space-y-2">
+                <div>
+                  <p className="font-semibold">Account Access Suspended</p>
+                  <p className="mt-0.5 text-xs text-amber-800">
+                    Your employee account is currently inactive or suspended. Please contact your restaurant owner or manager to restore access.
+                  </p>
+                </div>
+                {isSignedIn && (
+                  <button
+                    onClick={() => signOut().then(() => router.push("/staff/login"))}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-lg transition"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Sign Out & Switch Account
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -63,10 +75,42 @@ function StaffLoginContent() {
           {error === "no_membership" && (
             <div className="mb-6 rounded-2xl bg-red-50 border border-red-200 p-4 text-sm text-red-900 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold">No Restaurant Membership Found</p>
+                  <p className="mt-0.5 text-xs text-red-800">
+                    You are signed in, but this account is not assigned to an active restaurant staff team.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {isSignedIn && (
+                    <button
+                      onClick={() => signOut().then(() => router.push("/staff/login"))}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-900 bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      Sign Out & Switch Account
+                    </button>
+                  )}
+                  <Link
+                    href="/app"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16845B] bg-[#E8F5EE] hover:bg-[#D5EFE2] px-3 py-1.5 rounded-lg transition"
+                  >
+                    Owner Portal
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {error === "server_error" && (
+            <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-900 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold">No Restaurant Membership Found</p>
-                <p className="mt-0.5 text-xs text-red-800">
-                  You are not assigned to an active restaurant workspace. Please request an invitation from your restaurant manager.
+                <p className="font-semibold">Authentication Verification Notice</p>
+                <p className="mt-0.5 text-xs text-amber-800">
+                  We encountered a temporary session verification issue. Please try signing in again below.
                 </p>
               </div>
             </div>

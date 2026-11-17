@@ -337,3 +337,18 @@ export type OrganizationServiceActivation = Prisma.OrganizationServiceActivation
  * 
  */
 export type ServiceActivationEvent = Prisma.ServiceActivationEventModel
+/**
+ * Model AggregatorOutletMapping
+ * 
+ */
+export type AggregatorOutletMapping = Prisma.AggregatorOutletMappingModel
+/**
+ * Model AggregatorMenuMapping
+ * 
+ */
+export type AggregatorMenuMapping = Prisma.AggregatorMenuMappingModel
+/**
+ * Model AggregatorOrderLog
+ * 
+ */
+export type AggregatorOrderLog = Prisma.AggregatorOrderLogModel
