@@ -1,66 +1,85 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { PageShell } from "@/components/marketing/PageShell";
 import { brand } from "@/lib/brand";
+
+export const metadata: Metadata = {
+  title: "About Us — Architecture, Principles & Mission",
+  description:
+    "Learn about RestroNex: our mission, server-side multi-tenant architecture, paise-accurate billing math, and engineering principles designed for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/about",
+  },
+  openGraph: {
+    title: "About RestroNex — Architecture & Engineering Principles",
+    description:
+      "Original restaurant POS SaaS built for India: paise-precision billing, real-time KOT/KDS routing, and cryptographic multi-tenant isolation.",
+    url: "https://www.restronexpos.com/about",
+  },
+};
 
 export default function About() {
   return (
     <PageShell
       title="About RestroNex"
-      subtitle="Restaurant technology crafted for India's scale — secure, fast, and operator-obsessed."
-      badge="Our Story • Since 2020"
+      subtitle="Modern restaurant technology crafted for India — secure, fast, paise-accurate, and operator-obsessed."
+      badge="Engineering & Architecture • Made for India"
     >
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs">
           <div className="space-y-4 text-sm leading-relaxed text-[#718078]">
             <p>
-              <strong className="text-[#172B25] font-semibold">RestroNex</strong> is an original restaurant POS SaaS — multi-tenant, outlet-aware, and tenant-isolated by design. We benchmark feature coverage against leading platforms but ship original branding, UI, and content.
+              <strong className="text-[#172B25] font-semibold">RestroNex</strong> is a modern restaurant operating system — multi-tenant, outlet-aware, and tenant-isolated by design. We provide comprehensive operational tooling spanning touch billing, kitchen display systems, recipe-level inventory tracking, table QR ordering, and automated WhatsApp invoices.
             </p>
             <p>
-              We prioritize billing accuracy (paise integer math), inventory integrity (movement history, not just totals), and operational clarity (KOT/KDS with honest connectivity states).
+              We prioritize billing accuracy (strict minor-unit paise integer arithmetic), inventory integrity (movement history with raw-ingredient depletion, not just end-of-day guesses), and operational clarity (honest KOT/KDS status updates).
             </p>
             <p>
-              Platform admin and restaurant roles are separate. Tenant isolation is enforced server-side and verified via cross-tenant security probes.
+              Platform administration, restaurant owner, and station staff roles are segregated by strict server-side authorization. Tenant isolation is enforced at the database query level and continuously verified with security tests.
             </p>
             <div className="pt-3 border-t border-[#E5EBE7] text-xs space-y-1">
-              <div className="font-bold text-[#172B25]">Headquarters</div>
+              <div className="font-bold text-[#172B25]">Registered Location</div>
               <div>{brand.contact.address}</div>
+              <div className="text-[#16845B] font-medium pt-1">
+                Direct Contact: {brand.contact.phone} • {brand.contact.supportEmail}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs">
-          <div className="text-base font-bold text-[#172B25]">Core Principles</div>
+          <div className="text-base font-bold text-[#172B25]">Core Engineering Principles</div>
           <ul className="mt-4 space-y-2.5 text-sm text-[#718078]">
             <li className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#16845B]" />
-              <span>One menu, single source of truth across aggregators</span>
+              <span>One menu: single source of truth across counter, tables, and online channels</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#16845B]" />
-              <span>Financial transactions computed in minor units (paise)</span>
+              <span>Financial transactions computed in minor units (paise) with zero rounding error</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#16845B]" />
-              <span>Tenant ID never trusted from client input</span>
+              <span>Tenant ID never trusted from client input; resolved server-side from auth token</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#16845B]" />
-              <span>Full cryptographic audit trail for sensitive operations</span>
+              <span>Cryptographic audit trail for critical financial and administrative operations</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[#16845B]" />
-              <span>Honest integration and sync state visibility</span>
+              <span>Honest hardware status (LAN, USB, and Bluetooth ESC/POS printers)</span>
             </li>
           </ul>
 
           <div className="mt-8 grid grid-cols-2 gap-4">
             <div className="rounded-xl bg-[#E8F5EE] border border-[#16845B]/20 p-4 text-center">
-              <div className="text-2xl font-black text-[#16845B]">2,400+</div>
-              <div className="text-xs font-medium text-[#718078] mt-1">Active Outlets</div>
+              <div className="text-2xl font-black text-[#16845B]">100%</div>
+              <div className="text-xs font-medium text-[#718078] mt-1">Tenant Isolated</div>
             </div>
             <div className="rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] p-4 text-center">
-              <div className="text-2xl font-black text-[#172B25]">500k+</div>
-              <div className="text-xs font-medium text-[#718078] mt-1">Orders / month</div>
+              <div className="text-2xl font-black text-[#172B25]">Paise-Exact</div>
+              <div className="text-xs font-medium text-[#718078] mt-1">GST & Tax Arithmetic</div>
             </div>
           </div>
         </div>

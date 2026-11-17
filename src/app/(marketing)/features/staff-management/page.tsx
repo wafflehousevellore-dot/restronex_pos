@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Protect your restaurant revenue with strict server-enforced role-based access control.",
+  description: "Protect your restaurant revenue with strict server-enforced role-based access control. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/staff-management",
+  },
+  openGraph: {
+    title: "Protect your restaurant revenue with strict server-enforced role-based access control. | RestroNex",
+    description: "Protect your restaurant revenue with strict server-enforced role-based access control. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/staff-management",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { Users, Check, ArrowRight, Lock } from "lucide-react";

@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Your Own Branded Online Food Ordering",
+  description: "Stop losing 25-30% commissions on repeat orders. Launch a branded direct ordering website with your custom domain, live delivery fleet integration, and ins... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/online-ordering",
+  },
+  openGraph: {
+    title: "Your Own Branded Online Food Ordering | RestroNex",
+    description: "Stop losing 25-30% commissions on repeat orders. Launch a branded direct ordering website with your custom domain, live delivery fleet integration, and ins... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/features/online-ordering",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

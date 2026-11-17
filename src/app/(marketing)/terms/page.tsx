@@ -1,23 +1,130 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
+import Link from "next/link";
+import { brand } from "@/lib/brand";
+import { ShieldCheck, FileText, CheckCircle2, AlertCircle } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Terms of Service — Transparent SaaS & Billing Agreement",
+  description:
+    "Read the RestroNex Terms of Service: subscription plans, billing cycle, server-side data isolation, cancellation policies, and platform usage terms.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/terms",
+  },
+  openGraph: {
+    title: "Terms of Service | RestroNex",
+    description: "Transparent, operator-friendly subscription terms for RestroNex Restaurant OS.",
+    url: "https://www.restronexpos.com/terms",
+  },
+};
 
 export default function Terms() {
   return (
     <PageShell
       title="Terms of Service"
-      subtitle="Please read carefully — fair, transparent, operator-friendly."
-      badge="Legal • Terms"
+      subtitle="Transparent, operator-friendly subscription and software terms for RestroNex Restaurant OS."
+      badge="Legal & Terms • Effective November 2026"
     >
-      <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs max-w-3xl mx-auto">
-        <div className="space-y-4 text-sm leading-relaxed text-[#718078]">
+      <div className="max-w-4xl mx-auto space-y-6 text-sm leading-relaxed text-[#718078]">
+        {/* Section 1 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25] flex items-center gap-2">
+            <FileText className="h-5 w-5 text-[#16845B]" /> 1. Acceptance of Terms
+          </h2>
           <p>
-            By using RestroNex you agree to our subscription, billing, and fair-use terms. Subscriptions activate immediately upon payment verification. Failed payments may restrict features; entitlements are gated server-side.
+            These Terms of Service (&quot;Terms&quot;) govern your access to and use of the <b>RestroNex</b> restaurant operating system, including the cloud POS billing portal, kitchen display system (KDS), table QR ordering, recipe inventory system, and associated APIs provided at <b>https://www.restronexpos.com</b>.
           </p>
           <p>
-            You are responsible for accurate tax configuration and menu pricing. RestroNex provides tooling, not legal tax advice.
+            By creating an account, starting a trial, subscribing to a paid plan, or accessing any RestroNex software, you acknowledge that you have read, understood, and agree to be bound by these Terms and our{" "}
+            <Link href="/privacy" className="text-[#16845B] font-semibold underline">
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link href="/refund-policy" className="text-[#16845B] font-semibold underline">
+              Refund Policy
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* Section 2 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25] flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-[#16845B]" /> 2. Subscriptions, Pricing &amp; Billing
+          </h2>
+          <p>
+            RestroNex is licensed on a Software-as-a-Service (SaaS) subscription model. We offer three primary subscription plans:
+          </p>
+          <ul className="list-disc list-inside space-y-1.5 pl-2 text-[#4A5D55]">
+            <li><b>Starter Plan:</b> ₹99/month (or ₹990/year) + 18% GST — single outlet, up to 5 staff accounts.</li>
+            <li><b>Growth Plan:</b> ₹199/month (or ₹1,990/year) + 18% GST — up to 5 outlets, 25 staff accounts, full recipe inventory, and QR ordering.</li>
+            <li><b>Business Plan:</b> ₹299/month (or ₹2,990/year) + 18% GST — up to 50 outlets, 200 staff accounts, consolidated chain reports.</li>
+          </ul>
+          <p>
+            All subscription payments are processed securely through our authorized payment partner, <b>Razorpay</b>, using server-side HMAC-SHA256 signature verification. Applicable Goods &amp; Services Tax (GST) is calculated and itemized at checkout.
+          </p>
+        </div>
+
+        {/* Section 3 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25] flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-[#16845B]" /> 3. Data Ownership &amp; Tenant Isolation
+          </h2>
+          <p>
+            <b>Your Data Belongs to You:</b> You retain complete ownership of all restaurant menus, customer contact information, order histories, sales reports, and inventory ledgers uploaded to or generated by RestroNex. We never sell or share your proprietary restaurant business data.
           </p>
           <p>
-            Service is provided with high availability SLA. Audit logs and tenant isolation are cryptographically enforced. Abuse, scraping, or cross-tenant probing is strictly prohibited.
+            <b>Multi-Tenant Security:</b> RestroNex enforces server-side tenant isolation. Data from one restaurant organization is partitioned and unreachable by other tenants. All administrative operations are recorded in immutable audit logs.
           </p>
+        </div>
+
+        {/* Section 4 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25]">4. Hardware Compatibility &amp; Third-Party Services</h2>
+          <p>
+            RestroNex provides broad support for industry-standard 80mm and 58mm ESC/POS thermal printers via Network Ethernet/Wi-Fi LAN, Bluetooth SPP, and USB direct connections. Hardware must meet standard ESC/POS command specifications.
+          </p>
+          <p>
+            Automated WhatsApp invoice delivery is powered by the official Meta WhatsApp Cloud API. Use of WhatsApp messaging requires compliance with Meta&apos;s Business Messaging Policies, and messages may only be dispatched to customers with explicit transaction consent.
+          </p>
+        </div>
+
+        {/* Section 5 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25]">5. Cancellations &amp; 7-Day Refund Guarantee</h2>
+          <p>
+            New subscribers are entitled to a full 100% refund within the first <b>7 days</b> of paid subscription activation. Subscriptions can be cancelled at any time directly through the dashboard under Subscription Settings. For complete details on refund timelines and procedures, refer to our dedicated{" "}
+            <Link href="/refund-policy" className="text-[#16845B] font-semibold underline">
+              Refund Policy
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* Section 6 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25] flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-amber-600" /> 6. Limitation of Liability &amp; Governing Law
+          </h2>
+          <p>
+            RestroNex provides software on an &quot;as is&quot; and &quot;as available&quot; basis with high-availability cloud architecture. While we maintain 99.9% uptime objectives, we are not liable for internet disruptions, power outages, local printer hardware failures, or tax misconfigurations set by the restaurant operator.
+          </p>
+          <p>
+            These Terms are governed by and construed in accordance with the laws of <b>India</b>. Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the competent courts in <b>Vellore, Tamil Nadu, India</b>.
+          </p>
+        </div>
+
+        {/* Section 7 */}
+        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-6 sm:p-8 shadow-xs space-y-3">
+          <h2 className="text-base font-bold text-[#172B25]">7. Contact &amp; Support Inquiries</h2>
+          <p>
+            If you have questions regarding these Terms or our software services, please reach out directly:
+          </p>
+          <div className="text-xs text-[#4A5D55] space-y-1 pt-1">
+            <div><b>Email:</b> <a href={brand.contact.mailtoUrl} className="text-[#16845B] hover:underline">{brand.contact.supportEmail}</a></div>
+            <div><b>Phone / WhatsApp:</b> <a href={brand.contact.telUrl} className="text-[#16845B] hover:underline">{brand.contact.phone}</a></div>
+            <div><b>Registered Office:</b> {brand.contact.address}</div>
+          </div>
         </div>
       </div>
     </PageShell>

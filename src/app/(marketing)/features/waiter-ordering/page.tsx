@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Eliminate paper KOTs and run fast tableside order punching directly to your kitchen.",
+  description: "Eliminate paper KOTs and run fast tableside order punching directly to your kitchen. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/waiter-ordering",
+  },
+  openGraph: {
+    title: "Eliminate paper KOTs and run fast tableside order punching directly to your kitchen. | RestroNex",
+    description: "Eliminate paper KOTs and run fast tableside order punching directly to your kitchen. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/waiter-ordering",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { Smartphone, Check, ArrowRight, ShieldCheck, Zap } from "lucide-react";

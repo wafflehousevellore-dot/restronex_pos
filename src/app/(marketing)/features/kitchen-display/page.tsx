@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ditch paper paper tickets for zero-error kitchen execution",
+  description: "Ditch paper paper tickets for zero-error kitchen execution Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/kitchen-display",
+  },
+  openGraph: {
+    title: "Ditch paper paper tickets for zero-error kitchen execution | RestroNex",
+    description: "Ditch paper paper tickets for zero-error kitchen execution Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/kitchen-display",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

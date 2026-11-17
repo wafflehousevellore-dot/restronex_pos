@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Custom Cake Orders & Weighing Scale Integration",
+  description: "Take advance custom cake bookings with photo references, track delivery dates with calendar reminders, auto-calculate weight-based pricing, and track short... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/bakeries",
+  },
+  openGraph: {
+    title: "Custom Cake Orders & Weighing Scale Integration | RestroNex",
+    description: "Take advance custom cake bookings with photo references, track delivery dates with calendar reminders, auto-calculate weight-based pricing, and track short... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/bakeries",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

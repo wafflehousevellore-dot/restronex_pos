@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Connect Bluetooth, USB, and LAN thermal receipt printers with smart multi-station routing.",
+  description: "Connect Bluetooth, USB, and LAN thermal receipt printers with smart multi-station routing. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/printers",
+  },
+  openGraph: {
+    title: "Connect Bluetooth, USB, and LAN thermal receipt printers with smart multi-station routing. | RestroNex",
+    description: "Connect Bluetooth, USB, and LAN thermal receipt printers with smart multi-station routing. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/printers",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { Printer, Check, ArrowRight, ShieldCheck, Cpu } from "lucide-react";

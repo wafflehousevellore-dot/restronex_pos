@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scan, Order & Pay Right at the Table",
+  description: "Allow diners to scan table QR codes, browse visual digital menus with modifiers, fire orders directly to the kitchen, and pay via UPI or card without waiti... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/qr-ordering",
+  },
+  openGraph: {
+    title: "Scan, Order & Pay Right at the Table | RestroNex",
+    description: "Allow diners to scan table QR codes, browse visual digital menus with modifiers, fire orders directly to the kitchen, and pay via UPI or card without waiti... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/features/qr-ordering",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

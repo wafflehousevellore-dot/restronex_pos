@@ -1,6 +1,21 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Integrations & Connectors — Aggregators, Payments & Hardware",
+  description:
+    "Connect your restaurant POS with essential tools: Razorpay payment gateway, thermal receipt printers, Meta WhatsApp Cloud API, and accounting connectors.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/integrations",
+  },
+  openGraph: {
+    title: "Restaurant Integrations & Hardware Connectors | RestroNex",
+    description: "Manage delivery, payments, thermal printers, and WhatsApp notifications from one POS dashboard.",
+    url: "https://www.restronexpos.com/integrations",
+  },
+};
 
 const cats = [
   { name: "Delivery & Ordering", items: ["Swiggy","Zomato","DOTPE","Talabat","UrbanPiper","Thrive","QR Ordering"] },

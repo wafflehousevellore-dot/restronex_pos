@@ -1,3 +1,4 @@
+
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Link from "next/link";
@@ -32,15 +33,25 @@ export function PageShell({ title, subtitle, children, badge }: { title: string;
           </div>
         </section>
 
-        {/* Partner strip — clean light */}
+        {/* Platform capability highlights — genuine technology badges */}
         <div className="bg-white border-b border-[#E5EBE7]">
-          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 py-3">
-            <div className="flex flex-wrap items-center justify-center gap-6 lg:gap-10 text-xs font-bold tracking-widest text-[#718078]">
-              <span className="flex items-center gap-2"><span className="h-5 w-5 rounded-full bg-[#E8F5EE] text-[#16845B] grid place-items-center text-[10px]">◆</span> Sitemark</span>
-              <span>✦ Inspirex</span>
-              <span>◎ PinPoint</span>
-              <span>✧ Nextmove</span>
-              <span>⬢ Fitteams</span>
+          <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 py-3.5">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs font-semibold text-[#4A5D55]">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#16845B]" /> Cloud POS Billing
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#16845B]" /> ESC/POS Thermal Printing (LAN / USB / BT)
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#16845B]" /> Meta WhatsApp Cloud API
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#16845B]" /> Paise-Precision GST Math
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#16845B]" /> Multi-Tenant Data Isolation
+              </span>
             </div>
           </div>
         </div>

@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
 import SoftwareShowcaseSection from "@/components/marketing/SoftwareShowcaseSection";
 import Link from "next/link";
 import { Store, ChefHat, BarChart3, Truck, Layers, ShieldCheck, LayoutGrid, Users, QrCode, Globe, Building2, Plug, ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Restaurant POS Features — Billing, KOT/KDS, Inventory & Multi-Outlet",
+  description:
+    "Explore complete RestroNex features: fast counter POS, live kitchen display system, table QR ordering, recipe inventory depletion, thermal printing, and WhatsApp invoices.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features",
+  },
+  openGraph: {
+    title: "All Restaurant Management Features | RestroNex",
+    description: "Discover all-in-one restaurant operational tooling designed for Indian food businesses.",
+    url: "https://www.restronexpos.com/features",
+  },
+};
 
 const features = [
   { title: "POS & Billing", href: "/features/pos", desc: "Fast 3-click billing, GST paise calculations, split pay, shifts, printable receipts.", icon: Store },

@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Restaurant POS Software — Touch Billing, Thermal Receipts & KOT",
+  description:
+    "Explore the RestroNex POS platform: 3-click counter billing, thermal printer integration (LAN, BT, USB), live table management, and recipe inventory tracking.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/poss",
+  },
+  openGraph: {
+    title: "Restaurant POS Software Made Simple | RestroNex",
+    description: "Cloud-native, offline-ready restaurant billing software built for speed, accuracy, and reliability.",
+    url: "https://www.restronexpos.com/poss",
+  },
+};
 
 export default function PossPage() {
   return (

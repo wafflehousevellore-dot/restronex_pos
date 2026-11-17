@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Deliver paperless digital receipts and GST invoices directly to customers on WhatsApp.",
+  description: "Deliver paperless digital receipts and GST invoices directly to customers on WhatsApp. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/whatsapp-invoices",
+  },
+  openGraph: {
+    title: "Deliver paperless digital receipts and GST invoices directly to customers on WhatsApp. | RestroNex",
+    description: "Deliver paperless digital receipts and GST invoices directly to customers on WhatsApp. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/whatsapp-invoices",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { MessageSquare, Check, ArrowRight, ShieldCheck, Send } from "lucide-react";

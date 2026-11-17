@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fast, accurate billing for every service mode",
+  description: "Fast, accurate billing for every service mode Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/pos",
+  },
+  openGraph: {
+    title: "Fast, accurate billing for every service mode | RestroNex",
+    description: "Fast, accurate billing for every service mode Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/pos",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scale from 1 to 100+ branches effortlessly",
+  description: "Scale from 1 to 100+ branches effortlessly Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/multi-outlet",
+  },
+  openGraph: {
+    title: "Scale from 1 to 100+ branches effortlessly | RestroNex",
+    description: "Scale from 1 to 100+ branches effortlessly Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/multi-outlet",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sophisticated Service For Fine-Dine Restaurants",
+  description: "Deliver five-star hospitality with multi-course firing (Appetizer → Entree → Dessert), tableside sommelier wine notes, guest preference tagging, and split ... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/fine-dine",
+  },
+  openGraph: {
+    title: "Sophisticated Service For Fine-Dine Restaurants | RestroNex",
+    description: "Deliver five-star hospitality with multi-course firing (Appetizer → Entree → Dessert), tableside sommelier wine notes, guest preference tagging, and split ... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/fine-dine",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

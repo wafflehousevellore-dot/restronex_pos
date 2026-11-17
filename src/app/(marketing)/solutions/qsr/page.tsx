@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "High-Speed 3-Second Billing for QSRs",
+  description: "Clear long counter lines in seconds with rapid keyboard shortcuts, barcode scanner support, dual-screen customer displays, automated token number calling, ... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/qsr",
+  },
+  openGraph: {
+    title: "High-Speed 3-Second Billing for QSRs | RestroNex",
+    description: "Clear long counter lines in seconds with rapid keyboard shortcuts, barcode scanner support, dual-screen customer displays, automated token number calling, ... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/qsr",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import POSInteractivePreview from "@/components/marketing/POSInteractivePreview";
@@ -26,6 +27,30 @@ import {
 import { brand, pricingPlans, pricingComparison } from "@/lib/brand";
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "RestroNex — Cloud Restaurant POS, KOT/KDS & Billing Software",
+  description:
+    "All-in-one restaurant POS operating system for India. Fast counter billing, real-time KOT/KDS kitchen automation, contactless QR ordering, recipe inventory tracking, and automated WhatsApp bills.",
+  alternates: {
+    canonical: "https://www.restronexpos.com",
+  },
+  openGraph: {
+    title: "RestroNex — Cloud Restaurant POS, KOT/KDS & Billing Software",
+    description:
+      "All-in-one restaurant POS operating system for India. Fast counter billing, real-time KOT/KDS kitchen automation, contactless QR ordering, and recipe inventory.",
+    url: "https://www.restronexpos.com",
+    siteName: "RestroNex",
+    images: [
+      {
+        url: "/images/pos-billing-terminal.jpg",
+        width: 1200,
+        height: 630,
+        alt: "RestroNex Restaurant POS Billing Terminal",
+      },
+    ],
+  },
+};
 
 export default function HomePage() {
   const starterPlan = pricingPlans.find((p) => p.slug === "starter") || pricingPlans[0];

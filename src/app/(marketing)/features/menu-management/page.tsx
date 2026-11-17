@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "One menu, single source of truth across dining and aggregators",
+  description: "One menu, single source of truth across dining and aggregators Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/menu-management",
+  },
+  openGraph: {
+    title: "One menu, single source of truth across dining and aggregators | RestroNex",
+    description: "One menu, single source of truth across dining and aggregators Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/menu-management",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

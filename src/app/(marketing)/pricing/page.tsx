@@ -1,8 +1,24 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
 import PricingSelector from "@/components/marketing/PricingSelector";
 import { pricingComparison, pricingPlans, marketplaceServices } from "@/lib/brand";
 import Link from "next/link";
 import { ShieldCheck, ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Pricing Plans — Transparent Restaurant POS from ₹99/mo",
+  description:
+    "Explore transparent RestroNex pricing plans starting at ₹99/month. Includes Cloud POS billing, KOT/KDS, table QR ordering, recipe inventory, and WhatsApp tax invoices.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/pricing",
+  },
+  openGraph: {
+    title: "Transparent Restaurant POS Pricing | RestroNex",
+    description:
+      "Simple, honest SaaS pricing for Indian restaurants, cafes, and QSRs. Starter (₹99/mo), Growth (₹199/mo), Business (₹299/mo). 7-day money-back guarantee.",
+    url: "https://www.restronexpos.com/pricing",
+  },
+};
 
 export default function Pricing() {
   const starter = pricingPlans.find((p) => p.slug === "starter") || pricingPlans[0];

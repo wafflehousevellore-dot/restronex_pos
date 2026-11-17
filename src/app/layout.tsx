@@ -3,20 +3,76 @@ import "./globals.css";
 import { brand } from "@/lib/brand";
 import E2BTokenSync from "@/components/E2BTokenSync";
 import { ClerkProvider } from "@clerk/nextjs";
+import JsonLd from "@/components/marketing/JsonLd";
 
 export const metadata: Metadata = {
-  title: `${brand.name} — ${brand.tagline}`,
+  metadataBase: new URL("https://www.restronexpos.com"),
+  title: {
+    default: `${brand.name} — ${brand.tagline}`,
+    template: `%s | ${brand.name}`,
+  },
   description: brand.description,
-  keywords: brand.meta.keywords,
+  keywords: [
+    "restaurant POS software India",
+    "cloud restaurant billing",
+    "KOT KDS system",
+    "restaurant inventory software",
+    "table QR ordering",
+    "WhatsApp digital invoices",
+    "multi-outlet restaurant POS",
+    "thermal printer billing",
+  ],
+  authors: [{ name: "RestroNex Technologies", url: "https://www.restronexpos.com" }],
+  creator: "RestroNex",
+  publisher: "RestroNex",
+  applicationName: "RestroNex POS",
+  alternates: {
+    canonical: "https://www.restronexpos.com",
+  },
   openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: "https://www.restronexpos.com",
     title: `${brand.name} — ${brand.tagline}`,
     description: brand.description,
+    siteName: "RestroNex Restaurant OS",
+    images: [
+      {
+        url: "/images/pos-billing-terminal.jpg",
+        width: 1200,
+        height: 630,
+        alt: "RestroNex POS Touch Billing Terminal and Receipt Printer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.description,
+    images: ["/images/pos-billing-terminal.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full light" style={{ colorScheme: "light" }}>
+      <head>
+        <JsonLd />
+      </head>
       <body className="min-h-full flex flex-col antialiased bg-[#F8FAF9] text-[#172B25]">
         <ClerkProvider
           taskUrls={{

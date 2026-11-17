@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Live Table Management and Waiter Ordering",
+  description: "Turn tables 25% faster with real-time floor plans, color-coded table statuses, instant table transfers, and waiter mobile ordering. Never miss a guest requ... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/table-management",
+  },
+  openGraph: {
+    title: "Live Table Management and Waiter Ordering | RestroNex",
+    description: "Turn tables 25% faster with real-time floor plans, color-coded table statuses, instant table transfers, and waiter mobile ordering. Never miss a guest requ... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/features/table-management",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

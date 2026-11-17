@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Scoops, Waffles & Toppings Customizer",
+  description: "Speed through after-dinner dessert rushes. Select cone/cup options, multi-scoop flavors, fudge sauces, and toppings in 2 taps with rapid barcode scanning a... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/dessert-shops",
+  },
+  openGraph: {
+    title: "Scoops, Waffles & Toppings Customizer | RestroNex",
+    description: "Speed through after-dinner dessert rushes. Select cone/cup options, multi-scoop flavors, fudge sauces, and toppings in 2 taps with rapid barcode scanning a... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/dessert-shops",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

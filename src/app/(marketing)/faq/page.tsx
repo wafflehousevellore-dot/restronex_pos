@@ -1,4 +1,19 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
+
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions (FAQ) — Hardware, Billing & GST",
+  description:
+    "Find answers to common questions about RestroNex: GST calculation, thermal printers, multi-outlet management, KOT/KDS routing, and data security.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/faq",
+  },
+  openGraph: {
+    title: "Frequently Asked Questions | RestroNex",
+    description: "Clear, factual answers regarding RestroNex restaurant POS software, hardware, and subscriptions.",
+    url: "https://www.restronexpos.com/faq",
+  },
+};
 
 const faqs = [
   {

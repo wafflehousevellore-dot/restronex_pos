@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Multi-Brand Virtual Kitchen Consolidation POS",
+  description: "Run 8 brands from a single kitchen space. Receive Swiggy, Zomato, and Direct orders on one screen, route tickets to dedicated prep lines, and share central... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/cloud-kitchens",
+  },
+  openGraph: {
+    title: "Multi-Brand Virtual Kitchen Consolidation POS | RestroNex",
+    description: "Run 8 brands from a single kitchen space. Receive Swiggy, Zomato, and Direct orders on one screen, route tickets to dedicated prep lines, and share central... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/cloud-kitchens",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

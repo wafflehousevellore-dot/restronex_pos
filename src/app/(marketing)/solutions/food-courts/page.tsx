@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Multi-Vendor Food Court Central POS & Revenue Sharing",
+  description: "Run complex food courts with unified prepaid card top-ups, single cashier counters that split KOTs to different brand kiosks, and automated daily tenant re... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/food-courts",
+  },
+  openGraph: {
+    title: "Multi-Vendor Food Court Central POS & Revenue Sharing | RestroNex",
+    description: "Run complex food courts with unified prepaid card top-ups, single cashier counters that split KOTs to different brand kiosks, and automated daily tenant re... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/food-courts",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

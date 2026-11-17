@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Half-and-Half Custom Crust & Topping Matrix",
+  description: "Handle complex pizza modifications with ease: half-and-half toppings, cheese-burst crust options, extra sauces, oven station routing, and driver dispatch m... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/pizzerias",
+  },
+  openGraph: {
+    title: "Half-and-Half Custom Crust & Topping Matrix | RestroNex",
+    description: "Handle complex pizza modifications with ease: half-and-half toppings, cheese-burst crust options, extra sauces, oven station routing, and driver dispatch m... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/pizzerias",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Turn daily restaurant data into actionable profit insights",
+  description: "Turn daily restaurant data into actionable profit insights Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/reports",
+  },
+  openGraph: {
+    title: "Turn daily restaurant data into actionable profit insights | RestroNex",
+    description: "Turn daily restaurant data into actionable profit insights Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/reports",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

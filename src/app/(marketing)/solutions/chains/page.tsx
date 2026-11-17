@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Run 5 to 50+ branches with central menu distribution, consolidated analytics, and commissary transfers.",
+  description: "Run 5 to 50+ branches with central menu distribution, consolidated analytics, and commissary transfers. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/chains",
+  },
+  openGraph: {
+    title: "Run 5 to 50+ branches with central menu distribution, consolidated analytics, and commissary transfers. | RestroNex",
+    description: "Run 5 to 50+ branches with central menu distribution, consolidated analytics, and commissary transfers. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/solutions/chains",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import { Building2, Check, BarChart3, Network } from "lucide-react";
 

@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Control food costs with vendor price comparisons, structured POs, and digital goods receipt.",
+  description: "Control food costs with vendor price comparisons, structured POs, and digital goods receipt. Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/purchase-management",
+  },
+  openGraph: {
+    title: "Control food costs with vendor price comparisons, structured POs, and digital goods receipt. | RestroNex",
+    description: "Control food costs with vendor price comparisons, structured POs, and digital goods receipt. Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/purchase-management",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { ShoppingCart, Check, ArrowRight, ShieldCheck, TrendingDown } from "lucide-react";

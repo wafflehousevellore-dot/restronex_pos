@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { ShieldAlert, RefreshCw, CheckCircle2 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Refund & Cancellation Policy — 7-Day Guarantee",
+  description:
+    "RestroNex Refund and Cancellation Policy: 7-day money-back guarantee for new subscriptions, instant dashboard cancellation, and transparent Razorpay refund processing.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/refund-policy",
+  },
+  openGraph: {
+    title: "Refund and Cancellation Policy | RestroNex",
+    description: "7-day money-back guarantee and transparent cancellation terms for RestroNex SaaS.",
+    url: "https://www.restronexpos.com/refund-policy",
+  },
+};
 
 export default function RefundPolicyPage() {
   return (

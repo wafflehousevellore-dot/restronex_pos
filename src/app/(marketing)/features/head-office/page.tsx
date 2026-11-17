@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Central Head Office Command & Control",
+  description: "Manage 5 to 500 outlets from a single master dashboard. Push central recipes, standardize menu pricing with outlet overrides, track chain-wide food costs, ... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/head-office",
+  },
+  openGraph: {
+    title: "Central Head Office Command & Control | RestroNex",
+    description: "Manage 5 to 500 outlets from a single master dashboard. Push central recipes, standardize menu pricing with outlet overrides, track chain-wide food costs, ... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/features/head-office",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

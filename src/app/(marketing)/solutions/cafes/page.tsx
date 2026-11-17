@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Designed for Fast-Paced Cafes & Roasteries",
+  description: "Speed through the morning coffee rush with 3-second billing, barista KDS screen routing, milk & syrup modifier tracking, and repeat customer loyalty reward... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions/cafes",
+  },
+  openGraph: {
+    title: "Designed for Fast-Paced Cafes & Roasteries | RestroNex",
+    description: "Speed through the morning coffee rush with 3-second billing, barista KDS screen routing, milk & syrup modifier tracking, and repeat customer loyalty reward... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/solutions/cafes",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

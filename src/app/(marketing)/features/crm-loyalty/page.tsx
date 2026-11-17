@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Turn First-Time Guests Into Regular Customers",
+  description: "Build brand loyalty with automated guest profiling, points-per-rupee rewards, tiered cashback programs, and SMS/WhatsApp win-back campaigns directly tied t... Built for Indian restaurants.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/crm-loyalty",
+  },
+  openGraph: {
+    title: "Turn First-Time Guests Into Regular Customers | RestroNex",
+    description: "Build brand loyalty with automated guest profiling, points-per-rupee rewards, tiered cashback programs, and SMS/WhatsApp win-back campaigns directly tied t... Built for Indian restaurants.",
+    url: "https://www.restronexpos.com/features/crm-loyalty",
+  },
+};
+
 import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import Link from "next/link";

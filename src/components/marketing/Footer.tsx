@@ -74,11 +74,27 @@ export default function Footer() {
                 WhatsApp Support
               </a>
             </div>
-            <div className="mt-4 flex gap-2">
-              <div className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] grid place-items-center text-xs font-semibold text-[#172B25]">f</div>
-              <div className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] grid place-items-center text-xs font-semibold text-[#172B25]">𝕏</div>
-              <div className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] grid place-items-center text-xs font-semibold text-[#172B25]">in</div>
-              <div className="h-8 w-8 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] grid place-items-center text-xs font-semibold text-[#172B25]">▶</div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={brand.contact.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-xs font-semibold text-[#16845B] hover:bg-[#E8F5EE] transition-colors"
+              >
+                💬 WhatsApp Chat
+              </a>
+              <a
+                href={brand.contact.telUrl}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-xs font-semibold text-[#172B25] hover:bg-white transition-colors"
+              >
+                📞 Direct Call
+              </a>
+              <a
+                href={brand.contact.mailtoUrl}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E5EBE7] bg-[#F8FAF9] text-xs font-semibold text-[#172B25] hover:bg-white transition-colors"
+              >
+                ✉ Email Desk
+              </a>
             </div>
           </div>
         </div>

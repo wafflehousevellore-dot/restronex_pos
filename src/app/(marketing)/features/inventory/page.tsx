@@ -1,3 +1,18 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Stop food waste, shrinkage, and theft with precision stock tracking",
+  description: "Stop food waste, shrinkage, and theft with precision stock tracking Built for restaurants, cafes, and food businesses across India.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/features/inventory",
+  },
+  openGraph: {
+    title: "Stop food waste, shrinkage, and theft with precision stock tracking | RestroNex",
+    description: "Stop food waste, shrinkage, and theft with precision stock tracking Built for restaurants, cafes, and food businesses across India.",
+    url: "https://www.restronexpos.com/features/inventory",
+  },
+};
+
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 

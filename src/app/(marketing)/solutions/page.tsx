@@ -1,6 +1,21 @@
+import type { Metadata } from "next";
 import { PageShell } from "@/components/marketing/PageShell";
 import Link from "next/link";
 import { ArrowRight, Coffee, UtensilsCrossed, Zap, Cake, Pizza, IceCream, Store, Cloud } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Restaurant POS Solutions — Cafes, Fine Dining, QSR & Cloud Kitchens",
+  description:
+    "Tailored restaurant software for every format: QSR rapid billing, cafe barista KDS, fine-dining table management, bakery batch tracking, and cloud kitchen multi-brand routing.",
+  alternates: {
+    canonical: "https://www.restronexpos.com/solutions",
+  },
+  openGraph: {
+    title: "Restaurant POS Solutions by Format | RestroNex",
+    description: "Industry-specific restaurant workflows for cafes, QSRs, fine dining, pizzerias, and cloud kitchens.",
+    url: "https://www.restronexpos.com/solutions",
+  },
+};
 
 const solutions = [
   { slug: "cafes", title: "Cafe & Coffee Shop", desc: "Quick drink modifiers, loyalty cards, barista KOT screen.", icon: Coffee },
