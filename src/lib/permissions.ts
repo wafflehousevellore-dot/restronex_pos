@@ -59,6 +59,11 @@ export const ALL_PERMISSIONS = [
   "reports.view",
   "reports.export",
   "reports.financial",
+  "reports.schedule",
+
+  // AUDIT
+  "audit.view",
+  "audit.export",
 
   // STAFF
   "staff.view",
@@ -129,6 +134,9 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "attendance.export",
     "reports.view",
     "reports.export",
+    "reports.schedule",
+    "audit.view",
+    "audit.export",
     "staff.view",
     "staff.invite",
     "staff.manage",
@@ -187,6 +195,8 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "reports.view",
     "reports.export",
     "reports.financial",
+    "audit.view",
+    "audit.export",
     "shifts.view",
     "shifts.export",
     "attendance.view",
