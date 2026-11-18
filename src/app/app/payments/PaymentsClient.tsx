@@ -31,6 +31,7 @@ export default function PaymentsClient() {
   // Gateway form state
   const [keyId, setKeyId] = useState("");
   const [keySecret, setKeySecret] = useState("");
+  const [webhookSecret, setWebhookSecret] = useState("");
   const [merchantName, setMerchantName] = useState("");
   const [isGatewayEnabled, setIsGatewayEnabled] = useState(false);
   const [cashEnabled, setCashEnabled] = useState(true);
@@ -183,6 +184,7 @@ export default function PaymentsClient() {
           provider: "RAZORPAY",
           keyId,
           keySecret: keySecret || undefined,
+          webhookSecret: webhookSecret || undefined,
           merchantName,
           isEnabled: isGatewayEnabled,
           cashEnabled,
@@ -591,14 +593,14 @@ export default function PaymentsClient() {
                       PhonePe Merchant ID (MID) <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      placeholder="e.g. PGTESTPAYUAT86 or your Production MID"
+                      placeholder="e.g. M1234567890 (Your PhonePe Business MID)"
                       value={phonepeMid}
                       onChange={(e) => setPhonepeMid(e.target.value)}
                       required
                       className="bg-white border-[#E5EBE7] text-xs h-9 font-mono font-bold"
                     />
                     <div className="text-[10px] text-[#718078]">
-                      Default sandbox test MID: <code>PGTESTPAYUAT86</code>. Enter your live PhonePe Business MID when going live.
+                      Enter your live PhonePe Business Merchant ID (MID) from your PhonePe merchant console.
                     </div>
                   </div>
 
@@ -609,7 +611,7 @@ export default function PaymentsClient() {
                       placeholder={
                         gatewayConfig?.hasPhonepeSecret
                           ? "•••••••••••••••• (Encrypted on Server)"
-                          : "Enter Salt Key (or leave blank to use sandbox default)"
+                          : "Enter Production Salt Key"
                       }
                       value={phonepeSaltKey}
                       onChange={(e) => setPhonepeSaltKey(e.target.value)}
@@ -857,7 +859,7 @@ export default function PaymentsClient() {
                       Razorpay Key ID <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      placeholder="rzp_live_... or rzp_test_..."
+                      placeholder="rzp_live_..."
                       value={keyId}
                       onChange={(e) => setKeyId(e.target.value)}
                       className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
@@ -871,7 +873,7 @@ export default function PaymentsClient() {
                     </Label>
                     <Input
                       type="password"
-                      placeholder={gatewayConfig?.hasSecret ? "•••••••••••••••• (Encrypted on Server)" : "Enter Key Secret"}
+                      placeholder={gatewayConfig?.hasSecret ? "•••••••••••••••• (Encrypted on Server)" : "Enter Live Key Secret"}
                       value={keySecret}
                       onChange={(e) => setKeySecret(e.target.value)}
                       className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
@@ -879,6 +881,42 @@ export default function PaymentsClient() {
                     <div className="text-[10px] text-[#718078]">
                       Stored securely using AES-256-GCM encryption. Never exposed to browser.
                     </div>
+                  </div>
+
+                  {/* Production Webhook URL Card */}
+                  <div className="p-3 bg-[#F8FAF9] rounded-xl border border-[#E5EBE7] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-semibold text-[#172B25]">Razorpay Webhook Endpoint</Label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url = `${typeof window !== "undefined" ? window.location.origin : ""}/api/webhooks/razorpay`;
+                          navigator.clipboard.writeText(url);
+                          setGatewayMsg({ type: "success", text: "Webhook URL copied to clipboard!" });
+                        }}
+                        className="text-[11px] font-bold text-[#16845B] hover:underline cursor-pointer"
+                      >
+                        Copy URL
+                      </button>
+                    </div>
+                    <div className="text-xs font-mono bg-white p-2 rounded border border-[#E5EBE7] text-[#172B25] break-all">
+                      {typeof window !== "undefined" ? `${window.location.origin}/api/webhooks/razorpay` : "https://www.restronexpos.com/api/webhooks/razorpay"}
+                    </div>
+                    <div className="text-[10px] text-[#718078]">
+                      Paste this in Razorpay Dashboard → Settings → Webhooks. Subscribe to: <code>payment.captured</code>, <code>payment.failed</code>, <code>order.paid</code>.
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-[#172B25]">Webhook Signing Secret</Label>
+                    <Input
+                      type="password"
+                      placeholder="Secret configured in your Razorpay Webhook settings"
+                      value={webhookSecret}
+                      onChange={(e) => setWebhookSecret(e.target.value)}
+                      className="bg-white border-[#E5EBE7] text-xs h-9 font-mono"
+                    />
+                    <div className="text-[10px] text-[#718078]">Used for cryptographic HMAC-SHA256 signature verification.</div>
                   </div>
 
                   <div className="space-y-1.5">

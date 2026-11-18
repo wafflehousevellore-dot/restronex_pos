@@ -294,7 +294,7 @@ export default function SettingsAdminClient({
             <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
               <span className="text-[#718078]">Razorpay API Credentials</span>
               <span className="font-bold text-[#16845B]">
-                {razorpayConfigured ? (razorpayLiveMode ? "Live Production Mode ✓" : "Test Mode") : "Not Configured"}
+                {razorpayConfigured ? (razorpayLiveMode ? "Live Production Mode ✓" : "Configuration Required (Live Keys)") : "Not Configured"}
               </span>
             </div>
             <div className="flex justify-between py-2 border-b border-[#E5EBE7]">

@@ -70,3 +70,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: "ACKNOWLEDGED", warning: (err as Error).message }, { status: 200 });
   }
 }
+
+export async function GET() {
+  return NextResponse.json({
+    status: "ACTIVE",
+    provider: "SWIGGY",
+    service: "RestroNex Aggregator Webhook Gateway",
+    signatureVerification: "HMAC-SHA256",
+  });
+}

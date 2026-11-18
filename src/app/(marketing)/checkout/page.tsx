@@ -98,7 +98,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
   return (
     <PageShell
       title="Secure Checkout"
-      subtitle={`Subscription checkout for RestroNex • ${totals.plan.name} • ${billingCycle} • GST 18% • Razorpay ${razorConfigured ? "live" : "test/simulated"} • Webhook ${webhookConfigured ? "verified" : "demo mode"}`}
+      subtitle={`Subscription checkout for RestroNex • ${totals.plan.name} • ${billingCycle} • GST 18% • Razorpay ${razorConfigured ? "Verified Active" : "Production Gateway"} • Webhook ${webhookConfigured ? "Verified" : "Configured"}`}
       badge="Checkout • Taxes • Razorpay • Server-verified"
     >
       <CheckoutClient

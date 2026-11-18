@@ -27,6 +27,10 @@ export async function GET(req: NextRequest) {
     outlets,
     configs,
     menuItems,
+    paymentConfig,
+    whatsAppConfig,
+    printerDevices,
+    aggregatorConns,
   ] = await Promise.all([
     prisma.tenant.findUnique({
       where: { id: tenantId },
@@ -45,6 +49,20 @@ export async function GET(req: NextRequest) {
       where: { tenantId },
       select: { id: true, name: true, pricePaise: true, category: { select: { name: true } } },
       orderBy: { name: "asc" },
+    }),
+    prisma.tenantPaymentGatewayConfig.findUnique({
+      where: { tenantId },
+    }),
+    prisma.outletWhatsAppConfig.findFirst({
+      where: { tenantId },
+      orderBy: { updatedAt: "desc" },
+    }),
+    prisma.printerDevice.findMany({
+      where: { tenantId },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.aggregatorConnection.findMany({
+      where: { tenantId },
     }),
   ]);
 
@@ -68,11 +86,77 @@ export async function GET(req: NextRequest) {
     };
   });
 
+  const swiggyConn = aggregatorConns.find((c) => c.provider === "SWIGGY");
+  const zomatoConn = aggregatorConns.find((c) => c.provider === "ZOMATO");
+
   return NextResponse.json({
     tenant,
     outlets,
     configs: parsedConfigs,
     menuItems,
+    summary: {
+      payments: {
+        provider: paymentConfig?.provider || "RAZORPAY",
+        isEnabled: paymentConfig?.isEnabled || false,
+        status: paymentConfig?.isEnabled && paymentConfig?.keySecretEncrypted
+          ? "CONNECTED"
+          : paymentConfig?.keyId
+          ? "PENDING_CONFIGURATION"
+          : "NOT_CONNECTED",
+        keyIdMasked: paymentConfig?.keyId ? `${paymentConfig.keyId.slice(0, 8)}••••••••` : null,
+        hasSecret: !!paymentConfig?.keySecretEncrypted,
+        hasWebhookSecret: !!paymentConfig?.webhookSecretEncrypted,
+        cashEnabled: paymentConfig?.cashEnabled ?? true,
+        cardTerminalEnabled: paymentConfig?.cardTerminalEnabled ?? true,
+        upiManualEnabled: paymentConfig?.upiManualEnabled ?? true,
+        lastVerifiedAt: paymentConfig?.updatedAt || null,
+      },
+      whatsapp: {
+        status: whatsAppConfig?.status === "CONNECTED" ? "CONNECTED" : (whatsAppConfig?.phoneNumberId ? "PENDING_CONFIGURATION" : "NOT_CONNECTED"),
+        displayPhone: whatsAppConfig?.displayPhone || null,
+        phoneNumberId: whatsAppConfig?.phoneNumberId || null,
+        wabaId: whatsAppConfig?.wabaId || null,
+        lastVerifiedAt: whatsAppConfig?.lastVerifiedAt || whatsAppConfig?.connectedAt || null,
+      },
+      printers: {
+        count: printerDevices.length,
+        status: printerDevices.length > 0 ? "CONNECTED" : "NOT_CONNECTED",
+        devices: printerDevices.map((p) => ({
+          id: p.id,
+          name: p.name,
+          type: p.type,
+          station: p.station,
+          paperWidth: p.paperWidth,
+          isDefaultBilling: p.isDefaultBilling,
+          isDefaultKOT: p.isDefaultKOT,
+          lastActiveAt: p.lastActiveAt,
+        })),
+      },
+      onlineOrdering: {
+        swiggy: {
+          status: swiggyConn?.status === "CONNECTED" && swiggyConn?.credentialsEncrypted
+            ? "CONNECTED"
+            : swiggyConn?.credentialsEncrypted
+            ? "PENDING_APPROVAL"
+            : "PROVIDER_APPROVAL_REQUIRED",
+          hasCredentials: !!swiggyConn?.credentialsEncrypted,
+          lastSyncAt: swiggyConn?.lastSyncAt || null,
+        },
+        zomato: {
+          status: zomatoConn?.status === "CONNECTED" && zomatoConn?.credentialsEncrypted
+            ? "CONNECTED"
+            : zomatoConn?.credentialsEncrypted
+            ? "PENDING_APPROVAL"
+            : "PROVIDER_APPROVAL_REQUIRED",
+          hasCredentials: !!zomatoConn?.credentialsEncrypted,
+          lastSyncAt: zomatoConn?.lastSyncAt || null,
+        },
+      },
+      accounting: {
+        status: parsedConfigs.find((c) => c.provider === "accounting")?.status || "CONNECTED",
+        format: parsedConfigs.find((c) => c.provider === "accounting")?.data?.exportFormat || "TALLY_XML",
+      },
+    },
   });
 }
 

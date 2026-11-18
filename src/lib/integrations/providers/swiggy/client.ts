@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { AggregatorCredentials, MasterMenuSyncResult, MenuItemSyncPayload } from "../../core/integration-types";
 
 export class SwiggyApiClient {
@@ -11,15 +10,15 @@ export class SwiggyApiClient {
   }
 
   public async pushMenu(storeId: string, items: MenuItemSyncPayload[]): Promise<MasterMenuSyncResult> {
-    // If in testMode / sandbox without live credentials, safely simulate successful sync
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
+    if (!this.credentials.apiKey) {
       return {
         provider: "SWIGGY",
         storeId,
-        totalCategories: new Set(items.map(i => i.categoryName)).size,
+        totalCategories: 0,
         totalItems: items.length,
         syncedAt: new Date().toISOString(),
-        status: "SUCCESS",
+        status: "FAILED",
+        errors: ["Swiggy Partner credentials missing. Complete official partner onboarding to enable menu sync."],
       };
     }
 
@@ -70,8 +69,8 @@ export class SwiggyApiClient {
   }
 
   public async updateStoreStatus(storeId: string, isOnline: boolean, reason?: string) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, message: `Swiggy outlet ${storeId} set to ${isOnline ? "ONLINE" : "OFFLINE"}` };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Swiggy partner credentials not configured." };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/status`, {
@@ -90,8 +89,8 @@ export class SwiggyApiClient {
   }
 
   public async updateItemAvailability(storeId: string, itemIds: string[], isAvailable: boolean) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, updatedCount: itemIds.length };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Swiggy partner credentials not configured.", updatedCount: 0 };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/items/stock`, {
@@ -116,8 +115,8 @@ export class SwiggyApiClient {
     prepTimeMinutes = 15,
     cancelReason?: string
   ) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, message: `Swiggy order ${orderId} transitioned to ${status}` };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Swiggy partner credentials not configured." };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/orders/${orderId}/status`, {

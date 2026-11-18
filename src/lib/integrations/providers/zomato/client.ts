@@ -10,14 +10,15 @@ export class ZomatoApiClient {
   }
 
   public async pushMenu(storeId: string, items: MenuItemSyncPayload[]): Promise<MasterMenuSyncResult> {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
+    if (!this.credentials.apiKey) {
       return {
         provider: "ZOMATO",
         storeId,
-        totalCategories: new Set(items.map(i => i.categoryName)).size,
+        totalCategories: 0,
         totalItems: items.length,
         syncedAt: new Date().toISOString(),
-        status: "SUCCESS",
+        status: "FAILED",
+        errors: ["Zomato Partner credentials missing. Complete official partner onboarding to enable menu sync."],
       };
     }
 
@@ -67,8 +68,8 @@ export class ZomatoApiClient {
   }
 
   public async updateStoreStatus(storeId: string, isOnline: boolean, reason?: string) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, message: `Zomato outlet ${storeId} set to ${isOnline ? "ONLINE" : "OFFLINE"}` };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Zomato partner credentials not configured." };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/status`, {
@@ -87,8 +88,8 @@ export class ZomatoApiClient {
   }
 
   public async updateItemAvailability(storeId: string, itemIds: string[], isAvailable: boolean) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, updatedCount: itemIds.length };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Zomato partner credentials not configured.", updatedCount: 0 };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/items/availability`, {
@@ -113,8 +114,8 @@ export class ZomatoApiClient {
     prepTimeMinutes = 15,
     cancelReason?: string
   ) {
-    if (!this.credentials.apiKey || this.credentials.environment === "sandbox") {
-      return { success: true, message: `Zomato order ${orderId} transitioned to ${status}` };
+    if (!this.credentials.apiKey) {
+      return { success: false, error: "Zomato partner credentials not configured." };
     }
 
     const response = await fetch(`${this.baseUrl}/restaurants/${storeId}/orders/${orderId}/status`, {

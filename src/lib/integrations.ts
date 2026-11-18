@@ -1,13 +1,29 @@
 export type IntegrationProvider =
-  | "qr_ordering"
+  | "razorpay"
+  | "offline_pos"
+  | "direct_upi"
+  | "whatsapp"
   | "printer"
+  | "swiggy"
+  | "zomato"
+  | "qr_ordering"
   | "accounting"
+  | "zoho_books"
   | "dotpe";
+
+export type IntegrationCategory =
+  | "ALL"
+  | "PAYMENTS"
+  | "WHATSAPP"
+  | "PRINTERS"
+  | "ONLINE_ORDERING"
+  | "ACCOUNTING";
 
 export type IntegrationStatus =
   | "NOT_CONNECTED"
   | "REQUESTED"
   | "PENDING_APPROVAL"
+  | "PROVIDER_APPROVAL_REQUIRED"
   | "AUTHENTICATION_PENDING"
   | "OUTLET_MAPPING_PENDING"
   | "CONNECTED"
@@ -82,7 +98,7 @@ export interface IntegrationConfigData {
 export interface IntegrationMeta {
   provider: IntegrationProvider;
   name: string;
-  category: "Ordering" | "In-store" | "Accounting";
+  category: "Payments" | "WhatsApp" | "Hardware" | "Ordering" | "Accounting";
   connectionMode: ConnectionMode;
   tagline: string;
   description: string;
@@ -94,9 +110,139 @@ export interface IntegrationMeta {
 
 export const INTEGRATIONS: IntegrationMeta[] = [
   {
+    provider: "razorpay",
+    name: "Razorpay Payment Gateway",
+    category: "Payments",
+    connectionMode: "WEBHOOK_ADAPTER",
+    tagline: "Accept Cards, NetBanking, UPI & Wallets with Automated Reconciliation",
+    description:
+      "Accept customer payments directly into your registered business bank account. Supports dynamic QR, checkout modal, instant webhooks, and automated refund processing.",
+    officialPortalUrl: "https://dashboard.razorpay.com",
+    officialPortalName: "Razorpay Merchant Dashboard",
+    webhookPath: "/api/webhooks/razorpay",
+    defaultCapabilities: {
+      orders: true,
+      menu: false,
+      availability: false,
+      orderStatus: true,
+      riderTracking: false,
+    },
+  },
+  {
+    provider: "direct_upi",
+    name: "Direct Dynamic UPI QR (0% Fee)",
+    category: "Payments",
+    connectionMode: "ONE_CLICK",
+    tagline: "Instant VPA Dynamic QR for Google Pay, PhonePe & Paytm",
+    description:
+      "Generate dynamic UPI payment QRs on bills and contactless table menus with your own merchant VPA. Zero gateway commissions with direct bank account credit.",
+    officialPortalUrl: "https://www.npci.org.in",
+    officialPortalName: "NPCI Unified Payments Interface",
+    defaultCapabilities: {
+      orders: true,
+      menu: false,
+      availability: false,
+      orderStatus: true,
+      riderTracking: false,
+    },
+  },
+  {
+    provider: "offline_pos",
+    name: "Counter Cash & Card Terminal (Offline)",
+    category: "Payments",
+    connectionMode: "ONE_CLICK",
+    tagline: "Physical Cash Drawer Reconciliation & EDC Card Swipe Tracking",
+    description:
+      "Record in-person counter cash tenders with denomination breakdown, EDC card machine swipe approvals, and split-tender billing directly on POS billing terminal.",
+    officialPortalUrl: "https://www.restronexpos.com",
+    officialPortalName: "RestroNex POS Billing Terminal",
+    defaultCapabilities: {
+      orders: true,
+      menu: false,
+      availability: false,
+      orderStatus: true,
+      riderTracking: false,
+    },
+  },
+  {
+    provider: "whatsapp",
+    name: "WhatsApp Business API (Meta Cloud API)",
+    category: "WhatsApp",
+    connectionMode: "PARTNER_ONBOARDING",
+    tagline: "Automated Digital Tax Invoices & Transactional Alerts",
+    description:
+      "Send digital PDF invoices, table booking confirmations, and order ready notifications to customers directly on WhatsApp via the official Meta WhatsApp Business Cloud API.",
+    officialPortalUrl: "https://business.facebook.com",
+    officialPortalName: "Meta Business Suite & WhatsApp Manager",
+    webhookPath: "/api/webhooks/whatsapp",
+    defaultCapabilities: {
+      orders: true,
+      menu: false,
+      availability: false,
+      orderStatus: true,
+      riderTracking: false,
+    },
+  },
+  {
+    provider: "printer",
+    name: "Thermal Receipt & KOT Printers",
+    category: "Hardware",
+    connectionMode: "DEVICE_LAN",
+    tagline: "ESC/POS 80mm & 58mm Thermal Printers (LAN / USB / Bluetooth)",
+    description:
+      "High-speed thermal receipt and kitchen order ticket printing. Route orders automatically by station (Cashier Bill, Hot Kitchen KOT, Cold/Bar KOT) via Network LAN IP, USB, or Bluetooth.",
+    officialPortalUrl: "https://www.restronexpos.com",
+    officialPortalName: "RestroNex Hardware Station Hub",
+    defaultCapabilities: {
+      orders: true,
+      menu: false,
+      availability: false,
+      orderStatus: true,
+      riderTracking: false,
+    },
+  },
+  {
+    provider: "swiggy",
+    name: "Swiggy Food Delivery Bridge",
+    category: "Ordering",
+    connectionMode: "PARTNER_ONBOARDING",
+    tagline: "Direct POS Order Ingestion, Kitchen KOT Firing & Menu Sync",
+    description:
+      "Connect your Swiggy partner store. Incoming delivery orders automatically appear in POS, fire kitchen KOTs, and print thermal slips with automated status updates.",
+    officialPortalUrl: "https://partner.swiggy.com",
+    officialPortalName: "Swiggy Partner Portal",
+    webhookPath: "/api/webhooks/aggregators/swiggy",
+    defaultCapabilities: {
+      orders: true,
+      menu: true,
+      availability: true,
+      orderStatus: true,
+      riderTracking: true,
+    },
+  },
+  {
+    provider: "zomato",
+    name: "Zomato Food Delivery Bridge",
+    category: "Ordering",
+    connectionMode: "PARTNER_ONBOARDING",
+    tagline: "Direct POS Order Relay, Rider Dispatch Tracking & Live Menu Sync",
+    description:
+      "Official Zomato restaurant partner integration. Automatic order ingestion, kitchen order tickets, rider assignment alerts, and menu item availability synchronization.",
+    officialPortalUrl: "https://www.zomato.com/business",
+    officialPortalName: "Zomato for Business",
+    webhookPath: "/api/webhooks/aggregators/zomato",
+    defaultCapabilities: {
+      orders: true,
+      menu: true,
+      availability: true,
+      orderStatus: true,
+      riderTracking: true,
+    },
+  },
+  {
     provider: "qr_ordering",
     name: "Contactless QR Dine-in",
-    category: "In-store",
+    category: "Ordering",
     connectionMode: "ONE_CLICK",
     tagline: "Instant Table QR Menu with Direct KOT Firing",
     description:
@@ -112,33 +258,33 @@ export const INTEGRATIONS: IntegrationMeta[] = [
     },
   },
   {
-    provider: "printer",
-    name: "Network Thermal Printer & KDS",
-    category: "In-store",
-    connectionMode: "DEVICE_LAN",
-    tagline: "ESC/POS LAN Thermal Printing & Station KOTs",
+    provider: "accounting",
+    name: "Tally Prime & Tally.ERP 9 XML",
+    category: "Accounting",
+    connectionMode: "DATA_EXPORT",
+    tagline: "Direct XML Voucher Export for Sales, Taxes & Payment Tenders",
     description:
-      "Configure your local receipt and kitchen thermal printers (80mm / 58mm). Assign station routing (Kitchen, Bar, Dessert, Billing Counter) and send test print pings across your local restaurant network.",
-    officialPortalUrl: "https://www.restronexpos.com",
-    officialPortalName: "Local Hardware Hub",
+      "Export daily sales revenue, CGST/SGST tax breakdown, payment tenders (Cash, UPI, Cards), and day-end registers formatted for direct import into Tally Prime XML.",
+    officialPortalUrl: "https://tallysolutions.com",
+    officialPortalName: "Tally Prime Integration",
     defaultCapabilities: {
-      orders: true,
+      orders: false,
       menu: false,
       availability: false,
-      orderStatus: true,
+      orderStatus: false,
       riderTracking: false,
     },
   },
   {
-    provider: "accounting",
-    name: "Accounting & ERP Export",
+    provider: "zoho_books",
+    name: "Zoho Books & Excel CSV",
     category: "Accounting",
     connectionMode: "DATA_EXPORT",
-    tagline: "Tally Prime XML, Zoho Books & General Ledger",
+    tagline: "Standardized CSV Export for Sales Registers, GST & Item Margins",
     description:
-      "Export sales revenue, CGST/SGST tax breakdown, payment tenders (Cash, UPI, Cards), and day-end registers formatted for Tally Prime XML, Zoho Books, or Excel.",
-    officialPortalUrl: "https://tallysolutions.com",
-    officialPortalName: "Tally Prime Integration",
+      "Generate comprehensive accounting CSV exports tailored for Zoho Books, QuickBooks, or custom accounting systems. Includes item consumption, taxes, and payment audit logs.",
+    officialPortalUrl: "https://www.zoho.com/books/",
+    officialPortalName: "Zoho Books Integration",
     defaultCapabilities: {
       orders: false,
       menu: false,
@@ -192,6 +338,13 @@ export function statusLabel(s: IntegrationStatus | string): {
         color: "#B45309",
         badgeClass: "bg-amber-50 text-amber-800 border-amber-300",
         description: "Your connection request has been recorded. Partner approval required.",
+      };
+    case "PROVIDER_APPROVAL_REQUIRED":
+      return {
+        text: "Provider Approval Required",
+        color: "#D97706",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-300",
+        description: "Official partner merchant agreement and API approval required from aggregator.",
       };
     case "REQUESTED":
       return {

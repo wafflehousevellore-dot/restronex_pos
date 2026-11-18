@@ -75,7 +75,7 @@ export class AggregatorConnectionService {
       return {
         provider,
         status: "NOT_CONNECTED" as ConnectionStatus,
-        testMode: true,
+        testMode: false,
         autoAccept: true,
         defaultPrepMinutes: 15,
         pricingStrategy: "MASTER_EQUAL" as PricingStrategy,
@@ -88,8 +88,8 @@ export class AggregatorConnectionService {
     return {
       id: conn.id,
       provider: conn.provider as AggregatorProvider,
-      status: conn.status as ConnectionStatus,
-      testMode: conn.testMode,
+      status: (conn.credentialsEncrypted ? conn.status : "PROVIDER_APPROVAL_REQUIRED") as ConnectionStatus,
+      testMode: false,
       autoAccept: conn.autoAccept,
       defaultPrepMinutes: conn.defaultPrepMinutes,
       pricingStrategy: conn.pricingStrategy as PricingStrategy,
@@ -117,7 +117,7 @@ export class AggregatorConnectionService {
       tenantId,
       provider,
       credentials,
-      testMode = true,
+      testMode = false,
       autoAccept = true,
       defaultPrepMinutes = 15,
       pricingStrategy = "MASTER_EQUAL",

@@ -11,7 +11,6 @@ import {
   Layers,
   ShoppingBag,
   BarChart3,
-  FlaskConical,
   Settings,
   ArrowRight,
   ShieldCheck,
@@ -34,7 +33,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
 
-type TabKey = "overview" | "swiggy" | "zomato" | "outlets" | "menu" | "orders" | "reconciliation" | "simulator";
+type TabKey = "overview" | "swiggy" | "zomato" | "outlets" | "menu" | "orders" | "reconciliation";
 
 export default function OnlineIntegrationsClient() {
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
@@ -57,19 +56,14 @@ export default function OnlineIntegrationsClient() {
     apiKey: "",
     merchantId: "",
     webhookSecret: "",
-    environment: "sandbox",
+    environment: "production",
   });
   const [zomatoCreds, setZomatoCreds] = useState({
     apiKey: "",
     merchantId: "",
     webhookSecret: "",
-    environment: "sandbox",
+    environment: "production",
   });
-
-  // Simulator Form States
-  const [simProvider, setSimProvider] = useState<"SWIGGY" | "ZOMATO">("SWIGGY");
-  const [simOutletId, setSimOutletId] = useState("");
-  const [simResult, setSimResult] = useState<any>(null);
 
   // Mapping Form States
   const [mapOutletId, setMapOutletId] = useState("");
@@ -100,15 +94,14 @@ export default function OnlineIntegrationsClient() {
       const json = await res.json();
       if (res.ok && json.mappings) {
         setOutletMappings(json.mappings);
-        if (json.mappings.length > 0 && !simOutletId) {
-          setSimOutletId(json.mappings[0].outletId);
+        if (json.mappings.length > 0 && !mapOutletId) {
           setMapOutletId(json.mappings[0].outletId);
         }
       }
     } catch (err) {
       console.error(err);
     }
-  }, [simOutletId]);
+  }, [mapOutletId]);
 
   const fetchMenuPreview = useCallback(async (provider: "SWIGGY" | "ZOMATO", strategy?: string, hike?: number) => {
     try {
@@ -170,7 +163,7 @@ export default function OnlineIntegrationsClient() {
           action: "save_connection",
           provider,
           credentials: creds,
-          testMode: creds.environment === "sandbox",
+          testMode: false,
           autoAccept: true,
           defaultPrepMinutes: 15,
         }),
@@ -332,32 +325,6 @@ export default function OnlineIntegrationsClient() {
     }
   };
 
-  const handleSimulateOrder = async () => {
-    setActionLoading(true);
-    setSimResult(null);
-    try {
-      const res = await fetch("/api/integrations/aggregator", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "simulate_order",
-          provider: simProvider,
-          outletId: simOutletId || undefined,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Simulation failed");
-      setSimResult(data.result);
-      showMsg(`Simulated ${simProvider} order ${data.result.orderNumber} successfully! KOT and Print Job dispatched.`, "success");
-      await fetchStatus();
-      await fetchReconciliation();
-    } catch (err: any) {
-      showMsg(err.message, "error");
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
   const handleDownloadCsv = () => {
     window.open("/api/integrations/aggregator?action=export_reconciliation", "_blank");
   };
@@ -437,7 +404,6 @@ export default function OnlineIntegrationsClient() {
           { key: "menu", label: "Menu Synchronisation", icon: Utensils },
           { key: "orders", label: "Live Orders & Exceptions", icon: Clock, count: statusData?.stats?.exceptionsCount > 0 ? `${statusData.stats.exceptionsCount} Alerts` : undefined },
           { key: "reconciliation", label: "Reconciliation", icon: BarChart3 },
-          { key: "simulator", label: "Test Simulator", icon: FlaskConical },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -484,13 +450,25 @@ export default function OnlineIntegrationsClient() {
                   <div className="text-xl font-bold mt-1 text-[#172B25] flex items-center gap-2">
                     <span
                       className={`w-2.5 h-2.5 rounded-full ${
-                        statusData?.swiggy?.status === "CONNECTED" ? "bg-emerald-500" : "bg-amber-400"
+                        statusData?.swiggy?.status === "CONNECTED"
+                          ? "bg-emerald-500"
+                          : statusData?.swiggy?.hasCredentials
+                          ? "bg-blue-500"
+                          : "bg-amber-400"
                       }`}
                     />
-                    {statusData?.swiggy?.status || "NOT_CONNECTED"}
+                    {statusData?.swiggy?.status === "CONNECTED"
+                      ? "CONNECTED"
+                      : statusData?.swiggy?.hasCredentials
+                      ? "PENDING_APPROVAL"
+                      : "NOT_CONNECTED"}
                   </div>
                   <div className="text-xs text-gray-500 mt-0.5">
-                    Mode: {statusData?.swiggy?.testMode ? "Test / Sandbox" : "Live Production"}
+                    {statusData?.swiggy?.status === "CONNECTED"
+                      ? "Mode: Live Production (Verified)"
+                      : statusData?.swiggy?.hasCredentials
+                      ? "Status: Awaiting Swiggy Approval"
+                      : "Status: Provider Approval Required"}
                   </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 font-extrabold text-lg">
@@ -506,13 +484,25 @@ export default function OnlineIntegrationsClient() {
                   <div className="text-xl font-bold mt-1 text-[#172B25] flex items-center gap-2">
                     <span
                       className={`w-2.5 h-2.5 rounded-full ${
-                        statusData?.zomato?.status === "CONNECTED" ? "bg-emerald-500" : "bg-amber-400"
+                        statusData?.zomato?.status === "CONNECTED"
+                          ? "bg-emerald-500"
+                          : statusData?.zomato?.hasCredentials
+                          ? "bg-blue-500"
+                          : "bg-amber-400"
                       }`}
                     />
-                    {statusData?.zomato?.status || "NOT_CONNECTED"}
+                    {statusData?.zomato?.status === "CONNECTED"
+                      ? "CONNECTED"
+                      : statusData?.zomato?.hasCredentials
+                      ? "PENDING_APPROVAL"
+                      : "NOT_CONNECTED"}
                   </div>
                   <div className="text-xs text-gray-500 mt-0.5">
-                    Mode: {statusData?.zomato?.testMode ? "Test / Sandbox" : "Live Production"}
+                    {statusData?.zomato?.status === "CONNECTED"
+                      ? "Mode: Live Production (Verified)"
+                      : statusData?.zomato?.hasCredentials
+                      ? "Status: Awaiting Zomato Approval"
+                      : "Status: Provider Approval Required"}
                   </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 font-extrabold text-lg">
@@ -600,18 +590,17 @@ export default function OnlineIntegrationsClient() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200">
-                <div className="flex items-center gap-2 text-xs text-emerald-900 font-medium">
-                  <Zap className="w-4 h-4 text-emerald-700" />
-                  <span>Ready to test the pipeline? Trigger a mock delivery order in the Test Simulator.</span>
+              <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#E8F5EE] border border-[#16845B]/30">
+                <div className="flex items-center gap-2 text-xs text-[#16845B] font-medium">
+                  <ShieldCheck className="w-4 h-4 text-[#16845B]" />
+                  <span>Production Aggregator Bridge Active. Webhooks securely signed and verified via HMAC-SHA256.</span>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => setActiveTab("simulator")}
-                  className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
+                <Link
+                  href="/app/integrations"
+                  className="px-3.5 py-2 rounded-lg bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold flex items-center gap-1.5"
                 >
-                  Open Simulator →
-                </Button>
+                  POS Integrations Hub <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -729,14 +718,10 @@ export default function OnlineIntegrationsClient() {
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs">Execution Mode</Label>
-                    <select
-                      value={swiggyCreds.environment}
-                      onChange={(e) => setSwiggyCreds({ ...swiggyCreds, environment: e.target.value })}
-                      className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
-                    >
-                      <option value="sandbox">Sandbox / Test Mode (Safe Mock Simulation)</option>
-                      <option value="production">Live Production (Official Swiggy API)</option>
-                    </select>
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                      Live Production (Official Swiggy Partner API)
+                    </div>
                   </div>
                 </div>
 
@@ -877,14 +862,10 @@ export default function OnlineIntegrationsClient() {
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs">Execution Mode</Label>
-                    <select
-                      value={zomatoCreds.environment}
-                      onChange={(e) => setZomatoCreds({ ...zomatoCreds, environment: e.target.value })}
-                      className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
-                    >
-                      <option value="sandbox">Sandbox / Test Mode (Safe Mock Simulation)</option>
-                      <option value="production">Live Production (Official Zomato API)</option>
-                    </select>
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                      Live Production (Official Zomato Partner API)
+                    </div>
                   </div>
                 </div>
 
@@ -1400,125 +1381,13 @@ export default function OnlineIntegrationsClient() {
                     ) : (
                       <tr>
                         <td colSpan={8} className="px-4 py-6 text-center text-gray-400">
-                          No aggregator orders found for reconciliation yet. Run a test order in the simulator!
+                          No aggregator orders received for reconciliation yet. Live orders from Swiggy and Zomato will automatically appear here once incoming webhooks are processed.
                         </td>
                       </tr>
                     )}
                   </tbody>
                 </table>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Tab: SIMULATOR */}
-      {activeTab === "simulator" && (
-        <div className="space-y-6">
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-base font-bold text-[#172B25] flex items-center gap-2">
-                <FlaskConical className="w-4 h-4 text-emerald-600" />
-                Aggregator Sandbox & Order Simulator
-              </CardTitle>
-              <p className="text-xs text-gray-500">
-                Safely trigger incoming delivery orders to test KOT ticket routing, thermal receipt printing, and kitchen alerts
-              </p>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-bold">Select Aggregator Platform</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setSimProvider("SWIGGY")}
-                      className={`p-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-bold cursor-pointer ${
-                        simProvider === "SWIGGY"
-                          ? "bg-orange-50 border-orange-500 text-orange-700 ring-2 ring-orange-500/20"
-                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      <span className="w-5 h-5 rounded-full bg-orange-600 text-white flex items-center justify-center text-[10px]">S</span>
-                      Swiggy Delivery
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSimProvider("ZOMATO")}
-                      className={`p-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-bold cursor-pointer ${
-                        simProvider === "ZOMATO"
-                          ? "bg-red-50 border-red-500 text-red-700 ring-2 ring-red-500/20"
-                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      <span className="w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px]">Z</span>
-                      Zomato Delivery
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-bold">Target Outlet</Label>
-                  <select
-                    value={simOutletId}
-                    onChange={(e) => setSimOutletId(e.target.value)}
-                    className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
-                  >
-                    {outletMappings.map((o) => (
-                      <option key={o.outletId} value={o.outletId}>
-                        {o.outletName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs text-gray-600 space-y-1.5">
-                <div className="font-bold text-gray-800">What happens when you click &quot;Trigger Test Order&quot;:</div>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
-                  <li>Creates an idempotent POS Order with source <span className="font-semibold text-gray-800">{simProvider}</span>.</li>
-                  <li>Generates a Kitchen Order Ticket (KOT) routed to MAIN kitchen and BAR station.</li>
-                  <li>Queues an 80mm thermal print job in the receipt printer queue.</li>
-                  <li>Broadcasts real-time KDS chime event across active kitchen display terminals.</li>
-                </ul>
-              </div>
-
-              <Button
-                onClick={handleSimulateOrder}
-                disabled={actionLoading}
-                className="w-full sm:w-auto bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-bold px-6 py-2.5 flex items-center justify-center gap-2"
-              >
-                <Play className="w-4 h-4 fill-current" />
-                Trigger Test {simProvider} Order Now
-              </Button>
-
-              {/* Simulation Result */}
-              {simResult && (
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2 text-xs text-emerald-900 animate-in fade-in">
-                  <div className="font-bold text-sm flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    Test Order Created Successfully!
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-xs font-mono">
-                    <div>
-                      <span className="text-gray-500 block text-[10px]">ORDER NUMBER</span>
-                      <span className="font-bold">{simResult.orderNumber}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block text-[10px]">EXTERNAL REF</span>
-                      <span className="font-bold">{simResult.displayOrderId}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block text-[10px]">TICKET ID</span>
-                      <span className="font-bold">{simResult.ticketId?.slice(-8)}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-500 block text-[10px]">STATUS</span>
-                      <span className="font-bold">{simResult.status}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>

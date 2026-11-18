@@ -3,6 +3,7 @@ export type AggregatorProvider = "SWIGGY" | "ZOMATO";
 export type ConnectionStatus =
   | "NOT_CONNECTED"
   | "PENDING_APPROVAL"
+  | "PROVIDER_APPROVAL_REQUIRED"
   | "CONFIG_REQUIRED"
   | "CONNECTED"
   | "SYNC_WARNING"
