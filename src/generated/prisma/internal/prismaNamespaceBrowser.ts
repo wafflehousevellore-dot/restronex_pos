@@ -114,10 +114,7 @@ export const ModelName = {
   WhatsAppMessageQueue: 'WhatsAppMessageQueue',
   MarketplaceService: 'MarketplaceService',
   OrganizationServiceActivation: 'OrganizationServiceActivation',
-  ServiceActivationEvent: 'ServiceActivationEvent',
-  AggregatorOutletMapping: 'AggregatorOutletMapping',
-  AggregatorMenuMapping: 'AggregatorMenuMapping',
-  AggregatorOrderLog: 'AggregatorOrderLog'
+  ServiceActivationEvent: 'ServiceActivationEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1227,57 +1224,6 @@ export const ServiceActivationEventScalarFieldEnum = {
 } as const
 
 export type ServiceActivationEventScalarFieldEnum = (typeof ServiceActivationEventScalarFieldEnum)[keyof typeof ServiceActivationEventScalarFieldEnum]
-
-
-export const AggregatorOutletMappingScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  provider: 'provider',
-  providerStoreId: 'providerStoreId',
-  providerStoreName: 'providerStoreName',
-  providerCity: 'providerCity',
-  providerAddress: 'providerAddress',
-  restroOutletId: 'restroOutletId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AggregatorOutletMappingScalarFieldEnum = (typeof AggregatorOutletMappingScalarFieldEnum)[keyof typeof AggregatorOutletMappingScalarFieldEnum]
-
-
-export const AggregatorMenuMappingScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  provider: 'provider',
-  providerItemId: 'providerItemId',
-  providerItemName: 'providerItemName',
-  restroMenuItemId: 'restroMenuItemId',
-  restroAddonOptionId: 'restroAddonOptionId',
-  pricePaise: 'pricePaise',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AggregatorMenuMappingScalarFieldEnum = (typeof AggregatorMenuMappingScalarFieldEnum)[keyof typeof AggregatorMenuMappingScalarFieldEnum]
-
-
-export const AggregatorOrderLogScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  outletId: 'outletId',
-  provider: 'provider',
-  providerOrderId: 'providerOrderId',
-  orderId: 'orderId',
-  eventType: 'eventType',
-  status: 'status',
-  payloadJson: 'payloadJson',
-  errorMessage: 'errorMessage',
-  createdAt: 'createdAt'
-} as const
-
-export type AggregatorOrderLogScalarFieldEnum = (typeof AggregatorOrderLogScalarFieldEnum)[keyof typeof AggregatorOrderLogScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -250,7 +250,7 @@ export default async function StaffDashboardPage() {
               </div>
               <h2 className="text-lg font-bold text-[#0F1E19]">Order Activity Log</h2>
               <p className="text-xs text-[#4A5D55] mt-1">
-                Real-time stream of all orders across Dine-in, Takeaway, Delivery, Swiggy, and Zomato.
+                Real-time stream of all orders across Dine-in, Takeaway, Delivery, and QR orders.
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-[#EEF3F0]">

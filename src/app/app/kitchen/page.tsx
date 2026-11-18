@@ -440,7 +440,7 @@ export default function KitchenPage() {
                 Loud Kitchen Audio Alerts are Paused by Browser
               </div>
               <p className="text-xs text-red-800">
-                Web browsers block audio until you click once. Click below so incoming Swiggy, Zomato, and POS orders ring out loudly in the kitchen!
+                Web browsers block audio until you click once. Click below so incoming POS, QR, and online orders ring out loudly in the kitchen!
               </p>
             </div>
           </div>
@@ -470,7 +470,7 @@ export default function KitchenPage() {
               )}
             </div>
             <p className="text-xs text-[#718078]">
-              Automated live order reception • POS, Swiggy &amp; Zomato auto-sync • Loud chime alert
+              Automated live order reception • POS, QR &amp; Online auto-sync • Loud chime alert
             </p>
           </div>
         </div>
@@ -1065,26 +1065,26 @@ export default function KitchenPage() {
             )}
 
             <div className="grid grid-cols-2 gap-2.5 pt-1">
-              {/* Swiggy Simulation */}
+              {/* QR Table Simulation */}
               <button
                 type="button"
                 disabled={simulating}
-                onClick={() => runSimulation("SWIGGY")}
-                className="p-3 rounded-2xl bg-[#FC8019] hover:bg-[#e47316] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+                onClick={() => runSimulation("TABLE_QR")}
+                className="p-3 rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
               >
-                <Bike className="h-4 w-4 shrink-0" />
-                <span>Simulate Swiggy Order</span>
+                <Play className="h-4 w-4 shrink-0" />
+                <span>Simulate Table QR Order</span>
               </button>
 
-              {/* Zomato Simulation */}
+              {/* Online Delivery Simulation */}
               <button
                 type="button"
                 disabled={simulating}
-                onClick={() => runSimulation("ZOMATO")}
-                className="p-3 rounded-2xl bg-[#CB202D] hover:bg-[#b01c27] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+                onClick={() => runSimulation("WEBSITE")}
+                className="p-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
               >
                 <Bike className="h-4 w-4 shrink-0" />
-                <span>Simulate Zomato Order</span>
+                <span>Simulate Online Delivery</span>
               </button>
 
               {/* POS Walk-In Simulation */}
@@ -1092,21 +1092,21 @@ export default function KitchenPage() {
                 type="button"
                 disabled={simulating}
                 onClick={() => runSimulation("POS")}
-                className="p-3 rounded-2xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+                className="p-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
               >
                 <Play className="h-4 w-4 shrink-0" />
-                <span>Simulate POS Table Order</span>
+                <span>Simulate POS Counter Order</span>
               </button>
 
-              {/* Website Order Simulation */}
+              {/* Online Pickup Simulation */}
               <button
                 type="button"
                 disabled={simulating}
                 onClick={() => runSimulation("WEBSITE")}
-                className="p-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
+                className="p-3 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer"
               >
                 <Play className="h-4 w-4 shrink-0" />
-                <span>Simulate Online Order</span>
+                <span>Simulate Takeaway Order</span>
               </button>
             </div>
 
@@ -1115,10 +1115,10 @@ export default function KitchenPage() {
               <button
                 type="button"
                 disabled={simulating}
-                onClick={() => runSimulation("SWIGGY", "CANCEL_LATEST")}
+                onClick={() => runSimulation("WEBSITE", "CANCEL_LATEST")}
                 className="w-full p-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
-                <AlertTriangle className="h-4 w-4" /> Simulate Aggregator Cancellation Alarm
+                <AlertTriangle className="h-4 w-4" /> Simulate Order Cancellation Alarm
               </button>
             </div>
           </div>

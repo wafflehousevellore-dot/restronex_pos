@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
+  devIndicators: false,
   turbopack: { root: __dirname },
   experimental: {
     optimizePackageImports: ["lucide-react", "date-fns", "recharts"],

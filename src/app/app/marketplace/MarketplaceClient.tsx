@@ -331,7 +331,7 @@ export default function MarketplaceClient() {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search services by name, category, or capability (e.g. KDS, Loyalty, Thermal, UPI, Swiggy)..."
+                placeholder="Search services by name, category, or capability (e.g. KDS, Loyalty, Thermal, UPI, QR Menus)..."
                 className="pl-10 bg-[#F8FAF9] border-[#E5EBE7] text-sm text-[#172B25] rounded-xl focus:bg-white"
               />
             </div>

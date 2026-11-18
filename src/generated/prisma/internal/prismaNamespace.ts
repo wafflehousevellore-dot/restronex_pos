@@ -460,10 +460,7 @@ export const ModelName = {
   WhatsAppMessageQueue: 'WhatsAppMessageQueue',
   MarketplaceService: 'MarketplaceService',
   OrganizationServiceActivation: 'OrganizationServiceActivation',
-  ServiceActivationEvent: 'ServiceActivationEvent',
-  AggregatorOutletMapping: 'AggregatorOutletMapping',
-  AggregatorMenuMapping: 'AggregatorMenuMapping',
-  AggregatorOrderLog: 'AggregatorOrderLog'
+  ServiceActivationEvent: 'ServiceActivationEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -479,7 +476,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "staffProfile" | "outletMember" | "staffInvitation" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "addonGroup" | "addonOption" | "productAddonGroup" | "orderItemAddon" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue" | "marketplaceService" | "organizationServiceActivation" | "serviceActivationEvent" | "aggregatorOutletMapping" | "aggregatorMenuMapping" | "aggregatorOrderLog"
+    modelProps: "user" | "platformMfaCredential" | "tenant" | "membership" | "outlet" | "staffProfile" | "outletMember" | "staffInvitation" | "restaurantSetting" | "outletWhatsAppConfig" | "taxConfig" | "menuCategory" | "menuItem" | "menuVariant" | "menuModifier" | "addonGroup" | "addonOption" | "productAddonGroup" | "orderItemAddon" | "table" | "order" | "orderItem" | "kitchenTicket" | "payment" | "paymentRefund" | "cashierShift" | "inventoryItem" | "recipe" | "recipeIngredient" | "supplier" | "purchaseOrder" | "stockMovement" | "customer" | "loyaltyTxn" | "subscriptionPlan" | "subscription" | "subscriptionNotification" | "subscriptionPayment" | "webhookEvent" | "tenantPaymentGatewayConfig" | "paymentAttempt" | "paymentReconciliationLog" | "integrationConfig" | "token" | "reservation" | "feedback" | "expense" | "supplierPrice" | "dayEndSummary" | "auditLog" | "demoRequest" | "pendingRegistration" | "qrOrderingSession" | "printerDevice" | "printerRoutingRule" | "printJob" | "customerConsent" | "whatsAppDeliveryLog" | "invoiceRecord" | "featureUsage" | "whatsAppMessageQueue" | "marketplaceService" | "organizationServiceActivation" | "serviceActivationEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5219,228 +5216,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    AggregatorOutletMapping: {
-      payload: Prisma.$AggregatorOutletMappingPayload<ExtArgs>
-      fields: Prisma.AggregatorOutletMappingFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AggregatorOutletMappingFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AggregatorOutletMappingFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        findFirst: {
-          args: Prisma.AggregatorOutletMappingFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AggregatorOutletMappingFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        findMany: {
-          args: Prisma.AggregatorOutletMappingFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>[]
-        }
-        create: {
-          args: Prisma.AggregatorOutletMappingCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        createMany: {
-          args: Prisma.AggregatorOutletMappingCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AggregatorOutletMappingCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>[]
-        }
-        delete: {
-          args: Prisma.AggregatorOutletMappingDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        update: {
-          args: Prisma.AggregatorOutletMappingUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        deleteMany: {
-          args: Prisma.AggregatorOutletMappingDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AggregatorOutletMappingUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AggregatorOutletMappingUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>[]
-        }
-        upsert: {
-          args: Prisma.AggregatorOutletMappingUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOutletMappingPayload>
-        }
-        aggregate: {
-          args: Prisma.AggregatorOutletMappingAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAggregatorOutletMapping>
-        }
-        groupBy: {
-          args: Prisma.AggregatorOutletMappingGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorOutletMappingGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AggregatorOutletMappingCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorOutletMappingCountAggregateOutputType> | number
-        }
-      }
-    }
-    AggregatorMenuMapping: {
-      payload: Prisma.$AggregatorMenuMappingPayload<ExtArgs>
-      fields: Prisma.AggregatorMenuMappingFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AggregatorMenuMappingFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AggregatorMenuMappingFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        findFirst: {
-          args: Prisma.AggregatorMenuMappingFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AggregatorMenuMappingFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        findMany: {
-          args: Prisma.AggregatorMenuMappingFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>[]
-        }
-        create: {
-          args: Prisma.AggregatorMenuMappingCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        createMany: {
-          args: Prisma.AggregatorMenuMappingCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AggregatorMenuMappingCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>[]
-        }
-        delete: {
-          args: Prisma.AggregatorMenuMappingDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        update: {
-          args: Prisma.AggregatorMenuMappingUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        deleteMany: {
-          args: Prisma.AggregatorMenuMappingDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AggregatorMenuMappingUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AggregatorMenuMappingUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>[]
-        }
-        upsert: {
-          args: Prisma.AggregatorMenuMappingUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorMenuMappingPayload>
-        }
-        aggregate: {
-          args: Prisma.AggregatorMenuMappingAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAggregatorMenuMapping>
-        }
-        groupBy: {
-          args: Prisma.AggregatorMenuMappingGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorMenuMappingGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AggregatorMenuMappingCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorMenuMappingCountAggregateOutputType> | number
-        }
-      }
-    }
-    AggregatorOrderLog: {
-      payload: Prisma.$AggregatorOrderLogPayload<ExtArgs>
-      fields: Prisma.AggregatorOrderLogFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.AggregatorOrderLogFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.AggregatorOrderLogFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        findFirst: {
-          args: Prisma.AggregatorOrderLogFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.AggregatorOrderLogFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        findMany: {
-          args: Prisma.AggregatorOrderLogFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>[]
-        }
-        create: {
-          args: Prisma.AggregatorOrderLogCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        createMany: {
-          args: Prisma.AggregatorOrderLogCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.AggregatorOrderLogCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>[]
-        }
-        delete: {
-          args: Prisma.AggregatorOrderLogDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        update: {
-          args: Prisma.AggregatorOrderLogUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        deleteMany: {
-          args: Prisma.AggregatorOrderLogDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.AggregatorOrderLogUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.AggregatorOrderLogUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>[]
-        }
-        upsert: {
-          args: Prisma.AggregatorOrderLogUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$AggregatorOrderLogPayload>
-        }
-        aggregate: {
-          args: Prisma.AggregatorOrderLogAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateAggregatorOrderLog>
-        }
-        groupBy: {
-          args: Prisma.AggregatorOrderLogGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorOrderLogGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.AggregatorOrderLogCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatorOrderLogCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -6573,57 +6348,6 @@ export const ServiceActivationEventScalarFieldEnum = {
 export type ServiceActivationEventScalarFieldEnum = (typeof ServiceActivationEventScalarFieldEnum)[keyof typeof ServiceActivationEventScalarFieldEnum]
 
 
-export const AggregatorOutletMappingScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  provider: 'provider',
-  providerStoreId: 'providerStoreId',
-  providerStoreName: 'providerStoreName',
-  providerCity: 'providerCity',
-  providerAddress: 'providerAddress',
-  restroOutletId: 'restroOutletId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AggregatorOutletMappingScalarFieldEnum = (typeof AggregatorOutletMappingScalarFieldEnum)[keyof typeof AggregatorOutletMappingScalarFieldEnum]
-
-
-export const AggregatorMenuMappingScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  provider: 'provider',
-  providerItemId: 'providerItemId',
-  providerItemName: 'providerItemName',
-  restroMenuItemId: 'restroMenuItemId',
-  restroAddonOptionId: 'restroAddonOptionId',
-  pricePaise: 'pricePaise',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type AggregatorMenuMappingScalarFieldEnum = (typeof AggregatorMenuMappingScalarFieldEnum)[keyof typeof AggregatorMenuMappingScalarFieldEnum]
-
-
-export const AggregatorOrderLogScalarFieldEnum = {
-  id: 'id',
-  tenantId: 'tenantId',
-  outletId: 'outletId',
-  provider: 'provider',
-  providerOrderId: 'providerOrderId',
-  orderId: 'orderId',
-  eventType: 'eventType',
-  status: 'status',
-  payloadJson: 'payloadJson',
-  errorMessage: 'errorMessage',
-  createdAt: 'createdAt'
-} as const
-
-export type AggregatorOrderLogScalarFieldEnum = (typeof AggregatorOrderLogScalarFieldEnum)[keyof typeof AggregatorOrderLogScalarFieldEnum]
-
-
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -6931,9 +6655,6 @@ export type GlobalOmitConfig = {
   marketplaceService?: Prisma.MarketplaceServiceOmit
   organizationServiceActivation?: Prisma.OrganizationServiceActivationOmit
   serviceActivationEvent?: Prisma.ServiceActivationEventOmit
-  aggregatorOutletMapping?: Prisma.AggregatorOutletMappingOmit
-  aggregatorMenuMapping?: Prisma.AggregatorMenuMappingOmit
-  aggregatorOrderLog?: Prisma.AggregatorOrderLogOmit
 }
 
 /* Types for Logging */

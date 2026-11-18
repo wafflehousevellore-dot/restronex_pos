@@ -102,9 +102,6 @@ model Tenant {
   productAddonGroups ProductAddonGroup[]
   serviceActivations OrganizationServiceActivation[]
   serviceActivationEvents ServiceActivationEvent[]
-  aggregatorOutletMappings AggregatorOutletMapping[]
-  aggregatorMenuMappings   AggregatorMenuMapping[]
-  aggregatorOrderLogs      AggregatorOrderLog[]
 }
 
 model Membership {
@@ -158,7 +155,6 @@ model Outlet {
   qrSessions  QrOrderingSession[]
   whatsAppConfig OutletWhatsAppConfig?
   productAddonGroups ProductAddonGroup[]
-  aggregatorOutletMappings AggregatorOutletMapping[]
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -326,7 +322,6 @@ model MenuItem {
   orderItems  OrderItem[]
   recipe      Recipe?
   addonLinks  ProductAddonGroup[]
-  aggregatorMenuMappings AggregatorMenuMapping[]
   @@index([tenantId])
   @@index([categoryId])
   @@index([tenantId, isActive])
@@ -387,7 +382,6 @@ model AddonOption {
   tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   addonGroup      AddonGroup       @relation(fields: [addonGroupId], references: [id], onDelete: Cascade)
   orderItemAddons OrderItemAddon[]
-  aggregatorMenuMappings AggregatorMenuMapping[]
 
   @@index([tenantId])
   @@index([addonGroupId])
@@ -1245,62 +1239,5 @@ model ServiceActivationEvent {
   @@index([tenantId, createdAt])
 }
 
-model AggregatorOutletMapping {
-  id                String   @id @default(cuid())
-  tenantId          String
-  provider          String   // "swiggy" | "zomato"
-  providerStoreId   String
-  providerStoreName String
-  providerCity      String?
-  providerAddress   String?
-  restroOutletId    String
-  status            String   @default("ACTIVE") // ACTIVE | PENDING_APPROVAL | DISCONNECTED
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  outlet            Outlet   @relation(fields: [restroOutletId], references: [id], onDelete: Cascade)
-
-  @@unique([tenantId, provider, providerStoreId])
-  @@index([tenantId, provider])
-  @@index([providerStoreId])
-}
-
-model AggregatorMenuMapping {
-  id                  String       @id @default(cuid())
-  tenantId            String
-  provider            String       // "swiggy" | "zomato"
-  providerItemId      String
-  providerItemName    String
-  restroMenuItemId    String?
-  restroAddonOptionId String?
-  pricePaise          Int?
-  isActive            Boolean      @default(true)
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-  tenant              Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  menuItem            MenuItem?    @relation(fields: [restroMenuItemId], references: [id], onDelete: SetNull)
-  addonOption         AddonOption? @relation(fields: [restroAddonOptionId], references: [id], onDelete: SetNull)
-
-  @@unique([tenantId, provider, providerItemId])
-  @@index([tenantId, provider])
-}
-
-model AggregatorOrderLog {
-  id              String   @id @default(cuid())
-  tenantId        String
-  outletId        String?
-  provider        String   // "swiggy" | "zomato"
-  providerOrderId String
-  orderId         String?
-  eventType       String   @default("ORDER_PLACED")
-  status          String   @default("SUCCESS") // SUCCESS | FAILED | DUPLICATE | UNMAPPED_ITEMS
-  payloadJson     String?
-  errorMessage    String?
-  createdAt       DateTime @default(now())
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@index([tenantId, provider, createdAt])
-  @@index([providerOrderId])
-}
 
 

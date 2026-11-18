@@ -29,7 +29,7 @@ export default function WhatsAppAndPrintingSettingsPage() {
             Integrations Hub
           </h1>
           <p className="text-sm text-[#718078]">
-            Manage Swiggy &amp; Zomato auto-order reception, official Meta WhatsApp billing, and automatic thermal receipt printers.
+            Manage QR dine-in ordering, official Meta WhatsApp billing, and automatic thermal receipt printers.
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function WhatsAppAndPrintingSettingsPage() {
               : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
           }`}
         >
-          <Bike className="h-3.5 w-3.5" /> Swiggy, Zomato &amp; Online Orders
+          <Bike className="h-3.5 w-3.5" /> Channels &amp; QR Ordering
         </button>
         <button
           type="button"

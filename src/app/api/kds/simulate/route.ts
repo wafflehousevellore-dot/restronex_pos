@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   }
 
   const action = String(body.action || "SIMULATE_ORDER").toUpperCase();
-  const source = (String(body.source || "SWIGGY").toUpperCase()) as OrderSource;
+  const source = (String(body.source || "TABLE_QR").toUpperCase()) as OrderSource;
 
   if (action === "CANCEL_LATEST" || action === "SIMULATE_CANCELLATION") {
     // Find the latest active ticket/order for this outlet to cancel
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     ],
   };
 
-  const items = body.items || sampleItemsBySource[source] || sampleItemsBySource.SWIGGY;
+  const items = body.items || sampleItemsBySource[source] || sampleItemsBySource.TABLE_QR;
   const subtotalPaise = items.reduce((acc: number, it: any) => acc + (it.unitPricePaise * it.quantity), 0);
   const taxPaise = Math.round(subtotalPaise * 0.05);
   const totalPaise = subtotalPaise + taxPaise;
@@ -109,14 +109,14 @@ export async function POST(req: NextRequest) {
     tableNumber: source === "POS" || source === "TABLE_QR" ? String(Math.floor(1 + Math.random() * 12)) : undefined,
     customerName: body.customerName || `${randomName} (${source})`,
     customerPhone: "+91 9876543210",
-    cookingInstructions: body.instructions || (source === "SWIGGY" || source === "ZOMATO" ? "Make it extra crisp and pack safely" : undefined),
-    notes: source === "SWIGGY" ? "Swiggy Delivery (Rider: Suresh Kumar)" : source === "ZOMATO" ? "Zomato Delivery (Rider: Amit Verma)" : "POS Walk-in",
+    cookingInstructions: body.instructions || undefined,
+    notes: source === "WEBSITE" ? "Online Web Order (Delivery)" : source === "TABLE_QR" ? "Contactless Dine-in QR" : "POS Walk-in",
     items,
     subtotalPaise,
     taxPaise,
     totalPaise,
     isPaid: true,
-    paymentMethod: source === "SWIGGY" ? "SWIGGY_PAY" : source === "ZOMATO" ? "ZOMATO_PAY" : "UPI",
+    paymentMethod: "UPI",
     riderDetails:
       source === "SWIGGY"
         ? { name: "Suresh Kumar", phone: "+91 9988776655", etaMinutes: 12 }

@@ -1,6 +1,4 @@
 export type IntegrationProvider =
-  | "swiggy"
-  | "zomato"
   | "qr_ordering"
   | "printer"
   | "accounting"
@@ -18,7 +16,7 @@ export type IntegrationStatus =
   | "CONFIGURED"; // Legacy fallback
 
 export type ConnectionMode =
-  | "PARTNER_ONBOARDING" // Swiggy & Zomato: Merchant Phone + Outlet mapping + Official Partner Approval
+  | "PARTNER_ONBOARDING" // Partner Onboarding: Merchant Phone + Outlet mapping + Official Approval
   | "ONE_CLICK"          // QR Ordering: Instant table contactless menu
   | "DEVICE_LAN"         // Thermal Printer: Local IP & Port & Station
   | "DATA_EXPORT"        // Tally / Zoho / SAP: Format & Export schedule
@@ -95,44 +93,6 @@ export interface IntegrationMeta {
 }
 
 export const INTEGRATIONS: IntegrationMeta[] = [
-  {
-    provider: "swiggy",
-    name: "Swiggy",
-    category: "Ordering",
-    connectionMode: "PARTNER_ONBOARDING",
-    tagline: "Direct POS Integration & Real-time KOT Firing",
-    description:
-      "Connect your Swiggy merchant outlet using your registered mobile number. RestroNex syncs incoming orders, pushes menu availability, and updates live order status via official Swiggy Partner APIs.",
-    officialPortalUrl: "https://partner.swiggy.com",
-    officialPortalName: "Swiggy Partner Portal",
-    webhookPath: "/api/webhooks/swiggy",
-    defaultCapabilities: {
-      orders: true,
-      menu: true,
-      availability: true,
-      orderStatus: true,
-      riderTracking: true,
-    },
-  },
-  {
-    provider: "zomato",
-    name: "Zomato",
-    category: "Ordering",
-    connectionMode: "PARTNER_ONBOARDING",
-    tagline: "Official POS Integration & Rider Tracking",
-    description:
-      "Connect your Zomato restaurant using your merchant registered phone number. Synchronize live online orders, dispatch kitchen tickets (KOT), mark food preparation status, and track riders.",
-    officialPortalUrl: "https://www.zomato.com/partners",
-    officialPortalName: "Zomato for Business",
-    webhookPath: "/api/webhooks/zomato",
-    defaultCapabilities: {
-      orders: true,
-      menu: true,
-      availability: true,
-      orderStatus: true,
-      riderTracking: true,
-    },
-  },
   {
     provider: "qr_ordering",
     name: "Contactless QR Dine-in",

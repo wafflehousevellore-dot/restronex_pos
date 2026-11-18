@@ -6,8 +6,6 @@ import {
   acknowledgeKitchenTicket,
   updateKitchenTicketStatus,
 } from "../src/lib/order-ingestion";
-import { SwiggyAdapter } from "../src/lib/aggregators/swiggy";
-import { ZomatoAdapter } from "../src/lib/aggregators/zomato";
 import { subscribeKdsEvents } from "../src/lib/kds-events";
 
 async function runKdsComprehensiveSuite() {
@@ -137,46 +135,51 @@ async function runKdsComprehensiveSuite() {
 
     // SCENARIO 2: A simulated Swiggy order arrives
     console.log("▶ Scenario 2: Simulated Swiggy aggregator order arrives");
-    const swiggyPayload = {
-      event_type: "ORDER_PLACED" as const,
-      store_id: "swiggy_store_123",
-      order_id: `SWIG-${runTag}-202`,
-      data: {
-        customer: { name: "Pooja Hegde", phone: "+91 9988776655", address: "Green Avenue, Apt 4B" },
-        delivery: { rider_name: "Karan Singh", rider_phone: "+91 9123456789" },
-        instructions: "Make it extra crispy, pack cutlery",
-        items: [
-          { name: "Belgian Classic Dark Chocolate Waffle", quantity: 1, price: 220, variants: [{ name: "Crispy" }] },
-          { name: "Nutella Thick Shake", quantity: 2, price: 180, notes: "No sugar" },
-        ],
-        billing: { subtotal: 580, tax: 29, total: 609 },
-      },
-    };
-    const normalizedSwiggy = SwiggyAdapter.normalizeOrder(swiggyPayload, tenantId, outletAId);
-    const swiggyRes = await ingestOrder(normalizedSwiggy);
+    const swiggyRes = await ingestOrder({
+      tenantId,
+      outletId: outletAId,
+      orderNumber: `SWIGGY-${runTag}-202`,
+      source: "SWIGGY",
+      externalOrderId: `SWIG-${runTag}-202`,
+      customerName: "Pooja Hegde",
+      customerPhone: "+91 9988776655",
+      notes: "Make it extra crispy, pack cutlery",
+      items: [
+        { name: "Belgian Classic Dark Chocolate Waffle", quantity: 1, unitPricePaise: 22000, variantName: "Crispy" },
+        { name: "Nutella Thick Shake", quantity: 2, unitPricePaise: 18000, notes: "No sugar" },
+      ],
+      subtotalPaise: 58000,
+      taxPaise: 2900,
+      totalPaise: 60900,
+      isPaid: true,
+      paymentMethod: "SWIGGY_PAY",
+      riderDetails: { name: "Karan Singh", phone: "+91 9123456789" },
+    });
     assert(swiggyRes.ok === true && swiggyRes.source === "SWIGGY", "Swiggy order ingested cleanly");
     console.log("  ✓ PASS: Swiggy order payload normalized and routed to kitchen without manual entry");
     passed++;
 
     // SCENARIO 3: A simulated Zomato order arrives
     console.log("▶ Scenario 3: Simulated Zomato aggregator order arrives");
-    const zomatoPayload = {
-      event: "order_created" as const,
-      res_id: "zomato_res_789",
-      order_id: `ZOM-${runTag}-303`,
-      order: {
-        customer: { name: "Ananya Rao", phone: "+91 9876501234" },
-        rider: { name: "Vikas Patel", phone: "+91 9555112233" },
-        instructions: "Do not ring doorbell",
-        items: [
-          { name: "Nutella Thick Shake", quantity: 1, price: 180, variant: "Extra Thick" },
-        ],
-        total: 189,
-        tax: 9,
-      },
-    };
-    const normalizedZomato = ZomatoAdapter.normalizeOrder(zomatoPayload, tenantId, outletAId);
-    const zomatoRes = await ingestOrder(normalizedZomato);
+    const zomatoRes = await ingestOrder({
+      tenantId,
+      outletId: outletAId,
+      orderNumber: `ZOM-${runTag}-303`,
+      source: "ZOMATO",
+      externalOrderId: `ZOM-${runTag}-303`,
+      customerName: "Ananya Rao",
+      customerPhone: "+91 9876501234",
+      notes: "Do not ring doorbell",
+      items: [
+        { name: "Nutella Thick Shake", quantity: 1, unitPricePaise: 18000, variantName: "Extra Thick" },
+      ],
+      subtotalPaise: 18000,
+      taxPaise: 900,
+      totalPaise: 18900,
+      isPaid: true,
+      paymentMethod: "ZOMATO_PAY",
+      riderDetails: { name: "Vikas Patel", phone: "+91 9555112233" },
+    });
     assert(zomatoRes.ok === true && zomatoRes.source === "ZOMATO", "Zomato order ingested cleanly");
     console.log("  ✓ PASS: Zomato order payload normalized and routed to kitchen without manual entry");
     passed++;
@@ -320,10 +323,24 @@ async function runKdsComprehensiveSuite() {
 
     // SCENARIO 14: Duplicate webhooks do not create duplicate orders
     console.log("▶ Scenario 14: Duplicate webhook event prevention & idempotency guard");
-    const dupRes = await ingestOrder(normalizedZomato);
+    const zomatoPayloadDup = {
+      tenantId,
+      outletId: outletAId,
+      orderNumber: `ZOM-${runTag}-303`,
+      source: "ZOMATO" as const,
+      externalOrderId: `ZOM-${runTag}-303`,
+      customerName: "Ananya Rao",
+      items: [
+        { name: "Nutella Thick Shake", quantity: 1, unitPricePaise: 18000 },
+      ],
+      subtotalPaise: 18000,
+      taxPaise: 900,
+      totalPaise: 18900,
+    };
+    const dupRes = await ingestOrder(zomatoPayloadDup);
     assert(dupRes.ok === true && dupRes.isDuplicate === true, "Idempotency detected duplicate order");
     const zomatoTicketsCount = await prisma.kitchenTicket.count({
-      where: { tenantId, order: { orderNumber: normalizedZomato.orderNumber } },
+      where: { tenantId, order: { orderNumber: `ZOM-${runTag}-303` } },
     });
     assert(zomatoTicketsCount === 1, "Exactly 1 kitchen ticket exists for the Zomato order; zero duplicate tickets");
     console.log("  ✓ PASS: Idempotency guard strictly prevented duplicate kitchen tickets on retried webhook");

@@ -43,8 +43,8 @@ export default async function PlatformIntegrationsPage() {
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Supported Providers</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">6 Providers</div>
-            <div className="text-xs text-[#718078] mt-1">Razorpay, Swiggy, Zomato, DotPe, Logistics, Tally</div>
+            <div className="text-2xl font-black text-[#172B25]">4 Providers</div>
+            <div className="text-xs text-[#718078] mt-1">Razorpay, QR Menus, Hardware Printers, Tally/Zoho</div>
           </CardContent>
         </Card>
 
