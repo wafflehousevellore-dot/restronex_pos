@@ -8,6 +8,7 @@ import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whats
 import { generateAndPersistInvoicePdf, buildSignedInvoicePdfUrl } from "@/lib/invoice-storage";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 import { appCache } from "@/lib/cache";
+import { broadcastKdsEvent } from "@/lib/kds-events";
 
 export async function GET(req: NextRequest) {
   const { userId } = await getSession();
@@ -22,14 +23,58 @@ export async function GET(req: NextRequest) {
   const status = req.nextUrl.searchParams.get("status");
   const orderId = req.nextUrl.searchParams.get("orderId");
   const tableId = req.nextUrl.searchParams.get("tableId");
-  const limit = Math.min(Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 50), 100);
+  const channel = req.nextUrl.searchParams.get("channel");
+  const type = req.nextUrl.searchParams.get("type");
+  const search = req.nextUrl.searchParams.get("search");
+  const startDate = req.nextUrl.searchParams.get("startDate");
+  const endDate = req.nextUrl.searchParams.get("endDate");
+  const isPaidParam = req.nextUrl.searchParams.get("isPaid");
+  const limit = Math.min(Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 100), 200);
   const cursor = req.nextUrl.searchParams.get("cursor");
 
   const where: any = { tenantId };
-  if (outletId) where.outletId = outletId;
-  if (status) where.status = status;
+  if (outletId && outletId !== "ALL") where.outletId = outletId;
+  if (status && status !== "ALL") {
+    if (status.includes(",")) {
+      where.status = { in: status.split(",").map((s) => s.trim()) };
+    } else {
+      where.status = status;
+    }
+  }
   if (orderId) where.id = orderId;
   if (tableId) where.tableId = tableId;
+
+  if (channel && channel !== "ALL") {
+    where.OR = [
+      { channel: { equals: channel, mode: "insensitive" } },
+      { type: { equals: channel, mode: "insensitive" } },
+    ];
+  } else if (type && type !== "ALL") {
+    where.type = type;
+  }
+
+  if (isPaidParam === "true") where.isPaid = true;
+  if (isPaidParam === "false") where.isPaid = false;
+
+  if (startDate || endDate) {
+    where.createdAt = {};
+    if (startDate) where.createdAt.gte = new Date(startDate);
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
+      where.createdAt.lte = end;
+    }
+  }
+
+  if (search && search.trim()) {
+    const q = search.trim();
+    where.OR = [
+      { orderNumber: { contains: q, mode: "insensitive" } },
+      { customerName: { contains: q, mode: "insensitive" } },
+      { customerPhone: { contains: q, mode: "insensitive" } },
+      { aggregatorOrderId: { contains: q, mode: "insensitive" } },
+    ];
+  }
 
   const orders = await prisma.order.findMany({
     where,
@@ -45,11 +90,28 @@ export async function GET(req: NextRequest) {
       kotTickets: true,
       invoice: true,
       table: { select: { id: true, number: true, area: true } },
+      outlet: { select: { id: true, name: true, city: true } },
+      aggregatorReference: true,
       whatsAppLogs: { orderBy: { createdAt: "desc" }, take: 2 },
       printJobs: { orderBy: { createdAt: "desc" }, take: 2 },
     },
     orderBy: { createdAt: "desc" },
   });
+
+  if (orderId && orders.length > 0) {
+    const timeline = await prisma.auditLog.findMany({
+      where: { entity: "Order", entityId: orders[0].id, tenantId },
+      orderBy: { createdAt: "asc" },
+      select: {
+        id: true,
+        action: true,
+        userId: true,
+        metadataJson: true,
+        createdAt: true,
+      },
+    });
+    return NextResponse.json({ ...orders[0], timeline });
+  }
 
   return NextResponse.json(orders);
 }
@@ -535,6 +597,18 @@ export async function POST(req: NextRequest) {
     appCache.delPrefix(`table_`);
   }
 
+  // Broadcast Realtime Event to KDS and Live Orders Terminals
+  broadcastKdsEvent({
+    type: "NEW_ORDER",
+    tenantId: order.tenantId,
+    outletId: order.outletId,
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    status: order.status,
+    customerName: order.customerName || undefined,
+    itemsSummary: pricingResult.items.map((i: any) => `${i.quantity}x ${i.name}`).join(", "),
+  });
+
   return NextResponse.json({
     ok: true,
     orderId: order.id,
@@ -567,16 +641,17 @@ export async function PATCH(req: NextRequest) {
   const currentStatus = order.status;
   const ALLOWED_TRANSITIONS: Record<string, string[]> = {
     DRAFT: ["PLACED", "CANCELLED"],
-    OPEN: ["ACCEPTED", "PREPARING", "CANCELLED", "BILLED"],
+    OPEN: ["ACCEPTED", "PREPARING", "READY", "BILLED", "CLOSED", "COMPLETED", "CANCELLED"],
     PLACED: ["ACCEPTED", "PREPARING", "CANCELLED"],
-    ACCEPTED: ["PREPARING", "CANCELLED"],
+    ACCEPTED: ["PREPARING", "READY", "CANCELLED"],
     PREPARING: ["READY", "CANCELLED"],
-    READY: ["SERVED", "BILLED", "CANCELLED"],
-    SERVED: ["BILL_REQUESTED", "BILLED", "CANCELLED"],
-    BILL_REQUESTED: ["BILLED", "CANCELLED"],
-    BILLED: ["PAID", "CLOSED", "CANCELLED"],
-    PAID: ["CLOSED"],
+    READY: ["SERVED", "BILLED", "PAID", "CLOSED", "COMPLETED", "CANCELLED"],
+    SERVED: ["BILL_REQUESTED", "BILLED", "PAID", "CLOSED", "COMPLETED", "CANCELLED"],
+    BILL_REQUESTED: ["BILLED", "PAID", "CLOSED", "COMPLETED", "CANCELLED"],
+    BILLED: ["PAID", "CLOSED", "COMPLETED", "CANCELLED"],
+    PAID: ["CLOSED", "COMPLETED"],
     CLOSED: [],
+    COMPLETED: [],
     CANCELLED: [],
   };
 
@@ -592,20 +667,37 @@ export async function PATCH(req: NextRequest) {
     }
   }
 
+  const cancelReason = body.cancelReason || (nextStatus === "CANCELLED" ? notes : null);
+
   const updated = await prisma.$transaction(async (tx) => {
     const updateData: any = {};
     if (nextStatus) updateData.status = nextStatus;
     if (notes) updateData.notes = notes;
-    if (nextStatus === "CLOSED") updateData.billClosedAt = new Date();
+    if (cancelReason) updateData.cancelReason = cancelReason;
+    if (nextStatus === "CLOSED" || nextStatus === "COMPLETED") updateData.billClosedAt = new Date();
     if (nextStatus === "PAID") {
       updateData.isPaid = true;
       updateData.paidAt = new Date();
+    }
+    if (order.aggregatorOrderId) {
+      updateData.aggregatorStatus = nextStatus;
     }
 
     const o = await tx.order.update({
       where: { id: orderId },
       data: updateData,
     });
+
+    // Update AggregatorOrderReference if order came from an aggregator
+    if (order.aggregatorOrderId) {
+      await tx.aggregatorOrderReference.updateMany({
+        where: { orderId: order.id },
+        data: {
+          orderStatus: nextStatus,
+          ...(cancelReason ? { cancelReason } : {}),
+        },
+      });
+    }
 
     // If order was cancelled, restore inventory
     if (nextStatus === "CANCELLED" && currentStatus !== "CANCELLED") {
@@ -643,8 +735,8 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
-    // If order is closed, free table
-    if (nextStatus === "CLOSED" && order.tableId) {
+    // If order is closed or completed, free table
+    if ((nextStatus === "CLOSED" || nextStatus === "COMPLETED") && order.tableId) {
       await tx.table.update({
         where: { id: order.tableId },
         data: { status: "AVAILABLE", currentOrderId: null, orderTotalPaise: 0 },
@@ -658,7 +750,12 @@ export async function PATCH(req: NextRequest) {
         action: `ORDER_STATUS_${nextStatus}`,
         entity: "Order",
         entityId: order.id,
-        metadataJson: JSON.stringify({ from: currentStatus, to: nextStatus }),
+        metadataJson: JSON.stringify({
+          from: currentStatus,
+          to: nextStatus,
+          cancelReason: cancelReason || null,
+          notes: notes || null,
+        }),
       },
     });
 
@@ -666,6 +763,17 @@ export async function PATCH(req: NextRequest) {
   }, {
     maxWait: 15000, // 15s connection queue acquisition timeout
     timeout: 20000, // 20s transaction execution timeout
+  });
+
+  // Broadcast realtime update to KDS and Live Orders Terminals
+  broadcastKdsEvent({
+    type: nextStatus === "CANCELLED" ? "ORDER_CANCELLED" : "TICKET_STATUS_UPDATED",
+    tenantId: order.tenantId,
+    outletId: order.outletId,
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    status: nextStatus,
+    cancelReason: cancelReason || undefined,
   });
 
   if (nextStatus === "BILLED" || nextStatus === "PAID") {
