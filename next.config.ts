@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
       },
       // Private application & portal routes — strictly noindex & nofollow
       {
-        source: "/(app|staff|owner|platform|checkout|standard-checkout|order|qr|feedback|api|dashboard)/:path*",
+        source: "/(app|staff|owner|platform|platform-admin|checkout|standard-checkout|order|qr|feedback|api|dashboard)/:path*",
         headers: [
           { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, nosnippet" },
         ],

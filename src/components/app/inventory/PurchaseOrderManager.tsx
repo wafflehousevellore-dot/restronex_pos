@@ -369,7 +369,7 @@ export function PurchaseOrderManager({
           <ShoppingBag className="h-10 w-10 text-[#718078] opacity-30 mx-auto mb-2" />
           <h3 className="text-sm font-bold text-[#172B25]">No Purchase Orders</h3>
           <p className="text-xs text-[#718078] mt-1">
-            No orders match your filter. Click "Create Purchase Order" above to place vendor orders.
+            No orders match your filter. Click &quot;Create Purchase Order&quot; above to place vendor orders.
           </p>
         </div>
       ) : (

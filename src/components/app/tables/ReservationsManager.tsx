@@ -210,7 +210,7 @@ export function ReservationsManager({
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="bg-white p-3.5 rounded-2xl border border-[#E5EBE7] shadow-xs">
           <div className="text-xs font-semibold text-[#718078] flex items-center justify-between">
-            <span>Today's Bookings</span>
+            <span>Today&apos;s Bookings</span>
             <CalendarIcon className="h-4 w-4 text-[#16845B]" />
           </div>
           <div className="text-2xl font-black text-[#172B25] mt-1">{totalBookings}</div>
@@ -314,7 +314,7 @@ export function ReservationsManager({
           <CalendarIcon className="h-10 w-10 text-[#718078] opacity-30 mx-auto mb-2" />
           <h3 className="text-sm font-bold text-[#172B25]">No Reservations Found</h3>
           <p className="text-xs text-[#718078] mt-1">
-            No reservations scheduled for {new Date(selectedDate).toLocaleDateString()}. Click "Book Table" above to schedule a guest.
+            No reservations scheduled for {new Date(selectedDate).toLocaleDateString()}. Click &quot;Book Table&quot; above to schedule a guest.
           </p>
         </div>
       ) : (

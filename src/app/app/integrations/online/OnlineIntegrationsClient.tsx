@@ -1474,7 +1474,7 @@ export default function OnlineIntegrationsClient() {
               </div>
 
               <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs text-gray-600 space-y-1.5">
-                <div className="font-bold text-gray-800">What happens when you click "Trigger Test Order":</div>
+                <div className="font-bold text-gray-800">What happens when you click &quot;Trigger Test Order&quot;:</div>
                 <ul className="list-disc list-inside space-y-1 text-gray-600">
                   <li>Creates an idempotent POS Order with source <span className="font-semibold text-gray-800">{simProvider}</span>.</li>
                   <li>Generates a Kitchen Order Ticket (KOT) routed to MAIN kitchen and BAR station.</li>

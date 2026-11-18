@@ -1,7 +1,7 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const PROTECTED = ["/app", "/platform", "/checkout", "/organization"];
+const PROTECTED = ["/app", "/platform", "/platform-admin", "/checkout", "/organization"];
 const PUBLIC_STAFF_ROUTES = ["/staff/login", "/staff/accept-invitation", "/staff/auth-callback"];
 const PUBLIC_OWNER_ROUTES = ["/owner/login", "/owner/signup", "/login"];
 
@@ -35,7 +35,11 @@ export default clerkMiddleware(async (auth, req) => {
     return;
   }
 
-  const isPlatformRoute = pathname === "/platform" || pathname.startsWith("/platform/");
+  const isPlatformRoute =
+    pathname === "/platform" ||
+    pathname.startsWith("/platform/") ||
+    pathname === "/platform-admin" ||
+    pathname.startsWith("/platform-admin/");
   if (isPlatformRoute) {
     // Platform Admin portal strictly requires Clerk authentication (no JWT fallback bypass)
     const { userId } = await auth();

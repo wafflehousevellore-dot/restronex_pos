@@ -104,7 +104,7 @@ export function IngredientsTable({
           <Boxes className="h-10 w-10 text-[#718078] opacity-30 mx-auto mb-2" />
           <h3 className="text-sm font-bold text-[#172B25]">No Ingredients Found</h3>
           <p className="text-xs text-[#718078] mt-1">
-            No stock items match your search or filter. Click "+ New Ingredient" to add raw materials.
+            No stock items match your search or filter. Click &quot;+ New Ingredient&quot; to add raw materials.
           </p>
         </div>
       ) : (

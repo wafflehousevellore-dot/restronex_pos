@@ -210,10 +210,12 @@ export default function MarketplaceClient() {
     }
   }
 
+  const services = data?.services;
+
   // Filter and search catalog items
   const filteredServices = useMemo(() => {
-    if (!data?.services) return [];
-    return data.services.filter((svc) => {
+    if (!services) return [];
+    return services.filter((svc) => {
       // Category filter
       if (selectedCategory !== "ALL" && svc.category !== selectedCategory) {
         return false;
@@ -237,19 +239,19 @@ export default function MarketplaceClient() {
       }
       return true;
     });
-  }, [data?.services, selectedCategory, selectedStatus, search]);
+  }, [services, selectedCategory, selectedStatus, search]);
 
   // Counts for pills
   const counts = useMemo(() => {
-    if (!data?.services) return { all: 0, active: 0, config: 0, available: 0, planned: 0 };
+    if (!services) return { all: 0, active: 0, config: 0, available: 0, planned: 0 };
     return {
-      all: data.services.length,
-      active: data.services.filter((s) => s.lifecycleStatus === "ACTIVE").length,
-      config: data.services.filter((s) => s.lifecycleStatus === "CONFIGURATION_REQUIRED").length,
-      available: data.services.filter((s) => s.lifecycleStatus === "AVAILABLE").length,
-      planned: data.services.filter((s) => s.lifecycleStatus === "PLANNED").length,
+      all: services.length,
+      active: services.filter((s) => s.lifecycleStatus === "ACTIVE").length,
+      config: services.filter((s) => s.lifecycleStatus === "CONFIGURATION_REQUIRED").length,
+      available: services.filter((s) => s.lifecycleStatus === "AVAILABLE").length,
+      planned: services.filter((s) => s.lifecycleStatus === "PLANNED").length,
     };
-  }, [data?.services]);
+  }, [services]);
 
   return (
     <div className="space-y-6 text-[#172B25]">

@@ -442,7 +442,7 @@ export function RecipeManager({ inventoryItems }: RecipeManagerProps) {
 
                 {ingredientRows.length === 0 ? (
                   <div className="text-center py-6 text-xs text-[#718078] bg-gray-50 rounded-xl border border-dashed border-[#E5EBE7]">
-                    Click "+ Add Ingredient" to link raw materials to this dish.
+                    Click &quot;+ Add Ingredient&quot; to link raw materials to this dish.
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-60 overflow-y-auto pr-1">

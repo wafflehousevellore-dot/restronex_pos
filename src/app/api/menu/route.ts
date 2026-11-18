@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
   ]);
 
   // Compute operational menu metrics
-  let totalProducts = items.length;
+  const totalProducts = items.length;
   let activeProducts = 0;
   let inactiveProducts = 0;
   let outOfStockProducts = 0;

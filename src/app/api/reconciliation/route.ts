@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
 
   let matchedPaise = 0;
   let discrepancyPaise = 0;
-  let pendingGatewayPaise = 0;
+  const pendingGatewayPaise = 0;
   let aggregatorVolumePaise = 0;
 
   const items: ReconciliationItem[] = orders.map((order) => {

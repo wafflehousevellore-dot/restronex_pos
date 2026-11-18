@@ -315,7 +315,7 @@ export function OrderDetailsDrawer({
                       {/* Special cooking notes */}
                       {item.notes && (
                         <p className="text-[10px] text-amber-700 italic mt-0.5">
-                          Note: "{item.notes}"
+                          Note: &ldquo;{item.notes}&rdquo;
                         </p>
                       )}
                     </div>

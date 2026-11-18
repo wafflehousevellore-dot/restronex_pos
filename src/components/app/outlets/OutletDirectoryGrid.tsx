@@ -105,7 +105,7 @@ export function OutletDirectoryGrid({
           <Building2 className="h-10 w-10 text-[#718078] opacity-30 mx-auto mb-2" />
           <h3 className="text-sm font-bold text-[#172B25]">No Outlets Found</h3>
           <p className="text-xs text-[#718078] mt-1">
-            No branch locations match your search or filter. Click "+ Add New Outlet" to expand your chain.
+            No branch locations match your search or filter. Click &quot;+ Add New Outlet&quot; to expand your chain.
           </p>
         </div>
       ) : (

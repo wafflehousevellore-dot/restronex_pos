@@ -164,7 +164,7 @@ export function SupplierManager({ suppliers, onRefresh }: SupplierManagerProps) 
           <Building2 className="h-10 w-10 text-[#718078] opacity-30 mx-auto mb-2" />
           <h3 className="text-sm font-bold text-[#172B25]">No Suppliers Found</h3>
           <p className="text-xs text-[#718078] mt-1">
-            Click "+ Add New Supplier" above to add food distributors and raw material vendors.
+            Click &quot;+ Add New Supplier&quot; above to add food distributors and raw material vendors.
           </p>
         </div>
       ) : (
