@@ -39,6 +39,12 @@ export async function POST(req: NextRequest) {
     date?: string;
     openingFloatPaise?: string | number;
     countedCashPaise?: string | number;
+    cashAdditionsPaise?: string | number;
+    cashAdditionsReason?: string;
+    cashWithdrawalsPaise?: string | number;
+    cashWithdrawalsReason?: string;
+    managerNotes?: string;
+    forceCloseWithOpenOrders?: boolean;
   };
   try {
     body = await req.json();
@@ -62,6 +68,14 @@ export async function POST(req: NextRequest) {
     body.countedCashPaise !== undefined && body.countedCashPaise !== ""
       ? parseInt(String(body.countedCashPaise), 10)
       : null;
+  const cashAdditionsPaise =
+    body.cashAdditionsPaise !== undefined && body.cashAdditionsPaise !== ""
+      ? parseInt(String(body.cashAdditionsPaise), 10)
+      : 0;
+  const cashWithdrawalsPaise =
+    body.cashWithdrawalsPaise !== undefined && body.cashWithdrawalsPaise !== ""
+      ? parseInt(String(body.cashWithdrawalsPaise), 10)
+      : 0;
 
   const result = await closeOutletDayEnd({
     tenantId,
@@ -73,6 +87,12 @@ export async function POST(req: NextRequest) {
       countedCashPaise !== null && Number.isFinite(countedCashPaise)
         ? countedCashPaise
         : null,
+    cashAdditionsPaise: Number.isFinite(cashAdditionsPaise) ? cashAdditionsPaise : 0,
+    cashAdditionsReason: body.cashAdditionsReason || null,
+    cashWithdrawalsPaise: Number.isFinite(cashWithdrawalsPaise) ? cashWithdrawalsPaise : 0,
+    cashWithdrawalsReason: body.cashWithdrawalsReason || null,
+    managerNotes: body.managerNotes || null,
+    forceCloseWithOpenOrders: !!body.forceCloseWithOpenOrders,
   });
 
   if ("error" in result) {

@@ -2,24 +2,50 @@ import { prisma } from "@/lib/db";
 import { appCache } from "@/lib/cache";
 import { getTimeZoneDayBoundsUtc } from "@/lib/timezone";
 
-export async function closeOutletDayEnd(params: {
+export interface DayEndCloseParams {
   tenantId: string;
   outletId: string;
   userId?: string | null;
   date?: string | null;
   openingFloatPaise?: number;
   countedCashPaise?: number | null;
-}) {
+  cashAdditionsPaise?: number;
+  cashAdditionsReason?: string | null;
+  cashWithdrawalsPaise?: number;
+  cashWithdrawalsReason?: string | null;
+  managerNotes?: string | null;
+  forceCloseWithOpenOrders?: boolean;
+}
+
+export async function closeOutletDayEnd(params: DayEndCloseParams) {
   const outlet = await prisma.outlet.findFirst({
     where: { id: params.outletId, tenantId: params.tenantId },
     include: { tenant: { select: { name: true, timeZone: true } } },
   });
 
   if (!outlet) {
-    return { error: "Invalid outlet", status: 403 as const };
+    return { error: "Invalid outlet for organization", status: 403 as const };
   }
 
   const bounds = getTimeZoneDayBoundsUtc(params.date, outlet.tenant?.timeZone);
+
+  // Check for open / pending unbilled orders
+  const pendingOrdersCount = await prisma.order.count({
+    where: {
+      tenantId: params.tenantId,
+      outletId: params.outletId,
+      status: "OPEN",
+      createdAt: { gte: bounds.startOfDay, lte: bounds.endOfDay },
+    },
+  });
+
+  if (pendingOrdersCount > 0 && !params.forceCloseWithOpenOrders) {
+    return {
+      error: `There are ${pendingOrdersCount} unbilled/open dining orders remaining today. Settle or cancel them before day-end closing.`,
+      status: 409 as const,
+      pendingOrdersCount,
+    };
+  }
 
   const [orders, cancelledOrdersCount, payments, expenseAgg, refundsRaw] = await Promise.all([
     prisma.order.findMany({
@@ -117,7 +143,15 @@ export async function closeOutletDayEnd(params: {
   const openingFloatPaise = Number.isFinite(params.openingFloatPaise)
     ? Math.max(0, Math.round(params.openingFloatPaise!))
     : 0;
-  const expectedCashPaise = openingFloatPaise + cashSalesPaise;
+  const cashAdditionsPaise = Number.isFinite(params.cashAdditionsPaise)
+    ? Math.max(0, Math.round(params.cashAdditionsPaise!))
+    : 0;
+  const cashWithdrawalsPaise = Number.isFinite(params.cashWithdrawalsPaise)
+    ? Math.max(0, Math.round(params.cashWithdrawalsPaise!))
+    : 0;
+
+  // Expected Cash in Drawer
+  const expectedCashPaise = openingFloatPaise + cashSalesPaise + cashAdditionsPaise - cashWithdrawalsPaise;
   const countedCashPaise =
     params.countedCashPaise !== undefined &&
     params.countedCashPaise !== null &&
@@ -162,7 +196,7 @@ export async function closeOutletDayEnd(params: {
       data: {
         tenantId: params.tenantId,
         userId: params.userId,
-        action: "DAY_END_CLOSED",
+        action: existing ? "DAY_END_RECLOSED" : "DAY_END_CLOSED",
         entity: "DayEndSummary",
         entityId: summary.id,
         metadataJson: JSON.stringify({
@@ -174,12 +208,20 @@ export async function closeOutletDayEnd(params: {
           refundedPaise,
           ordersCount,
           cancelledOrdersCount,
+          pendingOrdersCount,
           cashSalesPaise,
           upiSalesPaise,
           cardSalesPaise,
           onlineSalesPaise,
+          openingFloatPaise,
+          cashAdditionsPaise,
+          cashAdditionsReason: params.cashAdditionsReason,
+          cashWithdrawalsPaise,
+          cashWithdrawalsReason: params.cashWithdrawalsReason,
           countedCashPaise,
+          expectedCashPaise,
           variancePaise: cashVariancePaise,
+          managerNotes: params.managerNotes,
         }),
       },
     });
@@ -196,6 +238,7 @@ export async function closeOutletDayEnd(params: {
     tenantName: outlet.tenant?.name || "Restaurant",
     ordersCount,
     cancelledOrdersCount,
+    pendingOrdersCount,
     totalSalesPaise,
     netSalesPaise,
     refundedPaise,
@@ -208,9 +251,14 @@ export async function closeOutletDayEnd(params: {
     otherSalesPaise,
     totalExpensePaise,
     openingFloatPaise,
+    cashAdditionsPaise,
+    cashAdditionsReason: params.cashAdditionsReason,
+    cashWithdrawalsPaise,
+    cashWithdrawalsReason: params.cashWithdrawalsReason,
     countedCashPaise,
     expectedCashPaise,
     cashVariancePaise,
+    managerNotes: params.managerNotes,
   };
 
   return { summary, zReport };
