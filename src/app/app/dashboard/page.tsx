@@ -1,52 +1,85 @@
 export const dynamic = "force-dynamic";
+
 import { getSession, getActiveOrgId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatINR } from "@/lib/money";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getEntitlements } from "@/lib/entitlements";
-import { getTimeZoneDateString, getTimeZoneDayBoundsUtc } from "@/lib/timezone";
+import {
+  getTimeZoneDateString,
+  getTimeZoneDayBoundsUtc,
+  normalizeTimeZone,
+} from "@/lib/timezone";
+import { DashboardClient } from "@/components/app/dashboard/DashboardClient";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
-export default async function Dashboard(){
-  const { userId } = await getSession();
-  if (!userId) {
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { user, userId } = await getSession();
+  if (!userId || !user) {
     return (
-      <div className="max-w-3xl mx-auto">
-        <div className="rounded-2xl border border-[#E5EBE7] bg-white p-8 text-center shadow-sm">
+      <div className="max-w-3xl mx-auto py-12">
+        <div className="rounded-3xl border border-[#E5EBE7] bg-white p-8 text-center shadow-xs">
           <div className="text-xl font-bold text-[#172B25]">Please sign in</div>
-          <div className="text-sm text-[#718078] mt-1">Your session expired. Sign in to view your dashboard.</div>
+          <div className="text-sm text-[#718078] mt-1.5">
+            Your session expired. Sign in to view your restaurant management dashboard.
+          </div>
           <div className="mt-6 flex gap-3 justify-center">
-            <Link href="/sign-in" className="rounded-full bg-[#16845B] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs">Sign In</Link>
-            <Link href="/sign-up" className="rounded-full border border-[#E5EBE7] bg-white px-6 py-2.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9]">Create Account</Link>
+            <Link
+              href="/sign-in"
+              className="rounded-xl bg-[#16845B] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/sign-up"
+              className="rounded-xl border border-[#E5EBE7] bg-white px-6 py-2.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9]"
+            >
+              Create Account
+            </Link>
           </div>
         </div>
       </div>
     );
   }
+
   let tenantId = await getActiveOrgId();
-  if(!tenantId){
-    const mem = await prisma.membership.findFirst({ where:{ userId }});
+  if (!tenantId) {
+    const mem = await prisma.membership.findFirst({ where: { userId } });
     tenantId = mem?.tenantId || null;
   }
-  if(!tenantId){
+
+  if (!tenantId) {
     return (
-      <div className="max-w-3xl mx-auto space-y-4">
-        <Card className="p-8 text-center bg-white border-[#E5EBE7] shadow-sm">
+      <div className="max-w-3xl mx-auto py-12 space-y-4">
+        <Card className="p-8 text-center bg-white border-[#E5EBE7] shadow-xs">
           <div className="text-xl font-bold text-[#172B25]">No restaurant business found</div>
-          <div className="text-sm text-[#718078] mt-1">Create your restaurant business to continue.</div>
-          <Link href="/app/organization" className="mt-6 inline-block rounded-full bg-[#16845B] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs">Create organization →</Link>
+          <div className="text-sm text-[#718078] mt-1.5">
+            Create or link your restaurant business to continue.
+          </div>
+          <Link
+            href="/app/organization"
+            className="mt-6 inline-block rounded-xl bg-[#16845B] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs"
+          >
+            Create organization →
+          </Link>
         </Card>
-        <div className="rounded-xl bg-white border border-[#E5EBE7] p-4 text-xs text-[#718078] text-center">
-          After auth, select or create your organization. Your selected subscription plan is preserved.
-        </div>
       </div>
     );
   }
-  const tenant = await prisma.tenant.findUnique({ where:{ id: tenantId }, include:{ outlets:true }});
+
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: tenantId },
+    include: { outlets: { orderBy: { createdAt: "asc" } } },
+  });
   if (!tenant) redirect("/app/organization");
+
   const ent = await getEntitlements(tenantId);
 
+  // If onboarding is not completed, display the onboarding wizard card
   if (!tenant.onboardingComplete) {
     const stepNames = [
       "Business",
@@ -61,29 +94,51 @@ export default async function Dashboard(){
       "Launch",
     ];
     return (
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl mx-auto py-8 space-y-4">
         {!ent.hasActiveSubscription && (
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900 flex items-center justify-between gap-3">
-            <span><b>Restaurant in Setup Mode:</b> Complete Restaurant Onboarding and select your plan to activate full POS billing.</span>
-            <Link href="/checkout?plan=growth&cycle=MONTHLY" className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] shrink-0">
+            <span>
+              <b>Restaurant in Setup Mode:</b> Complete Restaurant Onboarding and select your plan to
+              activate full POS billing.
+            </span>
+            <Link
+              href="/checkout?plan=growth&cycle=MONTHLY"
+              className="rounded-xl bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] shrink-0"
+            >
               Select Plan →
             </Link>
           </div>
         )}
-        <Card className="p-6 bg-white border-[#E5EBE7] shadow-sm">
+        <Card className="p-6 bg-white border-[#E5EBE7] shadow-xs">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-base font-bold text-[#172B25]">Onboarding in progress</div>
-              <div className="text-xs text-[#718078] mt-0.5">Step {Math.min(tenant.onboardingStep + 1, 10)} of 10 - {stepNames[Math.min(tenant.onboardingStep, 9)]} • Progress is saved</div>
+              <div className="text-xs text-[#718078] mt-0.5">
+                Step {Math.min(tenant.onboardingStep + 1, 10)} of 10 -{" "}
+                {stepNames[Math.min(tenant.onboardingStep, 9)]} • Progress is saved
+              </div>
             </div>
-            <Link href="/app/onboarding" className="rounded-full bg-[#16845B] px-5 py-2 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs">Continue onboarding →</Link>
+            <Link
+              href="/app/onboarding"
+              className="rounded-xl bg-[#16845B] px-5 py-2 text-sm font-bold text-white hover:bg-[#116B49] shadow-xs"
+            >
+              Continue onboarding →
+            </Link>
           </div>
           <div className="mt-5 grid grid-cols-10 gap-1.5">
-            {Array.from({length:10}).map((_,i)=> (
-              <div key={i} className={`h-2 rounded-full ${i<tenant.onboardingStep ? "bg-[#16845B]" : i===tenant.onboardingStep ? "bg-[#16845B]/60" : "bg-[#E5EBE7]"}`} />
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-2 rounded-full ${
+                  i < tenant.onboardingStep
+                    ? "bg-[#16845B]"
+                    : i === tenant.onboardingStep
+                    ? "bg-[#16845B]/60"
+                    : "bg-[#E5EBE7]"
+                }`}
+              />
             ))}
           </div>
-          <div className="mt-3 text-xs text-[#718078]">Complete onboarding steps (WhatsApp &amp; Printer can be skipped cleanly) to launch your POS workspace.</div>
         </Card>
       </div>
     );
@@ -93,346 +148,528 @@ export default async function Dashboard(){
     redirect("/checkout?reason=subscription_required");
   }
 
-  const tz = tenant.timeZone || "Asia/Kolkata";
-  const now = new Date();
-  const todayBounds = getTimeZoneDayBoundsUtc(undefined, tz, now);
-  const yesterdayStr = getTimeZoneDateString(
-    new Date(now.getTime() - 24 * 60 * 60 * 1000),
-    tz
-  );
-  const yesterdayBounds = getTimeZoneDayBoundsUtc(yesterdayStr, tz, now);
-  const urgentCutoff = new Date(now.getTime() - 15 * 60 * 1000);
-  const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  // Parse search params for outlet and date range filters
+  const sp = (await searchParams) || {};
+  const selectedOutletId = typeof sp.outletId === "string" ? sp.outletId : "all";
+  const selectedRange = typeof sp.range === "string" ? sp.range : "today";
+  const customFrom = typeof sp.from === "string" ? sp.from : undefined;
+  const customTo = typeof sp.to === "string" ? sp.to : undefined;
 
+  const tz = normalizeTimeZone(tenant.timeZone);
+  const now = new Date();
+
+  // Compute Current Period & Equivalent Prior Period Bounds
+  let periodStart: Date;
+  let periodEnd: Date;
+  let priorStart: Date;
+  let priorEnd: Date;
+  let periodLabel = "Today";
+  let isHourly = false;
+
+  const todayBounds = getTimeZoneDayBoundsUtc(undefined, tz, now);
+  const yesterdayDateStr = getTimeZoneDateString(new Date(now.getTime() - 86400000), tz);
+  const yesterdayBounds = getTimeZoneDayBoundsUtc(yesterdayDateStr, tz, now);
+
+  if (selectedRange === "yesterday") {
+    periodStart = yesterdayBounds.startOfDay;
+    periodEnd = yesterdayBounds.endOfDay;
+    const dayBeforeYesterdayStr = getTimeZoneDateString(new Date(now.getTime() - 2 * 86400000), tz);
+    const dayBeforeYesterdayBounds = getTimeZoneDayBoundsUtc(dayBeforeYesterdayStr, tz, now);
+    priorStart = dayBeforeYesterdayBounds.startOfDay;
+    priorEnd = dayBeforeYesterdayBounds.endOfDay;
+    periodLabel = "Yesterday";
+    isHourly = true;
+  } else if (selectedRange === "7d") {
+    periodStart = new Date(now.getTime() - 7 * 86400000);
+    periodEnd = now;
+    priorStart = new Date(now.getTime() - 14 * 86400000);
+    priorEnd = periodStart;
+    periodLabel = "Last 7 Days";
+  } else if (selectedRange === "30d") {
+    periodStart = new Date(now.getTime() - 30 * 86400000);
+    periodEnd = now;
+    priorStart = new Date(now.getTime() - 60 * 86400000);
+    priorEnd = periodStart;
+    periodLabel = "Last 30 Days";
+  } else if (selectedRange === "this_month") {
+    const todayStr = getTimeZoneDateString(now, tz);
+    const [y, m] = todayStr.split("-").map(Number);
+    const firstOfMonthBounds = getTimeZoneDayBoundsUtc(`${y}-${String(m).padStart(2, "0")}-01`, tz, now);
+    periodStart = firstOfMonthBounds.startOfDay;
+    periodEnd = now;
+    const duration = periodEnd.getTime() - periodStart.getTime();
+    priorEnd = periodStart;
+    priorStart = new Date(priorEnd.getTime() - duration);
+    periodLabel = "This Month";
+  } else if (selectedRange === "custom" && customFrom && customTo) {
+    const startBounds = getTimeZoneDayBoundsUtc(customFrom, tz, now);
+    const endBounds = getTimeZoneDayBoundsUtc(customTo, tz, now);
+    periodStart = startBounds.startOfDay;
+    periodEnd = endBounds.endOfDay;
+    const duration = periodEnd.getTime() - periodStart.getTime();
+    priorEnd = periodStart;
+    priorStart = new Date(priorEnd.getTime() - duration);
+    periodLabel = `${customFrom} to ${customTo}`;
+  } else {
+    // Default: Today
+    periodStart = todayBounds.startOfDay;
+    periodEnd = todayBounds.endOfDay;
+    priorStart = yesterdayBounds.startOfDay;
+    priorEnd = yesterdayBounds.endOfDay;
+    periodLabel = "Today";
+    isHourly = true;
+  }
+
+  // Construct base order filter (respecting outlet selection)
+  const baseOrderWhere: any = {
+    tenantId,
+    status: { not: "CANCELLED" },
+    createdAt: { gte: periodStart, lte: periodEnd },
+  };
+
+  const priorOrderWhere: any = {
+    tenantId,
+    status: { not: "CANCELLED" },
+    createdAt: { gte: priorStart, lte: priorEnd },
+  };
+
+  if (selectedOutletId !== "all") {
+    baseOrderWhere.outletId = selectedOutletId;
+    priorOrderWhere.outletId = selectedOutletId;
+  }
+
+  const urgentCutoff = new Date(now.getTime() - 15 * 60 * 1000);
+
+  // Execute Parallel Aggregations & Queries
   const [
-    todayAgg,
-    yesterdayAgg,
-    totalAgg,
-    recentOrders,
-    customers,
-    tables,
-    memCount,
-    salesByOutlet,
-    outlets,
+    currentAgg,
+    priorAgg,
+    channelOrders,
+    periodOrdersList,
+    recentOrdersList,
     activeKdsTickets,
     urgentKdsTickets,
+    openOrdersCount,
+    preparingOrdersCount,
+    readyOrdersCount,
+    cancelledOrdersCount,
     inventoryItems,
-    waConnectedCount,
-    printerCount,
-    waFailed24h,
-    printFailed24h,
+    topSellingOrderItems,
+    salesByOutletGroup,
   ] = await Promise.all([
+    // 1. Current period total
     prisma.order.aggregate({
-      where: {
-        tenantId,
-        status: { not: "CANCELLED" },
-        createdAt: { gte: todayBounds.startOfDay, lte: todayBounds.endOfDay },
-      },
+      where: baseOrderWhere,
       _sum: { totalPaise: true },
       _count: true,
     }),
+
+    // 2. Prior period total
     prisma.order.aggregate({
-      where: {
-        tenantId,
-        status: { not: "CANCELLED" },
-        createdAt: { gte: yesterdayBounds.startOfDay, lte: yesterdayBounds.endOfDay },
-      },
+      where: priorOrderWhere,
       _sum: { totalPaise: true },
       _count: true,
     }),
-    prisma.order.aggregate({
-      where: { tenantId, status: { not: "CANCELLED" } },
-      _sum: { totalPaise: true },
-      _count: true,
-    }),
+
+    // 3. Orders grouped by channel and serviceMode
     prisma.order.findMany({
-      where: { tenantId },
+      where: baseOrderWhere,
+      select: {
+        id: true,
+        type: true,
+        serviceMode: true,
+        channel: true,
+        totalPaise: true,
+      },
+    }),
+
+    // 4. Period orders list for trend grouping
+    prisma.order.findMany({
+      where: baseOrderWhere,
+      select: {
+        createdAt: true,
+        totalPaise: true,
+      },
+      orderBy: { createdAt: "asc" },
+    }),
+
+    // 5. Recent 10 orders for live feed
+    prisma.order.findMany({
+      where: selectedOutletId === "all" ? { tenantId } : { tenantId, outletId: selectedOutletId },
       orderBy: { createdAt: "desc" },
-      take: 5,
-      include: { outlet: { select: { name: true } } },
+      take: 10,
+      include: {
+        outlet: { select: { name: true } },
+      },
     }),
-    prisma.customer.count({ where: { tenantId } }),
-    prisma.table.count({ where: { tenantId, status: "OCCUPIED" } }),
-    prisma.membership.count({ where: { tenantId } }),
-    prisma.order.groupBy({
-      by: ["outletId"],
-      where: { tenantId, status: { not: "CANCELLED" } },
-      _sum: { totalPaise: true },
-      _count: true,
-    }),
-    prisma.outlet.findMany({ where: { tenantId } }),
-    prisma.kitchenTicket.count({
-      where: { tenantId, status: { in: ["NEW", "PREPARING"] } },
-    }),
+
+    // 6. Active KDS tickets
     prisma.kitchenTicket.count({
       where: {
         tenantId,
-        status: { in: ["NEW", "PREPARING"] },
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: { in: ["NEW", "PREPARING", "RECEIVED"] },
+      },
+    }),
+
+    // 7. Urgent KDS tickets (>15 mins)
+    prisma.kitchenTicket.count({
+      where: {
+        tenantId,
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: { in: ["NEW", "PREPARING", "RECEIVED"] },
         createdAt: { lte: urgentCutoff },
       },
     }),
+
+    // 8. Open orders
+    prisma.order.count({
+      where: {
+        tenantId,
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: { in: ["OPEN", "PENDING"] },
+      },
+    }),
+
+    // 9. Preparing orders
+    prisma.order.count({
+      where: {
+        tenantId,
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: "PREPARING",
+      },
+    }),
+
+    // 10. Ready orders
+    prisma.order.count({
+      where: {
+        tenantId,
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: "READY",
+      },
+    }),
+
+    // 11. Cancelled orders in period
+    prisma.order.count({
+      where: {
+        tenantId,
+        ...(selectedOutletId !== "all" ? { outletId: selectedOutletId } : {}),
+        status: "CANCELLED",
+        createdAt: { gte: periodStart, lte: periodEnd },
+      },
+    }),
+
+    // 12. Inventory items for stock health
     prisma.inventoryItem.findMany({
       where: { tenantId },
-      select: { id: true, name: true, currentStock: true, lowStockThreshold: true, unit: true },
+      select: {
+        id: true,
+        name: true,
+        currentStock: true,
+        lowStockThreshold: true,
+        unit: true,
+      },
     }),
-    prisma.outletWhatsAppConfig.count({
-      where: { tenantId, status: "CONNECTED" },
+
+    // 13. Top-selling products in period
+    prisma.orderItem.groupBy({
+      by: ["menuItemId"],
+      where: {
+        order: baseOrderWhere,
+      },
+      _sum: { quantity: true, totalPaise: true },
+      orderBy: { _sum: { totalPaise: "desc" } },
+      take: 10,
     }),
-    prisma.printerDevice.count({ where: { tenantId } }),
-    prisma.whatsAppMessageQueue.count({
-      where: { tenantId, status: "FAILED", createdAt: { gte: last24h } },
-    }),
-    prisma.printJob.count({
-      where: { tenantId, status: "FAILED", createdAt: { gte: last24h } },
-    }),
+
+    // 14. Sales by outlet group
+    tenant.outlets.length > 1
+      ? prisma.order.groupBy({
+          by: ["outletId"],
+          where: {
+            tenantId,
+            status: { not: "CANCELLED" },
+            createdAt: { gte: periodStart, lte: periodEnd },
+          },
+          _sum: { totalPaise: true },
+          _count: true,
+        })
+      : Promise.resolve([]),
   ]);
 
-  const todaySales = todayAgg._sum.totalPaise || 0;
-  const todayOrdersCount = todayAgg._count || 0;
-  const yesterdaySales = yesterdayAgg._sum.totalPaise || 0;
-  const todayDeltaPct =
-    yesterdaySales > 0
-      ? Math.round(((todaySales - yesterdaySales) / yesterdaySales) * 100)
-      : null;
-  const totalSales = totalAgg._sum.totalPaise || 0;
-  const lifetimeOrdersCount = totalAgg._count || 0;
-  const lowStockItems = inventoryItems.filter(
-    (item) => item.currentStock <= item.lowStockThreshold
-  );
-  const failedAutomationCount = waFailed24h + printFailed24h;
-  const outletMap = Object.fromEntries(outlets.map((o) => [o.id, o.name]));
+  // Compute KPIs & Deltas
+  const currRevenue = currentAgg._sum.totalPaise || 0;
+  const currOrders = currentAgg._count || 0;
+  const currAov = currOrders > 0 ? Math.round(currRevenue / currOrders) : 0;
+
+  const prevRevenue = priorAgg._sum.totalPaise || 0;
+  const prevOrders = priorAgg._count || 0;
+  const prevAov = prevOrders > 0 ? Math.round(prevRevenue / prevOrders) : 0;
+
+  const revenueDeltaPct =
+    prevRevenue > 0 ? Math.round(((currRevenue - prevRevenue) / prevRevenue) * 100) : null;
+  const ordersDeltaPct =
+    prevOrders > 0 ? Math.round(((currOrders - prevOrders) / prevOrders) * 100) : null;
+  const aovDeltaPct = prevAov > 0 ? Math.round(((currAov - prevAov) / prevAov) * 100) : null;
+
+  // Compute Non-Overlapping Channel Sales
+  let dineInPaise = 0, dineInCount = 0;
+  let takeawayPaise = 0, takeawayCount = 0;
+  let swiggyPaise = 0, swiggyCount = 0;
+  let zomatoPaise = 0, zomatoCount = 0;
+  let qrPaise = 0, qrCount = 0;
+  let webPaise = 0, webCount = 0;
+
+  channelOrders.forEach((o) => {
+    const ch = (o.channel || "").toUpperCase();
+    const tp = (o.type || "").toUpperCase();
+    const sm = (o.serviceMode || "").toUpperCase();
+    const amount = o.totalPaise || 0;
+
+    if (ch === "SWIGGY" || tp === "SWIGGY") {
+      swiggyPaise += amount;
+      swiggyCount++;
+    } else if (ch === "ZOMATO" || tp === "ZOMATO") {
+      zomatoPaise += amount;
+      zomatoCount++;
+    } else if (ch === "QR" || tp === "QR") {
+      qrPaise += amount;
+      qrCount++;
+    } else if (ch === "WEBSITE" || tp === "ONLINE") {
+      webPaise += amount;
+      webCount++;
+    } else if (sm === "TAKEAWAY" || tp === "TAKEAWAY") {
+      takeawayPaise += amount;
+      takeawayCount++;
+    } else {
+      dineInPaise += amount;
+      dineInCount++;
+    }
+  });
+
+  const onlinePaise = swiggyPaise + zomatoPaise + qrPaise + webPaise;
+  const onlineCount = swiggyCount + zomatoCount + qrCount + webCount;
+
+  // Channel breakdown array with distinct, non-overlapping metrics
+  const channelBreakdown = [
+    {
+      channel: "dine_in",
+      label: "Dine-In Restaurant",
+      revenuePaise: dineInPaise,
+      orderCount: dineInCount,
+      percentage: currRevenue > 0 ? Math.round((dineInPaise / currRevenue) * 100) : 0,
+      color: "bg-emerald-600",
+    },
+    {
+      channel: "takeaway",
+      label: "Takeaway & Pickup",
+      revenuePaise: takeawayPaise,
+      orderCount: takeawayCount,
+      percentage: currRevenue > 0 ? Math.round((takeawayPaise / currRevenue) * 100) : 0,
+      color: "bg-amber-500",
+    },
+    {
+      channel: "qr_direct",
+      label: "Table QR Contactless",
+      revenuePaise: qrPaise,
+      orderCount: qrCount,
+      percentage: currRevenue > 0 ? Math.round((qrPaise / currRevenue) * 100) : 0,
+      color: "bg-teal-500",
+    },
+    {
+      channel: "swiggy",
+      label: "Swiggy Delivery",
+      revenuePaise: swiggyPaise,
+      orderCount: swiggyCount,
+      percentage: currRevenue > 0 ? Math.round((swiggyPaise / currRevenue) * 100) : 0,
+      color: "bg-orange-500",
+    },
+    {
+      channel: "zomato",
+      label: "Zomato Delivery",
+      revenuePaise: zomatoPaise,
+      orderCount: zomatoCount,
+      percentage: currRevenue > 0 ? Math.round((zomatoPaise / currRevenue) * 100) : 0,
+      color: "bg-red-500",
+    },
+    {
+      channel: "website",
+      label: "Direct Website Orders",
+      revenuePaise: webPaise,
+      orderCount: webCount,
+      percentage: currRevenue > 0 ? Math.round((webPaise / currRevenue) * 100) : 0,
+      color: "bg-sky-500",
+    },
+  ].filter((c) => c.orderCount > 0 || c.revenuePaise > 0);
+
+  // Compute Hourly or Daily Trend Data Points
+  const trendBuckets: Record<string, { label: string; revenuePaise: number; orders: number }> = {};
+
+  if (isHourly) {
+    for (let h = 0; h < 24; h++) {
+      const label = `${String(h).padStart(2, "0")}:00`;
+      trendBuckets[String(h)] = { label, revenuePaise: 0, orders: 0 };
+    }
+
+    periodOrdersList.forEach((o) => {
+      const orderDate = new Date(o.createdAt);
+      const hourStr = String(new Intl.DateTimeFormat("en-US", { timeZone: tz, hour: "numeric", hourCycle: "h23" }).format(orderDate));
+      if (trendBuckets[hourStr]) {
+        trendBuckets[hourStr].revenuePaise += o.totalPaise;
+        trendBuckets[hourStr].orders++;
+      }
+    });
+  } else {
+    periodOrdersList.forEach((o) => {
+      const dayStr = getTimeZoneDateString(new Date(o.createdAt), tz);
+      if (!trendBuckets[dayStr]) {
+        const parts = dayStr.split("-");
+        const label = `${parts[2]}/${parts[1]}`;
+        trendBuckets[dayStr] = { label, revenuePaise: 0, orders: 0 };
+      }
+      trendBuckets[dayStr].revenuePaise += o.totalPaise;
+      trendBuckets[dayStr].orders++;
+    });
+  }
+
+  const trendData = Object.values(trendBuckets).map((b) => ({
+    label: b.label,
+    revenuePaise: b.revenuePaise,
+    orders: b.orders,
+    aovPaise: b.orders > 0 ? Math.round(b.revenuePaise / b.orders) : 0,
+  }));
+
+  // Fetch Metadata for Top Selling Products
+  const menuItemIds = topSellingOrderItems.map((item) => item.menuItemId);
+  const menuItems = await prisma.menuItem.findMany({
+    where: { id: { in: menuItemIds } },
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      category: { select: { name: true } },
+    },
+  });
+  const menuItemMap = Object.fromEntries(menuItems.map((m) => [m.id, m]));
+
+  const topSellingProducts = topSellingOrderItems.map((item) => {
+    const info = menuItemMap[item.menuItemId];
+    return {
+      id: item.menuItemId,
+      name: info?.name || "Menu Item",
+      imageUrl: info?.imageUrl || null,
+      categoryName: info?.category?.name || "General",
+      quantitySold: item._sum.quantity || 0,
+      revenuePaise: item._sum.totalPaise || 0,
+    };
+  });
+
+  // Recent Orders formatted
+  const recentOrders = recentOrdersList.map((o) => ({
+    id: o.id,
+    orderNumber: o.orderNumber,
+    source: o.type,
+    channel: o.channel,
+    customerName: o.customerName || "Walk-in Guest",
+    customerPhone: o.customerPhone || null,
+    outletName: o.outlet?.name || "Main Outlet",
+    timeFormatted: new Intl.DateTimeFormat("en-IN", {
+      timeZone: tz,
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "short",
+    }).format(new Date(o.createdAt)),
+    totalPaise: o.totalPaise,
+    isPaid: o.isPaid,
+    status: o.status,
+  }));
+
+  // Inventory Health
+  const lowStockCount = inventoryItems.filter(
+    (i) => i.currentStock > 0 && i.currentStock <= i.lowStockThreshold
+  ).length;
+  const outOfStockCount = inventoryItems.filter((i) => i.currentStock <= 0).length;
+  const criticalStockItems = inventoryItems
+    .filter((i) => i.currentStock <= i.lowStockThreshold)
+    .slice(0, 5)
+    .map((i) => ({
+      id: i.id,
+      name: i.name,
+      currentStock: i.currentStock,
+      lowStockThreshold: i.lowStockThreshold,
+      unit: i.unit,
+    }));
+
+  // Outlet Comparison (if multi-outlet)
+  let outletComparison: any[] | undefined = undefined;
+  if (tenant.outlets.length > 1) {
+    const outletMap = Object.fromEntries(tenant.outlets.map((o) => [o.id, o.name]));
+    let maxRev = -1;
+
+    outletComparison = salesByOutletGroup.map((r) => {
+      const rev = r._sum.totalPaise || 0;
+      if (rev > maxRev) maxRev = rev;
+      return {
+        outletId: r.outletId,
+        name: outletMap[r.outletId] || "Outlet",
+        revenuePaise: rev,
+        orders: r._count || 0,
+        aovPaise: r._count > 0 ? Math.round(rev / r._count) : 0,
+        sharePct: currRevenue > 0 ? Math.round((rev / currRevenue) * 100) : 0,
+      };
+    });
+
+    outletComparison.forEach((item) => {
+      item.isBestPerforming = item.revenuePaise > 0 && item.revenuePaise === maxRev;
+    });
+  }
 
   return (
-    <div className="space-y-6 text-[#172B25]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-black tracking-tight text-[#172B25]">Dashboard</h1>
-          <p className="text-sm text-[#718078]">{tenant.name} • {tenant.businessType} • {tenant.slug} • Onboarding Complete ✓</p>
-        </div>
-        <div className="flex gap-2">
-          <span className={`rounded-full px-3 py-1 text-xs font-bold ${
-            ent.hasActiveSubscription ? "bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7]" : "bg-amber-100 text-amber-800 border border-amber-200"
-          }`}>
-            {ent.hasActiveSubscription ? (ent.isTrialing ? `Trialing • ${ent.planName}` : `Active • ${ent.planName}`) : "No subscription → Checkout"}
-          </span>
-          <span className="rounded-full bg-white border border-[#E5EBE7] px-3 py-1 text-xs text-[#718078] font-medium shadow-xs">
-            {ent.maxOutlets} outlets • {ent.maxUsers} staff
-          </span>
-        </div>
-      </div>
-
-      {!ent.hasActiveSubscription && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 flex flex-wrap items-center justify-between gap-3 shadow-xs">
-          <div className="text-sm text-amber-900"><b>Subscription required:</b> Your POS features are gated until payment is server-verified. 14-day trial available.</div>
-          <Link href="/checkout" className="rounded-full bg-[#16845B] text-white px-5 py-2 text-sm font-bold hover:bg-[#116B49] shadow-xs">Go to checkout →</Link>
-        </div>
-      )}
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">
-              Today Sales ({todayBounds.date})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{formatINR(todaySales)}</div>
-            <div className="text-xs text-[#16845B] font-semibold mt-1">
-              {todayOrdersCount} orders today
-              {todayDeltaPct !== null && (
-                <span className={todayDeltaPct >= 0 ? "text-[#16845B]" : "text-amber-600"}>
-                  {" "}• {todayDeltaPct >= 0 ? "+" : ""}{todayDeltaPct}% vs yesterday
-                </span>
-              )}
-              {" "}• {ent.canUsePOS ? "POS enabled" : "POS gated"}
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Total Revenue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{formatINR(totalSales)}</div>
-            <div className="text-xs text-[#718078] mt-1">
-              {lifetimeOrdersCount} non-cancelled lifetime orders
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Active Tables</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{tables}</div>
-            <div className="text-xs text-[#718078] mt-1">Currently occupied dine-in</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Customers & Staff</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-black text-[#172B25]">{customers} • {memCount}</div>
-            <div className="text-xs text-[#718078] mt-1">Profiles • Staff limit {ent.maxUsers}</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid lg:grid-cols-[1.6fr_0.9fr] gap-6">
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-[#172B25]">Outlet Comparison - Tenant Isolated</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {salesByOutlet.length===0 ? (
-              <div className="text-sm text-[#718078] py-8 text-center border border-dashed border-[#E5EBE7] rounded-xl bg-[#F8FAF9]">
-                No sales recorded yet. Use POS to bill your first order.
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {salesByOutlet.map(r=> (
-                  <div key={r.outletId} className="flex items-center justify-between rounded-xl bg-[#F8FAF9] border border-[#E5EBE7] px-4 py-3">
-                    <div>
-                      <div className="text-sm font-bold text-[#172B25]">{outletMap[r.outletId] || r.outletId.slice(0,8)}</div>
-                      <div className="text-xs text-[#718078]">{r._count} orders</div>
-                    </div>
-                    <div className="text-sm font-bold text-[#16845B]">{formatINR(r._sum.totalPaise||0)}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-[#172B25]">Quick Actions</CardTitle>
-            <p className="text-xs text-[#718078]">Gated by active subscription • Inventory {ent.canUseInventory ? "enabled" : "requires Growth"}</p>
-          </CardHeader>
-          <CardContent className="grid gap-2.5">
-            <Link
-              href="/app/pos"
-              className={`rounded-full px-5 py-3 text-center text-sm font-bold shadow-xs transition ${
-                ent.canUsePOS ? "bg-[#16845B] hover:bg-[#116B49] text-white" : "bg-slate-100 text-slate-400 pointer-events-none"
-              }`}
-            >
-              Open POS Billing {ent.canUsePOS ? "" : "(gated)"}
-            </Link>
-            <Link href="/app/menu" className="rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-center text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs">
-              Manage Menu
-            </Link>
-            <Link href="/app/inventory" className={`rounded-full border px-5 py-2.5 text-center text-sm font-semibold shadow-xs ${
-              ent.canUseInventory ? "border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9]" : "border-slate-200 bg-slate-50 text-slate-400 pointer-events-none"
-            }`}>
-              Inventory {ent.canUseInventory ? "" : "(Growth+)"}
-            </Link>
-            <Link href="/app/integrations" className={`rounded-full border px-5 py-2.5 text-center text-sm font-semibold shadow-xs ${
-              ent.canUseIntegrations ? "border-[#E5EBE7] bg-white text-[#172B25] hover:bg-[#F8FAF9]" : "border-slate-200 bg-slate-50 text-slate-400 pointer-events-none"
-            }`}>
-              Integrations {ent.canUseIntegrations ? "" : "(Growth+)"}
-            </Link>
-            <Link href="/app/reports" className="rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-center text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-xs">
-              View Reports
-            </Link>
-            <Link href="/checkout" className="rounded-full bg-[#E8F5EE] border border-[#E5EBE7] text-[#16845B] hover:bg-[#16845B] hover:text-white px-5 py-2.5 text-center text-sm font-bold transition shadow-xs">
-              Manage Subscription →
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link href="/app/kitchen" className="block group">
-          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${urgentKdsTickets > 0 ? "bg-amber-50/70 border-amber-200" : "bg-white border-[#E5EBE7]"}`}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Live Kitchen Queue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-black text-[#172B25]">{activeKdsTickets} active tickets</div>
-              <div className={`text-xs font-semibold mt-1 ${urgentKdsTickets > 0 ? "text-amber-700" : "text-[#16845B]"}`}>
-                {urgentKdsTickets > 0 ? `${urgentKdsTickets} delayed (>15m) • View KDS →` : "Kitchen running on time →"}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/app/inventory" className="block group">
-          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${lowStockItems.length > 0 ? "bg-red-50/50 border-red-200" : "bg-white border-[#E5EBE7]"}`}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">Stock Alerts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-black text-[#172B25]">{lowStockItems.length} low-stock items</div>
-              <div className={`text-xs font-semibold mt-1 truncate ${lowStockItems.length > 0 ? "text-red-700" : "text-[#16845B]"}`}>
-                {lowStockItems.length > 0 ? `Reorder: ${lowStockItems[0].name} (${lowStockItems[0].currentStock} ${lowStockItems[0].unit})` : "All ingredients above threshold →"}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/app/integrations" className="block group">
-          <Card className={`h-full border shadow-xs transition group-hover:border-[#16845B]/50 ${failedAutomationCount > 0 ? "bg-amber-50/70 border-amber-200" : "bg-white border-[#E5EBE7]"}`}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase tracking-wider text-[#718078]">WhatsApp & Printers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-black text-[#172B25]">{waConnectedCount} WA • {printerCount} Printers</div>
-              <div className={`text-xs font-semibold mt-1 ${failedAutomationCount > 0 ? "text-amber-700" : "text-[#718078]"}`}>
-                {failedAutomationCount > 0 ? `${failedAutomationCount} failed job(s) in 24h • Inspect →` : "Billing automation ready →"}
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/app/reports" className="block group">
-          <Card className="h-full bg-[#E8F5EE]/60 border-[#16845B]/25 shadow-xs transition group-hover:border-[#16845B]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs uppercase tracking-wider text-[#16845B]">Business Insights</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl font-black text-[#172B25]">
-                {todayOrdersCount > 0 ? formatINR(Math.round(todaySales / todayOrdersCount)) : "₹0"} avg bill
-              </div>
-              <div className="text-xs font-semibold text-[#16845B] mt-1">
-                Charts, COGS, GST & CSV export →
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-
-      <Card className="bg-white border-[#E5EBE7] shadow-xs">
-        <CardHeader>
-          <CardTitle className="text-[#172B25]">Recent Orders</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {recentOrders.length === 0 ? (
-            <div className="text-sm text-[#718078] py-6 text-center border border-dashed border-[#E5EBE7] rounded-xl bg-[#F8FAF9]">
-              No orders yet.
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {recentOrders.map((o) => (
-                <div key={o.id} className="flex justify-between items-center rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-4 py-3">
-                  <div>
-                    <div className="text-sm font-bold text-[#172B25]">
-                      {o.orderNumber} • {o.type} {o.outlet?.name ? `(${o.outlet.name})` : ""}
-                    </div>
-                    <div className="text-xs text-[#718078]">
-                      <span className={o.status === "CANCELLED" ? "text-red-600 font-semibold" : ""}>{o.status}</span>
-                      {" "}• {new Date(o.createdAt).toLocaleString("en-IN", { timeZone: todayBounds.timeZone })}
-                    </div>
-                  </div>
-                  <div className={`text-sm font-bold ${o.status === "CANCELLED" ? "text-[#718078] line-through" : "text-[#16845B]"}`}>
-                    {formatINR(o.totalPaise)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <DashboardClient
+      userName={user.name || "Owner"}
+      businessName={tenant.name}
+      businessType={tenant.businessType || "Restaurant"}
+      outlets={tenant.outlets.map((o) => ({ id: o.id, name: o.name }))}
+      selectedOutletId={selectedOutletId}
+      selectedRange={selectedRange}
+      startDate={customFrom}
+      endDate={customTo}
+      periodLabel={periodLabel}
+      kpis={{
+        revenuePaise: currRevenue,
+        revenueDeltaPct,
+        ordersCount: currOrders,
+        ordersDeltaPct,
+        aovPaise: currAov,
+        aovDeltaPct,
+        dineInPaise,
+        dineInCount,
+        takeawayPaise,
+        takeawayCount,
+        onlinePaise,
+        onlineCount,
+        swiggyPaise,
+        swiggyCount,
+        zomatoPaise,
+        zomatoCount,
+      }}
+      trendData={trendData}
+      channelBreakdown={channelBreakdown}
+      topSellingProducts={topSellingProducts}
+      recentOrders={recentOrders}
+      operations={{
+        pendingOrdersCount: openOrdersCount,
+        preparingOrdersCount,
+        readyOrdersCount,
+        cancelledOrdersCount,
+        activeKdsTickets,
+        urgentKdsTickets,
+        lowStockCount,
+        outOfStockCount,
+        criticalStockItems,
+      }}
+      outletComparison={outletComparison}
+    />
   );
 }
