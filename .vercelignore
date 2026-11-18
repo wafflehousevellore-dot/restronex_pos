@@ -1,0 +1,7 @@
+backups
+backup
+load-tests
+scripts
+supabase
+*.md
+.git
