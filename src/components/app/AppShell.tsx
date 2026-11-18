@@ -84,7 +84,7 @@ export default function AppShell({
               <span>•</span>
               <span>Enterprise Edition</span>
               <span>•</span>
-              <span className="text-[#16845B] font-medium">Petpooja-Inspired Architecture</span>
+              <span className="text-[#16845B] font-medium">RestroNex Architecture</span>
             </div>
 
             <div className="flex items-center gap-4">

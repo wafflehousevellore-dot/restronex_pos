@@ -366,7 +366,7 @@ export function FeedbackManagerView({
                 <Input
                   value={assignedStaff}
                   onChange={(e) => setAssignedStaff(e.target.value)}
-                  placeholder="e.g. Pooja Verma (Floor Manager)"
+                  placeholder="e.g. Priya Verma (Floor Manager)"
                   className="mt-1 bg-[#F8FAF9] border-[#E5EBE7] text-xs h-9 rounded-xl font-medium"
                 />
               </div>

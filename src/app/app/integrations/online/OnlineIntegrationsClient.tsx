@@ -374,7 +374,7 @@ export default function OnlineIntegrationsClient() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-[#172B25]">Online Integrations</h1>
               <p className="text-sm text-gray-500">
-                Enterprise Petpooja-inspired Swiggy & Zomato integration, multi-outlet sync, and automated KOT routing
+                Enterprise Online Order Integration, Multi-Outlet Synchronization & Automated KOT Routing
               </p>
             </div>
           </div>
@@ -557,7 +557,7 @@ export default function OnlineIntegrationsClient() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold text-[#172B25] flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                Petpooja-Inspired Enterprise Aggregator Pipeline
+                RestroNex Enterprise Aggregator Pipeline
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6 pt-0 space-y-4">

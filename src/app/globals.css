@@ -129,7 +129,7 @@ html {
 }
 
 /* Thermal 80mm / 58mm POS Print Rules, QR Badge Print Rules & Z-Report Print Rules */
-/* Custom thin scrollbar for dense Petpooja data grids */
+/* Custom thin scrollbar for dense RestroNex data grids */
 .scrollbar-thin::-webkit-scrollbar {
   width: 6px;
   height: 6px;

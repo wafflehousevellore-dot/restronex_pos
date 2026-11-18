@@ -504,7 +504,7 @@ export function OrdersClient({
             Order Management
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Petpooja-inspired unified order control terminal across POS, Dine-In, QR, and Online Aggregators.
+            Enterprise unified order control terminal across POS, Dine-In, QR, and Online Aggregators.
           </p>
         </div>
 

@@ -395,7 +395,7 @@ export function MenuClient({
             Restaurant Menu Management
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Petpooja-inspired master catalog control: products, variants, modifier groups, and stock availability.
+            Enterprise master catalog control: products, variants, modifier groups, and stock availability.
           </p>
         </div>
       </div>

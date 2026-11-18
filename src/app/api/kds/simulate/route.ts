@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
   const taxPaise = Math.round(subtotalPaise * 0.05);
   const totalPaise = subtotalPaise + taxPaise;
 
-  const names = ["Aarav Sharma", "Pooja Patel", "Rohan Mehta", "Ananya Rao", "Vikram Singh"];
+  const names = ["Aarav Sharma", "Priya Patel", "Rohan Mehta", "Ananya Rao", "Vikram Singh"];
   const randomName = names[Math.floor(Math.random() * names.length)];
 
   const ingestRes = await ingestOrder({

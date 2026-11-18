@@ -1,11 +1,36 @@
+# Dependencies & Build Output
 node_modules
 .next
-.env
-dev.db
-dev.db-journal
-*.log
-*.tsbuildinfo
 .vercel
+dist
+build
+*.tsbuildinfo
+
+# Environment & Credentials
+.env
+.env*.local
+.env.local
+.env.production
+.env.development
 .env*
+!*.example
+
+# Local Databases, Dumps & Backups
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.dump
+*.bak
 backups/
-*.sql
+backup/
+
+# Logs & Temporary Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Internal audit reports
+PETPOOJA_BRANDING_REMOVAL_REPORT.md

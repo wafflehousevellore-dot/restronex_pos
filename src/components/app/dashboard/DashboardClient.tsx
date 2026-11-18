@@ -330,7 +330,7 @@ export function DashboardClient({
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5EE] border border-[#16845B]/20 px-3 py-1 text-xs font-bold text-[#16845B]">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Petpooja-Inspired Owner Operations</span>
+            <span>RestroNex Owner Operations</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-black text-[#172B25] tracking-tight">

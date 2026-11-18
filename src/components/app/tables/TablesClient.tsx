@@ -383,7 +383,7 @@ export function TablesClient() {
               Floor Plan & Reservations
             </h1>
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#16845B]/10 text-[#16845B]">
-              Petpooja Table Management
+              RestroNex Table Management
             </span>
           </div>
           <p className="text-xs text-[#718078] mt-0.5">

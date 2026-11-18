@@ -1251,7 +1251,7 @@ model ServiceActivationEvent {
 }
 
 // ============================================================================
-// AGGREGATOR INTEGRATION MODELS (Swiggy & Zomato - Petpooja Architecture)
+// AGGREGATOR INTEGRATION MODELS (Swiggy & Zomato - RestroNex Architecture)
 // ============================================================================
 
 model AggregatorConnection {

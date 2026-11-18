@@ -256,7 +256,7 @@ export function InventoryClient() {
               Inventory & Recipe Management
             </h1>
             <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#16845B]/10 text-[#16845B]">
-              Petpooja Operations
+              RestroNex Operations
             </span>
           </div>
           <p className="text-xs text-[#718078] mt-0.5">

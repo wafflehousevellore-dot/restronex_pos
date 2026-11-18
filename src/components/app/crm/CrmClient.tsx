@@ -321,7 +321,7 @@ export function CrmClient() {
             Customer Loyalty, CRM & Engagement
           </h1>
           <p className="text-sm text-[#718078]">
-            Petpooja-standard diner directory, points rewards engine, memberships, feedback & WhatsApp campaigns
+            Enterprise diner directory, points rewards engine, memberships, feedback & WhatsApp campaigns
           </p>
         </div>
         <div className="flex items-center gap-2">

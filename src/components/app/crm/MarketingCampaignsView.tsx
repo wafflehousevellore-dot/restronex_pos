@@ -196,7 +196,7 @@ export function MarketingCampaignsView({
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-[#16845B]" />
             <h3 className="text-sm font-black text-[#172B25]">
-              Petpooja-Inspired Automated Campaign Recipes
+              RestroNex Automated Campaign Recipes
             </h3>
           </div>
           <Button
