@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { logPlatformAdminAction, requirePlatformOwnerApi } from "@/lib/platform-auth";
+import { logPlatformAdminAction, requirePlatformPermissionApi } from "@/lib/platform-auth";
 import { GRACE_PERIOD_DAYS } from "@/lib/subscription";
 
 export async function GET(_req: NextRequest) {
-  const guard = await requirePlatformOwnerApi();
+  const guard = await requirePlatformPermissionApi("platform.subscriptions.view");
   if (!guard.ok) return guard.response;
 
   const [subscriptions, plans, subscriptionPayments, webhookEvents] = await Promise.all([
@@ -17,20 +17,20 @@ export async function GET(_req: NextRequest) {
             name: true,
             email: true,
             slug: true,
-            outlets: { select: { id: true } },
+            outlets: { select: { id: true, name: true, status: true } },
           },
         },
         plan: true,
         payments: {
           orderBy: { createdAt: "desc" },
-          take: 5,
+          take: 10,
         },
       },
     }),
     prisma.subscriptionPlan.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.subscriptionPayment.findMany({
       orderBy: { createdAt: "desc" },
-      take: 50,
+      take: 100,
       include: {
         subscription: {
           include: {
@@ -42,7 +42,7 @@ export async function GET(_req: NextRequest) {
     }),
     prisma.webhookEvent.findMany({
       orderBy: { createdAt: "desc" },
-      take: 30,
+      take: 50,
     }),
   ]);
 
@@ -100,6 +100,7 @@ export async function GET(_req: NextRequest) {
       cancelledSubscriptions: cancelledCount,
       totalNotificationsSent: notificationsCount,
       mrrPaise,
+      arrPaise: mrrPaise * 12,
       planDistribution: planDist,
     },
     subscriptions,
@@ -110,17 +111,18 @@ export async function GET(_req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const guard = await requirePlatformOwnerApi();
+  const guard = await requirePlatformPermissionApi("platform.subscriptions.manage");
   if (!guard.ok) return guard.response;
 
   try {
     const body = await req.json();
-    const { subscriptionId, status, planId, billingCycle, extendDays } = body as {
+    const { subscriptionId, status, planId, billingCycle, extendDays, reason } = body as {
       subscriptionId?: string;
       status?: "ACTIVE" | "PAST_DUE" | "CANCELLED" | "EXPIRED" | "PENDING";
       planId?: string;
       billingCycle?: "MONTHLY" | "ANNUAL";
       extendDays?: number;
+      reason?: string;
     };
 
     if (!subscriptionId) {
@@ -177,11 +179,13 @@ export async function PATCH(req: NextRequest) {
       entity: "Subscription",
       entityId: subscriptionId,
       metadata: {
+        tenantName: existing.tenant?.name,
         previousStatus: existing.status,
         newStatus: updated.status,
         previousPlanId: existing.planId,
         newPlanId: updated.planId,
         extendDays: extendDays || 0,
+        reason: reason || "Platform admin manual adjustment",
       },
     });
 
@@ -190,4 +194,3 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: err.message || "Failed to update subscription" }, { status: 500 });
   }
 }
-

@@ -3,11 +3,12 @@ import { prisma } from "@/lib/db";
 import {
   logPlatformAdminAction,
   PRIMARY_PLATFORM_OWNER_EMAIL,
-  requirePlatformOwnerApi,
+  requirePlatformPermissionApi,
 } from "@/lib/platform-auth";
+import { ALL_PLATFORM_ROLES, PlatformRole } from "@/lib/platform-roles";
 
 export async function GET() {
-  const guard = await requirePlatformOwnerApi();
+  const guard = await requirePlatformPermissionApi("platform.admins.manage");
   if (!guard.ok) return guard.response;
 
   const users = await prisma.user.findMany({
@@ -21,6 +22,13 @@ export async function GET() {
       clerkId: true,
       createdAt: true,
       updatedAt: true,
+      platformMfa: {
+        select: {
+          enabled: true,
+          enrolledAt: true,
+          lastVerifiedAt: true,
+        },
+      },
       memberships: {
         include: {
           tenant: { select: { id: true, name: true, slug: true } },
@@ -30,21 +38,72 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json({ users });
+  return NextResponse.json({ users, availableRoles: ALL_PLATFORM_ROLES });
 }
 
 export async function PATCH(req: NextRequest) {
-  const guard = await requirePlatformOwnerApi();
+  const guard = await requirePlatformPermissionApi("platform.admins.manage");
   if (!guard.ok) return guard.response;
 
   try {
     const body = await req.json();
-    const { action, membershipId, role } = body as {
-      action?: "UPDATE_MEMBERSHIP_ROLE" | "REMOVE_MEMBERSHIP";
-      membershipId?: string;
+    const { action, userId, role, isPlatformAdmin, membershipId, reason } = body as {
+      action?: "UPDATE_PLATFORM_USER" | "UPDATE_MEMBERSHIP_ROLE" | "REMOVE_MEMBERSHIP";
+      userId?: string;
       role?: string;
+      isPlatformAdmin?: boolean;
+      membershipId?: string;
+      reason?: string;
     };
 
+    // Platform user role update
+    if (action === "UPDATE_PLATFORM_USER") {
+      if (!userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
+      const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+      if (!targetUser) return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+      // Protect primary owner
+      if (
+        targetUser.email.toLowerCase() === PRIMARY_PLATFORM_OWNER_EMAIL &&
+        (isPlatformAdmin === false || role !== "PLATFORM_OWNER")
+      ) {
+        return NextResponse.json(
+          { error: "Cannot revoke or change primary Platform Owner status." },
+          { status: 400 }
+        );
+      }
+
+      if (role && !ALL_PLATFORM_ROLES.includes(role as PlatformRole)) {
+        return NextResponse.json({ error: "Invalid platform role" }, { status: 400 });
+      }
+
+      const updated = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          ...(role ? { role } : {}),
+          ...(typeof isPlatformAdmin === "boolean" ? { isPlatformAdmin } : {}),
+        },
+      });
+
+      await logPlatformAdminAction({
+        userId: guard.auth.user.id,
+        action: "PLATFORM_ADMIN_ROLE_UPDATED",
+        entity: "User",
+        entityId: userId,
+        metadata: {
+          targetEmail: targetUser.email,
+          previousRole: targetUser.role,
+          newRole: updated.role,
+          previousAdminStatus: targetUser.isPlatformAdmin,
+          newAdminStatus: updated.isPlatformAdmin,
+          reason: reason || "Administrative staff assignment",
+        },
+      });
+
+      return NextResponse.json({ ok: true, user: updated });
+    }
+
+    // Tenant membership update
     if (!membershipId) {
       return NextResponse.json({ error: "membershipId required" }, { status: 400 });
     }
@@ -57,7 +116,6 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Membership not found" }, { status: 404 });
     }
 
-    // Never allow platform admin privilege assignment via membership or arbitrary user mutations
     const allowedTenantRoles = ["OWNER", "HEAD_OFFICE", "OUTLET_MANAGER", "CASHIER", "WAITER", "KITCHEN_STAFF"];
 
     if (action === "REMOVE_MEMBERSHIP") {
@@ -79,6 +137,7 @@ export async function PATCH(req: NextRequest) {
           targetUserEmail: membership.user.email,
           tenantName: membership.tenant.name,
           previousRole: membership.role,
+          reason: reason || "Administrative cleanup",
         },
       });
       return NextResponse.json({ ok: true });
@@ -104,6 +163,7 @@ export async function PATCH(req: NextRequest) {
         tenantName: membership.tenant.name,
         previousRole: membership.role,
         newRole: updated.role,
+        reason: reason || "Administrative role change",
       },
     });
 

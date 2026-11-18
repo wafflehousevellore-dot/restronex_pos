@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { ensureSeedPlans } from "@/lib/seed";
-import { logPlatformAdminAction, requirePlatformOwnerApi } from "@/lib/platform-auth";
+import { logPlatformAdminAction, requirePlatformPermissionApi } from "@/lib/platform-auth";
 
 export async function GET() {
   await ensureSeedPlans();
@@ -11,7 +11,7 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
   try {
-    const guard = await requirePlatformOwnerApi();
+    const guard = await requirePlatformPermissionApi("platform.plans.manage");
     if (!guard.ok) return guard.response;
 
     const body = await req.json();

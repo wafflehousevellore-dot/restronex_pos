@@ -9,6 +9,14 @@ import Link from "next/link";
 import {
   Check,
   Zap,
+  AlertTriangle,
+  FileText,
+  Printer,
+  X,
+  Clock,
+  Building2,
+  ShieldAlert,
+  ArrowUpRight,
 } from "lucide-react";
 
 declare global {
@@ -25,6 +33,7 @@ export default function SubscriptionClient() {
   const [actionMsg, setActionMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [renewing, setRenewing] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<any | null>(null);
 
   // Preload Razorpay checkout script
   useEffect(() => {
@@ -78,7 +87,6 @@ export default function SubscriptionClient() {
       const j = await res.json();
       if (!res.ok) throw new Error(j.error || "Failed to initiate renewal");
 
-      // Launch official Razorpay standard checkout
       if (window.Razorpay) {
         const options = {
           key: j.keyId,
@@ -88,7 +96,7 @@ export default function SubscriptionClient() {
           description: `Subscription Renewal • ${j.plan.name} (${j.plan.billingCycle})`,
           order_id: j.orderId,
           handler: async function (response: any) {
-            setActionMsg({ type: "success", text: "Verifying payment with server..." });
+            setActionMsg({ type: "success", text: "Verifying payment signature with server..." });
             const vRes = await fetch("/api/checkout/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -123,7 +131,7 @@ export default function SubscriptionClient() {
   }
 
   async function handleCancelSubscription() {
-    if (!confirm("Are you sure you want to cancel? Your restaurant will retain access until the end of your billing cycle.")) return;
+    if (!confirm("Are you sure you want to cancel? Your restaurant will retain access until the end of your billing cycle and 7-day grace period.")) return;
 
     setCancelling(true);
     setActionMsg(null);
@@ -152,15 +160,15 @@ export default function SubscriptionClient() {
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-[#172B25]">Subscription & Plan Entitlements</h1>
+          <h1 className="text-2xl font-black tracking-tight text-[#172B25]">Subscription &amp; Billing Portal</h1>
           <p className="text-sm text-[#718078]">
-            Server-enforced SaaS billing, active plan allowances, and manual renewal management.
+            SaaS plan entitlements, outlet allowances, payment receipts, and contract renewal controls.
           </p>
         </div>
         <div className="flex gap-2">
           <Link href="/checkout">
             <Button className="rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white text-xs font-bold shadow-xs">
-              Open Checkout →
+              Checkout &amp; Plans →
             </Button>
           </Link>
         </div>
@@ -175,6 +183,46 @@ export default function SubscriptionClient() {
           }`}
         >
           {actionMsg.text}
+        </div>
+      )}
+
+      {/* Lifecycle Warning Banners */}
+      {ent && ent.status === "PAST_DUE" && (
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-xs text-amber-900 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0" />
+            <div>
+              <strong>Grace Period Active:</strong> Your plan expired, but operational access is protected for{" "}
+              <strong>{ent.graceDaysRemaining} more days</strong>. Renew now to prevent POS interruption.
+            </div>
+          </div>
+          <Button
+            size="sm"
+            onClick={handleManualRenew}
+            disabled={renewing}
+            className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shrink-0"
+          >
+            Renew Now
+          </Button>
+        </div>
+      )}
+
+      {ent && ent.status === "EXPIRED" && (
+        <div className="rounded-2xl border border-red-300 bg-red-50 p-4 text-xs text-red-900 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="h-5 w-5 text-red-600 shrink-0" />
+            <div>
+              <strong>Subscription Expired:</strong> POS order creation is paused. All menu items, recipes, invoices, and reports remain 100% safe. Renew to restore billing immediately.
+            </div>
+          </div>
+          <Button
+            size="sm"
+            onClick={handleManualRenew}
+            disabled={renewing}
+            className="rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0"
+          >
+            Reactivate Plan
+          </Button>
         </div>
       )}
 
@@ -245,9 +293,13 @@ export default function SubscriptionClient() {
                   dateStyle: "long",
                 })}
               </div>
-              {sub.cancelAtPeriodEnd && (
+              {sub.cancelAtPeriodEnd ? (
                 <div className="text-[11px] text-amber-700 font-bold mt-1">
-                  Access active until period end. Will not renew.
+                  Access active until period end. Will not auto-renew.
+                </div>
+              ) : (
+                <div className="text-[11px] text-[#16845B] font-semibold mt-1">
+                  Active recurring billing cycle
                 </div>
               )}
             </div>
@@ -257,8 +309,15 @@ export default function SubscriptionClient() {
               <div className="text-sm font-bold text-[#172B25] mt-1">
                 {ent.currentOutletsCount} / {ent.plan?.maxOutlets} Outlets registered
               </div>
-              <div className="text-[11px] text-[#16845B] font-semibold mt-1">
-                {ent.canAddOutlet ? "✓ Can add more outlets" : "Max outlet capacity reached"}
+              <div className="text-[11px] font-semibold mt-1">
+                {ent.canAddOutlet ? (
+                  <span className="text-[#16845B]">✓ Can add more outlets</span>
+                ) : (
+                  <Link href="/checkout?change=true" className="text-amber-700 underline font-bold flex items-center gap-1">
+                    <span>Limit reached • Upgrade Plan</span>
+                    <ArrowUpRight className="h-3 w-3" />
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -268,7 +327,7 @@ export default function SubscriptionClient() {
                 {ent.currentStaffCount} / {ent.plan?.maxUsers} Staff accounts
               </div>
               <div className="text-[11px] text-[#16845B] font-semibold mt-1">
-                {ent.canAddStaff ? "✓ Can add staff members" : "Max staff capacity reached"}
+                {ent.canAddStaff ? "✓ Can add staff members" : "Staff capacity reached"}
               </div>
             </div>
           </CardContent>
@@ -324,7 +383,7 @@ export default function SubscriptionClient() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-2 text-xs">
-                    {features.slice(0, 4).map((f: string) => (
+                    {features.slice(0, 5).map((f: string) => (
                       <div key={f} className="flex items-center gap-2 text-[#718078]">
                         <Check className="h-3.5 w-3.5 text-[#16845B] shrink-0" />
                         <span>{f}</span>
@@ -352,10 +411,10 @@ export default function SubscriptionClient() {
         </div>
       </div>
 
-      {/* Payment History Table */}
+      {/* Payment History Table & Receipt Modal */}
       {sub?.payments && sub.payments.length > 0 && (
         <div className="space-y-3">
-          <h2 className="text-base font-black text-[#172B25]">Subscription Billing History</h2>
+          <h2 className="text-base font-black text-[#172B25]">Subscription Billing History &amp; Receipts</h2>
           <Card className="bg-white border-[#E5EBE7] shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -367,6 +426,7 @@ export default function SubscriptionClient() {
                     <th className="py-3 px-4">Reference</th>
                     <th className="py-3 px-4">Status</th>
                     <th className="py-3 px-4">Date</th>
+                    <th className="py-3 px-4 text-center">Receipt</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5EBE7]">
@@ -402,6 +462,21 @@ export default function SubscriptionClient() {
                           dateStyle: "medium",
                         })}
                       </td>
+                      <td className="py-3.5 px-4 text-center">
+                        {p.status === "COMPLETED" ? (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-xs font-bold text-[#16845B] hover:bg-[#E8F5EE]"
+                            onClick={() => setSelectedInvoice(p)}
+                          >
+                            <FileText className="h-3.5 w-3.5 mr-1" />
+                            Tax Invoice
+                          </Button>
+                        ) : (
+                          <span className="text-[#718078]">—</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -410,7 +485,55 @@ export default function SubscriptionClient() {
           </Card>
         </div>
       )}
+
+      {/* Receipt Modal */}
+      {selectedInvoice && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-[#E5EBE7] shadow-xl max-w-lg w-full p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-[#E5EBE7] pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#16845B]" />
+                <h3 className="font-black text-[#172B25]">SaaS Subscription Tax Receipt</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" className="rounded-xl text-xs font-bold" onClick={() => window.print()}>
+                  <Printer className="h-3.5 w-3.5 mr-1" />
+                  Print
+                </Button>
+                <button
+                  onClick={() => setSelectedInvoice(null)}
+                  className="rounded-full p-1.5 text-[#718078] hover:text-[#172B25] hover:bg-[#F8FAF9]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="text-xs space-y-2">
+              <div className="flex justify-between">
+                <span className="text-[#718078]">Receipt Ref:</span>
+                <strong className="font-mono text-[#172B25]">{selectedInvoice.providerPaymentId || selectedInvoice.id}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#718078]">Date:</span>
+                <span>{new Date(selectedInvoice.createdAt).toLocaleDateString("en-IN", { dateStyle: "long" })}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#718078]">Plan:</span>
+                <strong>{sub?.plan?.name || "Standard"}</strong>
+              </div>
+              <div className="flex justify-between border-t border-[#E5EBE7] pt-2 text-sm font-black">
+                <span>Total Amount Paid (GST Incl):</span>
+                <span className="text-[#16845B]">{formatINR(selectedInvoice.amountPaise)}</span>
+              </div>
+            </div>
+
+            <div className="text-[11px] text-[#718078] bg-[#F8FAF9] p-3 rounded-xl border border-[#E5EBE7]">
+              Supplier: RestroNex Technologies Pvt Ltd • GSTIN: 33AAACR1234F1Z5 • SAC: 998313 (IT Software Licensing)
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

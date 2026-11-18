@@ -2,107 +2,100 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatINR } from "@/lib/money";
-import { Building2, CreditCard, Store, Activity, CheckCircle2, Clock, ShieldCheck } from "lucide-react";
+import {
+  Building2,
+  CreditCard,
+  Store,
+  Activity,
+  CheckCircle2,
+  ShieldCheck,
+  TrendingUp,
+  AlertTriangle,
+  RefreshCw,
+  Users,
+  FileText,
+  RotateCcw,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
-import fs from "fs";
-import path from "path";
+import { calculatePlatformFinancialMetrics } from "@/lib/platform-revenue";
 
 export default async function PlatformOverview() {
-  const [
-    totalTenants,
-    activeSubscriptions,
-    pendingRegistrationsCount,
-    _cancelledSubscriptions,
-    totalOutlets,
-    activeOutlets,
-    totalOrders,
-    plans,
-    recentPending,
-    recentTenants,
-    completedPayments,
-    failedPaymentsCount,
-  ] = await Promise.all([
-    prisma.tenant.count(),
-    prisma.subscription.count({ where: { status: "ACTIVE" } }),
-    prisma.pendingRegistration.count({ where: { status: "PENDING" } }),
-    prisma.subscription.count({ where: { status: "CANCELLED" } }),
-    prisma.outlet.count(),
-    prisma.outlet.count({ where: { status: "ACTIVE" } }),
-    prisma.order.count(),
-    prisma.subscriptionPlan.findMany({
-      include: {
-        subscriptions: {
-          where: { status: "ACTIVE" },
-        },
-      },
-    }),
-    prisma.pendingRegistration.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-    }),
+  const [metrics, recentTenants, recentPayments] = await Promise.all([
+    calculatePlatformFinancialMetrics(),
     prisma.tenant.findMany({
-      take: 5,
+      take: 6,
       orderBy: { createdAt: "desc" },
       include: {
         subscriptions: {
           include: { plan: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
         },
         outlets: true,
       },
     }),
-    prisma.subscriptionPayment.aggregate({
-      where: { status: "COMPLETED" },
-      _sum: { amountPaise: true },
-      _count: true,
+    prisma.subscriptionPayment.findMany({
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      include: {
+        subscription: {
+          include: {
+            tenant: { select: { id: true, name: true, slug: true } },
+            plan: { select: { name: true, slug: true } },
+          },
+        },
+      },
     }),
-    prisma.subscriptionPayment.count({ where: { status: "FAILED" } }),
   ]);
-
-  let mrrPaise = 0;
-  plans.forEach((plan) => {
-    const monthlyRate = plan.priceMonthlyPaise;
-    mrrPaise += plan.subscriptions.length * monthlyRate;
-  });
-
-  let dbSizeBytes = 0;
-  try {
-    const dbPath = path.join(process.cwd(), "prisma", "dev.db");
-    if (fs.existsSync(dbPath)) {
-      const stat = fs.statSync(dbPath);
-      dbSizeBytes = stat.size;
-    }
-  } catch {}
 
   return (
     <div className="space-y-8 text-[#172B25]">
+      {/* Header */}
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7] mb-2">
           <ShieldCheck className="h-3.5 w-3.5 text-[#16845B]" />
-          <span>Platform Owner • Live Infrastructure Metrics</span>
+          <span>RestroNex SaaS Operations &amp; Tenancy Control Center</span>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-black text-[#172B25]">Platform Operations &amp; Tenancy Overview</h1>
+            <h1 className="text-2xl font-black text-[#172B25]">Platform Executive Intelligence</h1>
             <p className="text-sm text-[#718078]">
-              Real-time metrics derived directly from persistent database records • Strict tenant isolation
+              Consolidated real-time SaaS subscription metrics derived directly from verified database records.
             </p>
           </div>
           <div className="flex flex-wrap gap-2 text-xs">
-            <Link href="/platform/subscriptions" className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] transition">
-              Subscriptions &amp; Payments →
+            <Link
+              href="/platform/revenue"
+              className="rounded-full bg-[#16845B] text-white px-4 py-1.5 font-bold hover:bg-[#116B49] shadow-xs transition"
+            >
+              Revenue Analytics →
             </Link>
-            <Link href="/platform/users" className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]">
-              Platform Users
+            <Link
+              href="/platform/subscriptions"
+              className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]"
+            >
+              Subscriptions
             </Link>
-            <Link href="/platform/settings" className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]">
-              System Settings
+            <Link
+              href="/platform/tenants"
+              className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]"
+            >
+              Organizations
+            </Link>
+            <Link
+              href="/platform/audit-logs"
+              className="rounded-full border border-[#E5EBE7] bg-white px-4 py-1.5 font-semibold text-[#172B25] hover:bg-[#F8FAF9]"
+            >
+              Security Audit
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Primary KPI Grid */}
+      {/* Primary KPI Grid: Section 6 Requirements */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total & Active Businesses */}
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
@@ -111,24 +104,62 @@ export default async function PlatformOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-black text-[#172B25]">{totalTenants}</div>
-            <p className="text-xs text-[#718078] mt-1">{activeSubscriptions} active paying subscriptions</p>
+            <div className="text-3xl font-black text-[#172B25]">{metrics.totalRegisteredBusinesses}</div>
+            <div className="mt-2 flex items-center gap-2 text-xs text-[#718078]">
+              <span className="font-semibold text-[#16845B]">{metrics.activeBusinesses} Active</span>
+              <span>•</span>
+              <span className="text-[#D97706]">{metrics.suspendedBusinesses} Suspended</span>
+            </div>
+            <p className="mt-1 text-[11px] text-[#718078]">
+              Total onboarded tenant organizations in platform database.
+            </p>
           </CardContent>
         </Card>
 
+        {/* Active Subscriptions & Distribution */}
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
-              <span>Monthly Recurring Rev (MRR)</span>
-              <CreditCard className="h-4 w-4 text-[#16845B]" />
+              <span>Active Subscriptions</span>
+              <CheckCircle2 className="h-4 w-4 text-[#16845B]" />
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-black text-[#16845B]">{formatINR(mrrPaise)}</div>
-            <p className="text-xs text-[#718078] mt-1">Verified: {formatINR(completedPayments._sum.amountPaise || 0)}</p>
+            <div className="text-3xl font-black text-[#16845B]">{metrics.activeSubscriptions}</div>
+            <div className="mt-2 flex items-center gap-2 text-xs text-[#718078]">
+              <span>{metrics.pastDueSubscriptions} Past-Due</span>
+              <span>•</span>
+              <span className="text-red-600">{metrics.expiredSubscriptions} Expired</span>
+              <span>•</span>
+              <span>{metrics.cancelledSubscriptions} Cancelled</span>
+            </div>
+            <p className="mt-1 text-[11px] text-[#718078]">
+              Paid active restaurant contracts granting full terminal access.
+            </p>
           </CardContent>
         </Card>
 
+        {/* Monthly Recurring Revenue (MRR) */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
+              <span>Monthly Recurring Revenue</span>
+              <TrendingUp className="h-4 w-4 text-[#16845B]" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-black text-[#172B25]">{formatINR(metrics.mrrPaise)}</div>
+            <div className="mt-2 flex items-center gap-2 text-xs text-[#718078]">
+              <span>ARR Run-Rate:</span>
+              <span className="font-bold text-[#172B25]">{formatINR(metrics.arrPaise)}</span>
+            </div>
+            <p className="mt-1 text-[11px] text-[#718078]">
+              Strict MRR from active recurring contracts (Annual plan normalized to 1/12th).
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Active Outlets */}
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
@@ -137,51 +168,100 @@ export default async function PlatformOverview() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-black text-[#172B25]">{activeOutlets}</div>
-            <p className="text-xs text-[#718078] mt-1">{totalOutlets} total across tenants</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-wider text-[#718078] flex items-center justify-between">
-              <span>Pending Registrations</span>
-              <Clock className="h-4 w-4 text-amber-600" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-black text-amber-600">{pendingRegistrationsCount}</div>
-            <p className="text-xs text-[#718078] mt-1">Awaiting checkout / verification</p>
+            <div className="text-3xl font-black text-[#172B25]">{metrics.activeOutlets}</div>
+            <div className="mt-2 flex items-center gap-2 text-xs text-[#718078]">
+              <span>Total Registered:</span>
+              <span className="font-semibold text-[#172B25]">{metrics.totalOutlets}</span>
+            </div>
+            <p className="mt-1 text-[11px] text-[#718078]">
+              Live restaurant branches across all active organizations.
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Plan-Wise Subscriber Breakdown */}
+      {/* Secondary Operational Metrics Grid */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Payment Success Rate */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardContent className="pt-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#718078]">Payment Success</span>
+              <CreditCard className="h-4 w-4 text-[#16845B]" />
+            </div>
+            <div className="mt-2 text-2xl font-black text-[#172B25]">{metrics.paymentSuccessRatePct}%</div>
+            <p className="mt-1 text-xs text-[#718078]">
+              {metrics.successfulPaymentsCount} successful / {metrics.totalPaymentAttempts} total attempts
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Payment Failure Rate */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardContent className="pt-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#718078]">Payment Failure</span>
+              <AlertTriangle className="h-4 w-4 text-red-600" />
+            </div>
+            <div className="mt-2 text-2xl font-black text-red-600">{metrics.paymentFailureRatePct}%</div>
+            <p className="mt-1 text-xs text-[#718078]">
+              {metrics.failedPaymentsCount} payment failures logged via webhooks
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Monthly Churn Rate */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardContent className="pt-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#718078]">Monthly Churn</span>
+              <RotateCcw className="h-4 w-4 text-[#718078]" />
+            </div>
+            <div className="mt-2 text-2xl font-black text-[#172B25]">{metrics.monthlyChurnRatePct}%</div>
+            <p className="mt-1 text-xs text-[#718078]">
+              {metrics.monthlyChurnCount} cancellations / expirations in last 30d
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Total SaaS Revenue & Refunds */}
+        <Card className="bg-white border-[#E5EBE7] shadow-xs">
+          <CardContent className="pt-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#718078]">Total SaaS Collections</span>
+              <Activity className="h-4 w-4 text-[#16845B]" />
+            </div>
+            <div className="mt-2 text-2xl font-black text-[#16845B]">
+              {formatINR(metrics.totalSaaSSubscriptionRevenuePaise)}
+            </div>
+            <p className="mt-1 text-xs text-[#718078]">
+              Refunds: {formatINR(metrics.totalRefundAmountPaise)}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Plan Distribution Breakdown */}
       <Card className="bg-white border-[#E5EBE7] shadow-xs">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base text-[#172B25]">Plan-Wise Subscribers & Quotas</CardTitle>
-            <p className="text-xs text-[#718078] mt-0.5">Configured prices, outlet quotas, and active paying accounts</p>
-          </div>
-          <Link href="/platform/plans" className="text-xs text-[#16845B] hover:underline font-semibold">
-            Edit Plans & Quotas →
-          </Link>
+        <CardHeader className="pb-3 border-b border-[#E5EBE7]">
+          <CardTitle className="text-sm font-black text-[#172B25] flex items-center justify-between">
+            <span>Subscription Plan Distribution &amp; MRR Contribution</span>
+            <span className="text-xs font-normal text-[#718078]">Active paid subscriptions only</span>
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <div className="grid md:grid-cols-3 gap-4">
-            {plans.map((p) => (
-              <div key={p.id} className="p-4 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9]">
+            {Object.entries(metrics.planDistribution).map(([slug, p]) => (
+              <div key={slug} className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] p-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#172B25]">{p.name}</span>
-                  <span className="text-xs font-mono text-[#16845B] font-semibold">{formatINR(p.priceMonthlyPaise)}/mo</span>
+                  <span className="font-bold text-sm text-[#172B25]">{p.name}</span>
+                  <span className="rounded-full bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7] px-2.5 py-0.5 text-xs font-bold">
+                    {p.count} Active
+                  </span>
                 </div>
-                <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-[#172B25]">{p.subscriptions.length}</span>
-                  <span className="text-xs text-[#718078]">active subscribers</span>
-                </div>
-                <div className="mt-2 text-[11px] text-[#718078] flex justify-between">
-                  <span>Max Outlets: {p.maxOutlets}</span>
-                  <span>Max Staff: {p.maxUsers}</span>
+                <div className="mt-3">
+                  <div className="text-xs text-[#718078]">Monthly Revenue Contribution</div>
+                  <div className="text-lg font-black text-[#16845B]">{formatINR(p.mrrPaise)}</div>
                 </div>
               </div>
             ))}
@@ -189,65 +269,95 @@ export default async function PlatformOverview() {
         </CardContent>
       </Card>
 
-      {/* Operational Health & Storage Status */}
+      {/* Recent Organizations & Payments Split */}
       <div className="grid lg:grid-cols-2 gap-6">
+        {/* Recent Organizations */}
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader>
-            <CardTitle className="text-base text-[#172B25] flex items-center gap-2">
-              <Activity className="h-4 w-4 text-[#16845B]" />
-              <span>Operational Health & Storage Monitoring</span>
+          <CardHeader className="pb-3 border-b border-[#E5EBE7] flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-black text-[#172B25] flex items-center gap-2">
+              <Building2 className="h-4 w-4 text-[#16845B]" />
+              <span>Recently Registered Organizations</span>
             </CardTitle>
+            <Link href="/platform/tenants" className="text-xs font-bold text-[#16845B] hover:underline">
+              View All ({metrics.totalRegisteredBusinesses}) →
+            </Link>
           </CardHeader>
-          <CardContent className="space-y-3 text-xs">
-            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
-              <span className="text-[#718078]">Database Engine</span>
-              <span className="font-mono text-[#16845B] font-semibold">PostgreSQL (Supabase Ready)</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
-              <span className="text-[#718078]">Database Size</span>
-              <span className="font-mono text-[#172B25]">{(dbSizeBytes / (1024 * 1024)).toFixed(2)} MB</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
-              <span className="text-[#718078]">Total POS Orders Logged</span>
-              <span className="font-mono text-[#172B25]">{totalOrders} orders</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-[#E5EBE7]">
-              <span className="text-[#718078]">Failed Payments Flagged</span>
-              <span className="font-mono text-amber-600 font-semibold">{failedPaymentsCount}</span>
-            </div>
-            <div className="flex justify-between py-2">
-              <span className="text-[#718078]">Health Check Status</span>
-              <span className="inline-flex items-center gap-1 text-[#16845B] font-bold">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Healthy (/api/health)
-              </span>
-            </div>
+          <CardContent className="pt-4">
+            {recentTenants.length === 0 ? (
+              <p className="text-xs text-[#718078] py-4 text-center">No organizations registered yet.</p>
+            ) : (
+              <div className="divide-y divide-[#E5EBE7] text-xs">
+                {recentTenants.map((t) => {
+                  const sub = t.subscriptions[0];
+                  return (
+                    <div key={t.id} className="py-3 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="font-bold text-[#172B25]">{t.name}</div>
+                        <div className="text-[11px] text-[#718078]">
+                          {t.email} • {t.outlets.length} outlet(s)
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            sub?.status === "ACTIVE"
+                              ? "bg-[#E8F5EE] text-[#16845B]"
+                              : "bg-[#F8FAF9] text-[#718078] border border-[#E5EBE7]"
+                          }`}
+                        >
+                          {sub?.plan?.name || "No Plan"} • {sub?.status || "PENDING"}
+                        </span>
+                        <div className="text-[10px] text-[#718078] mt-1">
+                          {new Date(t.createdAt).toLocaleDateString("en-IN")}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Recent Pending Registrations */}
+        {/* Recent SaaS Payments */}
         <Card className="bg-white border-[#E5EBE7] shadow-xs">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base text-[#172B25]">Recent Customer Onboarding Pipeline</CardTitle>
-            <span className="text-xs text-[#718078]">{recentPending.length} in funnel</span>
+          <CardHeader className="pb-3 border-b border-[#E5EBE7] flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-black text-[#172B25] flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-[#16845B]" />
+              <span>Recent SaaS Subscription Payments</span>
+            </CardTitle>
+            <Link href="/platform/payments" className="text-xs font-bold text-[#16845B] hover:underline">
+              Payments Ledger →
+            </Link>
           </CardHeader>
-          <CardContent>
-            {recentPending.length === 0 ? (
-              <p className="text-xs text-[#718078] py-6 text-center">No pending registrations at the moment.</p>
+          <CardContent className="pt-4">
+            {recentPayments.length === 0 ? (
+              <p className="text-xs text-[#718078] py-4 text-center">No subscription payments logged yet.</p>
             ) : (
-              <div className="space-y-2.5">
-                {recentPending.map((r) => (
-                  <div key={r.id} className="flex items-center justify-between p-3 rounded-lg border border-[#E5EBE7] bg-[#F8FAF9] text-xs">
+              <div className="divide-y divide-[#E5EBE7] text-xs">
+                {recentPayments.map((p) => (
+                  <div key={p.id} className="py-3 flex items-center justify-between gap-3">
                     <div>
-                      <div className="font-bold text-[#172B25]">{r.businessName}</div>
-                      <div className="text-[11px] text-[#718078]">{r.ownerName} • {r.email}</div>
+                      <div className="font-bold text-[#172B25]">
+                        {p.subscription.tenant.name}
+                      </div>
+                      <div className="text-[11px] text-[#718078]">
+                        {p.subscription.plan.name} • Ref: {p.providerPaymentId?.slice(0, 16) || p.id.slice(0, 12)}
+                      </div>
                     </div>
                     <div className="text-right">
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 uppercase">
-                        {r.planSlug} • {r.status}
+                      <div className="font-black text-[#172B25]">{formatINR(p.amountPaise)}</div>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                          p.status === "COMPLETED"
+                            ? "bg-[#E8F5EE] text-[#16845B]"
+                            : p.status === "REFUNDED"
+                            ? "bg-amber-100 text-amber-800"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {p.status}
                       </span>
-                      <div className="text-[10px] text-[#718078] mt-0.5">
-                        {new Date(r.createdAt).toLocaleDateString()}
-                      </div>
                     </div>
                   </div>
                 ))}
@@ -256,47 +366,6 @@ export default async function PlatformOverview() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Registered Tenants List */}
-      <Card className="bg-white border-[#E5EBE7] shadow-xs">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-base text-[#172B25]">Registered Restaurant Tenants</CardTitle>
-            <p className="text-xs text-[#718078] mt-0.5">Isolated tenant workspaces with configured outlets & active subscriptions</p>
-          </div>
-          <Link href="/platform/tenants" className="text-xs text-[#16845B] hover:underline font-semibold">
-            View All Tenants →
-          </Link>
-        </CardHeader>
-        <CardContent>
-          <div className="divide-y divide-[#E5EBE7] text-xs">
-            {recentTenants.map((t) => {
-              const activeSub = t.subscriptions.find((s) => s.status === "ACTIVE");
-              return (
-                <div key={t.id} className="py-3.5 flex items-center justify-between first:pt-0 last:pb-0">
-                  <div>
-                    <div className="font-bold text-[#172B25] text-sm">{t.name}</div>
-                    <div className="text-[#718078] text-[11px] mt-0.5">
-                      Slug: <span className="font-mono text-[#172B25]">{t.slug}</span> • {t.businessType} • {t.outlets.length} outlet(s)
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    {activeSub ? (
-                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-bold bg-[#E8F5EE] text-[#16845B] border border-[#E5EBE7]">
-                        {activeSub.plan.name} Plan (Active)
-                      </span>
-                    ) : (
-                      <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-[#F8FAF9] text-[#718078] border border-[#E5EBE7]">
-                        No Active Plan
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

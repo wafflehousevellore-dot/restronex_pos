@@ -6,6 +6,12 @@ import {
   getPlatformMfaCookie,
   verifyPlatformMfaSessionToken,
 } from "./platform-totp";
+import {
+  ALL_PLATFORM_ROLES,
+  hasPlatformPermission,
+  PlatformPermission,
+  PlatformRole,
+} from "./platform-roles";
 
 export const PRIMARY_PLATFORM_OWNER_EMAIL = "wafflehousevellore@gmail.com";
 
@@ -17,17 +23,19 @@ export type PlatformAuthFailureReason =
   | "MFA_REQUIRED"
   | "REVERIFICATION_REQUIRED";
 
+export interface PlatformAdminUser {
+  id: string;
+  email: string;
+  name: string;
+  role: PlatformRole;
+  isPlatformAdmin: boolean;
+  clerkId: string;
+}
+
 export type PlatformOwnerAuthResult =
   | {
       authorized: true;
-      user: {
-        id: string;
-        email: string;
-        name: string;
-        role: string;
-        isPlatformAdmin: boolean;
-        clerkId: string;
-      };
+      user: PlatformAdminUser;
       mfaEnrolled: boolean;
       mfaVerifiedInSession: boolean;
       totpEnabled: boolean;
@@ -47,14 +55,7 @@ export type PlatformOwnerAuthResult =
 export type PlatformOwnerIdentityResult =
   | {
       ok: true;
-      dbUser: {
-        id: string;
-        email: string;
-        name: string;
-        role: string;
-        isPlatformAdmin: boolean;
-        clerkId: string;
-      };
+      dbUser: PlatformAdminUser;
       clerkUserId: string;
       sessionId: string;
       clerkMfaEnrolled: boolean;
@@ -70,9 +71,10 @@ export type PlatformOwnerIdentityResult =
     };
 
 /**
- * Verifies primary Clerk authentication, verified owner email, and DB PLATFORM_OWNER privileges.
+ * Verifies Clerk authentication and platform-admin privileges.
+ * Strictly guarantees that PLATFORM_OWNER role is restricted to verified wafflehousevellore@gmail.com.
  */
-export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerIdentityResult> {
+export async function verifyPlatformAdminClerkIdentity(): Promise<PlatformOwnerIdentityResult> {
   try {
     const { userId: clerkUserId, sessionId, factorVerificationAge } = await auth();
     if (!clerkUserId) {
@@ -104,13 +106,18 @@ export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerI
       where: { clerkId: clerkUserId },
     });
 
-    if (
-      !dbUser ||
-      !dbUser.isPlatformAdmin ||
-      dbUser.role !== "PLATFORM_OWNER" ||
-      dbUser.email.toLowerCase() !== PRIMARY_PLATFORM_OWNER_EMAIL ||
-      verifiedEmail !== PRIMARY_PLATFORM_OWNER_EMAIL
-    ) {
+    const isRecognizedPlatformRole =
+      dbUser &&
+      dbUser.isPlatformAdmin &&
+      ALL_PLATFORM_ROLES.includes(dbUser.role as PlatformRole);
+
+    const isPlatformOwnerRole = dbUser?.role === "PLATFORM_OWNER";
+    const isOwnerEmailMatch =
+      dbUser?.email.toLowerCase() === PRIMARY_PLATFORM_OWNER_EMAIL &&
+      verifiedEmail === PRIMARY_PLATFORM_OWNER_EMAIL;
+
+    // Platform Owner is strictly restricted to wafflehousevellore@gmail.com
+    if (!isRecognizedPlatformRole || (isPlatformOwnerRole && !isOwnerEmailMatch)) {
       if (dbUser) {
         await prisma.auditLog
           .create({
@@ -122,6 +129,8 @@ export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerI
               metadataJson: JSON.stringify({
                 attemptedEmail: verifiedEmail || dbUser.email,
                 clerkUserId,
+                role: dbUser.role,
+                isPlatformAdmin: dbUser.isPlatformAdmin,
                 timestamp: new Date().toISOString(),
               }),
             },
@@ -133,7 +142,7 @@ export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerI
         ok: false,
         reason: "FORBIDDEN",
         status: 403,
-        message: "Forbidden: Restricted strictly to the verified RestroNex Platform Owner.",
+        message: "Forbidden: Restricted strictly to authorized RestroNex Platform Administrators.",
         userId: dbUser?.id,
       };
     }
@@ -157,7 +166,7 @@ export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerI
         id: dbUser.id,
         email: dbUser.email,
         name: dbUser.name,
-        role: dbUser.role,
+        role: dbUser.role as PlatformRole,
         isPlatformAdmin: dbUser.isPlatformAdmin,
         clerkId: clerkUserId,
       },
@@ -178,13 +187,15 @@ export async function verifyPlatformOwnerClerkIdentity(): Promise<PlatformOwnerI
   }
 }
 
+// Backward compatibility alias
+export const verifyPlatformOwnerClerkIdentity = verifyPlatformAdminClerkIdentity;
+
 /**
- * Verifies Platform Owner authorization using Clerk session, verified primary email,
- * DB role === PLATFORM_OWNER & isPlatformAdmin === true, and free RestroNex TOTP / Clerk MFA state.
+ * Verifies Platform Admin session, checking Clerk identity and 2FA/MFA.
  */
-export async function getPlatformOwnerSession(): Promise<PlatformOwnerAuthResult> {
+export async function getPlatformAdminSession(): Promise<PlatformOwnerAuthResult> {
   try {
-    const idResult = await verifyPlatformOwnerClerkIdentity();
+    const idResult = await verifyPlatformAdminClerkIdentity();
     if ("reason" in idResult) {
       return {
         authorized: false,
@@ -232,7 +243,6 @@ export async function getPlatformOwnerSession(): Promise<PlatformOwnerAuthResult
         };
       }
     } else if (factor1Age < 0 || factor1Age > 480) {
-      // Before TOTP 2FA is enrolled, require a fresh Clerk first-factor verification (password / email OTP)
       return {
         authorized: false,
         reason: "REVERIFICATION_REQUIRED",
@@ -264,11 +274,14 @@ export async function getPlatformOwnerSession(): Promise<PlatformOwnerAuthResult
   }
 }
 
+// Backward compatibility alias
+export const getPlatformOwnerSession = getPlatformAdminSession;
+
 /**
- * Helper for /api/platform/* and sensitive platform admin API routes.
+ * Server-side API guard with granular platform capability checking.
  */
-export async function requirePlatformOwnerApi() {
-  const result = await getPlatformOwnerSession();
+export async function requirePlatformPermissionApi(requiredPermission?: PlatformPermission) {
+  const result = await getPlatformAdminSession();
   if (!result.authorized && "reason" in result) {
     return {
       ok: false as const,
@@ -287,6 +300,38 @@ export async function requirePlatformOwnerApi() {
       ),
     };
   }
+
+  // Check granular capability if specified
+  if (requiredPermission && !hasPlatformPermission(result.user.role, requiredPermission)) {
+    await prisma.auditLog
+      .create({
+        data: {
+          userId: result.user.id,
+          action: "PLATFORM_PERMISSION_DENIED",
+          entity: "PlatformPermission",
+          metadataJson: JSON.stringify({
+            userEmail: result.user.email,
+            userRole: result.user.role,
+            requiredPermission,
+            timestamp: new Date().toISOString(),
+          }),
+        },
+      })
+      .catch(() => {});
+
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        {
+          error: `Forbidden: Your platform role '${result.user.role}' lacks capability '${requiredPermission}'.`,
+          code: "PLATFORM_FORBIDDEN",
+          requiredPermission,
+        },
+        { status: 403 }
+      ),
+    };
+  }
+
   return {
     ok: true as const,
     auth: result,
@@ -294,7 +339,28 @@ export async function requirePlatformOwnerApi() {
 }
 
 /**
- * Records sensitive Platform Owner administrative operations in immutable AuditLog.
+ * Helper strictly requiring PLATFORM_OWNER role.
+ */
+export async function requirePlatformOwnerApi() {
+  const guard = await requirePlatformPermissionApi();
+  if (!guard.ok) return guard;
+  if (guard.auth.user.role !== "PLATFORM_OWNER") {
+    return {
+      ok: false as const,
+      response: NextResponse.json(
+        {
+          error: "Forbidden: This action requires primary Platform Owner privileges.",
+          code: "PLATFORM_OWNER_REQUIRED",
+        },
+        { status: 403 }
+      ),
+    };
+  }
+  return guard;
+}
+
+/**
+ * Records sensitive Platform administrative operations in immutable AuditLog.
  */
 export async function logPlatformAdminAction(params: {
   userId: string;
@@ -314,7 +380,6 @@ export async function logPlatformAdminAction(params: {
         entityId: params.entityId || null,
         metadataJson: JSON.stringify({
           ...(params.metadata || {}),
-          actorRole: "PLATFORM_OWNER",
           recordedAt: new Date().toISOString(),
         }),
       },
