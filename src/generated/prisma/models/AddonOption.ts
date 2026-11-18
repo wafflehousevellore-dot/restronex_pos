@@ -263,6 +263,7 @@ export type AddonOptionWhereInput = {
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   addonGroup?: Prisma.XOR<Prisma.AddonGroupScalarRelationFilter, Prisma.AddonGroupWhereInput>
   orderItemAddons?: Prisma.OrderItemAddonListRelationFilter
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingListRelationFilter
 }
 
 export type AddonOptionOrderByWithRelationInput = {
@@ -279,6 +280,7 @@ export type AddonOptionOrderByWithRelationInput = {
   tenant?: Prisma.TenantOrderByWithRelationInput
   addonGroup?: Prisma.AddonGroupOrderByWithRelationInput
   orderItemAddons?: Prisma.OrderItemAddonOrderByRelationAggregateInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingOrderByRelationAggregateInput
 }
 
 export type AddonOptionWhereUniqueInput = Prisma.AtLeast<{
@@ -298,6 +300,7 @@ export type AddonOptionWhereUniqueInput = Prisma.AtLeast<{
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   addonGroup?: Prisma.XOR<Prisma.AddonGroupScalarRelationFilter, Prisma.AddonGroupWhereInput>
   orderItemAddons?: Prisma.OrderItemAddonListRelationFilter
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingListRelationFilter
 }, "id">
 
 export type AddonOptionOrderByWithAggregationInput = {
@@ -346,6 +349,7 @@ export type AddonOptionCreateInput = {
   tenant: Prisma.TenantCreateNestedOneWithoutAddonOptionsInput
   addonGroup: Prisma.AddonGroupCreateNestedOneWithoutOptionsInput
   orderItemAddons?: Prisma.OrderItemAddonCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionUncheckedCreateInput = {
@@ -360,6 +364,7 @@ export type AddonOptionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionUpdateInput = {
@@ -374,6 +379,7 @@ export type AddonOptionUpdateInput = {
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAddonOptionsNestedInput
   addonGroup?: Prisma.AddonGroupUpdateOneRequiredWithoutOptionsNestedInput
   orderItemAddons?: Prisma.OrderItemAddonUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateInput = {
@@ -388,6 +394,7 @@ export type AddonOptionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionCreateManyInput = {
@@ -591,6 +598,22 @@ export type AddonOptionUpdateOneWithoutOrderItemAddonsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AddonOptionUpdateToOneWithWhereWithoutOrderItemAddonsInput, Prisma.AddonOptionUpdateWithoutOrderItemAddonsInput>, Prisma.AddonOptionUncheckedUpdateWithoutOrderItemAddonsInput>
 }
 
+export type AddonOptionCreateNestedOneWithoutAggregatorMenuMappingsInput = {
+  create?: Prisma.XOR<Prisma.AddonOptionCreateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedCreateWithoutAggregatorMenuMappingsInput>
+  connectOrCreate?: Prisma.AddonOptionCreateOrConnectWithoutAggregatorMenuMappingsInput
+  connect?: Prisma.AddonOptionWhereUniqueInput
+}
+
+export type AddonOptionUpdateOneWithoutAggregatorMenuMappingsNestedInput = {
+  create?: Prisma.XOR<Prisma.AddonOptionCreateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedCreateWithoutAggregatorMenuMappingsInput>
+  connectOrCreate?: Prisma.AddonOptionCreateOrConnectWithoutAggregatorMenuMappingsInput
+  upsert?: Prisma.AddonOptionUpsertWithoutAggregatorMenuMappingsInput
+  disconnect?: Prisma.AddonOptionWhereInput | boolean
+  delete?: Prisma.AddonOptionWhereInput | boolean
+  connect?: Prisma.AddonOptionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AddonOptionUpdateToOneWithWhereWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUpdateWithoutAggregatorMenuMappingsInput>, Prisma.AddonOptionUncheckedUpdateWithoutAggregatorMenuMappingsInput>
+}
+
 export type AddonOptionCreateWithoutTenantInput = {
   id?: string
   name: string
@@ -602,6 +625,7 @@ export type AddonOptionCreateWithoutTenantInput = {
   updatedAt?: Date | string
   addonGroup: Prisma.AddonGroupCreateNestedOneWithoutOptionsInput
   orderItemAddons?: Prisma.OrderItemAddonCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionUncheckedCreateWithoutTenantInput = {
@@ -615,6 +639,7 @@ export type AddonOptionUncheckedCreateWithoutTenantInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionCreateOrConnectWithoutTenantInput = {
@@ -670,6 +695,7 @@ export type AddonOptionCreateWithoutAddonGroupInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAddonOptionsInput
   orderItemAddons?: Prisma.OrderItemAddonCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionUncheckedCreateWithoutAddonGroupInput = {
@@ -683,6 +709,7 @@ export type AddonOptionUncheckedCreateWithoutAddonGroupInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedCreateNestedManyWithoutAddonOptionInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionCreateOrConnectWithoutAddonGroupInput = {
@@ -722,6 +749,7 @@ export type AddonOptionCreateWithoutOrderItemAddonsInput = {
   updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutAddonOptionsInput
   addonGroup: Prisma.AddonGroupCreateNestedOneWithoutOptionsInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionUncheckedCreateWithoutOrderItemAddonsInput = {
@@ -735,6 +763,7 @@ export type AddonOptionUncheckedCreateWithoutOrderItemAddonsInput = {
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutAddonOptionInput
 }
 
 export type AddonOptionCreateOrConnectWithoutOrderItemAddonsInput = {
@@ -764,6 +793,7 @@ export type AddonOptionUpdateWithoutOrderItemAddonsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAddonOptionsNestedInput
   addonGroup?: Prisma.AddonGroupUpdateOneRequiredWithoutOptionsNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateWithoutOrderItemAddonsInput = {
@@ -777,6 +807,79 @@ export type AddonOptionUncheckedUpdateWithoutOrderItemAddonsInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutAddonOptionNestedInput
+}
+
+export type AddonOptionCreateWithoutAggregatorMenuMappingsInput = {
+  id?: string
+  name: string
+  pricePaise?: number
+  isDefault?: boolean
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutAddonOptionsInput
+  addonGroup: Prisma.AddonGroupCreateNestedOneWithoutOptionsInput
+  orderItemAddons?: Prisma.OrderItemAddonCreateNestedManyWithoutAddonOptionInput
+}
+
+export type AddonOptionUncheckedCreateWithoutAggregatorMenuMappingsInput = {
+  id?: string
+  tenantId: string
+  addonGroupId: string
+  name: string
+  pricePaise?: number
+  isDefault?: boolean
+  isActive?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  orderItemAddons?: Prisma.OrderItemAddonUncheckedCreateNestedManyWithoutAddonOptionInput
+}
+
+export type AddonOptionCreateOrConnectWithoutAggregatorMenuMappingsInput = {
+  where: Prisma.AddonOptionWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddonOptionCreateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedCreateWithoutAggregatorMenuMappingsInput>
+}
+
+export type AddonOptionUpsertWithoutAggregatorMenuMappingsInput = {
+  update: Prisma.XOR<Prisma.AddonOptionUpdateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedUpdateWithoutAggregatorMenuMappingsInput>
+  create: Prisma.XOR<Prisma.AddonOptionCreateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedCreateWithoutAggregatorMenuMappingsInput>
+  where?: Prisma.AddonOptionWhereInput
+}
+
+export type AddonOptionUpdateToOneWithWhereWithoutAggregatorMenuMappingsInput = {
+  where?: Prisma.AddonOptionWhereInput
+  data: Prisma.XOR<Prisma.AddonOptionUpdateWithoutAggregatorMenuMappingsInput, Prisma.AddonOptionUncheckedUpdateWithoutAggregatorMenuMappingsInput>
+}
+
+export type AddonOptionUpdateWithoutAggregatorMenuMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  pricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutAddonOptionsNestedInput
+  addonGroup?: Prisma.AddonGroupUpdateOneRequiredWithoutOptionsNestedInput
+  orderItemAddons?: Prisma.OrderItemAddonUpdateManyWithoutAddonOptionNestedInput
+}
+
+export type AddonOptionUncheckedUpdateWithoutAggregatorMenuMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  addonGroupId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  pricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orderItemAddons?: Prisma.OrderItemAddonUncheckedUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionCreateManyTenantInput = {
@@ -802,6 +905,7 @@ export type AddonOptionUpdateWithoutTenantInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   addonGroup?: Prisma.AddonGroupUpdateOneRequiredWithoutOptionsNestedInput
   orderItemAddons?: Prisma.OrderItemAddonUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateWithoutTenantInput = {
@@ -815,6 +919,7 @@ export type AddonOptionUncheckedUpdateWithoutTenantInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateManyWithoutTenantInput = {
@@ -852,6 +957,7 @@ export type AddonOptionUpdateWithoutAddonGroupInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutAddonOptionsNestedInput
   orderItemAddons?: Prisma.OrderItemAddonUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateWithoutAddonGroupInput = {
@@ -865,6 +971,7 @@ export type AddonOptionUncheckedUpdateWithoutAddonGroupInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItemAddons?: Prisma.OrderItemAddonUncheckedUpdateManyWithoutAddonOptionNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutAddonOptionNestedInput
 }
 
 export type AddonOptionUncheckedUpdateManyWithoutAddonGroupInput = {
@@ -886,10 +993,12 @@ export type AddonOptionUncheckedUpdateManyWithoutAddonGroupInput = {
 
 export type AddonOptionCountOutputType = {
   orderItemAddons: number
+  aggregatorMenuMappings: number
 }
 
 export type AddonOptionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   orderItemAddons?: boolean | AddonOptionCountOutputTypeCountOrderItemAddonsArgs
+  aggregatorMenuMappings?: boolean | AddonOptionCountOutputTypeCountAggregatorMenuMappingsArgs
 }
 
 /**
@@ -909,6 +1018,13 @@ export type AddonOptionCountOutputTypeCountOrderItemAddonsArgs<ExtArgs extends r
   where?: Prisma.OrderItemAddonWhereInput
 }
 
+/**
+ * AddonOptionCountOutputType without action
+ */
+export type AddonOptionCountOutputTypeCountAggregatorMenuMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AggregatorMenuMappingWhereInput
+}
+
 
 export type AddonOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -924,6 +1040,7 @@ export type AddonOptionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   addonGroup?: boolean | Prisma.AddonGroupDefaultArgs<ExtArgs>
   orderItemAddons?: boolean | Prisma.AddonOption$orderItemAddonsArgs<ExtArgs>
+  aggregatorMenuMappings?: boolean | Prisma.AddonOption$aggregatorMenuMappingsArgs<ExtArgs>
   _count?: boolean | Prisma.AddonOptionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["addonOption"]>
 
@@ -975,6 +1092,7 @@ export type AddonOptionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   addonGroup?: boolean | Prisma.AddonGroupDefaultArgs<ExtArgs>
   orderItemAddons?: boolean | Prisma.AddonOption$orderItemAddonsArgs<ExtArgs>
+  aggregatorMenuMappings?: boolean | Prisma.AddonOption$aggregatorMenuMappingsArgs<ExtArgs>
   _count?: boolean | Prisma.AddonOptionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AddonOptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -992,6 +1110,7 @@ export type $AddonOptionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     tenant: Prisma.$TenantPayload<ExtArgs>
     addonGroup: Prisma.$AddonGroupPayload<ExtArgs>
     orderItemAddons: Prisma.$OrderItemAddonPayload<ExtArgs>[]
+    aggregatorMenuMappings: Prisma.$AggregatorMenuMappingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1401,6 +1520,7 @@ export interface Prisma__AddonOptionClient<T, Null = never, ExtArgs extends runt
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   addonGroup<T extends Prisma.AddonGroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddonGroupDefaultArgs<ExtArgs>>): Prisma.Prisma__AddonGroupClient<runtime.Types.Result.GetResult<Prisma.$AddonGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   orderItemAddons<T extends Prisma.AddonOption$orderItemAddonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddonOption$orderItemAddonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemAddonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aggregatorMenuMappings<T extends Prisma.AddonOption$aggregatorMenuMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddonOption$aggregatorMenuMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorMenuMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1862,6 +1982,30 @@ export type AddonOption$orderItemAddonsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.OrderItemAddonScalarFieldEnum | Prisma.OrderItemAddonScalarFieldEnum[]
+}
+
+/**
+ * AddonOption.aggregatorMenuMappings
+ */
+export type AddonOption$aggregatorMenuMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AggregatorMenuMapping
+   */
+  select?: Prisma.AggregatorMenuMappingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AggregatorMenuMapping
+   */
+  omit?: Prisma.AggregatorMenuMappingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AggregatorMenuMappingInclude<ExtArgs> | null
+  where?: Prisma.AggregatorMenuMappingWhereInput
+  orderBy?: Prisma.AggregatorMenuMappingOrderByWithRelationInput | Prisma.AggregatorMenuMappingOrderByWithRelationInput[]
+  cursor?: Prisma.AggregatorMenuMappingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AggregatorMenuMappingScalarFieldEnum | Prisma.AggregatorMenuMappingScalarFieldEnum[]
 }
 
 /**

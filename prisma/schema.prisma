@@ -102,6 +102,12 @@ model Tenant {
   productAddonGroups ProductAddonGroup[]
   serviceActivations OrganizationServiceActivation[]
   serviceActivationEvents ServiceActivationEvent[]
+  aggregatorConnections AggregatorConnection[]
+  aggregatorOutletMappings AggregatorOutletMapping[]
+  aggregatorMenuMappings AggregatorMenuMapping[]
+  aggregatorOrderReferences AggregatorOrderReference[]
+  aggregatorSyncJobs AggregatorSyncJob[]
+  aggregatorExceptionQueues AggregatorExceptionQueue[]
 }
 
 model Membership {
@@ -155,6 +161,8 @@ model Outlet {
   qrSessions  QrOrderingSession[]
   whatsAppConfig OutletWhatsAppConfig?
   productAddonGroups ProductAddonGroup[]
+  aggregatorOutletMappings AggregatorOutletMapping[]
+  aggregatorOrderReferences AggregatorOrderReference[]
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -322,6 +330,7 @@ model MenuItem {
   orderItems  OrderItem[]
   recipe      Recipe?
   addonLinks  ProductAddonGroup[]
+  aggregatorMenuMappings AggregatorMenuMapping[]
   @@index([tenantId])
   @@index([categoryId])
   @@index([tenantId, isActive])
@@ -382,6 +391,7 @@ model AddonOption {
   tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   addonGroup      AddonGroup       @relation(fields: [addonGroupId], references: [id], onDelete: Cascade)
   orderItemAddons OrderItemAddon[]
+  aggregatorMenuMappings AggregatorMenuMapping[]
 
   @@index([tenantId])
   @@index([addonGroupId])
@@ -496,6 +506,7 @@ model Order {
   printJobs   PrintJob[]
   whatsAppLogs WhatsAppDeliveryLog[]
   whatsAppQueue WhatsAppMessageQueue[]
+  aggregatorReference AggregatorOrderReference?
   @@unique([tenantId, orderNumber])
   @@unique([tenantId, idempotencyKey])
   @@index([tenantId, outletId])
@@ -1238,6 +1249,180 @@ model ServiceActivationEvent {
 
   @@index([tenantId, createdAt])
 }
+
+// ============================================================================
+// AGGREGATOR INTEGRATION MODELS (Swiggy & Zomato - Petpooja Architecture)
+// ============================================================================
+
+model AggregatorConnection {
+  id                   String    @id @default(cuid())
+  tenantId             String
+  provider             String    // "SWIGGY" | "ZOMATO"
+  status               String    @default("NOT_CONNECTED") // "NOT_CONNECTED" | "PENDING_APPROVAL" | "CONFIG_REQUIRED" | "CONNECTED" | "SYNC_WARNING" | "DISCONNECTED"
+  credentialsEncrypted String?   @db.Text
+  testMode             Boolean   @default(true)
+  autoAccept           Boolean   @default(true)
+  defaultPrepMinutes   Int       @default(15)
+  pricingStrategy      String    @default("MASTER_EQUAL") // "MASTER_EQUAL" | "PERCENTAGE_HIKE" | "FIXED_HIKE" | "CUSTOM_MAPPING"
+  priceHikeValue       Float     @default(0) // e.g. 15 for 15%
+  lastSyncAt           DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  tenant               Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider])
+  @@index([tenantId])
+  @@index([provider, status])
+}
+
+model AggregatorOutletMapping {
+  id                  String    @id @default(cuid())
+  tenantId            String
+  outletId            String
+  provider            String    // "SWIGGY" | "ZOMATO"
+  providerStoreId     String    // External Restaurant ID
+  providerStoreName   String?
+  isOnline            Boolean   @default(false)
+  isRushMode          Boolean   @default(false)
+  autoOfflineOnClose  Boolean   @default(true)
+  defaultStationId    String?
+  posBillPrinting     Boolean   @default(true)
+  kotPrinting         Boolean   @default(true)
+  notificationAudio   Boolean   @default(true)
+  lastHeartbeatAt     DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  tenant              Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet              Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider, providerStoreId])
+  @@unique([outletId, provider])
+  @@index([tenantId, outletId])
+  @@index([provider, providerStoreId])
+}
+
+model AggregatorMenuMapping {
+  id               String       @id @default(cuid())
+  tenantId         String
+  provider         String       // "SWIGGY" | "ZOMATO"
+  menuItemId       String?
+  addonOptionId    String?
+  providerItemId   String       // External Item ID
+  providerItemName String
+  categoryName     String?
+  pricePaise       Int
+  isAvailable      Boolean      @default(true)
+  foodType         String       @default("VEG") // "VEG" | "NON_VEG" | "EGG"
+  lastSyncedAt     DateTime?
+  syncStatus       String       @default("SYNCED") // "SYNCED" | "PENDING" | "FAILED"
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  tenant           Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  menuItem         MenuItem?    @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  addonOption      AddonOption? @relation(fields: [addonOptionId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider, providerItemId])
+  @@index([tenantId, provider, menuItemId])
+}
+
+model AggregatorOrderReference {
+  id                     String    @id @default(cuid())
+  tenantId               String
+  outletId               String
+  orderId                String    @unique
+  provider               String    // "SWIGGY" | "ZOMATO"
+  providerOrderId        String    // External Order ID (e.g. SWG-849202)
+  displayOrderId         String?   // Short reference (e.g. #9202)
+  providerStoreId        String
+  customerName           String?
+  customerMaskedPhone    String?
+  deliveryAddressMasked  String?
+  orderStatus            String    // "PLACED" | "ACCEPTED" | "PREPARING" | "READY_FOR_PICKUP" | "DISPATCHED" | "DELIVERED" | "CANCELLED"
+  prepTimeMinutes        Int       @default(15)
+  rawPayloadJson         String?   @db.Text
+  riderName              String?
+  riderPhone             String?
+  riderStatus            String?   // "ASSIGNED" | "ARRIVED" | "PICKED_UP"
+  itemCount              Int       @default(1)
+  grossAmountPaise       Int       @default(0)
+  discountPaise          Int       @default(0)
+  deliveryFeePaise       Int       @default(0)
+  taxesPaise             Int       @default(0)
+  netPayoutPaise         Int       @default(0)
+  commissionPaise        Int       @default(0)
+  cancelReason           String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  tenant                 Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet                 Outlet    @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  order                  Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, provider, providerOrderId])
+  @@index([tenantId, provider, createdAt])
+  @@index([outletId, orderStatus])
+}
+
+model AggregatorWebhookEvent {
+  id           String    @id @default(cuid())
+  tenantId     String?
+  provider     String    // "SWIGGY" | "ZOMATO"
+  eventId      String    // Unique webhook delivery ID
+  eventType    String    // "ORDER_PLACED" | "ORDER_STATUS_UPDATE" | "RIDER_UPDATE" | "ORDER_CANCELLED" | "STORE_STATUS"
+  status       String    @default("RECEIVED") // "RECEIVED" | "PROCESSED" | "FAILED" | "IGNORED"
+  payloadJson  String    @db.Text
+  errorMessage String?
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@unique([provider, eventId])
+  @@index([provider, eventType, status])
+  @@index([createdAt])
+}
+
+model AggregatorSyncJob {
+  id           String    @id @default(cuid())
+  tenantId     String
+  outletId     String?
+  provider     String    // "SWIGGY" | "ZOMATO"
+  jobType      String    // "MENU_PUSH" | "AVAILABILITY_UPDATE" | "STORE_STATUS" | "PRICE_UPDATE"
+  status       String    @default("PENDING") // "PENDING" | "IN_PROGRESS" | "SUCCESS" | "FAILED"
+  payloadJson  String?   @db.Text
+  responseJson String?   @db.Text
+  errorLog     String?   @db.Text
+  retryCount   Int       @default(0)
+  nextRetryAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, provider, status])
+  @@index([status, nextRetryAt])
+}
+
+model AggregatorExceptionQueue {
+  id              String    @id @default(cuid())
+  tenantId        String
+  outletId        String?
+  provider        String    // "SWIGGY" | "ZOMATO"
+  externalOrderId String?
+  errorType       String    // "ITEM_UNMAPPED" | "OUTLET_UNMAPPED" | "PRICE_MISMATCH" | "INVENTORY_DEPLETED" | "PRINT_FAILURE"
+  reason          String
+  payloadJson     String    @db.Text
+  isResolved      Boolean   @default(false)
+  resolutionNotes String?
+  resolvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, provider, isResolved])
+}
+
 
 
 

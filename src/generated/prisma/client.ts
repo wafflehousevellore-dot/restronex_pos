@@ -361,3 +361,38 @@ export type OrganizationServiceActivation = Prisma.OrganizationServiceActivation
  * 
  */
 export type ServiceActivationEvent = Prisma.ServiceActivationEventModel
+/**
+ * Model AggregatorConnection
+ * 
+ */
+export type AggregatorConnection = Prisma.AggregatorConnectionModel
+/**
+ * Model AggregatorOutletMapping
+ * 
+ */
+export type AggregatorOutletMapping = Prisma.AggregatorOutletMappingModel
+/**
+ * Model AggregatorMenuMapping
+ * 
+ */
+export type AggregatorMenuMapping = Prisma.AggregatorMenuMappingModel
+/**
+ * Model AggregatorOrderReference
+ * 
+ */
+export type AggregatorOrderReference = Prisma.AggregatorOrderReferenceModel
+/**
+ * Model AggregatorWebhookEvent
+ * 
+ */
+export type AggregatorWebhookEvent = Prisma.AggregatorWebhookEventModel
+/**
+ * Model AggregatorSyncJob
+ * 
+ */
+export type AggregatorSyncJob = Prisma.AggregatorSyncJobModel
+/**
+ * Model AggregatorExceptionQueue
+ * 
+ */
+export type AggregatorExceptionQueue = Prisma.AggregatorExceptionQueueModel

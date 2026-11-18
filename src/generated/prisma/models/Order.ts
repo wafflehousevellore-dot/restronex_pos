@@ -468,6 +468,7 @@ export type OrderWhereInput = {
   printJobs?: Prisma.PrintJobListRelationFilter
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
   whatsAppQueue?: Prisma.WhatsAppMessageQueueListRelationFilter
+  aggregatorReference?: Prisma.XOR<Prisma.AggregatorOrderReferenceNullableScalarRelationFilter, Prisma.AggregatorOrderReferenceWhereInput> | null
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -516,6 +517,7 @@ export type OrderOrderByWithRelationInput = {
   printJobs?: Prisma.PrintJobOrderByRelationAggregateInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogOrderByRelationAggregateInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueOrderByRelationAggregateInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceOrderByWithRelationInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -569,6 +571,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   printJobs?: Prisma.PrintJobListRelationFilter
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogListRelationFilter
   whatsAppQueue?: Prisma.WhatsAppMessageQueueListRelationFilter
+  aggregatorReference?: Prisma.XOR<Prisma.AggregatorOrderReferenceNullableScalarRelationFilter, Prisma.AggregatorOrderReferenceWhereInput> | null
 }, "id" | "tenantId_orderNumber" | "tenantId_idempotencyKey">
 
 export type OrderOrderByWithAggregationInput = {
@@ -693,6 +696,7 @@ export type OrderCreateInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -737,6 +741,7 @@ export type OrderUncheckedCreateInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -781,6 +786,7 @@ export type OrderUpdateInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -825,6 +831,7 @@ export type OrderUncheckedUpdateInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -1369,6 +1376,20 @@ export type OrderUpdateOneRequiredWithoutWhatsAppQueueNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutWhatsAppQueueInput, Prisma.OrderUpdateWithoutWhatsAppQueueInput>, Prisma.OrderUncheckedUpdateWithoutWhatsAppQueueInput>
 }
 
+export type OrderCreateNestedOneWithoutAggregatorReferenceInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedCreateWithoutAggregatorReferenceInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutAggregatorReferenceInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneRequiredWithoutAggregatorReferenceNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedCreateWithoutAggregatorReferenceInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutAggregatorReferenceInput
+  upsert?: Prisma.OrderUpsertWithoutAggregatorReferenceInput
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutAggregatorReferenceInput, Prisma.OrderUpdateWithoutAggregatorReferenceInput>, Prisma.OrderUncheckedUpdateWithoutAggregatorReferenceInput>
+}
+
 export type OrderCreateWithoutTenantInput = {
   id?: string
   orderNumber: string
@@ -1410,6 +1431,7 @@ export type OrderCreateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTenantInput = {
@@ -1453,6 +1475,7 @@ export type OrderUncheckedCreateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTenantInput = {
@@ -1561,6 +1584,7 @@ export type OrderCreateWithoutOutletInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutOutletInput = {
@@ -1604,6 +1628,7 @@ export type OrderUncheckedCreateWithoutOutletInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutOutletInput = {
@@ -1673,6 +1698,7 @@ export type OrderCreateWithoutTableInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutTableInput = {
@@ -1716,6 +1742,7 @@ export type OrderUncheckedCreateWithoutTableInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutTableInput = {
@@ -1785,6 +1812,7 @@ export type OrderCreateWithoutItemsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutItemsInput = {
@@ -1828,6 +1856,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutItemsInput = {
@@ -1887,6 +1916,7 @@ export type OrderUpdateWithoutItemsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -1930,6 +1960,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutKotTicketsInput = {
@@ -1973,6 +2004,7 @@ export type OrderCreateWithoutKotTicketsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutKotTicketsInput = {
@@ -2016,6 +2048,7 @@ export type OrderUncheckedCreateWithoutKotTicketsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutKotTicketsInput = {
@@ -2075,6 +2108,7 @@ export type OrderUpdateWithoutKotTicketsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutKotTicketsInput = {
@@ -2118,6 +2152,7 @@ export type OrderUncheckedUpdateWithoutKotTicketsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPaymentsInput = {
@@ -2161,6 +2196,7 @@ export type OrderCreateWithoutPaymentsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentsInput = {
@@ -2204,6 +2240,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentsInput = {
@@ -2263,6 +2300,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentsInput = {
@@ -2306,6 +2344,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutPaymentAttemptsInput = {
@@ -2349,6 +2388,7 @@ export type OrderCreateWithoutPaymentAttemptsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPaymentAttemptsInput = {
@@ -2392,6 +2432,7 @@ export type OrderUncheckedCreateWithoutPaymentAttemptsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPaymentAttemptsInput = {
@@ -2451,6 +2492,7 @@ export type OrderUpdateWithoutPaymentAttemptsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPaymentAttemptsInput = {
@@ -2494,6 +2536,7 @@ export type OrderUncheckedUpdateWithoutPaymentAttemptsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutQrSessionInput = {
@@ -2537,6 +2580,7 @@ export type OrderCreateWithoutQrSessionInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutQrSessionInput = {
@@ -2580,6 +2624,7 @@ export type OrderUncheckedCreateWithoutQrSessionInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutQrSessionInput = {
@@ -2649,6 +2694,7 @@ export type OrderCreateWithoutPrintJobsInput = {
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutPrintJobsInput = {
@@ -2692,6 +2738,7 @@ export type OrderUncheckedCreateWithoutPrintJobsInput = {
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutPrintJobsInput = {
@@ -2751,6 +2798,7 @@ export type OrderUpdateWithoutPrintJobsInput = {
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutPrintJobsInput = {
@@ -2794,6 +2842,7 @@ export type OrderUncheckedUpdateWithoutPrintJobsInput = {
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutWhatsAppLogsInput = {
@@ -2837,6 +2886,7 @@ export type OrderCreateWithoutWhatsAppLogsInput = {
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutWhatsAppLogsInput = {
@@ -2880,6 +2930,7 @@ export type OrderUncheckedCreateWithoutWhatsAppLogsInput = {
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutWhatsAppLogsInput = {
@@ -2939,6 +2990,7 @@ export type OrderUpdateWithoutWhatsAppLogsInput = {
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutWhatsAppLogsInput = {
@@ -2982,6 +3034,7 @@ export type OrderUncheckedUpdateWithoutWhatsAppLogsInput = {
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutInvoiceInput = {
@@ -3025,6 +3078,7 @@ export type OrderCreateWithoutInvoiceInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutInvoiceInput = {
@@ -3068,6 +3122,7 @@ export type OrderUncheckedCreateWithoutInvoiceInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutInvoiceInput = {
@@ -3127,6 +3182,7 @@ export type OrderUpdateWithoutInvoiceInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutInvoiceInput = {
@@ -3170,6 +3226,7 @@ export type OrderUncheckedUpdateWithoutInvoiceInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateWithoutWhatsAppQueueInput = {
@@ -3213,6 +3270,7 @@ export type OrderCreateWithoutWhatsAppQueueInput = {
   invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutWhatsAppQueueInput = {
@@ -3256,6 +3314,7 @@ export type OrderUncheckedCreateWithoutWhatsAppQueueInput = {
   invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutWhatsAppQueueInput = {
@@ -3315,6 +3374,7 @@ export type OrderUpdateWithoutWhatsAppQueueInput = {
   invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutWhatsAppQueueInput = {
@@ -3358,6 +3418,199 @@ export type OrderUncheckedUpdateWithoutWhatsAppQueueInput = {
   invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutAggregatorReferenceInput = {
+  id?: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  printStatus?: string | null
+  idempotencyKey?: string | null
+  aggregatorOrderId?: string | null
+  aggregatorStatus?: string | null
+  channel?: string | null
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOrdersInput
+  outlet: Prisma.OutletCreateNestedOneWithoutOrdersInput
+  table?: Prisma.TableCreateNestedOneWithoutOrdersInput
+  qrSession?: Prisma.QrOrderingSessionCreateNestedOneWithoutOrdersInput
+  items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutOrderInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutAggregatorReferenceInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderNumber: string
+  type: string
+  status?: string
+  serviceMode?: string
+  tableId?: string | null
+  customerId?: string | null
+  customerName?: string | null
+  customerPhone?: string | null
+  subtotalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  serviceChargePaise?: number
+  totalPaise?: number
+  notes?: string | null
+  kotStatus?: string
+  createdById?: string | null
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  billClosedAt?: Date | string | null
+  whatsappConsent?: boolean
+  whatsappStatus?: string | null
+  printStatus?: string | null
+  qrSessionId?: string | null
+  idempotencyKey?: string | null
+  aggregatorOrderId?: string | null
+  aggregatorStatus?: string | null
+  channel?: string | null
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutOrderInput
+  kotTickets?: Prisma.KitchenTicketUncheckedCreateNestedManyWithoutOrderInput
+  invoice?: Prisma.InvoiceRecordUncheckedCreateNestedOneWithoutOrderInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutOrderInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutAggregatorReferenceInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedCreateWithoutAggregatorReferenceInput>
+}
+
+export type OrderUpsertWithoutAggregatorReferenceInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedUpdateWithoutAggregatorReferenceInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedCreateWithoutAggregatorReferenceInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutAggregatorReferenceInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutAggregatorReferenceInput, Prisma.OrderUncheckedUpdateWithoutAggregatorReferenceInput>
+}
+
+export type OrderUpdateWithoutAggregatorReferenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aggregatorOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aggregatorStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneRequiredWithoutOrdersNestedInput
+  table?: Prisma.TableUpdateOneWithoutOrdersNestedInput
+  qrSession?: Prisma.QrOrderingSessionUpdateOneWithoutOrdersNestedInput
+  items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutAggregatorReferenceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceMode?: Prisma.StringFieldUpdateOperationsInput | string
+  tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceChargePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kotStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  billClosedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  whatsappConsent?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  whatsappStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  printStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  qrSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aggregatorOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aggregatorStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  channel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutOrderNestedInput
+  kotTickets?: Prisma.KitchenTicketUncheckedUpdateManyWithoutOrderNestedInput
+  invoice?: Prisma.InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyTenantInput = {
@@ -3436,6 +3689,7 @@ export type OrderUpdateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTenantInput = {
@@ -3479,6 +3733,7 @@ export type OrderUncheckedUpdateWithoutTenantInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTenantInput = {
@@ -3592,6 +3847,7 @@ export type OrderUpdateWithoutOutletInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutOutletInput = {
@@ -3635,6 +3891,7 @@ export type OrderUncheckedUpdateWithoutOutletInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutOutletInput = {
@@ -3748,6 +4005,7 @@ export type OrderUpdateWithoutTableInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutTableInput = {
@@ -3791,6 +4049,7 @@ export type OrderUncheckedUpdateWithoutTableInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutTableInput = {
@@ -3904,6 +4163,7 @@ export type OrderUpdateWithoutQrSessionInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutQrSessionInput = {
@@ -3947,6 +4207,7 @@ export type OrderUncheckedUpdateWithoutQrSessionInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutOrderNestedInput
   whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutOrderNestedInput
+  aggregatorReference?: Prisma.AggregatorOrderReferenceUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutQrSessionInput = {
@@ -4115,6 +4376,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
   whatsAppLogs?: boolean | Prisma.Order$whatsAppLogsArgs<ExtArgs>
   whatsAppQueue?: boolean | Prisma.Order$whatsAppQueueArgs<ExtArgs>
+  aggregatorReference?: boolean | Prisma.Order$aggregatorReferenceArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -4248,6 +4510,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   printJobs?: boolean | Prisma.Order$printJobsArgs<ExtArgs>
   whatsAppLogs?: boolean | Prisma.Order$whatsAppLogsArgs<ExtArgs>
   whatsAppQueue?: boolean | Prisma.Order$whatsAppQueueArgs<ExtArgs>
+  aggregatorReference?: boolean | Prisma.Order$aggregatorReferenceArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4278,6 +4541,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     printJobs: Prisma.$PrintJobPayload<ExtArgs>[]
     whatsAppLogs: Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>[]
     whatsAppQueue: Prisma.$WhatsAppMessageQueuePayload<ExtArgs>[]
+    aggregatorReference: Prisma.$AggregatorOrderReferencePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4719,6 +4983,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   printJobs<T extends Prisma.Order$printJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$printJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrintJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppLogs<T extends Prisma.Order$whatsAppLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$whatsAppLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppDeliveryLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppQueue<T extends Prisma.Order$whatsAppQueueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$whatsAppQueueArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WhatsAppMessageQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aggregatorReference<T extends Prisma.Order$aggregatorReferenceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$aggregatorReferenceArgs<ExtArgs>>): Prisma.Prisma__AggregatorOrderReferenceClient<runtime.Types.Result.GetResult<Prisma.$AggregatorOrderReferencePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5404,6 +5669,25 @@ export type Order$whatsAppQueueArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.WhatsAppMessageQueueScalarFieldEnum | Prisma.WhatsAppMessageQueueScalarFieldEnum[]
+}
+
+/**
+ * Order.aggregatorReference
+ */
+export type Order$aggregatorReferenceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AggregatorOrderReference
+   */
+  select?: Prisma.AggregatorOrderReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AggregatorOrderReference
+   */
+  omit?: Prisma.AggregatorOrderReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AggregatorOrderReferenceInclude<ExtArgs> | null
+  where?: Prisma.AggregatorOrderReferenceWhereInput
 }
 
 /**

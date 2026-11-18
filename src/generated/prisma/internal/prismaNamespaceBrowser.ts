@@ -114,7 +114,14 @@ export const ModelName = {
   WhatsAppMessageQueue: 'WhatsAppMessageQueue',
   MarketplaceService: 'MarketplaceService',
   OrganizationServiceActivation: 'OrganizationServiceActivation',
-  ServiceActivationEvent: 'ServiceActivationEvent'
+  ServiceActivationEvent: 'ServiceActivationEvent',
+  AggregatorConnection: 'AggregatorConnection',
+  AggregatorOutletMapping: 'AggregatorOutletMapping',
+  AggregatorMenuMapping: 'AggregatorMenuMapping',
+  AggregatorOrderReference: 'AggregatorOrderReference',
+  AggregatorWebhookEvent: 'AggregatorWebhookEvent',
+  AggregatorSyncJob: 'AggregatorSyncJob',
+  AggregatorExceptionQueue: 'AggregatorExceptionQueue'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1224,6 +1231,154 @@ export const ServiceActivationEventScalarFieldEnum = {
 } as const
 
 export type ServiceActivationEventScalarFieldEnum = (typeof ServiceActivationEventScalarFieldEnum)[keyof typeof ServiceActivationEventScalarFieldEnum]
+
+
+export const AggregatorConnectionScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  provider: 'provider',
+  status: 'status',
+  credentialsEncrypted: 'credentialsEncrypted',
+  testMode: 'testMode',
+  autoAccept: 'autoAccept',
+  defaultPrepMinutes: 'defaultPrepMinutes',
+  pricingStrategy: 'pricingStrategy',
+  priceHikeValue: 'priceHikeValue',
+  lastSyncAt: 'lastSyncAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AggregatorConnectionScalarFieldEnum = (typeof AggregatorConnectionScalarFieldEnum)[keyof typeof AggregatorConnectionScalarFieldEnum]
+
+
+export const AggregatorOutletMappingScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  provider: 'provider',
+  providerStoreId: 'providerStoreId',
+  providerStoreName: 'providerStoreName',
+  isOnline: 'isOnline',
+  isRushMode: 'isRushMode',
+  autoOfflineOnClose: 'autoOfflineOnClose',
+  defaultStationId: 'defaultStationId',
+  posBillPrinting: 'posBillPrinting',
+  kotPrinting: 'kotPrinting',
+  notificationAudio: 'notificationAudio',
+  lastHeartbeatAt: 'lastHeartbeatAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AggregatorOutletMappingScalarFieldEnum = (typeof AggregatorOutletMappingScalarFieldEnum)[keyof typeof AggregatorOutletMappingScalarFieldEnum]
+
+
+export const AggregatorMenuMappingScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  provider: 'provider',
+  menuItemId: 'menuItemId',
+  addonOptionId: 'addonOptionId',
+  providerItemId: 'providerItemId',
+  providerItemName: 'providerItemName',
+  categoryName: 'categoryName',
+  pricePaise: 'pricePaise',
+  isAvailable: 'isAvailable',
+  foodType: 'foodType',
+  lastSyncedAt: 'lastSyncedAt',
+  syncStatus: 'syncStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AggregatorMenuMappingScalarFieldEnum = (typeof AggregatorMenuMappingScalarFieldEnum)[keyof typeof AggregatorMenuMappingScalarFieldEnum]
+
+
+export const AggregatorOrderReferenceScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  provider: 'provider',
+  providerOrderId: 'providerOrderId',
+  displayOrderId: 'displayOrderId',
+  providerStoreId: 'providerStoreId',
+  customerName: 'customerName',
+  customerMaskedPhone: 'customerMaskedPhone',
+  deliveryAddressMasked: 'deliveryAddressMasked',
+  orderStatus: 'orderStatus',
+  prepTimeMinutes: 'prepTimeMinutes',
+  rawPayloadJson: 'rawPayloadJson',
+  riderName: 'riderName',
+  riderPhone: 'riderPhone',
+  riderStatus: 'riderStatus',
+  itemCount: 'itemCount',
+  grossAmountPaise: 'grossAmountPaise',
+  discountPaise: 'discountPaise',
+  deliveryFeePaise: 'deliveryFeePaise',
+  taxesPaise: 'taxesPaise',
+  netPayoutPaise: 'netPayoutPaise',
+  commissionPaise: 'commissionPaise',
+  cancelReason: 'cancelReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AggregatorOrderReferenceScalarFieldEnum = (typeof AggregatorOrderReferenceScalarFieldEnum)[keyof typeof AggregatorOrderReferenceScalarFieldEnum]
+
+
+export const AggregatorWebhookEventScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  provider: 'provider',
+  eventId: 'eventId',
+  eventType: 'eventType',
+  status: 'status',
+  payloadJson: 'payloadJson',
+  errorMessage: 'errorMessage',
+  processedAt: 'processedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AggregatorWebhookEventScalarFieldEnum = (typeof AggregatorWebhookEventScalarFieldEnum)[keyof typeof AggregatorWebhookEventScalarFieldEnum]
+
+
+export const AggregatorSyncJobScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  provider: 'provider',
+  jobType: 'jobType',
+  status: 'status',
+  payloadJson: 'payloadJson',
+  responseJson: 'responseJson',
+  errorLog: 'errorLog',
+  retryCount: 'retryCount',
+  nextRetryAt: 'nextRetryAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AggregatorSyncJobScalarFieldEnum = (typeof AggregatorSyncJobScalarFieldEnum)[keyof typeof AggregatorSyncJobScalarFieldEnum]
+
+
+export const AggregatorExceptionQueueScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  provider: 'provider',
+  externalOrderId: 'externalOrderId',
+  errorType: 'errorType',
+  reason: 'reason',
+  payloadJson: 'payloadJson',
+  isResolved: 'isResolved',
+  resolutionNotes: 'resolutionNotes',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AggregatorExceptionQueueScalarFieldEnum = (typeof AggregatorExceptionQueueScalarFieldEnum)[keyof typeof AggregatorExceptionQueueScalarFieldEnum]
 
 
 export const SortOrder = {

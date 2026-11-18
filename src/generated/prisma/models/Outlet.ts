@@ -255,6 +255,8 @@ export type OutletWhereInput = {
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
   whatsAppConfig?: Prisma.XOR<Prisma.OutletWhatsAppConfigNullableScalarRelationFilter, Prisma.OutletWhatsAppConfigWhereInput> | null
   productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingListRelationFilter
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
 }
 
 export type OutletOrderByWithRelationInput = {
@@ -287,6 +289,8 @@ export type OutletOrderByWithRelationInput = {
   qrSessions?: Prisma.QrOrderingSessionOrderByRelationAggregateInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigOrderByWithRelationInput
   productAddonGroups?: Prisma.ProductAddonGroupOrderByRelationAggregateInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingOrderByRelationAggregateInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceOrderByRelationAggregateInput
 }
 
 export type OutletWhereUniqueInput = Prisma.AtLeast<{
@@ -323,6 +327,8 @@ export type OutletWhereUniqueInput = Prisma.AtLeast<{
   qrSessions?: Prisma.QrOrderingSessionListRelationFilter
   whatsAppConfig?: Prisma.XOR<Prisma.OutletWhatsAppConfigNullableScalarRelationFilter, Prisma.OutletWhatsAppConfigWhereInput> | null
   productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingListRelationFilter
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
 }, "id" | "tenantId_slug">
 
 export type OutletOrderByWithAggregationInput = {
@@ -390,6 +396,8 @@ export type OutletCreateInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateInput = {
@@ -421,6 +429,8 @@ export type OutletUncheckedCreateInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUpdateInput = {
@@ -452,6 +462,8 @@ export type OutletUpdateInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateInput = {
@@ -483,6 +495,8 @@ export type OutletUncheckedUpdateInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyInput = {
@@ -873,6 +887,34 @@ export type OutletUpdateOneRequiredWithoutPrintJobsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutPrintJobsInput, Prisma.OutletUpdateWithoutPrintJobsInput>, Prisma.OutletUncheckedUpdateWithoutPrintJobsInput>
 }
 
+export type OutletCreateNestedOneWithoutAggregatorOutletMappingsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedCreateWithoutAggregatorOutletMappingsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutAggregatorOutletMappingsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutAggregatorOutletMappingsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedCreateWithoutAggregatorOutletMappingsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutAggregatorOutletMappingsInput
+  upsert?: Prisma.OutletUpsertWithoutAggregatorOutletMappingsInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutAggregatorOutletMappingsInput, Prisma.OutletUpdateWithoutAggregatorOutletMappingsInput>, Prisma.OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput>
+}
+
+export type OutletCreateNestedOneWithoutAggregatorOrderReferencesInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedCreateWithoutAggregatorOrderReferencesInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutAggregatorOrderReferencesInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutAggregatorOrderReferencesNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedCreateWithoutAggregatorOrderReferencesInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutAggregatorOrderReferencesInput
+  upsert?: Prisma.OutletUpsertWithoutAggregatorOrderReferencesInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutAggregatorOrderReferencesInput, Prisma.OutletUpdateWithoutAggregatorOrderReferencesInput>, Prisma.OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput>
+}
+
 export type OutletCreateWithoutTenantInput = {
   id?: string
   name: string
@@ -901,6 +943,8 @@ export type OutletCreateWithoutTenantInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTenantInput = {
@@ -931,6 +975,8 @@ export type OutletUncheckedCreateWithoutTenantInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTenantInput = {
@@ -1005,6 +1051,8 @@ export type OutletCreateWithoutMembershipsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutMembershipsInput = {
@@ -1035,6 +1083,8 @@ export type OutletUncheckedCreateWithoutMembershipsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutMembershipsInput = {
@@ -1081,6 +1131,8 @@ export type OutletUpdateWithoutMembershipsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutMembershipsInput = {
@@ -1111,6 +1163,8 @@ export type OutletUncheckedUpdateWithoutMembershipsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutOutletMembersInput = {
@@ -1141,6 +1195,8 @@ export type OutletCreateWithoutOutletMembersInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOutletMembersInput = {
@@ -1171,6 +1227,8 @@ export type OutletUncheckedCreateWithoutOutletMembersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOutletMembersInput = {
@@ -1217,6 +1275,8 @@ export type OutletUpdateWithoutOutletMembersInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOutletMembersInput = {
@@ -1247,6 +1307,8 @@ export type OutletUncheckedUpdateWithoutOutletMembersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutStaffInvitationsInput = {
@@ -1277,6 +1339,8 @@ export type OutletCreateWithoutStaffInvitationsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
@@ -1307,6 +1371,8 @@ export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStaffInvitationsInput = {
@@ -1353,6 +1419,8 @@ export type OutletUpdateWithoutStaffInvitationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
@@ -1383,6 +1451,8 @@ export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutWhatsAppConfigInput = {
@@ -1413,6 +1483,8 @@ export type OutletCreateWithoutWhatsAppConfigInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
@@ -1443,6 +1515,8 @@ export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutWhatsAppConfigInput = {
@@ -1489,6 +1563,8 @@ export type OutletUpdateWithoutWhatsAppConfigInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
@@ -1519,6 +1595,8 @@ export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutProductAddonGroupsInput = {
@@ -1549,6 +1627,8 @@ export type OutletCreateWithoutProductAddonGroupsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutProductAddonGroupsInput = {
@@ -1579,6 +1659,8 @@ export type OutletUncheckedCreateWithoutProductAddonGroupsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutProductAddonGroupsInput = {
@@ -1625,6 +1707,8 @@ export type OutletUpdateWithoutProductAddonGroupsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutProductAddonGroupsInput = {
@@ -1655,6 +1739,8 @@ export type OutletUncheckedUpdateWithoutProductAddonGroupsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTablesInput = {
@@ -1685,6 +1771,8 @@ export type OutletCreateWithoutTablesInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTablesInput = {
@@ -1715,6 +1803,8 @@ export type OutletUncheckedCreateWithoutTablesInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTablesInput = {
@@ -1761,6 +1851,8 @@ export type OutletUpdateWithoutTablesInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTablesInput = {
@@ -1791,6 +1883,8 @@ export type OutletUncheckedUpdateWithoutTablesInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutOrdersInput = {
@@ -1821,6 +1915,8 @@ export type OutletCreateWithoutOrdersInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOrdersInput = {
@@ -1851,6 +1947,8 @@ export type OutletUncheckedCreateWithoutOrdersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOrdersInput = {
@@ -1897,6 +1995,8 @@ export type OutletUpdateWithoutOrdersInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOrdersInput = {
@@ -1927,6 +2027,8 @@ export type OutletUncheckedUpdateWithoutOrdersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutShiftsInput = {
@@ -1957,6 +2059,8 @@ export type OutletCreateWithoutShiftsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutShiftsInput = {
@@ -1987,6 +2091,8 @@ export type OutletUncheckedCreateWithoutShiftsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutShiftsInput = {
@@ -2033,6 +2139,8 @@ export type OutletUpdateWithoutShiftsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutShiftsInput = {
@@ -2063,6 +2171,8 @@ export type OutletUncheckedUpdateWithoutShiftsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutStockMovementsInput = {
@@ -2093,6 +2203,8 @@ export type OutletCreateWithoutStockMovementsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStockMovementsInput = {
@@ -2123,6 +2235,8 @@ export type OutletUncheckedCreateWithoutStockMovementsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStockMovementsInput = {
@@ -2169,6 +2283,8 @@ export type OutletUpdateWithoutStockMovementsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStockMovementsInput = {
@@ -2199,6 +2315,8 @@ export type OutletUncheckedUpdateWithoutStockMovementsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutTokensInput = {
@@ -2229,6 +2347,8 @@ export type OutletCreateWithoutTokensInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTokensInput = {
@@ -2259,6 +2379,8 @@ export type OutletUncheckedCreateWithoutTokensInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTokensInput = {
@@ -2305,6 +2427,8 @@ export type OutletUpdateWithoutTokensInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTokensInput = {
@@ -2335,6 +2459,8 @@ export type OutletUncheckedUpdateWithoutTokensInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutReservationsInput = {
@@ -2365,6 +2491,8 @@ export type OutletCreateWithoutReservationsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutReservationsInput = {
@@ -2395,6 +2523,8 @@ export type OutletUncheckedCreateWithoutReservationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutReservationsInput = {
@@ -2441,6 +2571,8 @@ export type OutletUpdateWithoutReservationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutReservationsInput = {
@@ -2471,6 +2603,8 @@ export type OutletUncheckedUpdateWithoutReservationsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutExpensesInput = {
@@ -2501,6 +2635,8 @@ export type OutletCreateWithoutExpensesInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutExpensesInput = {
@@ -2531,6 +2667,8 @@ export type OutletUncheckedCreateWithoutExpensesInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutExpensesInput = {
@@ -2577,6 +2715,8 @@ export type OutletUpdateWithoutExpensesInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutExpensesInput = {
@@ -2607,6 +2747,8 @@ export type OutletUncheckedUpdateWithoutExpensesInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutDayEndsInput = {
@@ -2637,6 +2779,8 @@ export type OutletCreateWithoutDayEndsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutDayEndsInput = {
@@ -2667,6 +2811,8 @@ export type OutletUncheckedCreateWithoutDayEndsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutDayEndsInput = {
@@ -2713,6 +2859,8 @@ export type OutletUpdateWithoutDayEndsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutDayEndsInput = {
@@ -2743,6 +2891,8 @@ export type OutletUncheckedUpdateWithoutDayEndsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutQrSessionsInput = {
@@ -2773,6 +2923,8 @@ export type OutletCreateWithoutQrSessionsInput = {
   printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutQrSessionsInput = {
@@ -2803,6 +2955,8 @@ export type OutletUncheckedCreateWithoutQrSessionsInput = {
   printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutQrSessionsInput = {
@@ -2849,6 +3003,8 @@ export type OutletUpdateWithoutQrSessionsInput = {
   printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutQrSessionsInput = {
@@ -2879,6 +3035,8 @@ export type OutletUncheckedUpdateWithoutQrSessionsInput = {
   printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintersInput = {
@@ -2909,6 +3067,8 @@ export type OutletCreateWithoutPrintersInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintersInput = {
@@ -2939,6 +3099,8 @@ export type OutletUncheckedCreateWithoutPrintersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintersInput = {
@@ -2985,6 +3147,8 @@ export type OutletUpdateWithoutPrintersInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintersInput = {
@@ -3015,6 +3179,8 @@ export type OutletUncheckedUpdateWithoutPrintersInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintJobsInput = {
@@ -3045,6 +3211,8 @@ export type OutletCreateWithoutPrintJobsInput = {
   qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintJobsInput = {
@@ -3075,6 +3243,8 @@ export type OutletUncheckedCreateWithoutPrintJobsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintJobsInput = {
@@ -3121,6 +3291,8 @@ export type OutletUpdateWithoutPrintJobsInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintJobsInput = {
@@ -3151,6 +3323,296 @@ export type OutletUncheckedUpdateWithoutPrintJobsInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutAggregatorOutletMappingsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutAggregatorOutletMappingsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutAggregatorOutletMappingsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedCreateWithoutAggregatorOutletMappingsInput>
+}
+
+export type OutletUpsertWithoutAggregatorOutletMappingsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedCreateWithoutAggregatorOutletMappingsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutAggregatorOutletMappingsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutAggregatorOutletMappingsInput, Prisma.OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput>
+}
+
+export type OutletUpdateWithoutAggregatorOutletMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletCreateWithoutAggregatorOrderReferencesInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+}
+
+export type OutletUncheckedCreateWithoutAggregatorOrderReferencesInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+}
+
+export type OutletCreateOrConnectWithoutAggregatorOrderReferencesInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedCreateWithoutAggregatorOrderReferencesInput>
+}
+
+export type OutletUpsertWithoutAggregatorOrderReferencesInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedCreateWithoutAggregatorOrderReferencesInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutAggregatorOrderReferencesInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutAggregatorOrderReferencesInput, Prisma.OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput>
+}
+
+export type OutletUpdateWithoutAggregatorOrderReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletCreateManyTenantInput = {
@@ -3195,6 +3657,8 @@ export type OutletUpdateWithoutTenantInput = {
   qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTenantInput = {
@@ -3225,6 +3689,8 @@ export type OutletUncheckedUpdateWithoutTenantInput = {
   qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
 }
 
 export type OutletUncheckedUpdateManyWithoutTenantInput = {
@@ -3262,6 +3728,8 @@ export type OutletCountOutputType = {
   printJobs: number
   qrSessions: number
   productAddonGroups: number
+  aggregatorOutletMappings: number
+  aggregatorOrderReferences: number
 }
 
 export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3280,6 +3748,8 @@ export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   printJobs?: boolean | OutletCountOutputTypeCountPrintJobsArgs
   qrSessions?: boolean | OutletCountOutputTypeCountQrSessionsArgs
   productAddonGroups?: boolean | OutletCountOutputTypeCountProductAddonGroupsArgs
+  aggregatorOutletMappings?: boolean | OutletCountOutputTypeCountAggregatorOutletMappingsArgs
+  aggregatorOrderReferences?: boolean | OutletCountOutputTypeCountAggregatorOrderReferencesArgs
 }
 
 /**
@@ -3397,6 +3867,20 @@ export type OutletCountOutputTypeCountProductAddonGroupsArgs<ExtArgs extends run
   where?: Prisma.ProductAddonGroupWhereInput
 }
 
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountAggregatorOutletMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AggregatorOutletMappingWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountAggregatorOrderReferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AggregatorOrderReferenceWhereInput
+}
+
 
 export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3428,6 +3912,8 @@ export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   whatsAppConfig?: boolean | Prisma.Outlet$whatsAppConfigArgs<ExtArgs>
   productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
+  aggregatorOutletMappings?: boolean | Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>
+  aggregatorOrderReferences?: boolean | Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outlet"]>
 
@@ -3497,6 +3983,8 @@ export type OutletInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   qrSessions?: boolean | Prisma.Outlet$qrSessionsArgs<ExtArgs>
   whatsAppConfig?: boolean | Prisma.Outlet$whatsAppConfigArgs<ExtArgs>
   productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
+  aggregatorOutletMappings?: boolean | Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>
+  aggregatorOrderReferences?: boolean | Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OutletIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3526,6 +4014,8 @@ export type $OutletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     qrSessions: Prisma.$QrOrderingSessionPayload<ExtArgs>[]
     whatsAppConfig: Prisma.$OutletWhatsAppConfigPayload<ExtArgs> | null
     productAddonGroups: Prisma.$ProductAddonGroupPayload<ExtArgs>[]
+    aggregatorOutletMappings: Prisma.$AggregatorOutletMappingPayload<ExtArgs>[]
+    aggregatorOrderReferences: Prisma.$AggregatorOrderReferencePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3951,6 +4441,8 @@ export interface Prisma__OutletClient<T, Null = never, ExtArgs extends runtime.T
   qrSessions<T extends Prisma.Outlet$qrSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$qrSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrOrderingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   whatsAppConfig<T extends Prisma.Outlet$whatsAppConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$whatsAppConfigArgs<ExtArgs>>): Prisma.Prisma__OutletWhatsAppConfigClient<runtime.Types.Result.GetResult<Prisma.$OutletWhatsAppConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   productAddonGroups<T extends Prisma.Outlet$productAddonGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$productAddonGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductAddonGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aggregatorOutletMappings<T extends Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorOutletMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aggregatorOrderReferences<T extends Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorOrderReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4769,6 +5261,54 @@ export type Outlet$productAddonGroupsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.ProductAddonGroupScalarFieldEnum | Prisma.ProductAddonGroupScalarFieldEnum[]
+}
+
+/**
+ * Outlet.aggregatorOutletMappings
+ */
+export type Outlet$aggregatorOutletMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AggregatorOutletMapping
+   */
+  select?: Prisma.AggregatorOutletMappingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AggregatorOutletMapping
+   */
+  omit?: Prisma.AggregatorOutletMappingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AggregatorOutletMappingInclude<ExtArgs> | null
+  where?: Prisma.AggregatorOutletMappingWhereInput
+  orderBy?: Prisma.AggregatorOutletMappingOrderByWithRelationInput | Prisma.AggregatorOutletMappingOrderByWithRelationInput[]
+  cursor?: Prisma.AggregatorOutletMappingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AggregatorOutletMappingScalarFieldEnum | Prisma.AggregatorOutletMappingScalarFieldEnum[]
+}
+
+/**
+ * Outlet.aggregatorOrderReferences
+ */
+export type Outlet$aggregatorOrderReferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AggregatorOrderReference
+   */
+  select?: Prisma.AggregatorOrderReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AggregatorOrderReference
+   */
+  omit?: Prisma.AggregatorOrderReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AggregatorOrderReferenceInclude<ExtArgs> | null
+  where?: Prisma.AggregatorOrderReferenceWhereInput
+  orderBy?: Prisma.AggregatorOrderReferenceOrderByWithRelationInput | Prisma.AggregatorOrderReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.AggregatorOrderReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AggregatorOrderReferenceScalarFieldEnum | Prisma.AggregatorOrderReferenceScalarFieldEnum[]
 }
 
 /**

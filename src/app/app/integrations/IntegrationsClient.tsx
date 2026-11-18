@@ -337,6 +337,31 @@ export default function IntegrationsClient() {
         </div>
       )}
 
+      {/* Banner: Swiggy & Zomato Aggregators */}
+      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-[#16845B] text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            ⚡
+          </div>
+          <div>
+            <div className="text-sm font-bold text-[#172B25] flex items-center gap-2">
+              <span>Swiggy & Zomato Enterprise Aggregator Engine</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-600 text-white">NEW</span>
+            </div>
+            <div className="text-xs text-gray-600">
+              Multi-outlet store mapping, master menu sync with markup formulas, automatic KOT routing, and financial reconciliation.
+            </div>
+          </div>
+        </div>
+        <Link
+          href="/app/integrations/online"
+          className="px-4 py-2 bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-bold rounded-xl transition shadow-xs whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5"
+        >
+          <span>Open Aggregator Engine</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
       {/* Main Grid: Left Provider Selector, Right Dynamic Action Panel */}
       <div className="grid lg:grid-cols-[380px_1fr] gap-6">
         {/* Left Side: Provider Cards */}

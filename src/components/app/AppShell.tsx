@@ -24,6 +24,7 @@ import {
   Menu,
   X,
   ShieldCheck,
+  Globe,
 } from "lucide-react";
 
 const nav = [
@@ -41,6 +42,7 @@ const nav = [
   { label: "Outlets", href: "/app/outlets", icon: Building2 },
   { label: "Staff & Team", href: "/app/staff", icon: UserCog },
   { label: "Integrations", href: "/app/integrations", icon: Plug },
+  { label: "Online (Swiggy/Zomato)", href: "/app/integrations/online", icon: Globe, badge: "Aggregators" },
   { label: "Subscription", href: "/app/subscription", icon: CreditCard },
   { label: "Marketplace", href: "/app/marketplace", icon: Plug, badge: "Hub" },
   { label: "Tokens", href: "/app/tokens", icon: FileText },
