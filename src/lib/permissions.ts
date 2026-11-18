@@ -18,7 +18,10 @@ export const ALL_PERMISSIONS = [
   "orders.view",
   "orders.create",
   "orders.update",
+  "orders.delete",
+  "orders.approve",
   "orders.cancel",
+  "orders.export",
 
   // KITCHEN
   "kitchen.view",
@@ -32,9 +35,25 @@ export const ALL_PERMISSIONS = [
 
   // INVENTORY
   "inventory.view",
+  "inventory.create",
   "inventory.manage",
+  "inventory.delete",
+  "inventory.approve",
   "inventory.purchase",
   "inventory.adjust_stock",
+  "inventory.export",
+
+  // SHIFTS
+  "shifts.view",
+  "shifts.manage",
+  "shifts.approve",
+  "shifts.export",
+
+  // ATTENDANCE
+  "attendance.view",
+  "attendance.manage",
+  "attendance.approve",
+  "attendance.export",
 
   // REPORTS
   "reports.view",
@@ -46,6 +65,8 @@ export const ALL_PERMISSIONS = [
   "staff.invite",
   "staff.manage",
   "staff.deactivate",
+  "staff.delete",
+  "staff.export",
 
   // SETTINGS
   "settings.view",
@@ -82,7 +103,10 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "orders.view",
     "orders.create",
     "orders.update",
+    "orders.delete",
+    "orders.approve",
     "orders.cancel",
+    "orders.export",
     "kitchen.view",
     "kitchen.update_status",
     "kitchen.manage_orders",
@@ -90,14 +114,25 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "tables.manage",
     "tables.transfer",
     "inventory.view",
+    "inventory.create",
     "inventory.manage",
     "inventory.purchase",
     "inventory.adjust_stock",
+    "inventory.export",
+    "shifts.view",
+    "shifts.manage",
+    "shifts.approve",
+    "shifts.export",
+    "attendance.view",
+    "attendance.manage",
+    "attendance.approve",
+    "attendance.export",
     "reports.view",
     "reports.export",
     "staff.view",
     "staff.invite",
     "staff.manage",
+    "staff.export",
     "settings.view",
   ],
   CASHIER: [
@@ -111,12 +146,16 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "orders.create",
     "orders.update",
     "tables.view",
+    "shifts.view",
+    "attendance.view",
   ],
   KITCHEN_STAFF: [
     "kitchen.view",
     "kitchen.update_status",
     "kitchen.manage_orders",
     "orders.view",
+    "shifts.view",
+    "attendance.view",
   ],
   WAITER: [
     "pos.view",
@@ -126,20 +165,32 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<StaffRole, PermissionKey[]> = {
     "tables.view",
     "tables.transfer",
     "kitchen.view",
+    "shifts.view",
+    "attendance.view",
   ],
   INVENTORY_MANAGER: [
     "inventory.view",
+    "inventory.create",
     "inventory.manage",
     "inventory.purchase",
     "inventory.adjust_stock",
+    "inventory.approve",
+    "inventory.export",
     "reports.view",
+    "shifts.view",
+    "attendance.view",
   ],
   ACCOUNTANT: [
     "pos.view",
     "orders.view",
+    "orders.export",
     "reports.view",
     "reports.export",
     "reports.financial",
+    "shifts.view",
+    "shifts.export",
+    "attendance.view",
+    "attendance.export",
   ],
 };
 
@@ -209,7 +260,10 @@ export const PERMISSION_GROUPS: Record<
       { key: "orders.view", label: "View Orders", description: "View order history and live tickets" },
       { key: "orders.create", label: "Create Orders", description: "Create phone and table orders" },
       { key: "orders.update", label: "Update Orders", description: "Update order items and notes" },
+      { key: "orders.delete", label: "Delete Orders", description: "Remove draft or invalid order records" },
+      { key: "orders.approve", label: "Approve Orders", description: "Authorize special or high-value orders" },
       { key: "orders.cancel", label: "Cancel Orders", description: "Cancel pending or unserved orders" },
+      { key: "orders.export", label: "Export Orders", description: "Export orders history to CSV" },
     ],
   },
   kitchen: {
@@ -232,9 +286,31 @@ export const PERMISSION_GROUPS: Record<
     label: "Inventory & Purchases",
     permissions: [
       { key: "inventory.view", label: "View Stock", description: "Check current ingredient stock levels" },
+      { key: "inventory.create", label: "Create Inventory Items", description: "Add new raw ingredients or BOM recipes" },
       { key: "inventory.manage", label: "Manage Catalog Items", description: "Create and edit inventory raw materials" },
+      { key: "inventory.delete", label: "Delete Inventory", description: "Remove discontinued stock items" },
+      { key: "inventory.approve", label: "Approve Purchases", description: "Approve supplier purchase orders" },
       { key: "inventory.purchase", label: "Purchase Orders", description: "Draft and receive purchase orders" },
       { key: "inventory.adjust_stock", label: "Adjust Stock", description: "Record manual wastage and stock corrections" },
+      { key: "inventory.export", label: "Export Inventory", description: "Download inventory valuation reports" },
+    ],
+  },
+  shifts: {
+    label: "Shift Management",
+    permissions: [
+      { key: "shifts.view", label: "View Shifts", description: "View scheduled staff shifts and cash registers" },
+      { key: "shifts.manage", label: "Manage Shifts", description: "Create, schedule, and assign work shifts" },
+      { key: "shifts.approve", label: "Approve Shift Close", description: "Verify drawer counts and sign off cash floats" },
+      { key: "shifts.export", label: "Export Shifts", description: "Export shift roster and register logs" },
+    ],
+  },
+  attendance: {
+    label: "Attendance & Timeclock",
+    permissions: [
+      { key: "attendance.view", label: "View Attendance", description: "Inspect daily punches and staff presence" },
+      { key: "attendance.manage", label: "Manage Timeclock", description: "Manually log or correct punch records" },
+      { key: "attendance.approve", label: "Approve Overtime/Leaves", description: "Approve attendance exceptions" },
+      { key: "attendance.export", label: "Export Attendance", description: "Download monthly attendance CSVs" },
     ],
   },
   reports: {
@@ -251,7 +327,9 @@ export const PERMISSION_GROUPS: Record<
       { key: "staff.view", label: "View Team", description: "List staff members and active shifts" },
       { key: "staff.invite", label: "Invite Employees", description: "Send invitations to new team members" },
       { key: "staff.manage", label: "Manage Roles", description: "Modify outlet assignments and permissions" },
-      { key: "staff.deactivate", label: "Suspend/Deactivate", description: "Revoke employee access" },
+      { key: "staff.deactivate", label: "Suspend/Deactivate", description: "Revoke employee access temporarily" },
+      { key: "staff.delete", label: "Remove Staff", description: "Permanently remove employee records" },
+      { key: "staff.export", label: "Export Staff", description: "Export staff directory and profiles" },
     ],
   },
   settings: {

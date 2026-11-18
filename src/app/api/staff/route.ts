@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
     outlets,
     pendingInvitations,
     currentRole: currentMembership.role,
+    currentUserId: userId,
   });
 }
 
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Only owners or managers can add staff" }, { status: 403 });
   }
 
-  const { email, name, role, outletId, outletIds, permissions, sendInvitation } = body;
+  const { email, name, role, outletId, outletIds, permissions, sendInvitation, phone, jobTitle, employeeCode } = body;
   if (!email || !role) {
     return NextResponse.json({ error: "Email and role are required" }, { status: 400 });
   }
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
         tenantId,
         email: normalizedEmail,
         fullName: name?.trim() || null,
+        phone: phone?.trim() || null,
         role: role.toUpperCase(),
         outletId: outletId || null,
         outletIdsJson: Array.isArray(outletIds) ? JSON.stringify(outletIds) : null,
@@ -100,7 +102,7 @@ export async function POST(req: NextRequest) {
         action: "STAFF_INVITATION_SENT",
         entity: "StaffInvitation",
         entityId: invitation.id,
-        metadataJson: JSON.stringify({ email: normalizedEmail, role }),
+        metadataJson: JSON.stringify({ email: normalizedEmail, role, phone }),
       },
     });
 
@@ -175,6 +177,9 @@ export async function POST(req: NextRequest) {
     data: {
       membershipId: newMembership.id,
       fullName: (name || targetUser.name).trim(),
+      phone: phone?.trim() || null,
+      jobTitle: jobTitle?.trim() || null,
+      employeeCode: employeeCode?.trim() || null,
       status: "ACTIVE",
     },
   });
@@ -210,12 +215,12 @@ export async function PATCH(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
 
   const body = await req.json();
-  const { membershipId, role, outletId, outletIds, status, permissions } = body;
+  const { membershipId, role, outletId, outletIds, status, permissions, name, phone, jobTitle, employeeCode } = body;
   if (!membershipId) return NextResponse.json({ error: "membershipId required" }, { status: 400 });
 
   const targetMembership = await prisma.membership.findUnique({
     where: { id: membershipId },
-    include: { user: true },
+    include: { user: true, staffProfile: true },
   });
   if (!targetMembership) return NextResponse.json({ error: "Membership not found" }, { status: 404 });
 
@@ -246,6 +251,28 @@ export async function PATCH(req: NextRequest) {
       outletMembers: { include: { outlet: true } },
     },
   });
+
+  // Upsert or update staff profile if profile attributes are passed
+  if (name !== undefined || phone !== undefined || jobTitle !== undefined || employeeCode !== undefined || status !== undefined) {
+    await prisma.staffProfile.upsert({
+      where: { membershipId },
+      create: {
+        membershipId,
+        fullName: name?.trim() || targetMembership.user.name,
+        phone: phone?.trim() || null,
+        jobTitle: jobTitle?.trim() || null,
+        employeeCode: employeeCode?.trim() || null,
+        status: status || targetMembership.status,
+      },
+      update: {
+        ...(name !== undefined ? { fullName: name.trim() } : {}),
+        ...(phone !== undefined ? { phone: phone?.trim() || null } : {}),
+        ...(jobTitle !== undefined ? { jobTitle: jobTitle?.trim() || null } : {}),
+        ...(employeeCode !== undefined ? { employeeCode: employeeCode?.trim() || null } : {}),
+        ...(status !== undefined ? { status } : {}),
+      },
+    });
+  }
 
   if (Array.isArray(outletIds)) {
     await prisma.outletMember.deleteMany({ where: { membershipId } });
