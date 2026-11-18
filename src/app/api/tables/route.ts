@@ -27,18 +27,42 @@ export async function GET(req: NextRequest) {
         include: {
           outlet: { select: { id: true, name: true, slug: true } },
           tenant: { select: { id: true, name: true } },
+          orders: {
+            where: {
+              status: { in: ["OPEN", "PLACED", "PREPARING", "READY", "SERVED", "BILLED"] },
+            },
+            include: {
+              items: {
+                include: {
+                  addons: true,
+                },
+              },
+              payments: true,
+            },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
         orderBy: { number: "asc" },
       });
 
       return tables.map((t) => {
-        if (!t.qrToken) {
-          const token = `tbl_${crypto.randomBytes(6).toString("hex")}`;
+        let token = t.qrToken;
+        if (!token) {
+          token = `tbl_${crypto.randomBytes(6).toString("hex")}`;
           // fire-and-forget token update to not block response
           prisma.table.update({ where: { id: t.id }, data: { qrToken: token } }).catch(() => {});
-          return { ...t, qrToken: token };
         }
-        return t;
+
+        const activeOrder = t.orders && t.orders.length > 0 ? t.orders[0] : null;
+        const liveTotalPaise = activeOrder ? activeOrder.totalPaise : t.orderTotalPaise;
+
+        return {
+          ...t,
+          qrToken: token,
+          activeOrder,
+          orderTotalPaise: liveTotalPaise,
+        };
       });
     },
     8
@@ -85,7 +109,7 @@ export async function POST(req: NextRequest) {
       capacity,
       status: "AVAILABLE",
       qrToken,
-      qrOrderingEnabled: true,
+      qrOrderingEnabled: body.qrOrderingEnabled !== false,
       waiterName: body.waiterName || null,
     },
   });
@@ -110,7 +134,7 @@ export async function PATCH(req: NextRequest) {
   const { userId } = await getSession();
   if (!userId) return NextResponse.json({ error: "Unauthenticated" }, { status: 401 });
   const body = await req.json();
-  const { tableId, status, waiterName, area, capacity, action, targetTableId } = body;
+  const { tableId, status, waiterName, area, capacity, number, qrOrderingEnabled, action, targetTableId } = body;
   if (!tableId) return NextResponse.json({ error: "tableId required" }, { status: 400 });
 
   const table = await prisma.table.findUnique({ where: { id: tableId } });
@@ -131,6 +155,7 @@ export async function PATCH(req: NextRequest) {
           status: "OCCUPIED",
           currentOrderId: table.currentOrderId,
           orderTotalPaise: table.orderTotalPaise,
+          waiterName: table.waiterName || targetTable.waiterName,
         },
       }),
       prisma.table.update({
@@ -142,12 +167,70 @@ export async function PATCH(req: NextRequest) {
         },
       }),
       prisma.order.updateMany({
-        where: { tableId, status: { in: ["OPEN", "BILLED", "PLACED", "PREPARING"] } },
+        where: { tableId, status: { in: ["OPEN", "BILLED", "PLACED", "PREPARING", "READY", "SERVED"] } },
         data: { tableId: targetTableId },
       }),
     ]);
 
+    appCache.delPrefix(`tables_${table.tenantId}`);
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId: table.tenantId,
+        userId,
+        action: "TABLE_ORDER_MOVED",
+        entity: "Table",
+        entityId: tableId,
+        metadataJson: JSON.stringify({ from: table.number, to: targetTable.number }),
+      },
+    });
+
     return NextResponse.json({ ok: true, moved: true, from: table.number, to: targetTable.number });
+  }
+
+  // Handle Merge Tables
+  if (action === "MERGE_TABLES" && targetTableId) {
+    const targetTable = await prisma.table.findUnique({ where: { id: targetTableId } });
+    if (!targetTable) return NextResponse.json({ error: "Target table not found" }, { status: 404 });
+
+    const combinedTotalPaise = (targetTable.orderTotalPaise || 0) + (table.orderTotalPaise || 0);
+
+    await prisma.$transaction([
+      prisma.table.update({
+        where: { id: targetTableId },
+        data: {
+          status: "OCCUPIED",
+          orderTotalPaise: combinedTotalPaise,
+        },
+      }),
+      prisma.table.update({
+        where: { id: tableId },
+        data: {
+          status: "AVAILABLE",
+          currentOrderId: null,
+          orderTotalPaise: 0,
+        },
+      }),
+      prisma.order.updateMany({
+        where: { tableId, status: { in: ["OPEN", "BILLED", "PLACED", "PREPARING", "READY", "SERVED"] } },
+        data: { tableId: targetTableId },
+      }),
+    ]);
+
+    appCache.delPrefix(`tables_${table.tenantId}`);
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId: table.tenantId,
+        userId,
+        action: "TABLES_MERGED",
+        entity: "Table",
+        entityId: targetTableId,
+        metadataJson: JSON.stringify({ source: table.number, target: targetTable.number }),
+      },
+    });
+
+    return NextResponse.json({ ok: true, merged: true, source: table.number, target: targetTable.number });
   }
 
   // Handle Close / Clean Table
@@ -161,20 +244,38 @@ export async function PATCH(req: NextRequest) {
         waiterName: null,
       },
     });
+
+    appCache.delPrefix(`tables_${table.tenantId}`);
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId: table.tenantId,
+        userId,
+        action: "TABLE_CLOSED",
+        entity: "Table",
+        entityId: tableId,
+        metadataJson: JSON.stringify({ number: table.number }),
+      },
+    });
+
     return NextResponse.json({ ok: true, table: updated });
   }
 
-  // General Update
+  // General Update / Edit
   const data: any = {};
   if (status) data.status = status;
   if (waiterName !== undefined) data.waiterName = waiterName;
-  if (area) data.area = area;
-  if (capacity) data.capacity = parseInt(capacity, 10);
+  if (area) data.area = area.trim();
+  if (number) data.number = number.trim();
+  if (capacity) data.capacity = parseInt(String(capacity), 10);
+  if (qrOrderingEnabled !== undefined) data.qrOrderingEnabled = Boolean(qrOrderingEnabled);
 
   const updated = await prisma.table.update({
     where: { id: tableId },
     data,
   });
+
+  appCache.delPrefix(`tables_${table.tenantId}`);
 
   return NextResponse.json({ ok: true, table: updated });
 }
@@ -191,11 +292,23 @@ export async function DELETE(req: NextRequest) {
   const mem = await prisma.membership.findFirst({ where: { userId, tenantId: table.tenantId } });
   if (!mem || mem.role !== "OWNER") return NextResponse.json({ error: "Only owners can delete tables" }, { status: 403 });
 
-  if (table.status === "OCCUPIED" || table.status === "BILLING") {
-    return NextResponse.json({ error: "Cannot delete an occupied table" }, { status: 400 });
+  if (table.status === "OCCUPIED" || table.status === "BILLING" || table.status === "BILLED") {
+    return NextResponse.json({ error: "Cannot delete an occupied or billed table" }, { status: 400 });
   }
 
   await prisma.table.delete({ where: { id: tableId } });
   appCache.delPrefix(`tables_${table.tenantId}`);
+
+  await prisma.auditLog.create({
+    data: {
+      tenantId: table.tenantId,
+      userId,
+      action: "TABLE_DELETED",
+      entity: "Table",
+      entityId: tableId,
+      metadataJson: JSON.stringify({ number: table.number }),
+    },
+  });
+
   return NextResponse.json({ ok: true, deleted: true });
 }
