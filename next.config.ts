@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
         destination: "/app/organization",
         permanent: false,
       },
+      {
+        source: "/app",
+        destination: "/app/dashboard",
+        permanent: false,
+      },
     ];
   },
   async headers() {

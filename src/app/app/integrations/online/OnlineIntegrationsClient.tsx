@@ -1298,7 +1298,7 @@ export default function OnlineIntegrationsClient() {
                   POS Orders View
                 </Link>{" "}
                 or the{" "}
-                <Link href="/staff/kds" className="text-emerald-700 font-bold underline">
+                <Link href="/staff/kitchen" className="text-emerald-700 font-bold underline">
                   Live KDS Kitchen Screen
                 </Link>
                 .
