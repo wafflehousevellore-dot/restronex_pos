@@ -29,13 +29,43 @@ export async function GET(req: NextRequest) {
       const swiggyConn = await AggregatorConnectionService.getConnection(tenantId, "SWIGGY");
       const zomatoConn = await AggregatorConnectionService.getConnection(tenantId, "ZOMATO");
 
-      const [outletsCount, mappedOutletsCount, activeOrdersCount, syncJobs, exceptionsCount] = await Promise.all([
+      const [
+        outletsCount,
+        allOutlets,
+        allMappings,
+        genuineActiveOrdersCount,
+        testOrdersCount,
+        syncJobs,
+        exceptionsCount,
+        swiggyWebhooksCount,
+        zomatoWebhooksCount,
+        swiggyProcessedWebhooksCount,
+        zomatoProcessedWebhooksCount,
+      ] = await Promise.all([
         prisma.outlet.count({ where: { tenantId } }),
-        prisma.aggregatorOutletMapping.count({ where: { tenantId } }),
+        prisma.outlet.findMany({
+          where: { tenantId },
+          select: { id: true, name: true, slug: true, city: true, status: true },
+          orderBy: { createdAt: "asc" },
+        }),
+        prisma.aggregatorOutletMapping.findMany({
+          where: { tenantId },
+        }),
         prisma.aggregatorOrderReference.count({
           where: {
             tenantId,
             orderStatus: { in: ["PLACED", "ACCEPTED", "PREPARING", "READY_FOR_PICKUP"] },
+            rawPayloadJson: { not: { contains: '"test":true' } },
+            order: { status: { notIn: ["BILLED", "CANCELLED", "REFUNDED", "COMPLETED"] } },
+          },
+        }),
+        prisma.aggregatorOrderReference.count({
+          where: {
+            tenantId,
+            OR: [
+              { rawPayloadJson: { contains: '"test":true' } },
+              { providerOrderId: { contains: "TEST" } },
+            ],
           },
         }),
         prisma.aggregatorSyncJob.findMany({
@@ -46,16 +76,198 @@ export async function GET(req: NextRequest) {
         prisma.aggregatorExceptionQueue.count({
           where: { tenantId, isResolved: false },
         }),
+        prisma.aggregatorWebhookEvent.count({
+          where: { provider: "SWIGGY", OR: [{ tenantId }, { tenantId: null }] },
+        }),
+        prisma.aggregatorWebhookEvent.count({
+          where: { provider: "ZOMATO", OR: [{ tenantId }, { tenantId: null }] },
+        }),
+        prisma.aggregatorWebhookEvent.count({
+          where: { provider: "SWIGGY", status: "PROCESSED", OR: [{ tenantId }, { tenantId: null }] },
+        }),
+        prisma.aggregatorWebhookEvent.count({
+          where: { provider: "ZOMATO", status: "PROCESSED", OR: [{ tenantId }, { tenantId: null }] },
+        }),
       ]);
+
+      const swiggyMappings = allMappings.filter((m) => m.provider === "SWIGGY");
+      const zomatoMappings = allMappings.filter((m) => m.provider === "ZOMATO");
+      const mappedOutletsSet = new Set(allMappings.map((m) => m.outletId));
+
+      const hasSwiggyWebhookSecret = !!process.env.SWIGGY_WEBHOOK_SECRET;
+      const hasZomatoWebhookSecret = !!process.env.ZOMATO_WEBHOOK_SECRET;
+
+      // Target listing counts based on business structure:
+      // Brand has 3 physical outlets: 3 Swiggy listings (1 per outlet) + 1 Zomato listing (Outlet 1 only) = 4 total listings
+      const physicalOutletsTarget = Math.max(outletsCount, 3);
+      const swiggyListingsTarget = physicalOutletsTarget;
+      const zomatoListingsTarget = 1;
+      const totalListingsTarget = swiggyListingsTarget + zomatoListingsTarget;
+
+      const swiggyStages = {
+        merchantAccountActive: {
+          key: "merchant_account",
+          label: "Merchant Account Active",
+          isComplete: !!swiggyConn.hasCredentials || swiggyMappings.length > 0,
+          status: (!!swiggyConn.hasCredentials || swiggyMappings.length > 0) ? "VERIFIED" : "PENDING_SETUP",
+          detail: (!!swiggyConn.hasCredentials || swiggyMappings.length > 0)
+            ? "Merchant portal account verified"
+            : "Requires registered restaurant partner account on Swiggy Partner Portal",
+        },
+        providerApprovalPending: {
+          key: "provider_approval",
+          label: "Provider Approval Pending",
+          isComplete: swiggyConn.status === "CONNECTED",
+          status: swiggyConn.status === "CONNECTED" ? "APPROVED" : "APPROVAL_REQUIRED",
+          detail: swiggyConn.status === "CONNECTED"
+            ? "Official Swiggy POS partner onboarding signed and authorized"
+            : "Awaiting official Swiggy Partner API agreement and POS enablement by Swiggy POC",
+        },
+        apiCredentialsConfigured: {
+          key: "api_credentials",
+          label: "API Credentials Configured",
+          isComplete: !!swiggyConn.hasCredentials,
+          status: swiggyConn.hasCredentials ? "CONFIGURED" : "NOT_CONFIGURED",
+          detail: swiggyConn.hasCredentials
+            ? "Client ID and Partner Secret Token secured in AES-256 vault"
+            : "No API credentials configured. Enter live credentials from Swiggy Developer Portal",
+        },
+        webhookRegistered: {
+          key: "webhook_registered",
+          label: "Webhook Registered",
+          isComplete: swiggyWebhooksCount > 0,
+          status: swiggyWebhooksCount > 0 ? "REGISTERED" : "UNREGISTERED",
+          detail: swiggyWebhooksCount > 0
+            ? `${swiggyWebhooksCount} webhook deliveries ingested`
+            : "Endpoint ready; register URL in Swiggy Merchant Developer Console to receive live orders",
+        },
+        webhookSignatureVerified: {
+          key: "webhook_signature",
+          label: "Webhook Signature Verified",
+          isComplete: hasSwiggyWebhookSecret && swiggyProcessedWebhooksCount > 0,
+          status: hasSwiggyWebhookSecret ? (swiggyProcessedWebhooksCount > 0 ? "VERIFIED" : "SECRET_ACTIVE") : "SECRET_REQUIRED",
+          detail: hasSwiggyWebhookSecret
+            ? (swiggyProcessedWebhooksCount > 0 ? "HMAC-SHA256 signature cryptographic verification confirmed" : "SWIGGY_WEBHOOK_SECRET loaded; awaiting first signed delivery")
+            : "SWIGGY_WEBHOOK_SECRET required in production environment variables",
+        },
+        integrationOperational: {
+          key: "integration_operational",
+          label: "Integration Operational",
+          isComplete: swiggyConn.status === "CONNECTED" && swiggyMappings.length > 0 && swiggyProcessedWebhooksCount > 0,
+          status: (swiggyConn.status === "CONNECTED" && swiggyMappings.length > 0) ? "OPERATIONAL" : "DISCONNECTED",
+          detail: (swiggyConn.status === "CONNECTED" && swiggyMappings.length > 0)
+            ? `Live: ${swiggyMappings.length}/${swiggyListingsTarget} outlets receiving orders`
+            : "Disconnected. Requires partner approval, API keys, and outlet mappings",
+        },
+      };
+
+      const zomatoStages = {
+        merchantAccountActive: {
+          key: "merchant_account",
+          label: "Merchant Account Active",
+          isComplete: !!zomatoConn.hasCredentials || zomatoMappings.length > 0,
+          status: (!!zomatoConn.hasCredentials || zomatoMappings.length > 0) ? "VERIFIED" : "PENDING_SETUP",
+          detail: (!!zomatoConn.hasCredentials || zomatoMappings.length > 0)
+            ? "Zomato for Business listing active"
+            : "Requires active Zomato restaurant listing for Outlet 1 (Main Counter)",
+        },
+        providerApprovalPending: {
+          key: "provider_approval",
+          label: "Provider Approval Pending",
+          isComplete: zomatoConn.status === "CONNECTED",
+          status: zomatoConn.status === "CONNECTED" ? "APPROVED" : "APPROVAL_REQUIRED",
+          detail: zomatoConn.status === "CONNECTED"
+            ? "Order Relay POS integration authorized by Zomato"
+            : "Awaiting Order Relay POS integration agreement and token from Zomato Partner Operations",
+        },
+        apiCredentialsConfigured: {
+          key: "api_credentials",
+          label: "API Credentials Configured",
+          isComplete: !!zomatoConn.hasCredentials,
+          status: zomatoConn.hasCredentials ? "CONFIGURED" : "NOT_CONFIGURED",
+          detail: zomatoConn.hasCredentials
+            ? "API Key / Bearer token stored in AES-256 vault"
+            : "No API credentials configured. Enter live keys from Zomato Partner Portal",
+        },
+        webhookRegistered: {
+          key: "webhook_registered",
+          label: "Webhook Registered",
+          isComplete: zomatoWebhooksCount > 0,
+          status: zomatoWebhooksCount > 0 ? "REGISTERED" : "UNREGISTERED",
+          detail: zomatoWebhooksCount > 0
+            ? `${zomatoWebhooksCount} webhook deliveries ingested`
+            : "Endpoint ready; configure Relay URL in Zomato Merchant Dashboard",
+        },
+        webhookSignatureVerified: {
+          key: "webhook_signature",
+          label: "Webhook Signature Verified",
+          isComplete: hasZomatoWebhookSecret && zomatoProcessedWebhooksCount > 0,
+          status: hasZomatoWebhookSecret ? (zomatoProcessedWebhooksCount > 0 ? "VERIFIED" : "SECRET_ACTIVE") : "SECRET_REQUIRED",
+          detail: hasZomatoWebhookSecret
+            ? (zomatoProcessedWebhooksCount > 0 ? "HMAC / Bearer signature cryptographic verification confirmed" : "ZOMATO_WEBHOOK_SECRET loaded; awaiting first signed delivery")
+            : "ZOMATO_WEBHOOK_SECRET required in production environment variables",
+        },
+        integrationOperational: {
+          key: "integration_operational",
+          label: "Integration Operational",
+          isComplete: zomatoConn.status === "CONNECTED" && zomatoMappings.length > 0 && zomatoProcessedWebhooksCount > 0,
+          status: (zomatoConn.status === "CONNECTED" && zomatoMappings.length > 0) ? "OPERATIONAL" : "DISCONNECTED",
+          detail: (zomatoConn.status === "CONNECTED" && zomatoMappings.length > 0)
+            ? `Live: Outlet 1 mapped to Zomato Res ID`
+            : "Disconnected. Requires partner approval, API keys, and Outlet 1 mapping",
+        },
+      };
 
       return NextResponse.json({
         swiggy: swiggyConn,
         zomato: zomatoConn,
         stats: {
+          physicalOutletsCount: outletsCount,
           outletsCount,
-          mappedOutletsCount,
-          activeOrdersCount,
+          businessOutletsTarget: physicalOutletsTarget,
+          totalListingsTarget,
+          swiggyListingsTarget,
+          zomatoListingsTarget,
+          mappedListingsCount: allMappings.length,
+          mappedOutletsCount: mappedOutletsSet.size,
+          swiggyMappedCount: swiggyMappings.length,
+          zomatoMappedCount: zomatoMappings.length,
+          activeOrdersCount: genuineActiveOrdersCount,
+          testOrdersCount,
           exceptionsCount,
+          swiggyWebhooksCount,
+          zomatoWebhooksCount,
+          hasSwiggyWebhookSecret,
+          hasZomatoWebhookSecret,
+        },
+        verificationStages: {
+          swiggy: swiggyStages,
+          zomato: zomatoStages,
+        },
+        bridgeStatus: {
+          status: (swiggyProcessedWebhooksCount > 0 || zomatoProcessedWebhooksCount > 0) ? "ACTIVE" : "STANDBY",
+          statusLabel: (swiggyProcessedWebhooksCount > 0 || zomatoProcessedWebhooksCount > 0)
+            ? "Production Aggregator Bridge Active"
+            : "Production Aggregator Bridge Standby (Awaiting Provider Deliveries)",
+          hasSecrets: hasSwiggyWebhookSecret || hasZomatoWebhookSecret,
+          totalWebhooksReceived: swiggyWebhooksCount + zomatoWebhooksCount,
+          verifiedEvents: swiggyProcessedWebhooksCount + zomatoProcessedWebhooksCount,
+        },
+        businessStructure: {
+          brandName: "WAFFLE PLUM HOUSE",
+          outlets: allOutlets,
+          listingsBreakdown: {
+            swiggy: {
+              target: swiggyListingsTarget,
+              mapped: swiggyMappings.length,
+              rule: "1 listing per physical outlet (3 total)",
+            },
+            zomato: {
+              target: zomatoListingsTarget,
+              mapped: zomatoMappings.length,
+              rule: "1 listing belonging exclusively to Outlet 1 (Main Counter)",
+            },
+          },
         },
         recentSyncJobs: syncJobs,
       });

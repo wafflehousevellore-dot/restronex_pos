@@ -106,7 +106,7 @@ export async function getOrRestoreBleDevice(): Promise<any> {
         if (!dev.gatt?.connected) {
           try {
             await dev.gatt?.connect();
-          } catch {}
+          } catch { }
         }
         return dev;
       }
@@ -152,9 +152,9 @@ export async function getBleWriteCharacteristic(dev: any): Promise<any> {
           activeBleCharacteristic = writeChar;
           return writeChar;
         }
-      } catch {}
+      } catch { }
     }
-  } catch {}
+  } catch { }
 
   return null;
 }
@@ -248,7 +248,7 @@ export async function discoverBluetoothPrinter(): Promise<{
       try {
         await dev.gatt?.connect();
         await getBleWriteCharacteristic(dev);
-      } catch {}
+      } catch { }
     }
 
     return {
@@ -289,7 +289,7 @@ export async function generateHtmlReceiptWithQr(
         margin: 1,
         errorCorrectionLevel: "M",
       });
-    } catch {}
+    } catch { }
   }
 
   // Find line position where QR should be embedded (after "SCAN TO PAY" or "Scan QR")
@@ -308,11 +308,9 @@ export async function generateHtmlReceiptWithQr(
       .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
       .join("\n");
 
-    htmlBody = `<pre>${preQr}</pre><div style="text-align:center;margin:6px 0;"><img src="${qrDataUrl}" style="width:${
-      paperWidth === "58mm" ? "130px" : "160px"
-    };height:${
-      paperWidth === "58mm" ? "130px" : "160px"
-    };image-rendering:pixelated;display:inline-block;" /></div><pre>${postQr}</pre>`;
+    htmlBody = `<pre>${preQr}</pre><div style="text-align:center;margin:6px 0;"><img src="${qrDataUrl}" style="width:${paperWidth === "58mm" ? "130px" : "160px"
+      };height:${paperWidth === "58mm" ? "130px" : "160px"
+      };image-rendering:pixelated;display:inline-block;" /></div><pre>${postQr}</pre>`;
   } else if (qrDataUrl) {
     const allText = textLines
       .map((l) => l.replace(/&/g, "&amp;").replace(/</g, "&lt;"))
@@ -388,10 +386,10 @@ export async function dispatchClientPrintJob(params: {
           : null;
         const dev = vidPid
           ? devices.find(
-              (d: any) =>
-                Number(d.vendorId).toString(16).padStart(4, "0") === vidPid[1] &&
-                Number(d.productId).toString(16).padStart(4, "0") === vidPid[2]
-            )
+            (d: any) =>
+              Number(d.vendorId).toString(16).padStart(4, "0") === vidPid[1] &&
+              Number(d.productId).toString(16).padStart(4, "0") === vidPid[2]
+          )
           : devices[0];
 
         if (!dev) {
@@ -413,7 +411,7 @@ export async function dispatchClientPrintJob(params: {
               errMsg = "No USB OUT bulk endpoint found on printer";
             }
           }
-          await dev.close().catch(() => {});
+          await dev.close().catch(() => { });
         }
       } catch (e: any) {
         finalStatus = "OFFLINE";
@@ -465,7 +463,7 @@ export async function dispatchClientPrintJob(params: {
           setTimeout(() => {
             try {
               document.body.removeChild(iframe);
-            } catch {}
+            } catch { }
           }, 4000);
           finalStatus = "PRINT_REQUESTED";
         } else {
@@ -506,7 +504,7 @@ export async function dispatchClientPrintJob(params: {
         setTimeout(() => {
           try {
             document.body.removeChild(iframe);
-          } catch {}
+          } catch { }
         }, 4000);
         // Never mark PRINTED on browser/OS spooler because browser cannot detect paper-out/offline
         finalStatus = "PRINT_REQUESTED";
@@ -525,7 +523,7 @@ export async function dispatchClientPrintJob(params: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: finalStatus, lastError: errMsg || null }),
     });
-  } catch {}
+  } catch { }
 
   return { status: finalStatus, error: errMsg };
 }

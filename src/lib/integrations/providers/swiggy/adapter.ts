@@ -19,7 +19,13 @@ export class SwiggyIntegrationProvider implements IIntegrationProvider {
     rawBody: string,
     secret?: string
   ): boolean {
-    if (!secret) return true; // Development / test mode bypass
+    if (!secret) {
+      if (process.env.NODE_ENV === "production") {
+        console.warn("[Swiggy Webhook]: Missing SWIGGY_WEBHOOK_SECRET in production - rejecting unsigned delivery");
+        return false;
+      }
+      return true; // Development / test mode bypass only
+    }
 
     const getHeader = (key: string): string | undefined => {
       if (typeof headers.get === "function") return headers.get(key) || undefined;

@@ -221,25 +221,29 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
 
     // 5. Atomic transaction to create Order, OrderItems, Payment, KitchenTicket, and PrintJob
     const result = await prisma.$transaction(async (tx) => {
+      const safeTotalPaise = totalPaise ?? (items.reduce((acc, i) => acc + (i.totalPaise || (i.unitPricePaise * i.quantity)), 0) + (taxPaise || 0) - (discountPaise || 0));
+      const safeSubtotalPaise = (subtotalPaise !== undefined && !isNaN(subtotalPaise)) ? subtotalPaise : items.reduce((acc, i) => acc + (i.totalPaise || (i.unitPricePaise * i.quantity)), 0);
+      const safeTaxPaise = taxPaise ?? 0;
+
       const order = await tx.order.create({
         data: {
-          tenantId,
-          outletId,
+          tenant: { connect: { id: tenantId } },
+          outlet: { connect: { id: outletId } },
           orderNumber,
           type: source,
           channel: source,
           aggregatorOrderId: externalOrderId || null,
           aggregatorStatus: "CONFIRMED",
           serviceMode,
-          tableId: tableId || null,
+          ...(tableId ? { table: { connect: { id: tableId } } } : {}),
           status: "PLACED",
           customerName: customerName || `${source} Customer`,
           customerPhone: customerPhone || null,
           notes: combinedNotes,
-          subtotalPaise,
-          taxPaise,
-          discountPaise,
-          totalPaise,
+          subtotalPaise: safeSubtotalPaise,
+          taxPaise: safeTaxPaise,
+          discountPaise: discountPaise || 0,
+          totalPaise: safeTotalPaise,
           isPaid,
           paidAt: isPaid ? new Date() : null,
           kotStatus: "SENT",
@@ -252,7 +256,7 @@ export async function ingestOrder(payload: NormalizedOrderPayload): Promise<Inge
               tenantId,
               outletId,
               method: paymentMethod,
-              amountPaise: totalPaise,
+              amountPaise: safeTotalPaise,
               status: isPaid ? "COMPLETED" : "PENDING",
               reference: externalOrderId ? `${source} Order #${externalOrderId}` : `POS ${orderNumber}`,
             },

@@ -202,6 +202,13 @@ html {
     z-index: 999999 !important;
   }
 
+  #thermal-receipt-printable[data-paper="58mm"] {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    padding: 2mm !important;
+    font-size: 10px !important;
+  }
+
   #qr-badge-printable {
     position: fixed !important;
     left: 50% !important;

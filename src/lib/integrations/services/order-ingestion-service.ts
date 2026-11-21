@@ -69,17 +69,23 @@ export class AggregatorOrderIngestionService {
     });
 
     if (!mapping) {
-      // Record in AggregatorExceptionQueue
-      await prisma.aggregatorExceptionQueue.create({
-        data: {
-          tenantId: "unknown",
-          provider,
-          externalOrderId: providerOrderId,
-          errorType: "OUTLET_UNMAPPED",
-          reason: `No outlet mapping found for store ${providerStoreId} on ${provider}`,
-          payloadJson: rawPayloadJson,
-        },
-      }).catch(() => null);
+      // Find fallback tenant for foreign key constraint
+      const fallbackTenant = (payload as any).tenantId
+        ? { id: (payload as any).tenantId }
+        : await prisma.tenant.findFirst({ select: { id: true } });
+
+      if (fallbackTenant) {
+        await prisma.aggregatorExceptionQueue.create({
+          data: {
+            tenantId: fallbackTenant.id,
+            provider,
+            externalOrderId: providerOrderId,
+            errorType: "OUTLET_UNMAPPED",
+            reason: `No outlet mapping found for store ${providerStoreId} on ${provider}`,
+            payloadJson: rawPayloadJson,
+          },
+        }).catch((e) => console.error("[ExceptionQueue] Failed to record unmapped store:", e));
+      }
 
       throw new UnmappedStoreError(providerStoreId, provider);
     }

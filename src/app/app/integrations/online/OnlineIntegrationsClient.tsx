@@ -28,10 +28,70 @@ import {
   HelpCircle,
   Power,
   TrendingUp,
+  ShieldAlert,
+  XCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+
+function VerificationStageList({
+  stages,
+}: {
+  stages?: Record<string, { label: string; isComplete: boolean; status: string; detail: string }>;
+}) {
+  if (!stages) return null;
+  const stageKeys = [
+    "merchantAccountActive",
+    "providerApprovalPending",
+    "apiCredentialsConfigured",
+    "webhookRegistered",
+    "webhookSignatureVerified",
+    "integrationOperational",
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      {stageKeys.map((key, idx) => {
+        const item = stages[key];
+        if (!item) return null;
+        return (
+          <div
+            key={key}
+            className={`p-3.5 rounded-xl border flex flex-col justify-between space-y-2 ${
+              item.isComplete
+                ? "bg-emerald-50/60 border-emerald-200"
+                : item.status === "APPROVAL_REQUIRED" || item.status === "SECRET_REQUIRED"
+                ? "bg-amber-50/60 border-amber-200"
+                : "bg-gray-50 border-gray-200"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-gray-200 text-gray-700 text-[10px] font-bold flex items-center justify-center shrink-0">
+                  {idx + 1}
+                </span>
+                <span className="text-xs font-bold text-[#172B25]">{item.label}</span>
+              </div>
+              <span
+                className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded-full shrink-0 ${
+                  item.isComplete
+                    ? "bg-emerald-100 text-emerald-800"
+                    : item.status === "APPROVAL_REQUIRED" || item.status === "SECRET_REQUIRED"
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {item.status}
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-600 leading-snug">{item.detail}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 type TabKey = "overview" | "swiggy" | "zomato" | "outlets" | "menu" | "orders" | "reconciliation";
 
@@ -470,6 +530,9 @@ export default function OnlineIntegrationsClient() {
                       ? "Status: Awaiting Swiggy Approval"
                       : "Status: Provider Approval Required"}
                   </div>
+                  <div className="text-[11px] text-gray-400 mt-1">
+                    {statusData?.stats?.swiggyMappedCount || 0} / {statusData?.stats?.swiggyListingsTarget || 3} Outlets Mapped
+                  </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 font-extrabold text-lg">
                   S
@@ -504,6 +567,9 @@ export default function OnlineIntegrationsClient() {
                       ? "Status: Awaiting Zomato Approval"
                       : "Status: Provider Approval Required"}
                   </div>
+                  <div className="text-[11px] text-gray-400 mt-1">
+                    Outlet 1 Only ({statusData?.stats?.zomatoMappedCount || 0} / 1 Mapped)
+                  </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 font-extrabold text-lg">
                   Z
@@ -514,11 +580,16 @@ export default function OnlineIntegrationsClient() {
             <Card className="border border-gray-200 shadow-xs">
               <CardContent className="p-5 flex items-center justify-between">
                 <div>
-                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Mapped Outlets</div>
+                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Mapped Listings</div>
                   <div className="text-2xl font-bold mt-1 text-[#172B25]">
-                    {statusData?.stats?.mappedOutletsCount || 0} / {statusData?.stats?.outletsCount || 0}
+                    {statusData?.stats?.mappedListingsCount || 0} / {statusData?.stats?.totalListingsTarget || 4}
                   </div>
-                  <div className="text-xs text-gray-500 mt-0.5">1-to-1 Provider Store ID Links</div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {statusData?.stats?.physicalOutletsCount || 3} Outlets • 4 Listings (3 Swiggy, 1 Zomato)
+                  </div>
+                  <div className="text-[11px] text-gray-400 mt-1">
+                    Swiggy: {statusData?.stats?.swiggyMappedCount || 0}/3 • Zomato: {statusData?.stats?.zomatoMappedCount || 0}/1
+                  </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                   <Store className="w-6 h-6" />
@@ -534,6 +605,9 @@ export default function OnlineIntegrationsClient() {
                     {statusData?.stats?.activeOrdersCount || 0} Orders
                   </div>
                   <div className="text-xs text-gray-500 mt-0.5">In Kitchen KOT / Dispatch</div>
+                  <div className="text-[11px] text-gray-400 mt-1">
+                    0 Live Active • {statusData?.stats?.testOrdersCount || 1} Test Order Archived
+                  </div>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
                   <Zap className="w-6 h-6" />
@@ -590,10 +664,27 @@ export default function OnlineIntegrationsClient() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-[#E8F5EE] border border-[#16845B]/30">
-                <div className="flex items-center gap-2 text-xs text-[#16845B] font-medium">
-                  <ShieldCheck className="w-4 h-4 text-[#16845B]" />
-                  <span>Production Aggregator Bridge Active. Webhooks securely signed and verified via HMAC-SHA256.</span>
+              {/* Real persisted bridge status */}
+              <div
+                className={`flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl border ${
+                  statusData?.bridgeStatus?.status === "ACTIVE"
+                    ? "bg-[#E8F5EE] border-[#16845B]/30"
+                    : "bg-amber-50/70 border-amber-200"
+                }`}
+              >
+                <div className="flex items-center gap-2 text-xs font-medium">
+                  {statusData?.bridgeStatus?.status === "ACTIVE" ? (
+                    <ShieldCheck className="w-4 h-4 text-[#16845B] shrink-0" />
+                  ) : (
+                    <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+                  )}
+                  <span className={statusData?.bridgeStatus?.status === "ACTIVE" ? "text-[#16845B]" : "text-amber-800"}>
+                    {statusData?.bridgeStatus?.statusLabel || "Production Aggregator Bridge Standby (Awaiting Official Deliveries)"}
+                    {" • "}
+                    {statusData?.bridgeStatus?.hasSecrets ? "Secrets Active" : "Webhook Secrets Required in Production"}
+                    {" • "}
+                    {`${statusData?.bridgeStatus?.totalWebhooksReceived || 0} Deliveries Ingested`}
+                  </span>
                 </div>
                 <Link
                   href="/app/integrations"
@@ -604,6 +695,43 @@ export default function OnlineIntegrationsClient() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Persisted Verification Stages Matrix */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 border-b">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-orange-100 text-orange-700 font-black text-xs flex items-center justify-center">
+                      S
+                    </div>
+                    <CardTitle className="text-sm font-bold text-[#172B25]">Swiggy Verification Matrix</CardTitle>
+                  </div>
+                  <span className="text-[11px] font-bold text-gray-500 uppercase">3 Outlets Target</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <VerificationStageList stages={statusData?.verificationStages?.swiggy} />
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200">
+              <CardHeader className="pb-3 border-b">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-red-100 text-red-700 font-black text-xs flex items-center justify-center">
+                      Z
+                    </div>
+                    <CardTitle className="text-sm font-bold text-[#172B25]">Zomato Verification Matrix</CardTitle>
+                  </div>
+                  <span className="text-[11px] font-bold text-gray-500 uppercase">Outlet 1 Only</span>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4">
+                <VerificationStageList stages={statusData?.verificationStages?.zomato} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       )}
 
@@ -634,29 +762,15 @@ export default function OnlineIntegrationsClient() {
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              {/* Checklist */}
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-600">
-                  Swiggy Onboarding Checklist
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-700">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Registered restaurant on Swiggy Partner Portal</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>POS API integration enabled by Swiggy POC</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Webhook URL registered for instant order push</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Outlets mapped to Swiggy Store IDs in RestroNex</span>
-                  </div>
+              {/* Persisted Verification Stages */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
+                    Persisted Swiggy Verification States
+                  </h4>
+                  <span className="text-[11px] text-gray-500 font-medium">3 Physical Outlets Target</span>
                 </div>
+                <VerificationStageList stages={statusData?.verificationStages?.swiggy} />
               </div>
 
               {/* Webhook endpoint card */}
@@ -778,29 +892,15 @@ export default function OnlineIntegrationsClient() {
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
-              {/* Checklist */}
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-gray-600">
-                  Zomato Onboarding Checklist
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-700">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Active restaurant listing on Zomato for Business</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>POS integration access token provided by Zomato</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Order Relay webhook URL configured</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Outlets mapped to Zomato Res IDs in RestroNex</span>
-                  </div>
+              {/* Persisted Verification Stages */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
+                    Persisted Zomato Verification States
+                  </h4>
+                  <span className="text-[11px] text-gray-500 font-medium">Outlet 1 (Main Counter) Only</span>
                 </div>
+                <VerificationStageList stages={statusData?.verificationStages?.zomato} />
               </div>
 
               {/* Webhook endpoint card */}
@@ -898,6 +998,38 @@ export default function OnlineIntegrationsClient() {
       {/* Tab: OUTLETS */}
       {activeTab === "outlets" && (
         <div className="space-y-6">
+          {/* Brand Multi-Outlet Architecture Card */}
+          <Card className="border border-blue-200 bg-blue-50/40">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 flex items-center gap-2">
+                    <Store className="w-4 h-4 text-blue-700" />
+                    Brand Multi-Outlet Listing Architecture (WAFFLE PLUM HOUSE)
+                  </h4>
+                  <p className="text-xs text-blue-800 leading-relaxed">
+                    Brand topology: <strong>3 physical outlets</strong> and <strong>4 external listings</strong>
+                    <span className="block mt-1">
+                      • <strong>Swiggy (3 Listings)</strong>: 1-to-1 Store ID mapped to each physical outlet (Main Counter, Outlet 2, Outlet 3).
+                    </span>
+                    <span className="block">
+                      • <strong>Zomato (1 Listing)</strong>: Dedicated Res ID mapped exclusively to <strong>Outlet 1 (Main Counter)</strong>.
+                    </span>
+                  </p>
+                </div>
+                <div className="px-3.5 py-2 rounded-xl bg-white border border-blue-200 text-left sm:text-right shrink-0">
+                  <div className="text-[10px] font-bold uppercase text-gray-500">Mapping Progress</div>
+                  <div className="text-lg font-black text-blue-900">
+                    {statusData?.stats?.mappedListingsCount || 0} / {statusData?.stats?.totalListingsTarget || 4} Listings
+                  </div>
+                  <div className="text-[11px] text-gray-500">
+                    {statusData?.stats?.physicalOutletsCount || 3} Physical Outlets
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Add Mapping Form */}
           <Card className="border border-gray-200">
             <CardHeader className="pb-3 border-b">

@@ -19,7 +19,13 @@ export class ZomatoIntegrationProvider implements IIntegrationProvider {
     rawBody: string,
     secret?: string
   ): boolean {
-    if (!secret) return true;
+    if (!secret) {
+      if (process.env.NODE_ENV === "production") {
+        console.warn("[Zomato Webhook]: Missing ZOMATO_WEBHOOK_SECRET in production - rejecting unsigned delivery");
+        return false;
+      }
+      return true; // Development / test mode bypass only
+    }
 
     const getHeader = (key: string): string | undefined => {
       if (typeof headers.get === "function") return headers.get(key) || undefined;

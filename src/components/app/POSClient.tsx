@@ -238,6 +238,7 @@ export default function POSClient({
   const [showReceipt, setShowReceipt] = useState(false);
   const [recentOrders, setRecentOrders] = useState<RecentPOSOrder[]>([]);
   const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   // Bluetooth printing
   const [bleConnected, setBleConnected] = useState(false);
@@ -752,12 +753,31 @@ export default function POSClient({
         totalPaise: grandTotalPaise,
         orderId: data.orderId,
         invoicePdfUrl: data.invoicePdfUrl,
-        paperWidth: "80mm",
+        paperWidth: (data.printJob?.paperWidth as "58mm" | "80mm") || "58mm",
+        printJobId: data.printJob?.jobId,
+        printStatus: data.printJob?.status,
+        printerName: data.printJob?.printerName,
       };
 
       setActiveReceipt(receipt);
       setLastOrder({ orderNumber, total: grandTotalPaise });
       setShowReceipt(true);
+
+      // Auto-dispatch thermal print job
+      if (data.printJob && data.printJob.requiresClientDispatch) {
+        dispatchClientPrintJob({
+          jobId: data.printJob.jobId,
+          printerType: data.printJob.printerType,
+          connectionString: data.printJob.connectionString,
+          bridgeUrl: data.printJob.bridgeUrl,
+          paperWidth: data.printJob.paperWidth || "58mm",
+          escPosBase64: data.printJob.escPosBase64,
+          textLines: data.printJob.textLines,
+          qrData: data.printJob.qrData || data.invoicePdfUrl,
+        }).catch((err) => {
+          console.warn("[POS Auto-Print] Silent hardware dispatch notice:", err);
+        });
+      }
 
       // Add to recent orders feed
       const newRecent: RecentPOSOrder = {
@@ -793,12 +813,137 @@ export default function POSClient({
     }
   };
 
-  // Reprint Handlers
-  const handleReprintBill = (o: RecentPOSOrder) => {
-    window.print();
+  // Manual Print & Reprint Handlers
+  const handleManualPrintBill = async () => {
+    if (!activeReceipt) return;
+    setIsPrinting(true);
+
+    try {
+      if (activeReceipt.orderId) {
+        const res = await fetch("/api/print-jobs", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: activeReceipt.orderId,
+            jobType: "BILL",
+            paperWidth: activeReceipt.paperWidth || "58mm",
+          }),
+        });
+        const data = await res.json();
+        if (data.requiresClientDispatch) {
+          await dispatchClientPrintJob({
+            jobId: data.jobId,
+            printerType: data.printerType,
+            connectionString: data.connectionString,
+            bridgeUrl: data.bridgeUrl,
+            paperWidth: data.paperWidth || activeReceipt.paperWidth || "58mm",
+            escPosBase64: data.escPosBase64,
+            textLines: data.textLines,
+            qrData: data.qrData || activeReceipt.invoicePdfUrl,
+          });
+          setMsg({ type: "success", text: `Bill dispatched to ${data.printerName || "Thermal Printer"}` });
+        }
+      }
+    } catch (e) {
+      console.warn("[POS Manual Print] Hardware dispatch warning:", e);
+    } finally {
+      setIsPrinting(false);
+    }
+
+    // Always invoke window.print() so browser/OS thermal printer prints the #thermal-receipt-printable
+    setTimeout(() => {
+      window.print();
+    }, 50);
   };
 
-  const handleReprintKOT = (o: RecentPOSOrder) => {
+  const handleReprintBill = async (o: RecentPOSOrder) => {
+    try {
+      const res = await fetch("/api/print-jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: o.id,
+          jobType: "BILL",
+        }),
+      });
+      const data = await res.json();
+      if (data.requiresClientDispatch) {
+        await dispatchClientPrintJob({
+          jobId: data.jobId,
+          printerType: data.printerType,
+          connectionString: data.connectionString,
+          bridgeUrl: data.bridgeUrl,
+          paperWidth: data.paperWidth || "58mm",
+          escPosBase64: data.escPosBase64,
+          textLines: data.textLines,
+          qrData: data.qrData,
+        });
+        setMsg({ type: "success", text: `Bill reprint sent to ${data.printerName || "Thermal Printer"}` });
+        return;
+      }
+    } catch (err) {
+      console.warn("[POS Reprint] Direct dispatch fallback:", err);
+    }
+
+    // Fallback: Populate activeReceipt and open print
+    setActiveReceipt({
+      orderNumber: o.orderNumber,
+      invoiceNumber: o.invoiceNumber || `INV-${o.orderNumber.replace("ORD-", "")}`,
+      outletName: outlets.find((x) => x.id === selectedOutlet)?.name || "RestroNex Restaurant",
+      date: new Date().toLocaleString("en-IN"),
+      orderType: o.orderType,
+      tableName: o.tableName,
+      customerName: o.customerName,
+      customerPhone: o.customerPhone,
+      paymentMethod: "CASH",
+      items: o.items && o.items.length > 0
+        ? o.items.map((it) => ({
+            name: it.name,
+            quantity: it.quantity,
+            unitPricePaise: Math.round(o.totalPaise / Math.max(1, o.items.length)),
+          }))
+        : [{ name: "Order Items", quantity: 1, unitPricePaise: o.totalPaise }],
+      subtotalPaise: o.totalPaise,
+      discountPaise: 0,
+      cgstPaise: 0,
+      sgstPaise: 0,
+      totalPaise: o.totalPaise,
+      orderId: o.id,
+      paperWidth: "58mm",
+    });
+    setShowReceipt(true);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handleReprintKOT = async (o: RecentPOSOrder) => {
+    try {
+      const res = await fetch("/api/print-jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: o.id,
+          jobType: "KOT",
+        }),
+      });
+      const data = await res.json();
+      if (data.requiresClientDispatch) {
+        await dispatchClientPrintJob({
+          jobId: data.jobId,
+          printerType: data.printerType,
+          connectionString: data.connectionString,
+          bridgeUrl: data.bridgeUrl,
+          paperWidth: data.paperWidth || "58mm",
+          escPosBase64: data.escPosBase64,
+          textLines: data.textLines,
+        });
+        setMsg({ type: "success", text: `KOT printed for #${o.orderNumber}` });
+        return;
+      }
+    } catch (err) {
+      console.warn("[POS KOT Reprint] Error:", err);
+    }
     setMsg({ type: "info", text: `KOT re-queued for ${o.orderNumber}.` });
   };
 
@@ -1299,11 +1444,12 @@ export default function POSClient({
             <div className="space-y-2 pt-2">
               <button
                 type="button"
-                onClick={() => window.print()}
-                className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+                onClick={handleManualPrintBill}
+                disabled={isPrinting}
+                className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-60"
               >
                 <Printer className="h-3.5 w-3.5" />
-                <span>Print 80mm Bill</span>
+                <span>{isPrinting ? "Sending to Printer..." : "Print Bill (Thermal / Browser)"}</span>
               </button>
 
               <button
@@ -1314,6 +1460,118 @@ export default function POSClient({
                 Start New Order
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hidden Thermal Receipt for Native Browser/OS & ESC/POS Printing */}
+      {activeReceipt && (
+        <div
+          id="thermal-receipt-printable"
+          data-paper={activeReceipt.paperWidth || "58mm"}
+          className="hidden print:block text-black bg-white"
+        >
+          {/* Outlet Header */}
+          <div className="text-center pb-2 border-b border-dashed border-black">
+            <div className="font-bold text-sm tracking-wide uppercase">
+              {activeReceipt.outletName || "WAFFLE PLUM HOUSE"}
+            </div>
+            <div className="text-[10px] mt-0.5">TAX INVOICE / CASH BILL</div>
+            <div className="text-[10px] mt-0.5">GSTIN: 33AAACW1234F1Z5 • FSSAI: 12423008000123</div>
+          </div>
+
+          {/* Metadata */}
+          <div className="py-1.5 border-b border-dashed border-black text-[11px] space-y-0.5">
+            <div className="flex justify-between">
+              <span>Order: <strong>{activeReceipt.orderNumber}</strong></span>
+              <span>Inv: {activeReceipt.invoiceNumber}</span>
+            </div>
+            <div className="flex justify-between text-[10px]">
+              <span>Date: {activeReceipt.date}</span>
+              <span>Type: {activeReceipt.orderType}</span>
+            </div>
+            {activeReceipt.tableName && (
+              <div className="font-bold">Table: {activeReceipt.tableName}</div>
+            )}
+            {activeReceipt.customerName && (
+              <div className="text-[10px]">
+                Customer: {activeReceipt.customerName} {activeReceipt.customerPhone ? `(${activeReceipt.customerPhone})` : ""}
+              </div>
+            )}
+          </div>
+
+          {/* Items Table */}
+          <div className="py-2 border-b border-dashed border-black text-[11px]">
+            <div className="flex justify-between font-bold border-b border-dashed border-black pb-1 mb-1 text-[10px]">
+              <span className="w-1/2">ITEM</span>
+              <span className="w-1/6 text-center">QTY</span>
+              <span className="w-1/3 text-right">AMOUNT</span>
+            </div>
+            {activeReceipt.items.map((it, idx) => (
+              <div key={idx} className="mb-1">
+                <div className="flex justify-between items-start">
+                  <span className="w-1/2 font-medium break-words leading-tight">{it.name}</span>
+                  <span className="w-1/6 text-center">{it.quantity}</span>
+                  <span className="w-1/3 text-right font-medium">
+                    {formatINR(it.quantity * it.unitPricePaise)}
+                  </span>
+                </div>
+                {it.modifiers && it.modifiers.length > 0 && (
+                  <div className="text-[9px] text-gray-700 pl-2">
+                    {it.modifiers.map((m, mIdx) => (
+                      <div key={mIdx} className="flex justify-between">
+                        <span>+ {m.name}</span>
+                        {m.pricePaise > 0 && <span>{formatINR(m.pricePaise)}</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Totals */}
+          <div className="py-1.5 border-b border-dashed border-black text-[11px] space-y-1">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>{formatINR(activeReceipt.subtotalPaise)}</span>
+            </div>
+            {activeReceipt.discountPaise > 0 && (
+              <div className="flex justify-between text-black">
+                <span>Discount</span>
+                <span>-{formatINR(activeReceipt.discountPaise)}</span>
+              </div>
+            )}
+            {activeReceipt.cgstPaise > 0 && (
+              <div className="flex justify-between text-[10px]">
+                <span>CGST (2.5%)</span>
+                <span>{formatINR(activeReceipt.cgstPaise)}</span>
+              </div>
+            )}
+            {activeReceipt.sgstPaise > 0 && (
+              <div className="flex justify-between text-[10px]">
+                <span>SGST (2.5%)</span>
+                <span>{formatINR(activeReceipt.sgstPaise)}</span>
+              </div>
+            )}
+            <div className="flex justify-between font-bold text-xs pt-1 border-t border-dashed border-black">
+              <span>NET PAYABLE</span>
+              <span>{formatINR(activeReceipt.totalPaise)}</span>
+            </div>
+          </div>
+
+          {/* Payment & Footer */}
+          <div className="pt-2 text-center text-[10px] space-y-1">
+            <div className="font-semibold">
+              Paid via: {activeReceipt.paymentMethod}
+            </div>
+            {activeReceipt.invoicePdfUrl && (
+              <div className="my-1 flex justify-center">
+                <QRCodeSVG value={activeReceipt.invoicePdfUrl} size={72} />
+              </div>
+            )}
+            <div className="font-medium text-[9px] mt-1">Thank you for dining with us!</div>
+            <div className="text-[8px] text-gray-600">RestroNex Restaurant OS • Powered by Waffle Plum House</div>
           </div>
         </div>
       )}
