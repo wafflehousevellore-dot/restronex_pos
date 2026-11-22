@@ -257,6 +257,11 @@ export type OutletWhereInput = {
   productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingListRelationFilter
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
+  bulkSales?: Prisma.BulkSaleListRelationFilter
+  inventoryItems?: Prisma.InventoryItemListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  transfersFrom?: Prisma.StockTransferListRelationFilter
+  transfersTo?: Prisma.StockTransferListRelationFilter
 }
 
 export type OutletOrderByWithRelationInput = {
@@ -291,6 +296,11 @@ export type OutletOrderByWithRelationInput = {
   productAddonGroups?: Prisma.ProductAddonGroupOrderByRelationAggregateInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingOrderByRelationAggregateInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceOrderByRelationAggregateInput
+  bulkSales?: Prisma.BulkSaleOrderByRelationAggregateInput
+  inventoryItems?: Prisma.InventoryItemOrderByRelationAggregateInput
+  purchaseOrders?: Prisma.PurchaseOrderOrderByRelationAggregateInput
+  transfersFrom?: Prisma.StockTransferOrderByRelationAggregateInput
+  transfersTo?: Prisma.StockTransferOrderByRelationAggregateInput
 }
 
 export type OutletWhereUniqueInput = Prisma.AtLeast<{
@@ -329,6 +339,11 @@ export type OutletWhereUniqueInput = Prisma.AtLeast<{
   productAddonGroups?: Prisma.ProductAddonGroupListRelationFilter
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingListRelationFilter
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
+  bulkSales?: Prisma.BulkSaleListRelationFilter
+  inventoryItems?: Prisma.InventoryItemListRelationFilter
+  purchaseOrders?: Prisma.PurchaseOrderListRelationFilter
+  transfersFrom?: Prisma.StockTransferListRelationFilter
+  transfersTo?: Prisma.StockTransferListRelationFilter
 }, "id" | "tenantId_slug">
 
 export type OutletOrderByWithAggregationInput = {
@@ -398,6 +413,11 @@ export type OutletCreateInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateInput = {
@@ -431,6 +451,11 @@ export type OutletUncheckedCreateInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUpdateInput = {
@@ -464,6 +489,11 @@ export type OutletUpdateInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateInput = {
@@ -497,6 +527,11 @@ export type OutletUncheckedUpdateInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateManyInput = {
@@ -773,6 +808,38 @@ export type OutletUpdateOneRequiredWithoutShiftsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutShiftsInput, Prisma.OutletUpdateWithoutShiftsInput>, Prisma.OutletUncheckedUpdateWithoutShiftsInput>
 }
 
+export type OutletCreateNestedOneWithoutInventoryItemsInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutInventoryItemsInput, Prisma.OutletUncheckedCreateWithoutInventoryItemsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutInventoryItemsInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneWithoutInventoryItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutInventoryItemsInput, Prisma.OutletUncheckedCreateWithoutInventoryItemsInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutInventoryItemsInput
+  upsert?: Prisma.OutletUpsertWithoutInventoryItemsInput
+  disconnect?: Prisma.OutletWhereInput | boolean
+  delete?: Prisma.OutletWhereInput | boolean
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutInventoryItemsInput, Prisma.OutletUpdateWithoutInventoryItemsInput>, Prisma.OutletUncheckedUpdateWithoutInventoryItemsInput>
+}
+
+export type OutletCreateNestedOneWithoutPurchaseOrdersInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPurchaseOrdersInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneWithoutPurchaseOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedCreateWithoutPurchaseOrdersInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutPurchaseOrdersInput
+  upsert?: Prisma.OutletUpsertWithoutPurchaseOrdersInput
+  disconnect?: Prisma.OutletWhereInput | boolean
+  delete?: Prisma.OutletWhereInput | boolean
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutPurchaseOrdersInput, Prisma.OutletUpdateWithoutPurchaseOrdersInput>, Prisma.OutletUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
 export type OutletCreateNestedOneWithoutStockMovementsInput = {
   create?: Prisma.XOR<Prisma.OutletCreateWithoutStockMovementsInput, Prisma.OutletUncheckedCreateWithoutStockMovementsInput>
   connectOrCreate?: Prisma.OutletCreateOrConnectWithoutStockMovementsInput
@@ -787,6 +854,48 @@ export type OutletUpdateOneWithoutStockMovementsNestedInput = {
   delete?: Prisma.OutletWhereInput | boolean
   connect?: Prisma.OutletWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.OutletUpdateWithoutStockMovementsInput>, Prisma.OutletUncheckedUpdateWithoutStockMovementsInput>
+}
+
+export type OutletCreateNestedOneWithoutBulkSalesInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutBulkSalesInput, Prisma.OutletUncheckedCreateWithoutBulkSalesInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutBulkSalesInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutBulkSalesNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutBulkSalesInput, Prisma.OutletUncheckedCreateWithoutBulkSalesInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutBulkSalesInput
+  upsert?: Prisma.OutletUpsertWithoutBulkSalesInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutBulkSalesInput, Prisma.OutletUpdateWithoutBulkSalesInput>, Prisma.OutletUncheckedUpdateWithoutBulkSalesInput>
+}
+
+export type OutletCreateNestedOneWithoutTransfersFromInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutTransfersFromInput, Prisma.OutletUncheckedCreateWithoutTransfersFromInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutTransfersFromInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletCreateNestedOneWithoutTransfersToInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutTransfersToInput, Prisma.OutletUncheckedCreateWithoutTransfersToInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutTransfersToInput
+  connect?: Prisma.OutletWhereUniqueInput
+}
+
+export type OutletUpdateOneRequiredWithoutTransfersFromNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutTransfersFromInput, Prisma.OutletUncheckedCreateWithoutTransfersFromInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutTransfersFromInput
+  upsert?: Prisma.OutletUpsertWithoutTransfersFromInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutTransfersFromInput, Prisma.OutletUpdateWithoutTransfersFromInput>, Prisma.OutletUncheckedUpdateWithoutTransfersFromInput>
+}
+
+export type OutletUpdateOneRequiredWithoutTransfersToNestedInput = {
+  create?: Prisma.XOR<Prisma.OutletCreateWithoutTransfersToInput, Prisma.OutletUncheckedCreateWithoutTransfersToInput>
+  connectOrCreate?: Prisma.OutletCreateOrConnectWithoutTransfersToInput
+  upsert?: Prisma.OutletUpsertWithoutTransfersToInput
+  connect?: Prisma.OutletWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OutletUpdateToOneWithWhereWithoutTransfersToInput, Prisma.OutletUpdateWithoutTransfersToInput>, Prisma.OutletUncheckedUpdateWithoutTransfersToInput>
 }
 
 export type OutletCreateNestedOneWithoutTokensInput = {
@@ -945,6 +1054,11 @@ export type OutletCreateWithoutTenantInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTenantInput = {
@@ -977,6 +1091,11 @@ export type OutletUncheckedCreateWithoutTenantInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTenantInput = {
@@ -1053,6 +1172,11 @@ export type OutletCreateWithoutMembershipsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutMembershipsInput = {
@@ -1085,6 +1209,11 @@ export type OutletUncheckedCreateWithoutMembershipsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutMembershipsInput = {
@@ -1133,6 +1262,11 @@ export type OutletUpdateWithoutMembershipsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutMembershipsInput = {
@@ -1165,6 +1299,11 @@ export type OutletUncheckedUpdateWithoutMembershipsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutOutletMembersInput = {
@@ -1197,6 +1336,11 @@ export type OutletCreateWithoutOutletMembersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOutletMembersInput = {
@@ -1229,6 +1373,11 @@ export type OutletUncheckedCreateWithoutOutletMembersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOutletMembersInput = {
@@ -1277,6 +1426,11 @@ export type OutletUpdateWithoutOutletMembersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOutletMembersInput = {
@@ -1309,6 +1463,11 @@ export type OutletUncheckedUpdateWithoutOutletMembersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutStaffInvitationsInput = {
@@ -1341,6 +1500,11 @@ export type OutletCreateWithoutStaffInvitationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
@@ -1373,6 +1537,11 @@ export type OutletUncheckedCreateWithoutStaffInvitationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStaffInvitationsInput = {
@@ -1421,6 +1590,11 @@ export type OutletUpdateWithoutStaffInvitationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
@@ -1453,6 +1627,11 @@ export type OutletUncheckedUpdateWithoutStaffInvitationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutWhatsAppConfigInput = {
@@ -1485,6 +1664,11 @@ export type OutletCreateWithoutWhatsAppConfigInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
@@ -1517,6 +1701,11 @@ export type OutletUncheckedCreateWithoutWhatsAppConfigInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutWhatsAppConfigInput = {
@@ -1565,6 +1754,11 @@ export type OutletUpdateWithoutWhatsAppConfigInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
@@ -1597,6 +1791,11 @@ export type OutletUncheckedUpdateWithoutWhatsAppConfigInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutProductAddonGroupsInput = {
@@ -1629,6 +1828,11 @@ export type OutletCreateWithoutProductAddonGroupsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutProductAddonGroupsInput = {
@@ -1661,6 +1865,11 @@ export type OutletUncheckedCreateWithoutProductAddonGroupsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutProductAddonGroupsInput = {
@@ -1709,6 +1918,11 @@ export type OutletUpdateWithoutProductAddonGroupsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutProductAddonGroupsInput = {
@@ -1741,6 +1955,11 @@ export type OutletUncheckedUpdateWithoutProductAddonGroupsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutTablesInput = {
@@ -1773,6 +1992,11 @@ export type OutletCreateWithoutTablesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTablesInput = {
@@ -1805,6 +2029,11 @@ export type OutletUncheckedCreateWithoutTablesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTablesInput = {
@@ -1853,6 +2082,11 @@ export type OutletUpdateWithoutTablesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTablesInput = {
@@ -1885,6 +2119,11 @@ export type OutletUncheckedUpdateWithoutTablesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutOrdersInput = {
@@ -1917,6 +2156,11 @@ export type OutletCreateWithoutOrdersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutOrdersInput = {
@@ -1949,6 +2193,11 @@ export type OutletUncheckedCreateWithoutOrdersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutOrdersInput = {
@@ -1997,6 +2246,11 @@ export type OutletUpdateWithoutOrdersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutOrdersInput = {
@@ -2029,6 +2283,11 @@ export type OutletUncheckedUpdateWithoutOrdersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutShiftsInput = {
@@ -2061,6 +2320,11 @@ export type OutletCreateWithoutShiftsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutShiftsInput = {
@@ -2093,6 +2357,11 @@ export type OutletUncheckedCreateWithoutShiftsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutShiftsInput = {
@@ -2141,6 +2410,11 @@ export type OutletUpdateWithoutShiftsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutShiftsInput = {
@@ -2173,6 +2447,339 @@ export type OutletUncheckedUpdateWithoutShiftsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletCreateWithoutInventoryItemsInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletUncheckedCreateWithoutInventoryItemsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletCreateOrConnectWithoutInventoryItemsInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutInventoryItemsInput, Prisma.OutletUncheckedCreateWithoutInventoryItemsInput>
+}
+
+export type OutletUpsertWithoutInventoryItemsInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutInventoryItemsInput, Prisma.OutletUncheckedUpdateWithoutInventoryItemsInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutInventoryItemsInput, Prisma.OutletUncheckedCreateWithoutInventoryItemsInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutInventoryItemsInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutInventoryItemsInput, Prisma.OutletUncheckedUpdateWithoutInventoryItemsInput>
+}
+
+export type OutletUpdateWithoutInventoryItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutInventoryItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletUncheckedCreateWithoutPurchaseOrdersInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletCreateOrConnectWithoutPurchaseOrdersInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedCreateWithoutPurchaseOrdersInput>
+}
+
+export type OutletUpsertWithoutPurchaseOrdersInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedUpdateWithoutPurchaseOrdersInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedCreateWithoutPurchaseOrdersInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutPurchaseOrdersInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutPurchaseOrdersInput, Prisma.OutletUncheckedUpdateWithoutPurchaseOrdersInput>
+}
+
+export type OutletUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutPurchaseOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutStockMovementsInput = {
@@ -2205,6 +2812,11 @@ export type OutletCreateWithoutStockMovementsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutStockMovementsInput = {
@@ -2237,6 +2849,11 @@ export type OutletUncheckedCreateWithoutStockMovementsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutStockMovementsInput = {
@@ -2285,6 +2902,11 @@ export type OutletUpdateWithoutStockMovementsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutStockMovementsInput = {
@@ -2317,6 +2939,503 @@ export type OutletUncheckedUpdateWithoutStockMovementsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletCreateWithoutBulkSalesInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletUncheckedCreateWithoutBulkSalesInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletCreateOrConnectWithoutBulkSalesInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutBulkSalesInput, Prisma.OutletUncheckedCreateWithoutBulkSalesInput>
+}
+
+export type OutletUpsertWithoutBulkSalesInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutBulkSalesInput, Prisma.OutletUncheckedUpdateWithoutBulkSalesInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutBulkSalesInput, Prisma.OutletUncheckedCreateWithoutBulkSalesInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutBulkSalesInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutBulkSalesInput, Prisma.OutletUncheckedUpdateWithoutBulkSalesInput>
+}
+
+export type OutletUpdateWithoutBulkSalesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutBulkSalesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletCreateWithoutTransfersFromInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletUncheckedCreateWithoutTransfersFromInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
+}
+
+export type OutletCreateOrConnectWithoutTransfersFromInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutTransfersFromInput, Prisma.OutletUncheckedCreateWithoutTransfersFromInput>
+}
+
+export type OutletCreateWithoutTransfersToInput = {
+  id?: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutOutletsInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+}
+
+export type OutletUncheckedCreateWithoutTransfersToInput = {
+  id?: string
+  tenantId: string
+  name: string
+  slug: string
+  address: string
+  city: string
+  phone: string
+  status?: string
+  serviceModes?: string
+  openingHours?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutOutletInput
+  outletMembers?: Prisma.OutletMemberUncheckedCreateNestedManyWithoutOutletInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutOutletInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutOutletInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutOutletInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutOutletInput
+  shifts?: Prisma.CashierShiftUncheckedCreateNestedManyWithoutOutletInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutOutletInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutOutletInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutOutletInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutOutletInput
+  printers?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutOutletInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutOutletInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutOutletInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+}
+
+export type OutletCreateOrConnectWithoutTransfersToInput = {
+  where: Prisma.OutletWhereUniqueInput
+  create: Prisma.XOR<Prisma.OutletCreateWithoutTransfersToInput, Prisma.OutletUncheckedCreateWithoutTransfersToInput>
+}
+
+export type OutletUpsertWithoutTransfersFromInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutTransfersFromInput, Prisma.OutletUncheckedUpdateWithoutTransfersFromInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutTransfersFromInput, Prisma.OutletUncheckedCreateWithoutTransfersFromInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutTransfersFromInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutTransfersFromInput, Prisma.OutletUncheckedUpdateWithoutTransfersFromInput>
+}
+
+export type OutletUpdateWithoutTransfersFromInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutTransfersFromInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
+}
+
+export type OutletUpsertWithoutTransfersToInput = {
+  update: Prisma.XOR<Prisma.OutletUpdateWithoutTransfersToInput, Prisma.OutletUncheckedUpdateWithoutTransfersToInput>
+  create: Prisma.XOR<Prisma.OutletCreateWithoutTransfersToInput, Prisma.OutletUncheckedCreateWithoutTransfersToInput>
+  where?: Prisma.OutletWhereInput
+}
+
+export type OutletUpdateToOneWithWhereWithoutTransfersToInput = {
+  where?: Prisma.OutletWhereInput
+  data: Prisma.XOR<Prisma.OutletUpdateWithoutTransfersToInput, Prisma.OutletUncheckedUpdateWithoutTransfersToInput>
+}
+
+export type OutletUpdateWithoutTransfersToInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutOutletsNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+}
+
+export type OutletUncheckedUpdateWithoutTransfersToInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  serviceModes?: Prisma.StringFieldUpdateOperationsInput | string
+  openingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutOutletNestedInput
+  outletMembers?: Prisma.OutletMemberUncheckedUpdateManyWithoutOutletNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutOutletNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutOutletNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutOutletNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutOutletNestedInput
+  shifts?: Prisma.CashierShiftUncheckedUpdateManyWithoutOutletNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutOutletNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutOutletNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutOutletNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutOutletNestedInput
+  printers?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutOutletNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutOutletNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutOutletNestedInput
+  whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
 }
 
 export type OutletCreateWithoutTokensInput = {
@@ -2349,6 +3468,11 @@ export type OutletCreateWithoutTokensInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutTokensInput = {
@@ -2381,6 +3505,11 @@ export type OutletUncheckedCreateWithoutTokensInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutTokensInput = {
@@ -2429,6 +3558,11 @@ export type OutletUpdateWithoutTokensInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTokensInput = {
@@ -2461,6 +3595,11 @@ export type OutletUncheckedUpdateWithoutTokensInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutReservationsInput = {
@@ -2493,6 +3632,11 @@ export type OutletCreateWithoutReservationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutReservationsInput = {
@@ -2525,6 +3669,11 @@ export type OutletUncheckedCreateWithoutReservationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutReservationsInput = {
@@ -2573,6 +3722,11 @@ export type OutletUpdateWithoutReservationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutReservationsInput = {
@@ -2605,6 +3759,11 @@ export type OutletUncheckedUpdateWithoutReservationsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutExpensesInput = {
@@ -2637,6 +3796,11 @@ export type OutletCreateWithoutExpensesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutExpensesInput = {
@@ -2669,6 +3833,11 @@ export type OutletUncheckedCreateWithoutExpensesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutExpensesInput = {
@@ -2717,6 +3886,11 @@ export type OutletUpdateWithoutExpensesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutExpensesInput = {
@@ -2749,6 +3923,11 @@ export type OutletUncheckedUpdateWithoutExpensesInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutDayEndsInput = {
@@ -2781,6 +3960,11 @@ export type OutletCreateWithoutDayEndsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutDayEndsInput = {
@@ -2813,6 +3997,11 @@ export type OutletUncheckedCreateWithoutDayEndsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutDayEndsInput = {
@@ -2861,6 +4050,11 @@ export type OutletUpdateWithoutDayEndsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutDayEndsInput = {
@@ -2893,6 +4087,11 @@ export type OutletUncheckedUpdateWithoutDayEndsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutQrSessionsInput = {
@@ -2925,6 +4124,11 @@ export type OutletCreateWithoutQrSessionsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutQrSessionsInput = {
@@ -2957,6 +4161,11 @@ export type OutletUncheckedCreateWithoutQrSessionsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutQrSessionsInput = {
@@ -3005,6 +4214,11 @@ export type OutletUpdateWithoutQrSessionsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutQrSessionsInput = {
@@ -3037,6 +4251,11 @@ export type OutletUncheckedUpdateWithoutQrSessionsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintersInput = {
@@ -3069,6 +4288,11 @@ export type OutletCreateWithoutPrintersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintersInput = {
@@ -3101,6 +4325,11 @@ export type OutletUncheckedCreateWithoutPrintersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintersInput = {
@@ -3149,6 +4378,11 @@ export type OutletUpdateWithoutPrintersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintersInput = {
@@ -3181,6 +4415,11 @@ export type OutletUncheckedUpdateWithoutPrintersInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutPrintJobsInput = {
@@ -3213,6 +4452,11 @@ export type OutletCreateWithoutPrintJobsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutPrintJobsInput = {
@@ -3245,6 +4489,11 @@ export type OutletUncheckedCreateWithoutPrintJobsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutPrintJobsInput = {
@@ -3293,6 +4542,11 @@ export type OutletUpdateWithoutPrintJobsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutPrintJobsInput = {
@@ -3325,6 +4579,11 @@ export type OutletUncheckedUpdateWithoutPrintJobsInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutAggregatorOutletMappingsInput = {
@@ -3357,6 +4616,11 @@ export type OutletCreateWithoutAggregatorOutletMappingsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutAggregatorOutletMappingsInput = {
@@ -3389,6 +4653,11 @@ export type OutletUncheckedCreateWithoutAggregatorOutletMappingsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutAggregatorOutletMappingsInput = {
@@ -3437,6 +4706,11 @@ export type OutletUpdateWithoutAggregatorOutletMappingsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput = {
@@ -3469,6 +4743,11 @@ export type OutletUncheckedUpdateWithoutAggregatorOutletMappingsInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateWithoutAggregatorOrderReferencesInput = {
@@ -3501,6 +4780,11 @@ export type OutletCreateWithoutAggregatorOrderReferencesInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletUncheckedCreateWithoutAggregatorOrderReferencesInput = {
@@ -3533,6 +4817,11 @@ export type OutletUncheckedCreateWithoutAggregatorOrderReferencesInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedOneWithoutOutletInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutOutletInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutOutletInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutOutletInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutOutletInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput
+  transfersFrom?: Prisma.StockTransferUncheckedCreateNestedManyWithoutFromOutletInput
+  transfersTo?: Prisma.StockTransferUncheckedCreateNestedManyWithoutToOutletInput
 }
 
 export type OutletCreateOrConnectWithoutAggregatorOrderReferencesInput = {
@@ -3581,6 +4870,11 @@ export type OutletUpdateWithoutAggregatorOrderReferencesInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput = {
@@ -3613,6 +4907,11 @@ export type OutletUncheckedUpdateWithoutAggregatorOrderReferencesInput = {
   whatsAppConfig?: Prisma.OutletWhatsAppConfigUncheckedUpdateOneWithoutOutletNestedInput
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletCreateManyTenantInput = {
@@ -3659,6 +4958,11 @@ export type OutletUpdateWithoutTenantInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateWithoutTenantInput = {
@@ -3691,6 +4995,11 @@ export type OutletUncheckedUpdateWithoutTenantInput = {
   productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutOutletNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutOutletNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutOutletNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutOutletNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput
+  transfersFrom?: Prisma.StockTransferUncheckedUpdateManyWithoutFromOutletNestedInput
+  transfersTo?: Prisma.StockTransferUncheckedUpdateManyWithoutToOutletNestedInput
 }
 
 export type OutletUncheckedUpdateManyWithoutTenantInput = {
@@ -3730,6 +5039,11 @@ export type OutletCountOutputType = {
   productAddonGroups: number
   aggregatorOutletMappings: number
   aggregatorOrderReferences: number
+  bulkSales: number
+  inventoryItems: number
+  purchaseOrders: number
+  transfersFrom: number
+  transfersTo: number
 }
 
 export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3750,6 +5064,11 @@ export type OutletCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   productAddonGroups?: boolean | OutletCountOutputTypeCountProductAddonGroupsArgs
   aggregatorOutletMappings?: boolean | OutletCountOutputTypeCountAggregatorOutletMappingsArgs
   aggregatorOrderReferences?: boolean | OutletCountOutputTypeCountAggregatorOrderReferencesArgs
+  bulkSales?: boolean | OutletCountOutputTypeCountBulkSalesArgs
+  inventoryItems?: boolean | OutletCountOutputTypeCountInventoryItemsArgs
+  purchaseOrders?: boolean | OutletCountOutputTypeCountPurchaseOrdersArgs
+  transfersFrom?: boolean | OutletCountOutputTypeCountTransfersFromArgs
+  transfersTo?: boolean | OutletCountOutputTypeCountTransfersToArgs
 }
 
 /**
@@ -3881,6 +5200,41 @@ export type OutletCountOutputTypeCountAggregatorOrderReferencesArgs<ExtArgs exte
   where?: Prisma.AggregatorOrderReferenceWhereInput
 }
 
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountBulkSalesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BulkSaleWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountInventoryItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InventoryItemWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountPurchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountTransfersFromArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockTransferWhereInput
+}
+
+/**
+ * OutletCountOutputType without action
+ */
+export type OutletCountOutputTypeCountTransfersToArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockTransferWhereInput
+}
+
 
 export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3914,6 +5268,11 @@ export type OutletSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
   aggregatorOutletMappings?: boolean | Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>
   aggregatorOrderReferences?: boolean | Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>
+  bulkSales?: boolean | Prisma.Outlet$bulkSalesArgs<ExtArgs>
+  inventoryItems?: boolean | Prisma.Outlet$inventoryItemsArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Outlet$purchaseOrdersArgs<ExtArgs>
+  transfersFrom?: boolean | Prisma.Outlet$transfersFromArgs<ExtArgs>
+  transfersTo?: boolean | Prisma.Outlet$transfersToArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["outlet"]>
 
@@ -3985,6 +5344,11 @@ export type OutletInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   productAddonGroups?: boolean | Prisma.Outlet$productAddonGroupsArgs<ExtArgs>
   aggregatorOutletMappings?: boolean | Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>
   aggregatorOrderReferences?: boolean | Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>
+  bulkSales?: boolean | Prisma.Outlet$bulkSalesArgs<ExtArgs>
+  inventoryItems?: boolean | Prisma.Outlet$inventoryItemsArgs<ExtArgs>
+  purchaseOrders?: boolean | Prisma.Outlet$purchaseOrdersArgs<ExtArgs>
+  transfersFrom?: boolean | Prisma.Outlet$transfersFromArgs<ExtArgs>
+  transfersTo?: boolean | Prisma.Outlet$transfersToArgs<ExtArgs>
   _count?: boolean | Prisma.OutletCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OutletIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4016,6 +5380,11 @@ export type $OutletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     productAddonGroups: Prisma.$ProductAddonGroupPayload<ExtArgs>[]
     aggregatorOutletMappings: Prisma.$AggregatorOutletMappingPayload<ExtArgs>[]
     aggregatorOrderReferences: Prisma.$AggregatorOrderReferencePayload<ExtArgs>[]
+    bulkSales: Prisma.$BulkSalePayload<ExtArgs>[]
+    inventoryItems: Prisma.$InventoryItemPayload<ExtArgs>[]
+    purchaseOrders: Prisma.$PurchaseOrderPayload<ExtArgs>[]
+    transfersFrom: Prisma.$StockTransferPayload<ExtArgs>[]
+    transfersTo: Prisma.$StockTransferPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4443,6 +5812,11 @@ export interface Prisma__OutletClient<T, Null = never, ExtArgs extends runtime.T
   productAddonGroups<T extends Prisma.Outlet$productAddonGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$productAddonGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductAddonGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aggregatorOutletMappings<T extends Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$aggregatorOutletMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorOutletMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aggregatorOrderReferences<T extends Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$aggregatorOrderReferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorOrderReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bulkSales<T extends Prisma.Outlet$bulkSalesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$bulkSalesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulkSalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inventoryItems<T extends Prisma.Outlet$inventoryItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$inventoryItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseOrders<T extends Prisma.Outlet$purchaseOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$purchaseOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transfersFrom<T extends Prisma.Outlet$transfersFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$transfersFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  transfersTo<T extends Prisma.Outlet$transfersToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Outlet$transfersToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5309,6 +6683,126 @@ export type Outlet$aggregatorOrderReferencesArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.AggregatorOrderReferenceScalarFieldEnum | Prisma.AggregatorOrderReferenceScalarFieldEnum[]
+}
+
+/**
+ * Outlet.bulkSales
+ */
+export type Outlet$bulkSalesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BulkSale
+   */
+  select?: Prisma.BulkSaleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BulkSale
+   */
+  omit?: Prisma.BulkSaleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BulkSaleInclude<ExtArgs> | null
+  where?: Prisma.BulkSaleWhereInput
+  orderBy?: Prisma.BulkSaleOrderByWithRelationInput | Prisma.BulkSaleOrderByWithRelationInput[]
+  cursor?: Prisma.BulkSaleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BulkSaleScalarFieldEnum | Prisma.BulkSaleScalarFieldEnum[]
+}
+
+/**
+ * Outlet.inventoryItems
+ */
+export type Outlet$inventoryItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryItem
+   */
+  select?: Prisma.InventoryItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryItem
+   */
+  omit?: Prisma.InventoryItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryItemInclude<ExtArgs> | null
+  where?: Prisma.InventoryItemWhereInput
+  orderBy?: Prisma.InventoryItemOrderByWithRelationInput | Prisma.InventoryItemOrderByWithRelationInput[]
+  cursor?: Prisma.InventoryItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InventoryItemScalarFieldEnum | Prisma.InventoryItemScalarFieldEnum[]
+}
+
+/**
+ * Outlet.purchaseOrders
+ */
+export type Outlet$purchaseOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrder
+   */
+  select?: Prisma.PurchaseOrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrder
+   */
+  omit?: Prisma.PurchaseOrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderWhereInput
+  orderBy?: Prisma.PurchaseOrderOrderByWithRelationInput | Prisma.PurchaseOrderOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderScalarFieldEnum | Prisma.PurchaseOrderScalarFieldEnum[]
+}
+
+/**
+ * Outlet.transfersFrom
+ */
+export type Outlet$transfersFromArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockTransfer
+   */
+  select?: Prisma.StockTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockTransfer
+   */
+  omit?: Prisma.StockTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockTransferInclude<ExtArgs> | null
+  where?: Prisma.StockTransferWhereInput
+  orderBy?: Prisma.StockTransferOrderByWithRelationInput | Prisma.StockTransferOrderByWithRelationInput[]
+  cursor?: Prisma.StockTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockTransferScalarFieldEnum | Prisma.StockTransferScalarFieldEnum[]
+}
+
+/**
+ * Outlet.transfersTo
+ */
+export type Outlet$transfersToArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockTransfer
+   */
+  select?: Prisma.StockTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockTransfer
+   */
+  omit?: Prisma.StockTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockTransferInclude<ExtArgs> | null
+  where?: Prisma.StockTransferWhereInput
+  orderBy?: Prisma.StockTransferOrderByWithRelationInput | Prisma.StockTransferOrderByWithRelationInput[]
+  cursor?: Prisma.StockTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockTransferScalarFieldEnum | Prisma.StockTransferScalarFieldEnum[]
 }
 
 /**

@@ -173,10 +173,35 @@ export type Supplier = Prisma.SupplierModel
  */
 export type PurchaseOrder = Prisma.PurchaseOrderModel
 /**
+ * Model PurchaseOrderItem
+ * 
+ */
+export type PurchaseOrderItem = Prisma.PurchaseOrderItemModel
+/**
  * Model StockMovement
  * 
  */
 export type StockMovement = Prisma.StockMovementModel
+/**
+ * Model BulkSale
+ * 
+ */
+export type BulkSale = Prisma.BulkSaleModel
+/**
+ * Model BulkSaleItem
+ * 
+ */
+export type BulkSaleItem = Prisma.BulkSaleItemModel
+/**
+ * Model StockTransfer
+ * 
+ */
+export type StockTransfer = Prisma.StockTransferModel
+/**
+ * Model StockTransferItem
+ * 
+ */
+export type StockTransferItem = Prisma.StockTransferItemModel
 /**
  * Model Customer
  * 
@@ -312,6 +337,11 @@ export type WhatsAppDeliveryLog = Prisma.WhatsAppDeliveryLogModel
  * 
  */
 export type InvoiceRecord = Prisma.InvoiceRecordModel
+/**
+ * Model CustomerMessageLog
+ * 
+ */
+export type CustomerMessageLog = Prisma.CustomerMessageLogModel
 /**
  * Model FeatureUsage
  * 

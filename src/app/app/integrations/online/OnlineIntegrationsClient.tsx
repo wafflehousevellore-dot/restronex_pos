@@ -30,11 +30,42 @@ import {
   TrendingUp,
   ShieldAlert,
   XCircle,
+  ExternalLink,
+  Mail,
+  Copy,
+  Lock,
+  Server,
+  Eye,
+  EyeOff,
+  ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+import { statusLabel, IntegrationStatus } from "@/lib/integrations";
 
+// ----------------------------------------------------------------------
+// Status Badge Component (10-Status Model)
+// ----------------------------------------------------------------------
+function IntegrationStatusBadge({ status }: { status: string }) {
+  const meta = statusLabel(status);
+  return (
+    <span
+      className={`px-3 py-1 text-xs font-bold uppercase rounded-full border inline-flex items-center gap-1.5 shadow-2xs ${meta.badgeClass}`}
+    >
+      <span
+        className="w-2 h-2 rounded-full shrink-0"
+        style={{ backgroundColor: meta.color }}
+      />
+      {meta.text}
+    </span>
+  );
+}
+
+// ----------------------------------------------------------------------
+// Verification Stage Matrix Component
+// ----------------------------------------------------------------------
 function VerificationStageList({
   stages,
 }: {
@@ -100,6 +131,7 @@ export default function OnlineIntegrationsClient() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Status & Data States
   const [statusData, setStatusData] = useState<any>(null);
@@ -113,17 +145,23 @@ export default function OnlineIntegrationsClient() {
 
   // Connection Form States
   const [swiggyCreds, setSwiggyCreds] = useState({
+    partnerClientId: "",
     apiKey: "",
     merchantId: "",
     webhookSecret: "",
     environment: "production",
   });
   const [zomatoCreds, setZomatoCreds] = useState({
+    posId: "",
     apiKey: "",
     merchantId: "",
     webhookSecret: "",
     environment: "production",
   });
+
+  // Password visibility toggles
+  const [showSwiggySecret, setShowSwiggySecret] = useState(false);
+  const [showZomatoSecret, setShowZomatoSecret] = useState(false);
 
   // Mapping Form States
   const [mapOutletId, setMapOutletId] = useState("");
@@ -133,7 +171,13 @@ export default function OnlineIntegrationsClient() {
 
   const showMsg = (text: string, type: "success" | "error" | "info" = "info") => {
     setMsg({ text, type });
-    setTimeout(() => setMsg(null), 6000);
+    setTimeout(() => setMsg(null), 7000);
+  };
+
+  const copyToClipboard = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2500);
   };
 
   const fetchStatus = useCallback(async () => {
@@ -142,11 +186,26 @@ export default function OnlineIntegrationsClient() {
       const json = await res.json();
       if (res.ok) {
         setStatusData(json);
+        // Pre-fill masked hints if present
+        if (json.swiggy?.merchantId && !swiggyCreds.merchantId) {
+          setSwiggyCreds((prev) => ({
+            ...prev,
+            merchantId: json.swiggy.merchantId,
+            partnerClientId: json.swiggy.partnerClientId || "",
+          }));
+        }
+        if (json.zomato?.merchantId && !zomatoCreds.merchantId) {
+          setZomatoCreds((prev) => ({
+            ...prev,
+            merchantId: json.zomato.merchantId,
+            posId: json.zomato.posId || "",
+          }));
+        }
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchStatus error:", err);
     }
-  }, []);
+  }, [swiggyCreds.merchantId, zomatoCreds.merchantId]);
 
   const fetchOutletMappings = useCallback(async () => {
     try {
@@ -159,7 +218,7 @@ export default function OnlineIntegrationsClient() {
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchOutletMappings error:", err);
     }
   }, [mapOutletId]);
 
@@ -172,7 +231,7 @@ export default function OnlineIntegrationsClient() {
         setMenuPreview(json);
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchMenuPreview error:", err);
     }
   }, []);
 
@@ -184,7 +243,7 @@ export default function OnlineIntegrationsClient() {
         setExceptions(json.exceptions);
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchExceptions error:", err);
     }
   }, []);
 
@@ -196,7 +255,7 @@ export default function OnlineIntegrationsClient() {
         setReconciliation(json);
       }
     } catch (err) {
-      console.error(err);
+      console.error("fetchReconciliation error:", err);
     }
   }, []);
 
@@ -230,7 +289,32 @@ export default function OnlineIntegrationsClient() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to save connection");
-      showMsg(`${provider} integration credentials saved successfully`, "success");
+      showMsg(`${provider} configuration saved in encrypted vault. Status updated.`, "success");
+      await fetchStatus();
+    } catch (err: any) {
+      showMsg(err.message, "error");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleTestVerification = async (provider: "SWIGGY" | "ZOMATO") => {
+    setActionLoading(true);
+    try {
+      const res = await fetch("/api/integrations/aggregator", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "test_verification",
+          provider,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        showMsg(`${provider} connection verified successfully!`, "success");
+      } else {
+        showMsg(`${data.status}: ${data.message}`, "info");
+      }
       await fetchStatus();
     } catch (err: any) {
       showMsg(err.message, "error");
@@ -250,7 +334,7 @@ export default function OnlineIntegrationsClient() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to disconnect");
-      showMsg(`${provider} disconnected cleanly`, "info");
+      showMsg(`${provider} disconnected cleanly. Outlets set offline.`, "info");
       await fetchStatus();
       await fetchOutletMappings();
     } catch (err: any) {
@@ -263,7 +347,7 @@ export default function OnlineIntegrationsClient() {
   const handleMapOutlet = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mapOutletId || !mapStoreId) {
-      showMsg("Please select an outlet and enter Store ID", "error");
+      showMsg("Please select an outlet and enter Store/Restaurant ID", "error");
       return;
     }
     setActionLoading(true);
@@ -275,8 +359,8 @@ export default function OnlineIntegrationsClient() {
           action: "map_outlet",
           outletId: mapOutletId,
           provider: mapProvider,
-          providerStoreId: mapStoreId,
-          providerStoreName: mapStoreName || undefined,
+          providerStoreId: mapStoreId.trim(),
+          providerStoreName: mapStoreName.trim() || undefined,
         }),
       });
       const data = await res.json();
@@ -308,7 +392,7 @@ export default function OnlineIntegrationsClient() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update store status");
-      showMsg(`Outlet status updated to ${!currentOnline ? "ONLINE" : "OFFLINE"} on ${provider}`, "success");
+      showMsg(`${provider} store status toggled to ${!currentOnline ? "ONLINE" : "OFFLINE"}`, "info");
       await fetchOutletMappings();
     } catch (err: any) {
       showMsg(err.message, "error");
@@ -332,7 +416,7 @@ export default function OnlineIntegrationsClient() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to toggle rush mode");
-      showMsg(`Rush Mode ${!currentRush ? "ACTIVATED (+15m prep)" : "DEACTIVATED"} for ${provider}`, "success");
+      showMsg(`Rush mode ${!currentRush ? "ENABLED (+15m prep buffer)" : "DISABLED"} on ${provider}`, "info");
       await fetchOutletMappings();
     } catch (err: any) {
       showMsg(err.message, "error");
@@ -341,22 +425,43 @@ export default function OnlineIntegrationsClient() {
     }
   };
 
-  const handlePushMenuSync = async () => {
+  const handleUnmapOutlet = async (outletId: string, provider: "SWIGGY" | "ZOMATO") => {
+    if (!confirm(`Remove ${provider} mapping from this outlet? Live orders for this store ID will be rejected.`)) return;
     setActionLoading(true);
     try {
       const res = await fetch("/api/integrations/aggregator", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          action: "push_menu_sync",
-          provider: menuProvider,
+          action: "unmap_outlet",
+          outletId,
+          provider,
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to push menu");
-      showMsg(`Master Menu synced to ${menuProvider} successfully across all mapped outlets!`, "success");
+      if (!res.ok) throw new Error(data.error || "Failed to unmap outlet");
+      showMsg(`Removed ${provider} mapping`, "info");
+      await fetchOutletMappings();
       await fetchStatus();
-      await fetchMenuPreview(menuProvider, menuStrategy, menuHikeValue);
+    } catch (err: any) {
+      showMsg(err.message, "error");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handlePushMenuSync = async (provider: "SWIGGY" | "ZOMATO") => {
+    setActionLoading(true);
+    try {
+      const res = await fetch("/api/integrations/aggregator", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "push_menu_sync", provider }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to trigger menu sync");
+      showMsg(`Master menu push job queued for ${provider}`, "success");
+      await fetchStatus();
     } catch (err: any) {
       showMsg(err.message, "error");
     } finally {
@@ -389,19 +494,25 @@ export default function OnlineIntegrationsClient() {
     window.open("/api/integrations/aggregator?action=export_reconciliation", "_blank");
   };
 
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://www.restronexpos.com";
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
+      {/* ------------------------------------------------------------- */}
+      {/* PAGE HEADER */}
+      {/* ------------------------------------------------------------- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b pb-5">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md">
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-[#172B25]">Online Integrations</h1>
-              <p className="text-sm text-gray-500">
-                Enterprise Online Order Integration, Multi-Outlet Synchronization & Automated KOT Routing
+              <h1 className="text-2xl font-black tracking-tight text-[#172B25]">
+                Online Ordering Integrations
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-500 font-medium">
+                Connect restaurant delivery platforms to RestroNex POS. Automatically receive online orders, manage kitchen operations and synchronise order statuses.
               </p>
             </div>
           </div>
@@ -410,25 +521,24 @@ export default function OnlineIntegrationsClient() {
         <div className="flex items-center gap-2">
           <Link
             href="/app/integrations"
-            className="px-3.5 py-2 text-xs font-medium rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50"
+            className="px-3.5 py-2 text-xs font-semibold rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
           >
-            ← Legacy Integrations
+            ← Integrations Hub
           </Link>
           <Button
             variant="outline"
             size="sm"
             onClick={() => {
               setLoading(true);
-              fetchStatus();
-              fetchOutletMappings();
-              fetchReconciliation();
-              setLoading(false);
+              Promise.all([fetchStatus(), fetchOutletMappings(), fetchExceptions()]).finally(() =>
+                setLoading(false)
+              );
             }}
             disabled={loading || actionLoading}
-            className="flex items-center gap-1.5"
+            className="flex items-center gap-1.5 text-xs font-semibold"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-            Refresh
+            Refresh Status
           </Button>
         </div>
       </div>
@@ -454,14 +564,16 @@ export default function OnlineIntegrationsClient() {
         </div>
       )}
 
-      {/* Tabs navigation */}
+      {/* ------------------------------------------------------------- */}
+      {/* TABS NAVIGATION */}
+      {/* ------------------------------------------------------------- */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 border-b text-sm font-medium">
         {[
-          { key: "overview", label: "Overview", icon: Layers },
-          { key: "swiggy", label: "Swiggy", icon: Zap, badge: statusData?.swiggy?.status === "CONNECTED" ? "Active" : undefined },
-          { key: "zomato", label: "Zomato", icon: ShoppingBag, badge: statusData?.zomato?.status === "CONNECTED" ? "Active" : undefined },
-          { key: "outlets", label: "Outlet Mapping", icon: Store, count: statusData?.stats?.mappedOutletsCount },
-          { key: "menu", label: "Menu Synchronisation", icon: Utensils },
+          { key: "overview", label: "Overview & Dashboard", icon: Layers },
+          { key: "swiggy", label: "Swiggy Setup Guide", icon: Zap, status: statusData?.swiggy?.status },
+          { key: "zomato", label: "Zomato Setup Guide", icon: ShoppingBag, status: statusData?.zomato?.status },
+          { key: "outlets", label: "Outlet Mapping", icon: Store, count: statusData?.stats?.mappedListingsCount },
+          { key: "menu", label: "Menu Sync & Pricing", icon: Utensils },
           { key: "orders", label: "Live Orders & Exceptions", icon: Clock, count: statusData?.stats?.exceptionsCount > 0 ? `${statusData.stats.exceptionsCount} Alerts` : undefined },
           { key: "reconciliation", label: "Reconciliation", icon: BarChart3 },
         ].map((tab) => {
@@ -479,14 +591,12 @@ export default function OnlineIntegrationsClient() {
             >
               <Icon className="w-4 h-4" />
               <span>{tab.label}</span>
-              {tab.badge && (
-                <span className="px-1.5 py-0.5 text-[10px] uppercase font-bold rounded-full bg-emerald-100 text-emerald-800">
-                  {tab.badge}
-                </span>
+              {tab.status && tab.status === "CONNECTED" && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
               )}
               {tab.count !== undefined && (
                 <span
-                  className={`px-1.5 py-0.5 text-[10px] rounded-full ${
+                  className={`px-1.5 py-0.5 text-[10px] font-bold rounded-full ${
                     isActive ? "bg-white/20 text-white" : "bg-gray-200 text-gray-700"
                   }`}
                 >
@@ -498,504 +608,1114 @@ export default function OnlineIntegrationsClient() {
         })}
       </div>
 
-      {/* Tab: OVERVIEW */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: OVERVIEW & DASHBOARD */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "overview" && (
         <div className="space-y-6">
-          {/* Metrics summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="border border-gray-200 shadow-xs">
-              <CardContent className="p-5 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Swiggy Status</div>
-                  <div className="text-xl font-bold mt-1 text-[#172B25] flex items-center gap-2">
-                    <span
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        statusData?.swiggy?.status === "CONNECTED"
-                          ? "bg-emerald-500"
-                          : statusData?.swiggy?.hasCredentials
-                          ? "bg-blue-500"
-                          : "bg-amber-400"
-                      }`}
-                    />
-                    {statusData?.swiggy?.status === "CONNECTED"
-                      ? "CONNECTED"
-                      : statusData?.swiggy?.hasCredentials
-                      ? "PENDING_APPROVAL"
-                      : "NOT_CONNECTED"}
+          {/* TWO-SCOPE MULTI-TENANT CREDENTIAL ARCHITECTURE NOTICE */}
+          <Card className="border border-indigo-100 bg-gradient-to-r from-indigo-50/70 via-blue-50/50 to-white shadow-2xs">
+            <CardContent className="p-5">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                <div className="space-y-1.5 max-w-3xl">
+                  <div className="flex items-center gap-2 text-indigo-950 font-black text-xs uppercase tracking-wider">
+                    <Server className="w-4 h-4 text-indigo-700" />
+                    Two-Scope SaaS Credential Architecture
                   </div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {statusData?.swiggy?.status === "CONNECTED"
-                      ? "Mode: Live Production (Verified)"
-                      : statusData?.swiggy?.hasCredentials
-                      ? "Status: Awaiting Swiggy Approval"
-                      : "Status: Provider Approval Required"}
-                  </div>
-                  <div className="text-[11px] text-gray-400 mt-1">
-                    {statusData?.stats?.swiggyMappedCount || 0} / {statusData?.stats?.swiggyListingsTarget || 3} Outlets Mapped
-                  </div>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 font-extrabold text-lg">
-                  S
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200 shadow-xs">
-              <CardContent className="p-5 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Zomato Status</div>
-                  <div className="text-xl font-bold mt-1 text-[#172B25] flex items-center gap-2">
-                    <span
-                      className={`w-2.5 h-2.5 rounded-full ${
-                        statusData?.zomato?.status === "CONNECTED"
-                          ? "bg-emerald-500"
-                          : statusData?.zomato?.hasCredentials
-                          ? "bg-blue-500"
-                          : "bg-amber-400"
-                      }`}
-                    />
-                    {statusData?.zomato?.status === "CONNECTED"
-                      ? "CONNECTED"
-                      : statusData?.zomato?.hasCredentials
-                      ? "PENDING_APPROVAL"
-                      : "NOT_CONNECTED"}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {statusData?.zomato?.status === "CONNECTED"
-                      ? "Mode: Live Production (Verified)"
-                      : statusData?.zomato?.hasCredentials
-                      ? "Status: Awaiting Zomato Approval"
-                      : "Status: Provider Approval Required"}
-                  </div>
-                  <div className="text-[11px] text-gray-400 mt-1">
-                    Outlet 1 Only ({statusData?.stats?.zomatoMappedCount || 0} / 1 Mapped)
-                  </div>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 font-extrabold text-lg">
-                  Z
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200 shadow-xs">
-              <CardContent className="p-5 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Mapped Listings</div>
-                  <div className="text-2xl font-bold mt-1 text-[#172B25]">
-                    {statusData?.stats?.mappedListingsCount || 0} / {statusData?.stats?.totalListingsTarget || 4}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {statusData?.stats?.physicalOutletsCount || 3} Outlets • 4 Listings (3 Swiggy, 1 Zomato)
-                  </div>
-                  <div className="text-[11px] text-gray-400 mt-1">
-                    Swiggy: {statusData?.stats?.swiggyMappedCount || 0}/3 • Zomato: {statusData?.stats?.zomatoMappedCount || 0}/1
-                  </div>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-                  <Store className="w-6 h-6" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-gray-200 shadow-xs">
-              <CardContent className="p-5 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase font-bold text-gray-500 tracking-wider">Active Pipeline</div>
-                  <div className="text-2xl font-bold mt-1 text-[#172B25]">
-                    {statusData?.stats?.activeOrdersCount || 0} Orders
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5">In Kitchen KOT / Dispatch</div>
-                  <div className="text-[11px] text-gray-400 mt-1">
-                    0 Live Active • {statusData?.stats?.testOrdersCount || 1} Test Order Archived
-                  </div>
-                </div>
-                <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
-                  <Zap className="w-6 h-6" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Architecture & Workflow Diagram */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold text-[#172B25] flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                RestroNex Enterprise Aggregator Pipeline
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 pt-0 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
-                  <div className="text-xs font-bold uppercase text-gray-600 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">1</span>
-                    Webhook Ingestion
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    HMAC-SHA256 signature verification, idempotency gate, and raw payload audit logging.
+                  <h3 className="text-base font-bold text-[#172B25]">
+                    How RestroNex Separates Platform Partnerships from Restaurant Outlets
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    RestroNex enforces strict credential scoping. As a restaurant owner, you do <strong>not</strong> need to apply as a POS software vendor yourself:
                   </p>
-                </div>
-                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
-                  <div className="text-xs font-bold uppercase text-gray-600 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">2</span>
-                    Multi-Outlet Routing
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                    <div className="p-3 rounded-lg bg-white/90 border border-indigo-100 space-y-1">
+                      <div className="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-indigo-600" />
+                        Scope 1: RestroNex Vendor Credentials
+                      </div>
+                      <p className="text-[11px] text-gray-600">
+                        Official POS Integration agreements, developer NDAs, and master API partner tokens are secured platform-wide by RestroNex engineering in Super Admin.
+                      </p>
+                    </div>
+                    <div className="p-3 rounded-lg bg-white/90 border border-blue-100 space-y-1">
+                      <div className="text-xs font-bold text-blue-900 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-blue-600" />
+                        Scope 2: Restaurant & Outlet Configuration
+                      </div>
+                      <p className="text-[11px] text-gray-600">
+                        You configure your restaurant listing IDs (Swiggy Store ID / Zomato Res ID), map them to your RestroNex physical branches, and enter merchant credentials if specifically issued.
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-600">
-                    Matches Store ID to RestroNex outlet. Unmapped stores are queued safely in exception logs.
-                  </p>
                 </div>
-                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
-                  <div className="text-xs font-bold uppercase text-gray-600 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">3</span>
-                    Kitchen Station KOT
+                <div className="flex flex-col items-start lg:items-end gap-2 shrink-0">
+                  <div className="px-3 py-1.5 rounded-lg bg-white border border-indigo-200 text-xs text-indigo-900 font-bold flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    AES-256 Vault Encrypted
                   </div>
-                  <p className="text-xs text-gray-600">
-                    Auto-splits items by station (Food → Main Kitchen, Drinks → Bar) with audio chime alert.
-                  </p>
-                </div>
-                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
-                  <div className="text-xs font-bold uppercase text-gray-600 flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">4</span>
-                    Auto Thermal Print
-                  </div>
-                  <p className="text-xs text-gray-600">
-                    Dispatches 80mm/58mm thermal print job to designated network or USB receipt printers.
-                  </p>
-                </div>
-              </div>
-
-              {/* Real persisted bridge status */}
-              <div
-                className={`flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl border ${
-                  statusData?.bridgeStatus?.status === "ACTIVE"
-                    ? "bg-[#E8F5EE] border-[#16845B]/30"
-                    : "bg-amber-50/70 border-amber-200"
-                }`}
-              >
-                <div className="flex items-center gap-2 text-xs font-medium">
-                  {statusData?.bridgeStatus?.status === "ACTIVE" ? (
-                    <ShieldCheck className="w-4 h-4 text-[#16845B] shrink-0" />
-                  ) : (
-                    <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-                  )}
-                  <span className={statusData?.bridgeStatus?.status === "ACTIVE" ? "text-[#16845B]" : "text-amber-800"}>
-                    {statusData?.bridgeStatus?.statusLabel || "Production Aggregator Bridge Standby (Awaiting Official Deliveries)"}
-                    {" • "}
-                    {statusData?.bridgeStatus?.hasSecrets ? "Secrets Active" : "Webhook Secrets Required in Production"}
-                    {" • "}
-                    {`${statusData?.bridgeStatus?.totalWebhooksReceived || 0} Deliveries Ingested`}
+                  <span className="text-[11px] text-gray-500">
+                    Tenant Scoped & Audit Logged
                   </span>
                 </div>
-                <Link
-                  href="/app/integrations"
-                  className="px-3.5 py-2 rounded-lg bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold flex items-center gap-1.5"
-                >
-                  POS Integrations Hub <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
               </div>
             </CardContent>
           </Card>
 
-          {/* Persisted Verification Stages Matrix */}
+          {/* ------------------------------------------------------------- */}
+          {/* SEPARATE PROVIDER CARDS (SWIGGY & ZOMATO) */}
+          {/* ------------------------------------------------------------- */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border border-gray-200">
-              <CardHeader className="pb-3 border-b">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-orange-100 text-orange-700 font-black text-xs flex items-center justify-center">
+            {/* SWIGGY PROVIDER CARD */}
+            <Card className="border border-orange-200/80 shadow-xs hover:shadow-md transition-all bg-gradient-to-b from-orange-50/30 to-white">
+              <CardHeader className="pb-3 border-b border-orange-100">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-black text-2xl shadow-sm">
                       S
                     </div>
-                    <CardTitle className="text-sm font-bold text-[#172B25]">Swiggy Verification Matrix</CardTitle>
+                    <div>
+                      <CardTitle className="text-lg font-black text-[#172B25] flex items-center gap-2">
+                        Swiggy
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-orange-100 text-orange-800">
+                          Direct Food Delivery
+                        </span>
+                      </CardTitle>
+                      <p className="text-xs text-gray-600 mt-0.5">
+                        Connect your Swiggy restaurant listings to RestroNex POS to receive online orders and manage kitchen operations.
+                      </p>
+                    </div>
                   </div>
-                  <span className="text-[11px] font-bold text-gray-500 uppercase">3 Outlets Target</span>
+                  <IntegrationStatusBadge
+                    status={statusData?.swiggy?.status || "PROVIDER_APPROVAL_REQUIRED"}
+                  />
                 </div>
               </CardHeader>
-              <CardContent className="p-4">
-                <VerificationStageList stages={statusData?.verificationStages?.swiggy} />
+
+              <CardContent className="p-5 space-y-4">
+                {/* Metric Summary Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Mapped Outlets</div>
+                    <div className="text-base font-black text-[#172B25] mt-0.5">
+                      {statusData?.stats?.swiggyMappedCount || 0} / {statusData?.stats?.swiggyListingsTarget || 1}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Active Live</div>
+                    <div className="text-base font-black text-emerald-700 mt-0.5">
+                      {statusData?.dashboard?.swiggy?.activeConnections || 0}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Pending Setup</div>
+                    <div className="text-base font-black text-amber-700 mt-0.5">
+                      {statusData?.dashboard?.swiggy?.pendingConfigurations || 0}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Failed / Errors</div>
+                    <div className="text-base font-black text-gray-700 mt-0.5">
+                      {statusData?.dashboard?.swiggy?.failedVerificationCount || 0}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Integration Details info row */}
+                <div className="p-3 rounded-xl bg-gray-50 border border-gray-200/80 text-xs space-y-1.5 text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">Webhook Gateway:</span>
+                    <span className="font-mono text-[11px] text-gray-600">/api/webhooks/swiggy</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">Last Received Webhook:</span>
+                    <span className="text-[11px] text-gray-600">
+                      {statusData?.dashboard?.swiggy?.lastReceivedWebhook
+                        ? new Date(statusData.dashboard.swiggy.lastReceivedWebhook).toLocaleString()
+                        : "Awaiting first signed delivery"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">API Credentials Vault:</span>
+                    <span className="text-[11px] font-bold text-indigo-700">
+                      {statusData?.swiggy?.hasCredentials ? "Configured (AES-256 Encrypted)" : "Not configured"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Provider Card Action Controls */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setActiveTab("swiggy")}
+                    className="text-xs font-bold border-orange-200 hover:bg-orange-50 text-orange-950"
+                  >
+                    Setup Guide
+                  </Button>
+                  <a
+                    href="https://mcp.swiggy.com/builders/enterprises/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-800 gap-1"
+                  >
+                    Obtain API <ExternalLink className="w-3 h-3 text-gray-500" />
+                  </a>
+                  <Button
+                    size="sm"
+                    onClick={() => setActiveTab("swiggy")}
+                    className="text-xs font-bold bg-[#16845B] hover:bg-[#126b4a] text-white"
+                  >
+                    Configure
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setActiveTab("outlets")}
+                    className="text-xs font-bold"
+                  >
+                    Manage Outlets
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="border border-gray-200">
-              <CardHeader className="pb-3 border-b">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-red-100 text-red-700 font-black text-xs flex items-center justify-center">
+            {/* ZOMATO PROVIDER CARD */}
+            <Card className="border border-red-200/80 shadow-xs hover:shadow-md transition-all bg-gradient-to-b from-red-50/30 to-white">
+              <CardHeader className="pb-3 border-b border-red-100">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-black text-2xl shadow-sm">
                       Z
                     </div>
-                    <CardTitle className="text-sm font-bold text-[#172B25]">Zomato Verification Matrix</CardTitle>
+                    <div>
+                      <CardTitle className="text-lg font-black text-[#172B25] flex items-center gap-2">
+                        Zomato
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-red-100 text-red-800">
+                          Order Relay & KDS
+                        </span>
+                      </CardTitle>
+                      <p className="text-xs text-gray-600 mt-0.5">
+                        Connect your Zomato restaurant listings to RestroNex POS for automated order processing, menu synchronisation and kitchen management.
+                      </p>
+                    </div>
                   </div>
-                  <span className="text-[11px] font-bold text-gray-500 uppercase">Outlet 1 Only</span>
+                  <IntegrationStatusBadge
+                    status={statusData?.zomato?.status || "PROVIDER_APPROVAL_REQUIRED"}
+                  />
                 </div>
               </CardHeader>
-              <CardContent className="p-4">
-                <VerificationStageList stages={statusData?.verificationStages?.zomato} />
+
+              <CardContent className="p-5 space-y-4">
+                {/* Metric Summary Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Mapped Outlets</div>
+                    <div className="text-base font-black text-[#172B25] mt-0.5">
+                      {statusData?.stats?.zomatoMappedCount || 0} / {statusData?.stats?.zomatoListingsTarget || 1}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Active Live</div>
+                    <div className="text-base font-black text-emerald-700 mt-0.5">
+                      {statusData?.dashboard?.zomato?.activeConnections || 0}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Pending Setup</div>
+                    <div className="text-base font-black text-amber-700 mt-0.5">
+                      {statusData?.dashboard?.zomato?.pendingConfigurations || 0}
+                    </div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white border border-gray-100 text-center">
+                    <div className="text-[10px] uppercase font-bold text-gray-500">Failed / Errors</div>
+                    <div className="text-base font-black text-gray-700 mt-0.5">
+                      {statusData?.dashboard?.zomato?.failedVerificationCount || 0}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Integration Details info row */}
+                <div className="p-3 rounded-xl bg-gray-50 border border-gray-200/80 text-xs space-y-1.5 text-gray-600">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">Webhook Gateway:</span>
+                    <span className="font-mono text-[11px] text-gray-600">/api/webhooks/zomato</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">Last Received Webhook:</span>
+                    <span className="text-[11px] text-gray-600">
+                      {statusData?.dashboard?.zomato?.lastReceivedWebhook
+                        ? new Date(statusData.dashboard.zomato.lastReceivedWebhook).toLocaleString()
+                        : "Awaiting first signed delivery"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-gray-700">API Credentials Vault:</span>
+                    <span className="text-[11px] font-bold text-indigo-700">
+                      {statusData?.zomato?.hasCredentials ? "Configured (AES-256 Encrypted)" : "Not configured"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Provider Card Action Controls */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setActiveTab("zomato")}
+                    className="text-xs font-bold border-red-200 hover:bg-red-50 text-red-950"
+                  >
+                    Setup Guide
+                  </Button>
+                  <a
+                    href="https://www.zomato.com/developer/integration/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-bold rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-800 gap-1"
+                  >
+                    Developer Portal <ExternalLink className="w-3 h-3 text-gray-500" />
+                  </a>
+                  <Button
+                    size="sm"
+                    onClick={() => setActiveTab("zomato")}
+                    className="text-xs font-bold bg-[#16845B] hover:bg-[#126b4a] text-white"
+                  >
+                    Configure
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setActiveTab("outlets")}
+                    className="text-xs font-bold"
+                  >
+                    Manage Outlets
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* ------------------------------------------------------------- */}
+          {/* RECENT INTEGRATION ERRORS & EXCEPTION QUEUE */}
+          {/* ------------------------------------------------------------- */}
+          <Card className="border border-gray-200">
+            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-sm font-bold text-[#172B25] flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  Recent Integration Ingestion & Routing Exceptions
+                </CardTitle>
+                <p className="text-xs text-gray-500">
+                  Unmapped Store IDs, unregistered listings, and order payload warnings are isolated here.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveTab("orders")}
+                className="text-xs font-semibold"
+              >
+                View Exception Queue ({statusData?.stats?.exceptionsCount || 0})
+              </Button>
+            </CardHeader>
+            <CardContent className="p-0">
+              {statusData?.dashboard?.recentErrors && statusData.dashboard.recentErrors.length > 0 ? (
+                <div className="divide-y divide-gray-100">
+                  {statusData.dashboard.recentErrors.map((err: any) => (
+                    <div key={err.id} className="p-3.5 flex items-center justify-between gap-3 text-xs">
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-1.5 py-0.5 font-bold uppercase rounded-md text-[10px] ${
+                              err.provider === "SWIGGY"
+                                ? "bg-orange-100 text-orange-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {err.provider}
+                          </span>
+                          <span className="font-bold text-gray-900">{err.errorType}</span>
+                          <span className="text-[11px] text-gray-400">
+                            {new Date(err.createdAt).toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <p className="text-gray-600">{err.reason}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setActiveTab("outlets")}
+                        className="text-[11px] shrink-0"
+                      >
+                        Fix Mapping
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 text-center text-xs text-gray-500 space-y-1">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600 mx-auto" />
+                  <p className="font-semibold text-gray-700">Zero Ingestion Exceptions</p>
+                  <p className="text-gray-500">All inbound aggregator webhooks and store mappings are operating cleanly.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       )}
 
-      {/* Tab: SWIGGY */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: SWIGGY SETUP GUIDE */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "swiggy" && (
         <div className="space-y-6">
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b">
-              <div className="flex items-center justify-between">
+          <Card className="border border-orange-200">
+            <CardHeader className="pb-4 border-b bg-gradient-to-r from-orange-50/50 to-white">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 font-black text-xl">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-black text-2xl shadow-sm">
                     S
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-bold text-[#172B25]">Swiggy Partner Integration</CardTitle>
-                    <p className="text-xs text-gray-500">Official Merchant API & Webhook Configuration</p>
+                    <h2 className="text-lg font-black text-[#172B25]">Swiggy Official Setup Guide</h2>
+                    <p className="text-xs text-gray-600">
+                      Connect your Swiggy restaurant listings to RestroNex POS to receive online orders and manage kitchen operations.
+                    </p>
                   </div>
                 </div>
-                <span
-                  className={`px-2.5 py-1 text-xs font-bold rounded-full ${
-                    statusData?.swiggy?.status === "CONNECTED"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {statusData?.swiggy?.status || "NOT_CONNECTED"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <IntegrationStatusBadge status={statusData?.swiggy?.status || "PROVIDER_APPROVAL_REQUIRED"} />
+                </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {/* Persisted Verification Stages */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                    Persisted Swiggy Verification States
-                  </h4>
-                  <span className="text-[11px] text-gray-500 font-medium">3 Physical Outlets Target</span>
+
+            <CardContent className="p-6 space-y-8">
+              {/* STEP 1 */}
+              <div className="space-y-3 border-l-2 border-orange-500 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">
+                    1
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 1 — Request official integration access
+                  </h3>
                 </div>
-                <VerificationStageList stages={statusData?.verificationStages?.swiggy} />
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  This is Swiggy Builders Club&apos;s enterprise application for its commerce MCP platform. It is not confirmed as the merchant-side restaurant POS order-relay API. Contact Swiggy to obtain confirmation and the correct restaurant POS partnership onboarding route.
+                </p>
+
+                <div className="p-3.5 rounded-xl bg-orange-50/70 border border-orange-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="space-y-0.5">
+                    <div className="text-xs font-bold text-orange-950">Swiggy Builders Club Enterprise Portal:</div>
+                    <a
+                      href="https://mcp.swiggy.com/builders/enterprises/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-orange-800 underline font-mono flex items-center gap-1"
+                    >
+                      https://mcp.swiggy.com/builders/enterprises/ <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href="mailto:builders@swiggy.in?subject=RestroNex%20POS%20Merchant%20Integration%20Request"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition shadow-xs"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      Contact Swiggy Partnership Team
+                    </a>
+                  </div>
+                </div>
               </div>
 
-              {/* Webhook endpoint card */}
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 space-y-2">
-                <div className="text-xs font-bold text-blue-900">Your Swiggy Webhook URL:</div>
+              {/* STEP 2 */}
+              <div className="space-y-3 border-l-2 border-orange-500 pl-4">
                 <div className="flex items-center gap-2">
-                  <code className="text-xs bg-white px-3 py-1.5 rounded-lg border border-blue-200 text-blue-900 font-mono flex-1 overflow-x-auto">
-                    {typeof window !== "undefined" ? `${window.location.origin}/api/webhooks/swiggy` : "https://www.restronexpos.com/api/webhooks/swiggy"}
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">
+                    2
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 2 — Obtain merchant POS API credentials
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Obtain merchant-side POS integration approval and official API authentication details directly from the Swiggy partnership team. Do not use consumer MCP OAuth credentials as merchant POS credentials.
+                </p>
+                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
+                  <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <p>
+                    <strong>Provider Advisory:</strong> Swiggy issues partner API credentials strictly following official merchant POS agreements. These credentials are not self-service or publicly generatable.
+                  </p>
+                </div>
+
+                {/* Authorized Configuration Form */}
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
+                      <Lock className="w-3.5 h-3.5 text-gray-500" />
+                      Authorized Swiggy Merchant POS Credentials (AES-256 Vault)
+                    </h4>
+                    {statusData?.swiggy?.hasCredentials && (
+                      <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" /> Secured in Database
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Partner Client ID</Label>
+                      <Input
+                        placeholder={statusData?.swiggy?.partnerClientId || "e.g. swg_partner_client_..."}
+                        value={swiggyCreds.partnerClientId}
+                        onChange={(e) => setSwiggyCreds({ ...swiggyCreds, partnerClientId: e.target.value })}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Partner Token / API Secret</Label>
+                      <div className="relative">
+                        <Input
+                          type={showSwiggySecret ? "text" : "password"}
+                          placeholder={statusData?.swiggy?.maskedApiKey || "swg_live_token_..."}
+                          value={swiggyCreds.apiKey}
+                          onChange={(e) => setSwiggyCreds({ ...swiggyCreds, apiKey: e.target.value })}
+                          className="text-xs font-mono pr-8"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowSwiggySecret(!showSwiggySecret)}
+                          className="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600"
+                        >
+                          {showSwiggySecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Webhook Signing Secret (HMAC-SHA256)</Label>
+                      <Input
+                        type="password"
+                        placeholder={statusData?.swiggy?.maskedWebhookSecret || "Used for cryptographic payload verification"}
+                        value={swiggyCreds.webhookSecret}
+                        onChange={(e) => setSwiggyCreds({ ...swiggyCreds, webhookSecret: e.target.value })}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Merchant ID / Account Ref</Label>
+                      <Input
+                        placeholder={statusData?.swiggy?.merchantId || "e.g. SWG-MERCHANT-8492"}
+                        value={swiggyCreds.merchantId}
+                        onChange={(e) => setSwiggyCreds({ ...swiggyCreds, merchantId: e.target.value })}
+                        className="text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <p className="text-[11px] text-gray-500">
+                      Stored encrypted at rest on server. Never returned in plaintext to browser responses.
+                    </p>
+                    <Button
+                      size="sm"
+                      onClick={() => handleSaveConnection("SWIGGY")}
+                      disabled={actionLoading}
+                      className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
+                    >
+                      Save Swiggy Credentials
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 3 */}
+              <div className="space-y-3 border-l-2 border-orange-500 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">
+                    3
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 3 — Obtain Swiggy Store ID
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Ask Swiggy&apos;s restaurant partner/account manager or approved POS integration team for the correct external restaurant/store ID for each listing.
+                </p>
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3">
+                  <div className="text-xs font-bold text-gray-800">
+                    Quick Assign Store ID to RestroNex Outlet:
+                  </div>
+                  <form onSubmit={handleMapOutlet} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-xs">RestroNex Outlet</Label>
+                      <select
+                        value={mapOutletId}
+                        onChange={(e) => setMapOutletId(e.target.value)}
+                        className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
+                      >
+                        {outletMappings.map((o) => (
+                          <option key={o.outletId} value={o.outletId}>
+                            {o.outletName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Swiggy Restaurant / Store ID</Label>
+                      <Input
+                        placeholder="e.g. 543210 (Provided by Swiggy)"
+                        value={mapStoreId}
+                        onChange={(e) => {
+                          setMapProvider("SWIGGY");
+                          setMapStoreId(e.target.value);
+                        }}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        type="submit"
+                        disabled={actionLoading}
+                        className="w-full text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white"
+                      >
+                        Save Store Mapping
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              {/* STEP 4 */}
+              <div className="space-y-3 border-l-2 border-orange-500 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">
+                    4
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 4 — Complete outlet mapping
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Every Swiggy store ID must be mapped to a corresponding RestroNex physical outlet. Multiple mappings per restaurant tenant are supported.
+                </p>
+
+                {/* Outlet mappings preview table */}
+                <div className="rounded-xl border border-gray-200 overflow-hidden">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-gray-50 border-b text-gray-600 font-bold">
+                      <tr>
+                        <th className="p-3">RestroNex Business</th>
+                        <th className="p-3">RestroNex Outlet</th>
+                        <th className="p-3">Swiggy Store ID</th>
+                        <th className="p-3">Mapping Status</th>
+                        <th className="p-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {outletMappings.flatMap((o) =>
+                        o.mappings
+                          .filter((m: any) => m.provider === "SWIGGY")
+                          .map((m: any) => (
+                            <tr key={m.id} className="hover:bg-gray-50/50">
+                              <td className="p-3 font-semibold text-[#172B25]">
+                                {statusData?.businessStructure?.brandName || "Restaurant Brand"}
+                              </td>
+                              <td className="p-3">
+                                <div className="font-bold text-[#172B25]">{o.outletName}</div>
+                                <div className="text-[10px] text-gray-500">{o.outletAddress}</div>
+                              </td>
+                              <td className="p-3 font-mono font-bold text-orange-950">
+                                {m.providerStoreId}
+                              </td>
+                              <td className="p-3">
+                                <span
+                                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    m.isOnline
+                                      ? "bg-emerald-100 text-emerald-800"
+                                      : "bg-gray-100 text-gray-700"
+                                  }`}
+                                >
+                                  {m.isOnline ? "ACTIVE MAPPED" : "OFFLINE"}
+                                </span>
+                              </td>
+                              <td className="p-3 text-right">
+                                <button
+                                  onClick={() => handleUnmapOutlet(o.outletId, "SWIGGY")}
+                                  className="text-red-600 hover:text-red-800 font-bold text-xs"
+                                >
+                                  Disconnect
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                      {outletMappings.every((o) => !o.mappings.some((m: any) => m.provider === "SWIGGY")) && (
+                        <tr>
+                          <td colSpan={5} className="p-4 text-center text-gray-500 italic">
+                            No Swiggy store listings mapped yet. Use Step 3 above to map your first store ID.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* STEP 5 */}
+              <div className="space-y-3 border-l-2 border-orange-500 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-orange-600 text-white text-xs font-black flex items-center justify-center">
+                    5
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 5 — Verify connection
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Only mark Connected when the official integration has been approved, valid credentials have been configured and a real provider verification succeeds. Until then, display: <strong>&ldquo;Partner approval required&rdquo;</strong>.
+                </p>
+
+                {/* Verification matrix card */}
+                <div className="p-4 rounded-xl bg-orange-50/50 border border-orange-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-bold text-orange-950">
+                      Live Verification Status:
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => handleTestVerification("SWIGGY")}
+                      disabled={actionLoading}
+                      className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold"
+                    >
+                      Run Provider Verification Test
+                    </Button>
+                  </div>
+                  <VerificationStageList stages={statusData?.verificationStages?.swiggy} />
+                </div>
+              </div>
+
+              {/* DEDICATED WEBHOOK URL FOR ACCOUNT MANAGER */}
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
+                <div className="text-xs font-bold text-gray-800">
+                  Swiggy Webhook Delivery Endpoint:
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="text-xs bg-white px-3 py-1.5 rounded-lg border border-gray-200 font-mono text-gray-800 flex-1 overflow-x-auto">
+                    {`${origin}/api/webhooks/swiggy`}
                   </code>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-xs"
-                    onClick={() => {
-                      navigator.clipboard.writeText(`${window.location.origin}/api/webhooks/swiggy`);
-                      showMsg("Webhook URL copied to clipboard", "info");
-                    }}
+                    className="text-xs shrink-0"
+                    onClick={() => copyToClipboard(`${origin}/api/webhooks/swiggy`, "swiggy_url")}
                   >
-                    Copy
+                    {copiedKey === "swiggy_url" ? "Copied!" : "Copy Webhook URL"}
                   </Button>
                 </div>
-                <p className="text-[11px] text-blue-700">
-                  Share this URL with your Swiggy Account Manager or configure it in Swiggy Partner Portal Settings.
+                <p className="text-[11px] text-gray-500">
+                  Provide this endpoint to your Swiggy Merchant POC or input it into your Swiggy Developer Portal.
                 </p>
-              </div>
-
-              {/* Credentials form */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-bold text-[#172B25]">Credentials & Environment</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Partner API Key / Client Token</Label>
-                    <Input
-                      type="password"
-                      placeholder="swg_api_key_..."
-                      value={swiggyCreds.apiKey}
-                      onChange={(e) => setSwiggyCreds({ ...swiggyCreds, apiKey: e.target.value })}
-                      className="text-xs font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Merchant ID / Partner ID</Label>
-                    <Input
-                      placeholder="e.g. SWG-MERCHANT-8492"
-                      value={swiggyCreds.merchantId}
-                      onChange={(e) => setSwiggyCreds({ ...swiggyCreds, merchantId: e.target.value })}
-                      className="text-xs"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Webhook Signing Secret</Label>
-                    <Input
-                      type="password"
-                      placeholder="Used for HMAC-SHA256 verification"
-                      value={swiggyCreds.webhookSecret}
-                      onChange={(e) => setSwiggyCreds({ ...swiggyCreds, webhookSecret: e.target.value })}
-                      className="text-xs font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Execution Mode</Label>
-                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
-                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                      Live Production (Official Swiggy Partner API)
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 pt-3">
-                  <Button
-                    onClick={() => handleSaveConnection("SWIGGY")}
-                    disabled={actionLoading}
-                    className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
-                  >
-                    Save Swiggy Settings
-                  </Button>
-                  {statusData?.swiggy?.status === "CONNECTED" && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDisconnect("SWIGGY")}
-                      disabled={actionLoading}
-                      className="text-xs font-semibold"
-                    >
-                      Disconnect Swiggy
-                    </Button>
-                  )}
-                </div>
               </div>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Tab: ZOMATO */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: ZOMATO SETUP GUIDE */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "zomato" && (
         <div className="space-y-6">
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b">
-              <div className="flex items-center justify-between">
+          <Card className="border border-red-200">
+            <CardHeader className="pb-4 border-b bg-gradient-to-r from-red-50/50 to-white">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 font-black text-xl">
+                  <div className="w-12 h-12 rounded-2xl bg-red-600 text-white flex items-center justify-center font-black text-2xl shadow-sm">
                     Z
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-bold text-[#172B25]">Zomato Partner Integration</CardTitle>
-                    <p className="text-xs text-gray-500">Official Merchant API & Webhook Configuration</p>
+                    <h2 className="text-lg font-black text-[#172B25]">Zomato Official Setup Guide</h2>
+                    <p className="text-xs text-gray-600">
+                      Connect your Zomato restaurant listings to RestroNex POS for automated order processing, menu synchronisation and kitchen management.
+                    </p>
                   </div>
                 </div>
-                <span
-                  className={`px-2.5 py-1 text-xs font-bold rounded-full ${
-                    statusData?.zomato?.status === "CONNECTED"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {statusData?.zomato?.status || "NOT_CONNECTED"}
-                </span>
+                <div className="flex items-center gap-2">
+                  <IntegrationStatusBadge status={statusData?.zomato?.status || "PROVIDER_APPROVAL_REQUIRED"} />
+                </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              {/* Persisted Verification Stages */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                    Persisted Zomato Verification States
-                  </h4>
-                  <span className="text-[11px] text-gray-500 font-medium">Outlet 1 (Main Counter) Only</span>
+
+            <CardContent className="p-6 space-y-8">
+              {/* OFFICIAL LINKS CALLOUT BANNER */}
+              <div className="p-4 rounded-xl bg-red-50 border border-red-200 space-y-3">
+                <div className="text-xs font-bold text-red-950 flex items-center gap-1.5">
+                  <ExternalLink className="w-4 h-4 text-red-700" />
+                  Official Zomato POS Developer Documentation & Support Channels:
                 </div>
-                <VerificationStageList stages={statusData?.verificationStages?.zomato} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs">
+                  <a
+                    href="https://www.zomato.com/developer/integration/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2.5 rounded-lg bg-white border border-red-100 hover:border-red-300 font-semibold text-red-900 flex items-center justify-between transition"
+                  >
+                    <span>POS Developer Platform</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-red-600" />
+                  </a>
+                  <a
+                    href="https://www.zomato.com/developer/integration/docs/overview/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2.5 rounded-lg bg-white border border-red-100 hover:border-red-300 font-semibold text-red-900 flex items-center justify-between transition"
+                  >
+                    <span>Integration Overview</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-red-600" />
+                  </a>
+                  <a
+                    href="https://www.zomato.com/developer/integration/docs/getting-started/development-for-integration/pre-integration/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2.5 rounded-lg bg-white border border-red-100 hover:border-red-300 font-semibold text-red-900 flex items-center justify-between transition"
+                  >
+                    <span>Pre-Integration Guide</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-red-600" />
+                  </a>
+                  <a
+                    href="https://www.zomato.com/developer/integration/docs/getting-started/milestones/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2.5 rounded-lg bg-white border border-red-100 hover:border-red-300 font-semibold text-red-900 flex items-center justify-between transition"
+                  >
+                    <span>Milestones & Guidelines</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-red-600" />
+                  </a>
+                  <a
+                    href="mailto:pos-partnership@zomato.com"
+                    className="p-2.5 rounded-lg bg-white border border-red-100 hover:border-red-300 font-semibold text-red-900 flex items-center justify-between transition sm:col-span-2 lg:col-span-1"
+                  >
+                    <span>pos-partnership@zomato.com</span>
+                    <Mail className="w-3.5 h-3.5 text-red-600" />
+                  </a>
+                </div>
               </div>
 
-              {/* Webhook endpoint card */}
-              <div className="p-4 rounded-xl bg-red-50 border border-red-200 space-y-2">
-                <div className="text-xs font-bold text-red-900">Your Zomato Webhook URL:</div>
+              {/* STEP 1 */}
+              <div className="space-y-3 border-l-2 border-red-600 pl-4">
                 <div className="flex items-center gap-2">
-                  <code className="text-xs bg-white px-3 py-1.5 rounded-lg border border-red-200 text-red-900 font-mono flex-1 overflow-x-auto">
-                    {typeof window !== "undefined" ? `${window.location.origin}/api/webhooks/zomato` : "https://www.restronexpos.com/api/webhooks/zomato"}
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-black flex items-center justify-center">
+                    1
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 1 — Apply for POS integration
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  RestroNex must complete Zomato&apos;s POS vendor onboarding process, including the required forms and NDA. Zomato will assign a point of contact.
+                </p>
+                <div>
+                  <a
+                    href="https://www.zomato.com/developer/integration/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg bg-red-600 text-white hover:bg-red-700 transition shadow-xs"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Open Zomato POS Developer Platform
+                  </a>
+                </div>
+              </div>
+
+              {/* STEP 2 */}
+              <div className="space-y-3 border-l-2 border-red-600 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-black flex items-center justify-center">
+                    2
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 2 — Obtain Zomato API credentials
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Zomato&apos;s POS point of contact provides the POS ID and API authentication credentials after the vendor onboarding and configuration process. Do not allow restaurants to assume they can generate these credentials independently.
+                </p>
+
+                {/* Authorized Configuration Form */}
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
+                      <Lock className="w-3.5 h-3.5 text-gray-500" />
+                      Authorized Zomato POS Credentials (AES-256 Vault)
+                    </h4>
+                    {statusData?.zomato?.hasCredentials && (
+                      <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" /> Secured in Database
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Zomato POS ID</Label>
+                      <Input
+                        placeholder={statusData?.zomato?.posId || "e.g. zom_pos_id_..."}
+                        value={zomatoCreds.posId}
+                        onChange={(e) => setZomatoCreds({ ...zomatoCreds, posId: e.target.value })}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">API Key / Authentication Token</Label>
+                      <div className="relative">
+                        <Input
+                          type={showZomatoSecret ? "text" : "password"}
+                          placeholder={statusData?.zomato?.maskedApiKey || "zom_api_token_..."}
+                          value={zomatoCreds.apiKey}
+                          onChange={(e) => setZomatoCreds({ ...zomatoCreds, apiKey: e.target.value })}
+                          className="text-xs font-mono pr-8"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowZomatoSecret(!showZomatoSecret)}
+                          className="absolute right-2.5 top-2.5 text-gray-400 hover:text-gray-600"
+                        >
+                          {showZomatoSecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Webhook Authentication Secret / Bearer</Label>
+                      <Input
+                        type="password"
+                        placeholder={statusData?.zomato?.maskedWebhookSecret || "Used for Bearer token & HMAC verification"}
+                        value={zomatoCreds.webhookSecret}
+                        onChange={(e) => setZomatoCreds({ ...zomatoCreds, webhookSecret: e.target.value })}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Default Zomato Restaurant ID (res_id)</Label>
+                      <Input
+                        placeholder={statusData?.zomato?.merchantId || "e.g. 19284012"}
+                        value={zomatoCreds.merchantId}
+                        onChange={(e) => setZomatoCreds({ ...zomatoCreds, merchantId: e.target.value })}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <p className="text-[11px] text-gray-500">
+                      Stored encrypted at rest on server. Never exposed to browser logs or frontend state.
+                    </p>
+                    <Button
+                      size="sm"
+                      onClick={() => handleSaveConnection("ZOMATO")}
+                      disabled={actionLoading}
+                      className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
+                    >
+                      Save Zomato Credentials
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 3 */}
+              <div className="space-y-3 border-l-2 border-red-600 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-black flex items-center justify-center">
+                    3
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 3 — Obtain Zomato Restaurant ID / Store ID
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  During testing, Zomato provides the test restaurant/store ID to the POS vendor. For live restaurants, confirm the correct Zomato restaurant ID (res_id) and mapping with the Zomato POC or approved restaurant integration process.
+                </p>
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3">
+                  <div className="text-xs font-bold text-gray-800">
+                    Quick Assign Zomato Res ID to RestroNex Outlet:
+                  </div>
+                  <form onSubmit={handleMapOutlet} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-xs">RestroNex Outlet</Label>
+                      <select
+                        value={mapOutletId}
+                        onChange={(e) => setMapOutletId(e.target.value)}
+                        className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
+                      >
+                        {outletMappings.map((o) => (
+                          <option key={o.outletId} value={o.outletId}>
+                            {o.outletName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-xs">Zomato Restaurant ID (res_id)</Label>
+                      <Input
+                        placeholder="e.g. 19284012 (From Zomato)"
+                        value={mapStoreId}
+                        onChange={(e) => {
+                          setMapProvider("ZOMATO");
+                          setMapStoreId(e.target.value);
+                        }}
+                        className="text-xs font-mono"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        type="submit"
+                        disabled={actionLoading}
+                        className="w-full text-xs font-semibold bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        Save Zomato Res ID
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              {/* STEP 4 */}
+              <div className="space-y-3 border-l-2 border-red-600 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-black flex items-center justify-center">
+                    4
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 4 — Map Zomato outlets
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Map each physical branch to its respective Zomato Res ID. Multiple Zomato listings and multiple physical outlets are supported simultaneously.
+                </p>
+
+                {/* Outlet mappings preview table */}
+                <div className="rounded-xl border border-gray-200 overflow-hidden">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-gray-50 border-b text-gray-600 font-bold">
+                      <tr>
+                        <th className="p-3">RestroNex Business</th>
+                        <th className="p-3">RestroNex Outlet</th>
+                        <th className="p-3">Zomato Res ID</th>
+                        <th className="p-3">Mapping Status</th>
+                        <th className="p-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {outletMappings.flatMap((o) =>
+                        o.mappings
+                          .filter((m: any) => m.provider === "ZOMATO")
+                          .map((m: any) => (
+                            <tr key={m.id} className="hover:bg-gray-50/50">
+                              <td className="p-3 font-semibold text-[#172B25]">
+                                {statusData?.businessStructure?.brandName || "Restaurant Brand"}
+                              </td>
+                              <td className="p-3">
+                                <div className="font-bold text-[#172B25]">{o.outletName}</div>
+                                <div className="text-[10px] text-gray-500">{o.outletAddress}</div>
+                              </td>
+                              <td className="p-3 font-mono font-bold text-red-950">
+                                {m.providerStoreId}
+                              </td>
+                              <td className="p-3">
+                                <span
+                                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    m.isOnline
+                                      ? "bg-emerald-100 text-emerald-800"
+                                      : "bg-gray-100 text-gray-700"
+                                  }`}
+                                >
+                                  {m.isOnline ? "ACTIVE MAPPED" : "OFFLINE"}
+                                </span>
+                              </td>
+                              <td className="p-3 text-right">
+                                <button
+                                  onClick={() => handleUnmapOutlet(o.outletId, "ZOMATO")}
+                                  className="text-red-600 hover:text-red-800 font-bold text-xs"
+                                >
+                                  Disconnect
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                      {outletMappings.every((o) => !o.mappings.some((m: any) => m.provider === "ZOMATO")) && (
+                        <tr>
+                          <td colSpan={5} className="p-4 text-center text-gray-500 italic">
+                            No Zomato restaurant listings mapped yet. Use Step 3 above to map your first Res ID.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* STEP 5 */}
+              <div className="space-y-3 border-l-2 border-red-600 pl-4">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-black flex items-center justify-center">
+                    5
+                  </span>
+                  <h3 className="text-sm font-bold text-[#172B25]">
+                    Step 5 — Verify connection
+                  </h3>
+                </div>
+                <p className="text-xs text-gray-700 leading-relaxed">
+                  Test only against official approved endpoints using real credentials. Never display Connected simply because fields were filled.
+                </p>
+
+                {/* Verification matrix card */}
+                <div className="p-4 rounded-xl bg-red-50/50 border border-red-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs font-bold text-red-950">
+                      Live Verification Status:
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => handleTestVerification("ZOMATO")}
+                      disabled={actionLoading}
+                      className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold"
+                    >
+                      Run Provider Verification Test
+                    </Button>
+                  </div>
+                  <VerificationStageList stages={statusData?.verificationStages?.zomato} />
+                </div>
+              </div>
+
+              {/* DEDICATED WEBHOOK URL FOR ZOMATO DASHBOARD */}
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-2">
+                <div className="text-xs font-bold text-gray-800">
+                  Zomato Webhook Delivery Endpoint:
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="text-xs bg-white px-3 py-1.5 rounded-lg border border-gray-200 font-mono text-gray-800 flex-1 overflow-x-auto">
+                    {`${origin}/api/webhooks/zomato`}
                   </code>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-xs"
-                    onClick={() => {
-                      navigator.clipboard.writeText(`${window.location.origin}/api/webhooks/zomato`);
-                      showMsg("Webhook URL copied to clipboard", "info");
-                    }}
+                    className="text-xs shrink-0"
+                    onClick={() => copyToClipboard(`${origin}/api/webhooks/zomato`, "zomato_url")}
                   >
-                    Copy
+                    {copiedKey === "zomato_url" ? "Copied!" : "Copy Webhook URL"}
                   </Button>
                 </div>
-                <p className="text-[11px] text-red-700">
-                  Share this URL with your Zomato POS Account Manager or input it in Zomato Merchant Dashboard.
+                <p className="text-[11px] text-gray-500">
+                  Configure this Relay URL in your Zomato Merchant Dashboard or share it with your assigned POS Integration POC.
                 </p>
-              </div>
-
-              {/* Credentials form */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-bold text-[#172B25]">Credentials & Environment</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Partner API Key / Access Token</Label>
-                    <Input
-                      type="password"
-                      placeholder="zom_api_token_..."
-                      value={zomatoCreds.apiKey}
-                      onChange={(e) => setZomatoCreds({ ...zomatoCreds, apiKey: e.target.value })}
-                      className="text-xs font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Restaurant ID (Res ID)</Label>
-                    <Input
-                      placeholder="e.g. 19284012"
-                      value={zomatoCreds.merchantId}
-                      onChange={(e) => setZomatoCreds({ ...zomatoCreds, merchantId: e.target.value })}
-                      className="text-xs"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Webhook Secret / Bearer Token</Label>
-                    <Input
-                      type="password"
-                      placeholder="Secret token for incoming webhook verification"
-                      value={zomatoCreds.webhookSecret}
-                      onChange={(e) => setZomatoCreds({ ...zomatoCreds, webhookSecret: e.target.value })}
-                      className="text-xs font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Execution Mode</Label>
-                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
-                      <span className="w-2 h-2 rounded-full bg-emerald-600" />
-                      Live Production (Official Zomato Partner API)
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 pt-3">
-                  <Button
-                    onClick={() => handleSaveConnection("ZOMATO")}
-                    disabled={actionLoading}
-                    className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
-                  >
-                    Save Zomato Settings
-                  </Button>
-                  {statusData?.zomato?.status === "CONNECTED" && (
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDisconnect("ZOMATO")}
-                      disabled={actionLoading}
-                      className="text-xs font-semibold"
-                    >
-                      Disconnect Zomato
-                    </Button>
-                  )}
-                </div>
               </div>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Tab: OUTLETS */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: OUTLET MAPPINGS */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "outlets" && (
         <div className="space-y-6">
           {/* Brand Multi-Outlet Architecture Card */}
@@ -1005,25 +1725,25 @@ export default function OnlineIntegrationsClient() {
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-blue-900 flex items-center gap-2">
                     <Store className="w-4 h-4 text-blue-700" />
-                    Brand Multi-Outlet Listing Architecture (WAFFLE PLUM HOUSE)
+                    Brand Multi-Outlet Listing Architecture ({statusData?.businessStructure?.brandName || "Restaurant Brand"})
                   </h4>
                   <p className="text-xs text-blue-800 leading-relaxed">
-                    Brand topology: <strong>3 physical outlets</strong> and <strong>4 external listings</strong>
+                    Brand topology: <strong>{statusData?.stats?.physicalOutletsCount || 1} physical {statusData?.stats?.physicalOutletsCount === 1 ? "outlet" : "outlets"}</strong> and <strong>{statusData?.stats?.totalListingsTarget || (statusData?.stats?.physicalOutletsCount || 1) * 2} external listing slots</strong>
                     <span className="block mt-1">
-                      • <strong>Swiggy (3 Listings)</strong>: 1-to-1 Store ID mapped to each physical outlet (Main Counter, Outlet 2, Outlet 3).
+                      • <strong>Swiggy ({statusData?.stats?.swiggyListingsTarget || statusData?.stats?.physicalOutletsCount || 1} Listings)</strong>: 1-to-1 Store ID mapped to physical outlets.
                     </span>
                     <span className="block">
-                      • <strong>Zomato (1 Listing)</strong>: Dedicated Res ID mapped exclusively to <strong>Outlet 1 (Main Counter)</strong>.
+                      • <strong>Zomato ({statusData?.stats?.zomatoListingsTarget || statusData?.stats?.physicalOutletsCount || 1} Listings)</strong>: Dedicated Res ID mapped to physical outlets.
                     </span>
                   </p>
                 </div>
                 <div className="px-3.5 py-2 rounded-xl bg-white border border-blue-200 text-left sm:text-right shrink-0">
                   <div className="text-[10px] font-bold uppercase text-gray-500">Mapping Progress</div>
                   <div className="text-lg font-black text-blue-900">
-                    {statusData?.stats?.mappedListingsCount || 0} / {statusData?.stats?.totalListingsTarget || 4} Listings
+                    {statusData?.stats?.mappedListingsCount || 0} / {statusData?.stats?.totalListingsTarget || 2} Listings
                   </div>
                   <div className="text-[11px] text-gray-500">
-                    {statusData?.stats?.physicalOutletsCount || 3} Physical Outlets
+                    {statusData?.stats?.physicalOutletsCount || 1} Physical Outlets
                   </div>
                 </div>
               </div>
@@ -1061,24 +1781,23 @@ export default function OnlineIntegrationsClient() {
                     onChange={(e) => setMapProvider(e.target.value as "SWIGGY" | "ZOMATO")}
                     className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
                   >
-                    <option value="SWIGGY">Swiggy</option>
-                    <option value="ZOMATO">Zomato</option>
+                    <option value="SWIGGY">Swiggy (Store ID)</option>
+                    <option value="ZOMATO">Zomato (Res ID)</option>
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">External Store ID</Label>
+                  <Label className="text-xs">External Store / Res ID</Label>
                   <Input
-                    placeholder="e.g. SWG-10293 or 1928401"
+                    placeholder="e.g. 543210 or 19284012"
                     value={mapStoreId}
                     onChange={(e) => setMapStoreId(e.target.value)}
-                    className="text-xs"
-                    required
+                    className="text-xs font-mono"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs">Store Name / Branch</Label>
+                  <Label className="text-xs">Display Label (Optional)</Label>
                   <Input
-                    placeholder="e.g. Sector 14 Branch"
+                    placeholder="e.g. Swiggy - Main Counter"
                     value={mapStoreName}
                     onChange={(e) => setMapStoreName(e.target.value)}
                     className="text-xs"
@@ -1088,7 +1807,7 @@ export default function OnlineIntegrationsClient() {
                   <Button
                     type="submit"
                     disabled={actionLoading}
-                    className="w-full bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold"
+                    className="w-full text-xs font-semibold bg-[#16845B] hover:bg-[#126b4a] text-white"
                   >
                     Save Mapping
                   </Button>
@@ -1097,152 +1816,145 @@ export default function OnlineIntegrationsClient() {
             </CardContent>
           </Card>
 
-          {/* Mapped Outlets Table */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b">
-              <CardTitle className="text-sm font-bold text-[#172B25]">Connected Outlets & Operational Controls</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-gray-50 border-b text-gray-600 font-semibold">
-                    <tr>
-                      <th className="px-4 py-3">Outlet</th>
-                      <th className="px-4 py-3">Provider</th>
-                      <th className="px-4 py-3">External Store ID</th>
-                      <th className="px-4 py-3">Store Status</th>
-                      <th className="px-4 py-3">Rush Mode</th>
-                      <th className="px-4 py-3">KOT / Printing</th>
-                      <th className="px-4 py-3 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {outletMappings.flatMap((outlet) =>
-                      outlet.mappings.length > 0 ? (
-                        outlet.mappings.map((m: any) => (
-                          <tr key={m.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-3 font-medium text-gray-900">{outlet.outletName}</td>
-                            <td className="px-4 py-3">
-                              <span
-                                className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                                  m.provider === "SWIGGY" ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"
-                                }`}
-                              >
-                                {m.provider}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 font-mono text-gray-700">
-                              {m.providerStoreId}
-                              {m.providerStoreName && (
-                                <span className="text-gray-400 block text-[10px]">{m.providerStoreName}</span>
-                              )}
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={() => handleToggleStoreStatus(outlet.outletId, m.provider, m.isOnline)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 cursor-pointer ${
-                                  m.isOnline
-                                    ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                }`}
-                              >
-                                <span className={`w-2 h-2 rounded-full ${m.isOnline ? "bg-emerald-600" : "bg-gray-500"}`} />
-                                {m.isOnline ? "ONLINE" : "OFFLINE"}
-                              </button>
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={() => handleToggleRushMode(outlet.outletId, m.provider, m.isRushMode)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-bold cursor-pointer ${
-                                  m.isRushMode
-                                    ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                                }`}
-                              >
-                                {m.isRushMode ? "⚡ Rush (+15m)" : "Normal"}
-                              </button>
-                            </td>
-                            <td className="px-4 py-3 text-gray-600 flex items-center gap-2">
-                              <span className="flex items-center gap-1">
-                                <Printer className="w-3.5 h-3.5 text-gray-500" /> KOT: ON
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 text-right">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-[11px] text-red-600 hover:bg-red-50"
-                                onClick={async () => {
-                                  if (confirm("Remove mapping?")) {
-                                    await fetch("/api/integrations/aggregator", {
-                                      method: "POST",
-                                      headers: { "Content-Type": "application/json" },
-                                      body: JSON.stringify({
-                                        action: "unmap_outlet",
-                                        outletId: outlet.outletId,
-                                        provider: m.provider,
-                                      }),
-                                    });
-                                    fetchOutletMappings();
-                                  }
-                                }}
-                              >
-                                Unmap
-                              </Button>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr key={outlet.outletId} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 font-medium text-gray-900">{outlet.outletName}</td>
-                          <td colSpan={5} className="px-4 py-3 text-gray-400 italic">
-                            No aggregator mappings configured
-                          </td>
-                          <td className="px-4 py-3 text-right">
-                            <span className="text-[10px] text-gray-400">Use form above to map</span>
-                          </td>
-                        </tr>
-                      )
+          {/* Outlets Listing Table */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-[#172B25]">Active Outlet Mappings & Controls</h3>
+            <div className="space-y-4">
+              {outletMappings.map((outlet) => (
+                <Card key={outlet.outletId} className="border border-gray-200 shadow-2xs">
+                  <CardHeader className="p-4 bg-gray-50 border-b flex flex-row items-center justify-between">
+                    <div>
+                      <div className="text-sm font-bold text-[#172B25] flex items-center gap-2">
+                        <Store className="w-4 h-4 text-emerald-600" />
+                        {outlet.outletName}
+                      </div>
+                      <div className="text-xs text-gray-500">{outlet.outletAddress || "Address on file"}</div>
+                    </div>
+                    <span className="text-xs font-bold text-gray-600">
+                      {outlet.mappings.length} Active Mappings
+                    </span>
+                  </CardHeader>
+                  <CardContent className="p-0 divide-y divide-gray-100">
+                    {outlet.mappings.length > 0 ? (
+                      outlet.mappings.map((m: any) => (
+                        <div key={m.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                          <div className="flex items-center gap-3">
+                            <span
+                              className={`w-7 h-7 rounded-lg text-xs font-black flex items-center justify-center shrink-0 ${
+                                m.provider === "SWIGGY"
+                                  ? "bg-orange-100 text-orange-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {m.provider === "SWIGGY" ? "S" : "Z"}
+                            </span>
+                            <div>
+                              <div className="font-bold text-gray-900 flex items-center gap-2">
+                                <span>{m.provider}</span>
+                                <span className="font-mono text-gray-500">ID: {m.providerStoreId}</span>
+                                <span
+                                  className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    m.isOnline
+                                      ? "bg-emerald-100 text-emerald-800"
+                                      : "bg-gray-100 text-gray-600"
+                                  }`}
+                                >
+                                  {m.isOnline ? "ONLINE" : "OFFLINE"}
+                                </span>
+                                {m.isRushMode && (
+                                  <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                                    RUSH (+15m)
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[11px] text-gray-500">
+                                {m.providerStoreName} • Auto-offline on close: {m.autoOfflineOnClose ? "Yes" : "No"}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Button
+                              size="sm"
+                              variant={m.isOnline ? "outline" : "default"}
+                              onClick={() => handleToggleStoreStatus(outlet.outletId, m.provider, m.isOnline)}
+                              disabled={actionLoading}
+                              className="text-xs h-8"
+                            >
+                              {m.isOnline ? "Set Offline" : "Set Online"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleToggleRushMode(outlet.outletId, m.provider, m.isRushMode)}
+                              disabled={actionLoading}
+                              className={`text-xs h-8 ${m.isRushMode ? "bg-amber-50 text-amber-800 border-amber-300" : ""}`}
+                            >
+                              {m.isRushMode ? "Disable Rush" : "Rush Mode"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleUnmapOutlet(outlet.outletId, m.provider)}
+                              disabled={actionLoading}
+                              className="text-xs h-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              Disconnect
+                            </Button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-xs text-gray-500 italic text-center">
+                        No aggregator mappings for this outlet yet. Use the form above to connect Swiggy or Zomato.
+                      </div>
                     )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Tab: MENU */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: MENU SYNCHRONISATION */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "menu" && (
         <div className="space-y-6">
           <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="text-base font-bold text-[#172B25] flex items-center gap-2">
                   <Utensils className="w-4 h-4 text-emerald-600" />
-                  Master Menu Synchronisation & Pricing Controls
+                  Master Catalog to Aggregator Menu Sync
                 </CardTitle>
                 <p className="text-xs text-gray-500">
-                  Configure channel price markup formulas and push master catalog to aggregators
+                  Push menu items, categories, variants, and price markups to Swiggy & Zomato
                 </p>
               </div>
-
               <div className="flex items-center gap-2">
                 <Button
-                  onClick={handlePushMenuSync}
+                  onClick={() => handlePushMenuSync("SWIGGY")}
                   disabled={actionLoading}
-                  className="bg-[#16845B] hover:bg-[#126b4a] text-white text-xs font-semibold flex items-center gap-1.5"
+                  className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${actionLoading ? "animate-spin" : ""}`} />
-                  Push Menu to {menuProvider}
+                  Push to Swiggy
+                </Button>
+                <Button
+                  onClick={() => handlePushMenuSync("ZOMATO")}
+                  disabled={actionLoading}
+                  className="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold"
+                >
+                  Push to Zomato
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-5 space-y-5">
-              {/* Controls bar */}
+            <CardContent className="p-6 space-y-6">
+              {/* Strategy Controls */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold">Target Aggregator</Label>
+                  <Label className="text-xs font-bold">Aggregator Platform</Label>
                   <select
                     value={menuProvider}
                     onChange={(e) => {
@@ -1252,11 +1964,10 @@ export default function OnlineIntegrationsClient() {
                     }}
                     className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
                   >
-                    <option value="SWIGGY">Swiggy</option>
-                    <option value="ZOMATO">Zomato</option>
+                    <option value="SWIGGY">Swiggy Menu Catalog</option>
+                    <option value="ZOMATO">Zomato Menu Catalog</option>
                   </select>
                 </div>
-
                 <div className="space-y-1.5">
                   <Label className="text-xs font-bold">Pricing Strategy</Label>
                   <select
@@ -1267,15 +1978,13 @@ export default function OnlineIntegrationsClient() {
                     }}
                     className="w-full text-xs rounded-lg border border-gray-300 px-3 py-2 bg-white"
                   >
-                    <option value="MASTER_EQUAL">Equal to POS Dine-in Price (0% Hike)</option>
-                    <option value="PERCENTAGE_HIKE">Percentage Markup (+15% or Custom)</option>
-                    <option value="FIXED_HIKE">Fixed Markup (+₹20 or Custom)</option>
-                    <option value="CUSTOM_MAPPING">Custom Item Mapping Overrides</option>
+                    <option value="PERCENTAGE_HIKE">Percentage Markup (+%)</option>
+                    <option value="FIXED_HIKE">Fixed Markup (+₹)</option>
+                    <option value="MASTER_EQUAL">Same as POS Menu (0% Markup)</option>
                   </select>
                 </div>
-
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-bold">Markup Value (% or ₹)</Label>
+                  <Label className="text-xs font-bold">Markup Value</Label>
                   <Input
                     type="number"
                     value={menuHikeValue}
@@ -1284,236 +1993,268 @@ export default function OnlineIntegrationsClient() {
                       setMenuHikeValue(v);
                       fetchMenuPreview(menuProvider, menuStrategy, v);
                     }}
+                    placeholder="15"
                     className="text-xs"
                   />
                 </div>
               </div>
 
               {/* Items Preview Table */}
-              <div className="border rounded-xl overflow-hidden">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-gray-50 border-b text-gray-600 font-semibold">
-                    <tr>
-                      <th className="px-4 py-3">Item Name</th>
-                      <th className="px-4 py-3">Category</th>
-                      <th className="px-4 py-3">Type</th>
-                      <th className="px-4 py-3">Master Price</th>
-                      <th className="px-4 py-3">Aggregator Price</th>
-                      <th className="px-4 py-3">Stock Switch</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {menuPreview?.items && menuPreview.items.length > 0 ? (
-                      menuPreview.items.map((item: any) => (
-                        <tr key={item.providerItemId} className="hover:bg-gray-50">
-                          <td className="px-4 py-2.5 font-medium text-gray-900">{item.name}</td>
-                          <td className="px-4 py-2.5 text-gray-600">{item.categoryName}</td>
-                          <td className="px-4 py-2.5">
-                            <span
-                              className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                                item.foodType === "VEG" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {item.foodType}
-                            </span>
-                          </td>
-                          <td className="px-4 py-2.5 text-gray-500 line-through">₹{item.masterPricePaise / 100}</td>
-                          <td className="px-4 py-2.5 font-bold text-emerald-700">₹{item.pricePaise / 100}</td>
-                          <td className="px-4 py-2.5">
-                            <button
-                              onClick={() => handleToggleItemAvailability(item.providerItemId, item.isAvailable)}
-                              className={`px-2.5 py-1 rounded-full text-[10px] font-bold cursor-pointer ${
-                                item.isAvailable
-                                  ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                              }`}
-                            >
-                              {item.isAvailable ? "IN STOCK" : "SOLD OUT"}
-                            </button>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-gray-700">
+                    Live Menu Preview ({menuPreview?.totalItems || 0} Items across {menuPreview?.totalCategories || 0} Categories)
+                  </h4>
+                  <span className="text-xs text-gray-500">
+                    Active Markup: {menuStrategy === "PERCENTAGE_HIKE" ? `+${menuHikeValue}%` : menuStrategy === "FIXED_HIKE" ? `+₹${menuHikeValue}` : "Equal to POS"}
+                  </span>
+                </div>
+
+                <div className="border border-gray-200 rounded-xl overflow-hidden">
+                  <table className="w-full text-xs text-left">
+                    <thead className="bg-gray-50 border-b text-gray-600 font-bold">
+                      <tr>
+                        <th className="p-3">Item Name</th>
+                        <th className="p-3">Category</th>
+                        <th className="p-3">Base POS Price</th>
+                        <th className="p-3">Aggregator Price</th>
+                        <th className="p-3 text-right">86 Stock Toggle</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {menuPreview?.items && menuPreview.items.length > 0 ? (
+                        menuPreview.items.slice(0, 15).map((it: any) => (
+                          <tr key={it.id} className="hover:bg-gray-50/50">
+                            <td className="p-3">
+                              <div className="font-bold text-[#172B25]">{it.name}</div>
+                              <div className="text-[10px] text-gray-400">ID: {it.id}</div>
+                            </td>
+                            <td className="p-3 text-gray-600">{it.categoryName}</td>
+                            <td className="p-3 font-mono font-medium text-gray-700">
+                              ₹{(it.basePricePaise / 100).toFixed(2)}
+                            </td>
+                            <td className="p-3 font-mono font-bold text-emerald-700">
+                              ₹{(it.aggregatorPricePaise / 100).toFixed(2)}
+                            </td>
+                            <td className="p-3 text-right">
+                              <Button
+                                size="sm"
+                                variant={it.isAvailable ? "outline" : "destructive"}
+                                onClick={() => handleToggleItemAvailability(it.id, it.isAvailable)}
+                                className="text-[11px] h-7 font-bold"
+                              >
+                                {it.isAvailable ? "In Stock (86)" : "Sold Out"}
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="p-6 text-center text-gray-500 italic">
+                            Loading catalog items...
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={6} className="px-4 py-6 text-center text-gray-400">
-                          No menu items found. Add items to Menu Catalog to sync.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
       )}
 
-      {/* Tab: ORDERS & EXCEPTIONS */}
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: LIVE ORDERS & EXCEPTIONS */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === "orders" && (
         <div className="space-y-6">
-          {/* Exception Alerts */}
-          {exceptions.length > 0 && (
-            <Card className="border-amber-200 bg-amber-50/50">
-              <CardHeader className="pb-3 border-b border-amber-200">
-                <CardTitle className="text-sm font-bold text-amber-900 flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-600" />
-                  Integration Exception Queue ({exceptions.length} Issues)
+          <Card className="border border-gray-200">
+            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-sm font-bold text-[#172B25] flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600" />
+                  Aggregator Exception Queue & Ingestion Audit
                 </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 space-y-2">
-                {exceptions.map((ex: any) => (
-                  <div key={ex.id} className="p-3 bg-white rounded-lg border border-amber-200 flex items-center justify-between gap-3 text-xs">
-                    <div>
-                      <div className="font-bold text-amber-900 flex items-center gap-2">
-                        <span>{ex.errorType}</span>
-                        <span className="text-gray-400">•</span>
-                        <span>{ex.provider}</span>
-                        {ex.externalOrderId && (
-                          <span className="font-mono text-gray-600">({ex.externalOrderId})</span>
-                        )}
-                      </div>
-                      <div className="text-gray-600 mt-0.5">{ex.reason}</div>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs text-amber-900"
-                      onClick={async () => {
-                        await fetch("/api/integrations/aggregator", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ action: "resolve_exception", exceptionId: ex.id }),
-                        });
-                        fetchExceptions();
-                      }}
-                    >
-                      Resolve
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Live Orders View */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-bold text-[#172B25] flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-emerald-600" />
-                Live Online Orders Pipeline
-              </CardTitle>
-              <span className="text-xs text-gray-500">Auto-routes to KOT Kitchen & KDS Screens</span>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="p-8 text-center text-gray-500 text-xs">
-                To view real-time orders flowing from Swiggy & Zomato into POS and Kitchen stations, switch to{" "}
-                <Link href="/app/orders" className="text-emerald-700 font-bold underline">
-                  POS Orders View
-                </Link>{" "}
-                or the{" "}
-                <Link href="/staff/kitchen" className="text-emerald-700 font-bold underline">
-                  Live KDS Kitchen Screen
-                </Link>
-                .
+                <p className="text-xs text-gray-500">
+                  Orders rejected due to unmapped stores or invalid signatures are captured here for troubleshooting.
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Tab: RECONCILIATION */}
-      {activeTab === "reconciliation" && (
-        <div className="space-y-6">
-          {/* Summary Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <Card className="p-3 border">
-              <div className="text-[11px] font-bold text-gray-500 uppercase">Total Orders</div>
-              <div className="text-lg font-bold text-[#172B25] mt-1">{reconciliation?.summary?.totalOrders || 0}</div>
-            </Card>
-            <Card className="p-3 border">
-              <div className="text-[11px] font-bold text-gray-500 uppercase">Gross Sales</div>
-              <div className="text-lg font-bold text-emerald-700 mt-1">₹{reconciliation?.summary?.grossSales?.toFixed(2) || "0.00"}</div>
-            </Card>
-            <Card className="p-3 border">
-              <div className="text-[11px] font-bold text-gray-500 uppercase">Discounts</div>
-              <div className="text-lg font-bold text-amber-700 mt-1">₹{reconciliation?.summary?.totalDiscounts?.toFixed(2) || "0.00"}</div>
-            </Card>
-            <Card className="p-3 border">
-              <div className="text-[11px] font-bold text-gray-500 uppercase">Taxes</div>
-              <div className="text-lg font-bold text-gray-700 mt-1">₹{reconciliation?.summary?.totalTaxes?.toFixed(2) || "0.00"}</div>
-            </Card>
-            <Card className="p-3 border">
-              <div className="text-[11px] font-bold text-gray-500 uppercase">Commission</div>
-              <div className="text-lg font-bold text-red-700 mt-1">₹{reconciliation?.summary?.totalCommission?.toFixed(2) || "0.00"}</div>
-            </Card>
-            <Card className="p-3 border bg-emerald-50/50 border-emerald-200">
-              <div className="text-[11px] font-bold text-emerald-800 uppercase">Net Payout</div>
-              <div className="text-lg font-bold text-emerald-900 mt-1">₹{reconciliation?.summary?.netPayout?.toFixed(2) || "0.00"}</div>
-            </Card>
-          </div>
-
-          {/* Orders Table */}
-          <Card className="border border-gray-200">
-            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-bold text-[#172B25]">Aggregator Settlement Ledger</CardTitle>
               <Button
-                size="sm"
                 variant="outline"
-                onClick={handleDownloadCsv}
-                className="text-xs font-semibold flex items-center gap-1.5"
+                size="sm"
+                onClick={fetchExceptions}
+                className="text-xs font-semibold"
               >
-                <Download className="w-3.5 h-3.5" />
-                Export CSV Report
+                Refresh Queue
               </Button>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              {exceptions.length > 0 ? (
+                <div className="divide-y divide-gray-100">
+                  {exceptions.map((exc) => (
+                    <div key={exc.id} className="p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                              exc.provider === "SWIGGY"
+                                ? "bg-orange-100 text-orange-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {exc.provider}
+                          </span>
+                          <span className="text-xs font-bold text-gray-900">{exc.errorType}</span>
+                          {exc.externalOrderId && (
+                            <span className="text-xs font-mono text-gray-500">Ref: {exc.externalOrderId}</span>
+                          )}
+                          <span className="text-[11px] text-gray-400">
+                            {new Date(exc.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            exc.isResolved
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          {exc.isResolved ? "RESOLVED" : "UNRESOLVED"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-700">{exc.reason}</p>
+                      {exc.payloadJson && (
+                        <details className="text-[11px] text-gray-500">
+                          <summary className="cursor-pointer hover:underline text-gray-600">
+                            View Payload Snippet
+                          </summary>
+                          <pre className="mt-1 p-2 bg-gray-50 rounded border text-[10px] overflow-x-auto">
+                            {exc.payloadJson.slice(0, 300)}...
+                          </pre>
+                        </details>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-8 text-center text-xs text-gray-500 space-y-1">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+                  <p className="font-semibold text-gray-700">Exception Queue is Empty</p>
+                  <p className="text-gray-500">No unmapped store IDs or failed webhook ingestion events recorded.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* TAB: RECONCILIATION */}
+      {/* ------------------------------------------------------------- */}
+      {activeTab === "reconciliation" && (
+        <div className="space-y-6">
+          <Card className="border border-gray-200">
+            <CardHeader className="pb-3 border-b flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-bold text-[#172B25] flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-emerald-600" />
+                  Aggregator Payout & Order Reconciliation
+                </CardTitle>
+                <p className="text-xs text-gray-500">
+                  Compare aggregator payouts, discounts, commissions, and taxes against RestroNex POS billed orders.
+                </p>
+              </div>
+              <Button
+                onClick={handleDownloadCsv}
+                variant="outline"
+                size="sm"
+                className="text-xs font-semibold flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Export Reconciliation CSV
+              </Button>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {/* Summary Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                  <div className="text-xs font-bold text-gray-500 uppercase">Gross Volume</div>
+                  <div className="text-xl font-black text-[#172B25] mt-1">
+                    ₹{((reconciliation?.summary?.totalGrossPaise || 0) / 100).toFixed(2)}
+                  </div>
+                  <div className="text-[11px] text-gray-500 mt-0.5">
+                    {reconciliation?.summary?.totalOrders || 0} Total Orders
+                  </div>
+                </div>
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                  <div className="text-xs font-bold text-gray-500 uppercase">Customer Discounts</div>
+                  <div className="text-xl font-black text-amber-700 mt-1">
+                    ₹{((reconciliation?.summary?.totalDiscountsPaise || 0) / 100).toFixed(2)}
+                  </div>
+                  <div className="text-[11px] text-gray-500 mt-0.5">Funded by merchant / app</div>
+                </div>
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                  <div className="text-xs font-bold text-gray-500 uppercase">Est. Commissions</div>
+                  <div className="text-xl font-black text-red-700 mt-1">
+                    ₹{((reconciliation?.summary?.totalCommissionPaise || 0) / 100).toFixed(2)}
+                  </div>
+                  <div className="text-[11px] text-gray-500 mt-0.5">~18% platform commission</div>
+                </div>
+                <div className="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                  <div className="text-xs font-bold text-emerald-800 uppercase">Net Payout Est.</div>
+                  <div className="text-xl font-black text-emerald-800 mt-1">
+                    ₹{((reconciliation?.summary?.totalNetPayoutPaise || 0) / 100).toFixed(2)}
+                  </div>
+                  <div className="text-[11px] text-emerald-700 mt-0.5">Deposited to bank account</div>
+                </div>
+              </div>
+
+              {/* Orders Table */}
+              <div className="border border-gray-200 rounded-xl overflow-hidden">
                 <table className="w-full text-xs text-left">
-                  <thead className="bg-gray-50 border-b text-gray-600 font-semibold">
+                  <thead className="bg-gray-50 border-b text-gray-600 font-bold">
                     <tr>
-                      <th className="px-4 py-3">Order Number</th>
-                      <th className="px-4 py-3">Provider</th>
-                      <th className="px-4 py-3">Outlet</th>
-                      <th className="px-4 py-3">Gross</th>
-                      <th className="px-4 py-3">Commission (18%)</th>
-                      <th className="px-4 py-3">Net Payout</th>
-                      <th className="px-4 py-3">Status</th>
-                      <th className="px-4 py-3">Date</th>
+                      <th className="p-3">Order ID</th>
+                      <th className="p-3">Platform</th>
+                      <th className="p-3">Gross Amount</th>
+                      <th className="p-3">Taxes</th>
+                      <th className="p-3">Est. Commission</th>
+                      <th className="p-3">Net Payout</th>
+                      <th className="p-3">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
-                    {reconciliation?.orders && reconciliation.orders.length > 0 ? (
-                      reconciliation.orders.map((o: any) => (
-                        <tr key={o.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-2.5 font-bold text-gray-900">{o.orderNumber}</td>
-                          <td className="px-4 py-2.5 font-semibold">
-                            <span className={o.provider === "SWIGGY" ? "text-orange-600" : "text-red-600"}>
-                              {o.provider}
+                    {reconciliation?.rows && reconciliation.rows.length > 0 ? (
+                      reconciliation.rows.map((r: any) => (
+                        <tr key={r.providerOrderId} className="hover:bg-gray-50/50">
+                          <td className="p-3 font-mono font-bold text-[#172B25]">{r.providerOrderId}</td>
+                          <td className="p-3">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                r.provider === "SWIGGY"
+                                  ? "bg-orange-100 text-orange-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {r.provider}
                             </span>
                           </td>
-                          <td className="px-4 py-2.5 text-gray-600">{o.outletName}</td>
-                          <td className="px-4 py-2.5 font-medium text-gray-900">₹{o.grossAmount.toFixed(2)}</td>
-                          <td className="px-4 py-2.5 text-red-600">-₹{o.commission.toFixed(2)}</td>
-                          <td className="px-4 py-2.5 font-bold text-emerald-700">₹{o.netPayout.toFixed(2)}</td>
-                          <td className="px-4 py-2.5">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">
-                              {o.orderStatus}
+                          <td className="p-3 font-mono font-medium">₹{r.grossAmount.toFixed(2)}</td>
+                          <td className="p-3 font-mono text-gray-600">₹{r.taxes.toFixed(2)}</td>
+                          <td className="p-3 font-mono text-red-600">₹{r.commission.toFixed(2)}</td>
+                          <td className="p-3 font-mono font-bold text-emerald-700">₹{r.netPayout.toFixed(2)}</td>
+                          <td className="p-3">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-700">
+                              {r.status}
                             </span>
-                          </td>
-                          <td className="px-4 py-2.5 text-gray-500">
-                            {new Date(o.createdAt).toLocaleDateString("en-IN", {
-                              day: "numeric",
-                              month: "short",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={8} className="px-4 py-6 text-center text-gray-400">
-                          No aggregator orders received for reconciliation yet. Live orders from Swiggy and Zomato will automatically appear here once incoming webhooks are processed.
+                        <td colSpan={7} className="p-6 text-center text-gray-500 italic">
+                          No settled aggregator orders to display for this period.
                         </td>
                       </tr>
                     )}

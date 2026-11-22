@@ -20,7 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 
-export type GuideKey = "razorpay" | "whatsapp" | "printer" | "aggregators" | "accounting";
+export type GuideKey = "razorpay" | "whatsapp" | "printer" | "swiggy" | "zomato" | "aggregators" | "accounting";
 
 export interface GuideStep {
   num: number;
@@ -31,6 +31,7 @@ export interface GuideStep {
   code?: string;
   codeLabel?: string;
   actionText?: string;
+  actionUrl?: string;
   providerKey?: string;
 }
 
@@ -319,70 +320,180 @@ export default function IntegrationSetupGuidesModal({
       ],
     },
 
-    aggregators: {
-      title: "Online Ordering (Swiggy & Zomato) Setup",
-      subtitle: "Official merchant partner onboarding, multi-outlet store mapping, and menu synchronization",
+    swiggy: {
+      title: "Swiggy Restaurant POS Integration Guide",
+      subtitle: "Official Swiggy Builders Club / Merchant POS Bridge setup, outlet mapping & order relay",
       icon: ShoppingBag,
       color: "text-orange-600",
       bgColor: "bg-orange-50 border-orange-200",
-      totalSteps: 8,
+      totalSteps: 5,
       prerequisites: [
-        "Active Swiggy Restaurant Partner merchant account (partner.swiggy.com)",
-        "Active Zomato for Business merchant account (zomato.com/business)",
-        "Valid FSSAI license and GSTIN certificate linked to aggregator listings",
+        "Active Swiggy Restaurant Partner listing (partner.swiggy.com)",
+        "Valid FSSAI license & GSTIN registered on Swiggy",
+        "Point of Contact (POC) or Swiggy Partner Helpdesk access",
       ],
       steps: [
         {
           num: 1,
-          title: "Check Partner Eligibility & Active Listings",
-          body: "Confirm that your restaurant is active, live, and accepting orders on Swiggy and Zomato customer apps. Ensure your FSSAI license is up to date on both partner portals.",
+          title: "Step 1 — Request Official Integration Access",
+          body: "Submit your POS integration request to Swiggy. Important notice: Swiggy Builders Club's enterprise application (mcp.swiggy.com/builders/enterprises/) is designed for its commerce MCP platform. It is not confirmed as the merchant-side restaurant POS order-relay API. Contact Swiggy to obtain confirmation and the correct restaurant POS partnership onboarding route.",
+          tip: "RestroNex is platform-ready. Contact builders@swiggy.in or your restaurant's Swiggy account manager to initiate POS relay authorization.",
+          actionText: "Contact Swiggy Partnership Team",
+          actionUrl: "mailto:builders@swiggy.in?subject=RestroNex%20POS%20Integration%20Request",
         },
         {
           num: 2,
-          title: "Apply for POS Integration with Aggregator Support",
-          body: "Contact your Swiggy Point of Contact (POC) / Swiggy Partner Helpdesk and request POS Integration. On Zomato, raise a ticket via Zomato Restaurant Partner App under 'POS Integration Request'. Inform them that you are using RestroNex Restaurant OS.",
-          tip: "Swiggy and Zomato officially require merchant agreement sign-off before releasing API tokens.",
-        },
-        {
-          num: 3,
-          title: "Receive Partner API Credentials & Store IDs",
-          body: "Aggregator technical support will issue your Merchant ID, Outlet/Store ID (Res ID on Zomato, Store ID on Swiggy), and a secure API Client Token / Signing Secret.",
-        },
-        {
-          num: 4,
-          title: "Enter Merchant & Store IDs in RestroNex",
-          body: "Open RestroNex Online Integrations → Swiggy or Zomato tab. Enter your Merchant ID and Store IDs. RestroNex encrypts all aggregator tokens securely on the server.",
-          actionText: "Open Online Ordering Console",
+          title: "Step 2 — Obtain Merchant POS API Credentials",
+          body: "Obtain merchant POS API credentials from authorized Swiggy integration channels. Swiggy technical support or your integration POC will provide: Partner Client ID, Partner Token / API Secret, Webhook Signing Secret, and Merchant ID. RestroNex encrypts all secrets with AES-256-GCM.",
+          code: `${origin}/api/webhooks/aggregators/swiggy`,
+          codeLabel: "Swiggy Production Webhook URL",
+          actionText: "Configure Swiggy Credentials",
           providerKey: "swiggy",
         },
         {
+          num: 3,
+          title: "Step 3 — Locate Swiggy Store ID for Each Outlet",
+          body: "Log in to the Swiggy Partner Portal (partner.swiggy.com). Under 'Outlet Profile' or 'Store Info', locate your numeric or alphanumeric Swiggy Store ID (e.g., 784920) for each physical restaurant branch.",
+          tip: "Each physical branch in RestroNex maps to a separate Swiggy Store ID.",
+        },
+        {
+          num: 4,
+          title: "Step 4 — Complete Outlet Mapping Table",
+          body: "Open RestroNex Online Integrations → Swiggy → Manage Outlets. Map each physical outlet branch to its corresponding Swiggy Store ID. This ensures incoming orders dispatch KOTs to the exact kitchen station.",
+          actionText: "Open Online Ordering Console",
+          actionUrl: "/app/integrations/online",
+        },
+        {
           num: 5,
-          title: "Provide RestroNex Webhook URLs to Aggregators",
-          body: "Provide your dedicated RestroNex webhook URLs to Swiggy and Zomato partner technical onboarding teams. They will configure these endpoints in their order dispatch relays.",
+          title: "Step 5 — Verify Connection & Live Activation",
+          body: "Run the Connection Verification check. Connection status will display 'Provider approval required' until Swiggy partner onboarding authorizes POS order relay and approves the webhook registration. RestroNex never simulates a connected state prematurely.",
+          warning: "Never assume credentials alone mean live orders are active. Swiggy POS relay mode must be enabled by Swiggy technical operations.",
+        },
+      ],
+      troubleshooting: [
+        {
+          q: "Why does status display 'PROVIDER APPROVAL REQUIRED'?",
+          a: "Swiggy requires merchant authorization and POS relay enablement on their backend. Once your Swiggy POC switches your restaurant to POS mode, live orders will flow immediately.",
+        },
+        {
+          q: "Orders fail with HMAC signature verification error",
+          a: "RestroNex cryptographically verifies every webhook using HMAC-SHA256. Ensure the Webhook Signing Secret in RestroNex matches the key assigned in your Swiggy partner profile.",
+        },
+      ],
+    },
+
+    zomato: {
+      title: "Zomato for Business POS Integration Guide",
+      subtitle: "Official Zomato Developer Platform setup, NDA milestones, res_id mapping & live sync",
+      icon: ShoppingBag,
+      color: "text-red-600",
+      bgColor: "bg-red-50 border-red-200",
+      totalSteps: 5,
+      prerequisites: [
+        "Active Zomato for Business merchant account (zomato.com/business)",
+        "Valid FSSAI license & GSTIN linked to your Zomato listing",
+        "Assigned Zomato technical onboarding Point of Contact (POC)",
+      ],
+      steps: [
+        {
+          num: 1,
+          title: "Step 1 — Apply for POS Integration on Developer Platform",
+          body: "Open the official Zomato POS Developer Platform (zomato.com/developer/integration/). Complete the standard onboarding milestones: (1) Pre-integration review, (2) NDA execution, (3) POC assignment, (4) Technical integration, and (5) Go-live sign-off. Alternatively, email pos-partnership@zomato.com.",
+          tip: "Official Zomato POS integration requires vendor-level authorization with a dedicated integration POC.",
+          actionText: "Open Zomato POS Developer Platform",
+          actionUrl: "https://www.zomato.com/developer/integration/",
+        },
+        {
+          num: 2,
+          title: "Step 2 — Obtain POS ID & Authentication Tokens",
+          body: "Once your integration application is approved and NDA executed, Zomato will issue: (1) Zomato POS ID (e.g., POS-RESTRO-001), (2) API Key / Authentication Token, and (3) Webhook Secret / Bearer Token. Enter these into RestroNex settings.",
+          code: `${origin}/api/webhooks/aggregators/zomato`,
+          codeLabel: "Zomato Production Webhook URL",
+          actionText: "Configure Zomato Credentials",
+          providerKey: "zomato",
+        },
+        {
+          num: 3,
+          title: "Step 3 — Find Zomato Restaurant ID (res_id) Per Branch",
+          body: "In Zomato for Business portal, find your numeric Restaurant ID (res_id, e.g., 18942103) for each branch. This ID is also visible in your restaurant's public Zomato listing URL.",
+          tip: "Each outlet has a unique res_id. If you operate multiple branches, gather all res_ids before mapping.",
+        },
+        {
+          num: 4,
+          title: "Step 4 — Map Zomato Outlets Table",
+          body: "Open RestroNex Online Integrations → Zomato → Manage Outlets. Map each RestroNex physical outlet to its assigned Zomato res_id. Configure prep times and pricing markup rules.",
+          actionText: "Open Online Ordering Console",
+          actionUrl: "/app/integrations/online",
+        },
+        {
+          num: 5,
+          title: "Step 5 — Verify Connection & Live Activation",
+          body: "Run the Connection Verification check. RestroNex validates credential format, outlet mapping completeness, and webhook readiness. Status honestly reflects provider onboarding status and displays 'Provider approval required' until live orders are confirmed.",
+          warning: "Zomato requires automated order acceptance and status callbacks (CONFIRMED, FOOD_READY, DISPATCHED). RestroNex provides full status synchronization out of the box.",
+        },
+      ],
+      troubleshooting: [
+        {
+          q: "How do I contact Zomato POS Partnership team?",
+          a: "You can email pos-partnership@zomato.com directly or raise a POS Integration ticket in the Zomato for Business merchant app.",
+        },
+        {
+          q: "Why is my status 'OUTLET_MAPPING_PENDING'?",
+          a: "You have saved your credentials, but you have not yet mapped any physical RestroNex branch to a Zomato res_id. Go to Online Integrations and add at least one outlet mapping.",
+        },
+      ],
+    },
+
+    aggregators: {
+      title: "Online Ordering (Swiggy & Zomato) Overview",
+      subtitle: "Official merchant partner onboarding, multi-outlet store mapping, and menu synchronization",
+      icon: ShoppingBag,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50 border-orange-200",
+      totalSteps: 5,
+      prerequisites: [
+        "Active Swiggy Restaurant Partner listing (partner.swiggy.com)",
+        "Active Zomato for Business listing (zomato.com/business)",
+        "Valid FSSAI license & GSTIN certificate linked to aggregator listings",
+      ],
+      steps: [
+        {
+          num: 1,
+          title: "Step 1 — Understand Two-Scope Architecture",
+          body: "Platform-level vendor credentials (POS Partner Token, API Secret, Signing Secret) are managed at the platform level. Restaurant-level configuration (Store IDs, res_ids, prep times, pricing markups) is managed per outlet in RestroNex.",
+          tip: "Select the dedicated Swiggy or Zomato tab above for platform-specific step-by-step guides.",
+        },
+        {
+          num: 2,
+          title: "Step 2 — Request Official Aggregator Access",
+          body: "Apply for official integration via Swiggy Builders Club / POC and Zomato Developer Platform (zomato.com/developer/integration/). Complete onboarding milestones and NDA execution.",
+          actionText: "Contact Swiggy Partnership",
+          actionUrl: "mailto:builders@swiggy.in",
+        },
+        {
+          num: 3,
+          title: "Step 3 — Configure Webhook Endpoints",
+          body: "Provide RestroNex webhook endpoints to the aggregator technical teams. RestroNex verifies incoming orders using HMAC-SHA256 signatures.",
           code: `${origin}/api/webhooks/aggregators/swiggy`,
-          codeLabel: "Swiggy Production Webhook URL",
+          codeLabel: "Production Webhook Endpoints",
         },
         {
-          num: 6,
-          title: "Map RestroNex Outlets to Aggregator Store Locations",
-          body: "In RestroNex Outlet Mapping tab, link your physical restaurant branch to its corresponding Swiggy Store ID and Zomato Res ID. This ensures orders are automatically routed to the correct cashier desk.",
+          num: 4,
+          title: "Step 4 — Map RestroNex Outlets to External Listings",
+          body: "Map your physical outlets to Swiggy Store IDs and Zomato res_ids in the Online Ordering Console.",
+          actionText: "Open Online Ordering Console",
+          actionUrl: "/app/integrations/online",
         },
         {
-          num: 7,
-          title: "Synchronize Master Menu & Pricing Markups",
-          body: "Navigate to Menu Synchronisation. Choose your aggregator pricing strategy (e.g. 15% price hike to cover packaging/commissions) and click 'Push Menu Sync'. Review categories, items, and addon variants.",
-        },
-        {
-          num: 8,
-          title: "Request Provider Activation & Verify First Live Order",
-          body: "Inform aggregator support to switch your store to POS Relay mode. When your first customer places an order on Swiggy or Zomato, it will ring loudly on POS, fire kitchen KOTs, and print thermal slips automatically.",
-          tip: "Once activated, your status will change from 'PROVIDER APPROVAL REQUIRED' to 'CONNECTED (Live Production)'.",
+          num: 5,
+          title: "Step 5 — Verify Connection & Kitchen Flow",
+          body: "Test verification checks credential readiness and outlet mappings. Status honestly displays 'Provider approval required' until live orders arrive and are acknowledged.",
         },
       ],
       troubleshooting: [
         {
           q: "Why does my status show 'PROVIDER APPROVAL REQUIRED'?",
-          a: "Direct Swiggy and Zomato API access requires an active commercial contract with the aggregator. RestroNex is fully architected and ready; you simply need to request POS API enablement from your Swiggy/Zomato account manager.",
+          a: "Direct Swiggy and Zomato API access requires an active commercial contract with the aggregator. RestroNex is fully architected and ready; simply request POS API enablement from your account manager.",
         },
         {
           q: "Aggregator order arrives but kitchen KOT does not print",
@@ -487,7 +598,9 @@ export default function IntegrationSetupGuidesModal({
             { key: "razorpay", label: "Razorpay (Payments)", icon: CreditCard },
             { key: "whatsapp", label: "Meta WhatsApp", icon: MessageSquare },
             { key: "printer", label: "Thermal Printers", icon: Printer },
-            { key: "aggregators", label: "Swiggy & Zomato", icon: ShoppingBag },
+            { key: "swiggy", label: "Swiggy POS Bridge", icon: ShoppingBag },
+            { key: "zomato", label: "Zomato POS Bridge", icon: ShoppingBag },
+            { key: "aggregators", label: "Aggregators Overview", icon: ShoppingBag },
             { key: "accounting", label: "Tally & Accounting", icon: FileSpreadsheet },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -593,9 +706,20 @@ export default function IntegrationSetupGuidesModal({
                   </div>
                 )}
 
-                {/* Action button if step has action */}
-                {step.actionText && onOpenConfigure && (
-                  <div className="pt-2">
+                {/* Action buttons if step has action */}
+                <div className="flex flex-wrap items-center gap-2 pt-2">
+                  {step.actionUrl && (
+                    <a
+                      href={step.actionUrl}
+                      target={step.actionUrl.startsWith("mailto:") ? undefined : "_blank"}
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold flex items-center gap-2 shadow-xs transition cursor-pointer"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      {step.actionText || "Open Official Portal"}
+                    </a>
+                  )}
+                  {step.actionText && !step.actionUrl && onOpenConfigure && (
                     <button
                       onClick={() => {
                         onClose();
@@ -606,8 +730,8 @@ export default function IntegrationSetupGuidesModal({
                       <Sparkles className="w-4 h-4" />
                       {step.actionText} →
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             );
           })()}

@@ -94,6 +94,7 @@ export const navigationGroups: NavGroup[] = [
     title: "OPERATIONS",
     items: [
       { label: "Inventory & Stock", href: "/app/inventory", icon: PackageSearch },
+      { label: "Bulk Stock Sales", href: "/app/inventory?tab=BULK_SALES", icon: Store, badge: "Direct" },
       { label: "Suppliers & Purchases", href: "/app/purchases", icon: Truck },
       { label: "Customers & CRM", href: "/app/customers", icon: Users },
       { label: "Staff & Team", href: "/app/staff", icon: ShieldUser },

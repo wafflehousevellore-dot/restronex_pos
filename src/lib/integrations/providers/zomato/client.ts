@@ -113,7 +113,7 @@ export class ZomatoApiClient {
     status: string,
     prepTimeMinutes = 15,
     cancelReason?: string
-  ) {
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
     if (!this.credentials.apiKey) {
       return { success: false, error: "Zomato partner credentials not configured." };
     }
@@ -131,6 +131,10 @@ export class ZomatoApiClient {
       }),
     });
 
-    return { success: response.ok };
+    return {
+      success: response.ok,
+      message: response.ok ? "Status updated on Zomato" : undefined,
+      error: response.ok ? undefined : response.statusText,
+    };
   }
 }

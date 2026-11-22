@@ -9,10 +9,11 @@ import {
   FileText, 
   Plus, 
   SlidersHorizontal, 
-  ArrowRightLeft 
+  ArrowRightLeft,
+  Store,
 } from "lucide-react";
 
-export type InventoryTabType = "STOCK" | "RECIPES" | "PURCHASES" | "SUPPLIERS" | "REPORTS";
+export type InventoryTabType = "STOCK" | "BULK_SALES" | "RECIPES" | "PURCHASES" | "TRANSFERS" | "SUPPLIERS" | "REPORTS";
 
 interface InventoryTabsNavProps {
   activeTab: InventoryTabType;
@@ -24,6 +25,7 @@ interface InventoryTabsNavProps {
   recipesCount: number;
   posCount: number;
   suppliersCount: number;
+  bulkSalesCount?: number;
 }
 
 export function InventoryTabsNav({
@@ -36,13 +38,16 @@ export function InventoryTabsNav({
   recipesCount,
   posCount,
   suppliersCount,
+  bulkSalesCount,
 }: InventoryTabsNavProps) {
   const tabs = [
-    { id: "STOCK" as InventoryTabType, label: "Stock & Ingredients", icon: Boxes, count: itemsCount },
+    { id: "STOCK" as InventoryTabType, label: "Stock & Products", icon: Boxes, count: itemsCount },
+    { id: "BULK_SALES" as InventoryTabType, label: "Bulk Stock Sales", icon: Store, count: bulkSalesCount },
+    { id: "PURCHASES" as InventoryTabType, label: "Purchases & Inward", icon: ShoppingBag, count: posCount },
     { id: "RECIPES" as InventoryTabType, label: "Recipes & BOM", icon: UtensilsCrossed, count: recipesCount },
-    { id: "PURCHASES" as InventoryTabType, label: "Purchase Orders", icon: ShoppingBag, count: posCount },
-    { id: "SUPPLIERS" as InventoryTabType, label: "Suppliers Directory", icon: Building2, count: suppliersCount },
-    { id: "REPORTS" as InventoryTabType, label: "Audit Movements & Reports", icon: FileText },
+    { id: "TRANSFERS" as InventoryTabType, label: "Outlet Transfers", icon: ArrowRightLeft },
+    { id: "SUPPLIERS" as InventoryTabType, label: "Suppliers", icon: Building2, count: suppliersCount },
+    { id: "REPORTS" as InventoryTabType, label: "Valuation & Ledger", icon: FileText },
   ];
 
   return (

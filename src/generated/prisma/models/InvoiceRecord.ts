@@ -31,6 +31,7 @@ export type InvoiceRecordAvgAggregateOutputType = {
   taxPaise: number | null
   discountPaise: number | null
   totalPaise: number | null
+  viewCount: number | null
 }
 
 export type InvoiceRecordSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type InvoiceRecordSumAggregateOutputType = {
   taxPaise: number | null
   discountPaise: number | null
   totalPaise: number | null
+  viewCount: number | null
 }
 
 export type InvoiceRecordMinAggregateOutputType = {
@@ -55,6 +57,11 @@ export type InvoiceRecordMinAggregateOutputType = {
   customerPhone: string | null
   customerName: string | null
   status: string | null
+  publicToken: string | null
+  tokenExpiresAt: Date | null
+  tokenRevoked: boolean | null
+  viewCount: number | null
+  lastViewedAt: Date | null
   createdAt: Date | null
 }
 
@@ -73,6 +80,11 @@ export type InvoiceRecordMaxAggregateOutputType = {
   customerPhone: string | null
   customerName: string | null
   status: string | null
+  publicToken: string | null
+  tokenExpiresAt: Date | null
+  tokenRevoked: boolean | null
+  viewCount: number | null
+  lastViewedAt: Date | null
   createdAt: Date | null
 }
 
@@ -91,6 +103,11 @@ export type InvoiceRecordCountAggregateOutputType = {
   customerPhone: number
   customerName: number
   status: number
+  publicToken: number
+  tokenExpiresAt: number
+  tokenRevoked: number
+  viewCount: number
+  lastViewedAt: number
   createdAt: number
   _all: number
 }
@@ -101,6 +118,7 @@ export type InvoiceRecordAvgAggregateInputType = {
   taxPaise?: true
   discountPaise?: true
   totalPaise?: true
+  viewCount?: true
 }
 
 export type InvoiceRecordSumAggregateInputType = {
@@ -108,6 +126,7 @@ export type InvoiceRecordSumAggregateInputType = {
   taxPaise?: true
   discountPaise?: true
   totalPaise?: true
+  viewCount?: true
 }
 
 export type InvoiceRecordMinAggregateInputType = {
@@ -125,6 +144,11 @@ export type InvoiceRecordMinAggregateInputType = {
   customerPhone?: true
   customerName?: true
   status?: true
+  publicToken?: true
+  tokenExpiresAt?: true
+  tokenRevoked?: true
+  viewCount?: true
+  lastViewedAt?: true
   createdAt?: true
 }
 
@@ -143,6 +167,11 @@ export type InvoiceRecordMaxAggregateInputType = {
   customerPhone?: true
   customerName?: true
   status?: true
+  publicToken?: true
+  tokenExpiresAt?: true
+  tokenRevoked?: true
+  viewCount?: true
+  lastViewedAt?: true
   createdAt?: true
 }
 
@@ -161,6 +190,11 @@ export type InvoiceRecordCountAggregateInputType = {
   customerPhone?: true
   customerName?: true
   status?: true
+  publicToken?: true
+  tokenExpiresAt?: true
+  tokenRevoked?: true
+  viewCount?: true
+  lastViewedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -266,6 +300,11 @@ export type InvoiceRecordGroupByOutputType = {
   customerPhone: string | null
   customerName: string | null
   status: string
+  publicToken: string | null
+  tokenExpiresAt: Date | null
+  tokenRevoked: boolean
+  viewCount: number
+  lastViewedAt: Date | null
   createdAt: Date
   _count: InvoiceRecordCountAggregateOutputType | null
   _avg: InvoiceRecordAvgAggregateOutputType | null
@@ -307,9 +346,15 @@ export type InvoiceRecordWhereInput = {
   customerPhone?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   customerName?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   status?: Prisma.StringFilter<"InvoiceRecord"> | string
+  publicToken?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
+  tokenExpiresAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
+  tokenRevoked?: Prisma.BoolFilter<"InvoiceRecord"> | boolean
+  viewCount?: Prisma.IntFilter<"InvoiceRecord"> | number
+  lastViewedAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InvoiceRecord"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  customerMessages?: Prisma.CustomerMessageLogListRelationFilter
 }
 
 export type InvoiceRecordOrderByWithRelationInput = {
@@ -327,9 +372,15 @@ export type InvoiceRecordOrderByWithRelationInput = {
   customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   customerName?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  tokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tokenRevoked?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  lastViewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
   tenant?: Prisma.TenantOrderByWithRelationInput
+  customerMessages?: Prisma.CustomerMessageLogOrderByRelationAggregateInput
 }
 
 export type InvoiceRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -351,9 +402,15 @@ export type InvoiceRecordWhereUniqueInput = Prisma.AtLeast<{
   customerPhone?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   customerName?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   status?: Prisma.StringFilter<"InvoiceRecord"> | string
+  publicToken?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
+  tokenExpiresAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
+  tokenRevoked?: Prisma.BoolFilter<"InvoiceRecord"> | boolean
+  viewCount?: Prisma.IntFilter<"InvoiceRecord"> | number
+  lastViewedAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InvoiceRecord"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  customerMessages?: Prisma.CustomerMessageLogListRelationFilter
 }, "id" | "orderId" | "tenantId_invoiceNumber">
 
 export type InvoiceRecordOrderByWithAggregationInput = {
@@ -371,6 +428,11 @@ export type InvoiceRecordOrderByWithAggregationInput = {
   customerPhone?: Prisma.SortOrderInput | Prisma.SortOrder
   customerName?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  tokenExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  tokenRevoked?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  lastViewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.InvoiceRecordCountOrderByAggregateInput
   _avg?: Prisma.InvoiceRecordAvgOrderByAggregateInput
@@ -397,6 +459,11 @@ export type InvoiceRecordScalarWhereWithAggregatesInput = {
   customerPhone?: Prisma.StringNullableWithAggregatesFilter<"InvoiceRecord"> | string | null
   customerName?: Prisma.StringNullableWithAggregatesFilter<"InvoiceRecord"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"InvoiceRecord"> | string
+  publicToken?: Prisma.StringNullableWithAggregatesFilter<"InvoiceRecord"> | string | null
+  tokenExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InvoiceRecord"> | Date | string | null
+  tokenRevoked?: Prisma.BoolWithAggregatesFilter<"InvoiceRecord"> | boolean
+  viewCount?: Prisma.IntWithAggregatesFilter<"InvoiceRecord"> | number
+  lastViewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"InvoiceRecord"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"InvoiceRecord"> | Date | string
 }
 
@@ -413,9 +480,15 @@ export type InvoiceRecordCreateInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutInvoiceInput
   tenant: Prisma.TenantCreateNestedOneWithoutInvoicesInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordUncheckedCreateInput = {
@@ -433,7 +506,13 @@ export type InvoiceRecordUncheckedCreateInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordUpdateInput = {
@@ -449,9 +528,15 @@ export type InvoiceRecordUpdateInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutInvoiceNestedInput
   tenant?: Prisma.TenantUpdateOneRequiredWithoutInvoicesNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceRecordUncheckedUpdateInput = {
@@ -469,7 +554,13 @@ export type InvoiceRecordUncheckedUpdateInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceRecordCreateManyInput = {
@@ -487,6 +578,11 @@ export type InvoiceRecordCreateManyInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -503,6 +599,11 @@ export type InvoiceRecordUpdateManyMutationInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -521,6 +622,11 @@ export type InvoiceRecordUncheckedUpdateManyInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -559,6 +665,11 @@ export type InvoiceRecordCountOrderByAggregateInput = {
   customerPhone?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
+  tokenExpiresAt?: Prisma.SortOrder
+  tokenRevoked?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  lastViewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -567,6 +678,7 @@ export type InvoiceRecordAvgOrderByAggregateInput = {
   taxPaise?: Prisma.SortOrder
   discountPaise?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
 }
 
 export type InvoiceRecordMaxOrderByAggregateInput = {
@@ -584,6 +696,11 @@ export type InvoiceRecordMaxOrderByAggregateInput = {
   customerPhone?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
+  tokenExpiresAt?: Prisma.SortOrder
+  tokenRevoked?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  lastViewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -602,6 +719,11 @@ export type InvoiceRecordMinOrderByAggregateInput = {
   customerPhone?: Prisma.SortOrder
   customerName?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  publicToken?: Prisma.SortOrder
+  tokenExpiresAt?: Prisma.SortOrder
+  tokenRevoked?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  lastViewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -610,6 +732,7 @@ export type InvoiceRecordSumOrderByAggregateInput = {
   taxPaise?: Prisma.SortOrder
   discountPaise?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
 }
 
 export type InvoiceRecordCreateNestedManyWithoutTenantInput = {
@@ -686,6 +809,22 @@ export type InvoiceRecordUncheckedUpdateOneWithoutOrderNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceRecordUpdateToOneWithWhereWithoutOrderInput, Prisma.InvoiceRecordUpdateWithoutOrderInput>, Prisma.InvoiceRecordUncheckedUpdateWithoutOrderInput>
 }
 
+export type InvoiceRecordCreateNestedOneWithoutCustomerMessagesInput = {
+  create?: Prisma.XOR<Prisma.InvoiceRecordCreateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedCreateWithoutCustomerMessagesInput>
+  connectOrCreate?: Prisma.InvoiceRecordCreateOrConnectWithoutCustomerMessagesInput
+  connect?: Prisma.InvoiceRecordWhereUniqueInput
+}
+
+export type InvoiceRecordUpdateOneWithoutCustomerMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceRecordCreateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedCreateWithoutCustomerMessagesInput>
+  connectOrCreate?: Prisma.InvoiceRecordCreateOrConnectWithoutCustomerMessagesInput
+  upsert?: Prisma.InvoiceRecordUpsertWithoutCustomerMessagesInput
+  disconnect?: Prisma.InvoiceRecordWhereInput | boolean
+  delete?: Prisma.InvoiceRecordWhereInput | boolean
+  connect?: Prisma.InvoiceRecordWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceRecordUpdateToOneWithWhereWithoutCustomerMessagesInput, Prisma.InvoiceRecordUpdateWithoutCustomerMessagesInput>, Prisma.InvoiceRecordUncheckedUpdateWithoutCustomerMessagesInput>
+}
+
 export type InvoiceRecordCreateWithoutTenantInput = {
   id?: string
   outletId: string
@@ -699,8 +838,14 @@ export type InvoiceRecordCreateWithoutTenantInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutInvoiceInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordUncheckedCreateWithoutTenantInput = {
@@ -717,7 +862,13 @@ export type InvoiceRecordUncheckedCreateWithoutTenantInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordCreateOrConnectWithoutTenantInput = {
@@ -764,6 +915,11 @@ export type InvoiceRecordScalarWhereInput = {
   customerPhone?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   customerName?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
   status?: Prisma.StringFilter<"InvoiceRecord"> | string
+  publicToken?: Prisma.StringNullableFilter<"InvoiceRecord"> | string | null
+  tokenExpiresAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
+  tokenRevoked?: Prisma.BoolFilter<"InvoiceRecord"> | boolean
+  viewCount?: Prisma.IntFilter<"InvoiceRecord"> | number
+  lastViewedAt?: Prisma.DateTimeNullableFilter<"InvoiceRecord"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"InvoiceRecord"> | Date | string
 }
 
@@ -780,8 +936,14 @@ export type InvoiceRecordCreateWithoutOrderInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutInvoicesInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordUncheckedCreateWithoutOrderInput = {
@@ -798,7 +960,13 @@ export type InvoiceRecordUncheckedCreateWithoutOrderInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceRecordCreateOrConnectWithoutOrderInput = {
@@ -830,8 +998,14 @@ export type InvoiceRecordUpdateWithoutOrderInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutInvoicesNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceRecordUncheckedUpdateWithoutOrderInput = {
@@ -848,6 +1022,120 @@ export type InvoiceRecordUncheckedUpdateWithoutOrderInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceRecordCreateWithoutCustomerMessagesInput = {
+  id?: string
+  outletId: string
+  invoiceNumber: string
+  fileUrl?: string | null
+  pdfStoragePath?: string | null
+  subtotalPaise: number
+  taxPaise: number
+  discountPaise: number
+  totalPaise: number
+  customerPhone?: string | null
+  customerName?: string | null
+  status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
+  createdAt?: Date | string
+  order: Prisma.OrderCreateNestedOneWithoutInvoiceInput
+  tenant: Prisma.TenantCreateNestedOneWithoutInvoicesInput
+}
+
+export type InvoiceRecordUncheckedCreateWithoutCustomerMessagesInput = {
+  id?: string
+  tenantId: string
+  outletId: string
+  orderId: string
+  invoiceNumber: string
+  fileUrl?: string | null
+  pdfStoragePath?: string | null
+  subtotalPaise: number
+  taxPaise: number
+  discountPaise: number
+  totalPaise: number
+  customerPhone?: string | null
+  customerName?: string | null
+  status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type InvoiceRecordCreateOrConnectWithoutCustomerMessagesInput = {
+  where: Prisma.InvoiceRecordWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceRecordCreateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedCreateWithoutCustomerMessagesInput>
+}
+
+export type InvoiceRecordUpsertWithoutCustomerMessagesInput = {
+  update: Prisma.XOR<Prisma.InvoiceRecordUpdateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedUpdateWithoutCustomerMessagesInput>
+  create: Prisma.XOR<Prisma.InvoiceRecordCreateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedCreateWithoutCustomerMessagesInput>
+  where?: Prisma.InvoiceRecordWhereInput
+}
+
+export type InvoiceRecordUpdateToOneWithWhereWithoutCustomerMessagesInput = {
+  where?: Prisma.InvoiceRecordWhereInput
+  data: Prisma.XOR<Prisma.InvoiceRecordUpdateWithoutCustomerMessagesInput, Prisma.InvoiceRecordUncheckedUpdateWithoutCustomerMessagesInput>
+}
+
+export type InvoiceRecordUpdateWithoutCustomerMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStoragePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  order?: Prisma.OrderUpdateOneRequiredWithoutInvoiceNestedInput
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInvoicesNestedInput
+}
+
+export type InvoiceRecordUncheckedUpdateWithoutCustomerMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.StringFieldUpdateOperationsInput | string
+  orderId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  fileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pdfStoragePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subtotalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -865,6 +1153,11 @@ export type InvoiceRecordCreateManyTenantInput = {
   customerPhone?: string | null
   customerName?: string | null
   status?: string
+  publicToken?: string | null
+  tokenExpiresAt?: Date | string | null
+  tokenRevoked?: boolean
+  viewCount?: number
+  lastViewedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -881,8 +1174,14 @@ export type InvoiceRecordUpdateWithoutTenantInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutInvoiceNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceRecordUncheckedUpdateWithoutTenantInput = {
@@ -899,7 +1198,13 @@ export type InvoiceRecordUncheckedUpdateWithoutTenantInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceRecordUncheckedUpdateManyWithoutTenantInput = {
@@ -916,9 +1221,43 @@ export type InvoiceRecordUncheckedUpdateManyWithoutTenantInput = {
   customerPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  publicToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tokenExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tokenRevoked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastViewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type InvoiceRecordCountOutputType
+ */
+
+export type InvoiceRecordCountOutputType = {
+  customerMessages: number
+}
+
+export type InvoiceRecordCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  customerMessages?: boolean | InvoiceRecordCountOutputTypeCountCustomerMessagesArgs
+}
+
+/**
+ * InvoiceRecordCountOutputType without action
+ */
+export type InvoiceRecordCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceRecordCountOutputType
+   */
+  select?: Prisma.InvoiceRecordCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * InvoiceRecordCountOutputType without action
+ */
+export type InvoiceRecordCountOutputTypeCountCustomerMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomerMessageLogWhereInput
+}
 
 
 export type InvoiceRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -936,9 +1275,16 @@ export type InvoiceRecordSelect<ExtArgs extends runtime.Types.Extensions.Interna
   customerPhone?: boolean
   customerName?: boolean
   status?: boolean
+  publicToken?: boolean
+  tokenExpiresAt?: boolean
+  tokenRevoked?: boolean
+  viewCount?: boolean
+  lastViewedAt?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  customerMessages?: boolean | Prisma.InvoiceRecord$customerMessagesArgs<ExtArgs>
+  _count?: boolean | Prisma.InvoiceRecordCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoiceRecord"]>
 
 export type InvoiceRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -956,6 +1302,11 @@ export type InvoiceRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   customerPhone?: boolean
   customerName?: boolean
   status?: boolean
+  publicToken?: boolean
+  tokenExpiresAt?: boolean
+  tokenRevoked?: boolean
+  viewCount?: boolean
+  lastViewedAt?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -976,6 +1327,11 @@ export type InvoiceRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   customerPhone?: boolean
   customerName?: boolean
   status?: boolean
+  publicToken?: boolean
+  tokenExpiresAt?: boolean
+  tokenRevoked?: boolean
+  viewCount?: boolean
+  lastViewedAt?: boolean
   createdAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
@@ -996,13 +1352,20 @@ export type InvoiceRecordSelectScalar = {
   customerPhone?: boolean
   customerName?: boolean
   status?: boolean
+  publicToken?: boolean
+  tokenExpiresAt?: boolean
+  tokenRevoked?: boolean
+  viewCount?: boolean
+  lastViewedAt?: boolean
   createdAt?: boolean
 }
 
-export type InvoiceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderId" | "invoiceNumber" | "fileUrl" | "pdfStoragePath" | "subtotalPaise" | "taxPaise" | "discountPaise" | "totalPaise" | "customerPhone" | "customerName" | "status" | "createdAt", ExtArgs["result"]["invoiceRecord"]>
+export type InvoiceRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "outletId" | "orderId" | "invoiceNumber" | "fileUrl" | "pdfStoragePath" | "subtotalPaise" | "taxPaise" | "discountPaise" | "totalPaise" | "customerPhone" | "customerName" | "status" | "publicToken" | "tokenExpiresAt" | "tokenRevoked" | "viewCount" | "lastViewedAt" | "createdAt", ExtArgs["result"]["invoiceRecord"]>
 export type InvoiceRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  customerMessages?: boolean | Prisma.InvoiceRecord$customerMessagesArgs<ExtArgs>
+  _count?: boolean | Prisma.InvoiceRecordCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InvoiceRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
@@ -1018,6 +1381,7 @@ export type $InvoiceRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     order: Prisma.$OrderPayload<ExtArgs>
     tenant: Prisma.$TenantPayload<ExtArgs>
+    customerMessages: Prisma.$CustomerMessageLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1034,6 +1398,11 @@ export type $InvoiceRecordPayload<ExtArgs extends runtime.Types.Extensions.Inter
     customerPhone: string | null
     customerName: string | null
     status: string
+    publicToken: string | null
+    tokenExpiresAt: Date | null
+    tokenRevoked: boolean
+    viewCount: number
+    lastViewedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["invoiceRecord"]>
   composites: {}
@@ -1431,6 +1800,7 @@ export interface Prisma__InvoiceRecordClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   order<T extends Prisma.OrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrderDefaultArgs<ExtArgs>>): Prisma.Prisma__OrderClient<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  customerMessages<T extends Prisma.InvoiceRecord$customerMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InvoiceRecord$customerMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerMessageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1474,6 +1844,11 @@ export interface InvoiceRecordFieldRefs {
   readonly customerPhone: Prisma.FieldRef<"InvoiceRecord", 'String'>
   readonly customerName: Prisma.FieldRef<"InvoiceRecord", 'String'>
   readonly status: Prisma.FieldRef<"InvoiceRecord", 'String'>
+  readonly publicToken: Prisma.FieldRef<"InvoiceRecord", 'String'>
+  readonly tokenExpiresAt: Prisma.FieldRef<"InvoiceRecord", 'DateTime'>
+  readonly tokenRevoked: Prisma.FieldRef<"InvoiceRecord", 'Boolean'>
+  readonly viewCount: Prisma.FieldRef<"InvoiceRecord", 'Int'>
+  readonly lastViewedAt: Prisma.FieldRef<"InvoiceRecord", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"InvoiceRecord", 'DateTime'>
 }
     
@@ -1873,6 +2248,30 @@ export type InvoiceRecordDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many InvoiceRecords to delete.
    */
   limit?: number
+}
+
+/**
+ * InvoiceRecord.customerMessages
+ */
+export type InvoiceRecord$customerMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomerMessageLog
+   */
+  select?: Prisma.CustomerMessageLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomerMessageLog
+   */
+  omit?: Prisma.CustomerMessageLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerMessageLogInclude<ExtArgs> | null
+  where?: Prisma.CustomerMessageLogWhereInput
+  orderBy?: Prisma.CustomerMessageLogOrderByWithRelationInput | Prisma.CustomerMessageLogOrderByWithRelationInput[]
+  cursor?: Prisma.CustomerMessageLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomerMessageLogScalarFieldEnum | Prisma.CustomerMessageLogScalarFieldEnum[]
 }
 
 /**

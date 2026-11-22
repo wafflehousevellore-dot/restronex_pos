@@ -74,6 +74,8 @@ export default function IntegrationConfigModal({
   const [aggStoreId, setAggStoreId] = useState("");
   const [aggApiKey, setAggApiKey] = useState("");
   const [aggWebhookSecret, setAggWebhookSecret] = useState("");
+  const [aggPosId, setAggPosId] = useState("");
+  const [aggPartnerClientId, setAggPartnerClientId] = useState("");
 
   // Accounting states (Tally)
   const [tallyFormat, setTallyFormat] = useState<"TALLY_XML" | "ZOHO_BOOKS" | "CSV">("TALLY_XML");
@@ -105,6 +107,19 @@ export default function IntegrationConfigModal({
         .then((r) => r.json())
         .then((d) => {
           if (d.displayPhone) setWaTestPhone(d.displayPhone);
+        })
+        .catch(() => {});
+    } else if (provider === "swiggy" || provider === "zomato") {
+      fetch(`/api/integrations/aggregator?provider=${provider.toUpperCase()}`)
+        .then((r) => r.json())
+        .then((d) => {
+          if (d.connection) {
+            if (d.connection.merchantId) setAggMerchantId(d.connection.merchantId);
+            if (d.connection.posId) setAggPosId(d.connection.posId);
+            if (d.connection.partnerClientId) setAggPartnerClientId(d.connection.partnerClientId);
+            if (d.connection.maskedApiKey) setAggApiKey(d.connection.maskedApiKey);
+            if (d.connection.maskedWebhookSecret) setAggWebhookSecret(d.connection.maskedWebhookSecret);
+          }
         })
         .catch(() => {});
     }
@@ -225,6 +240,8 @@ export default function IntegrationConfigModal({
             apiKey: aggApiKey.trim(),
             merchantId: aggMerchantId.trim(),
             webhookSecret: aggWebhookSecret.trim(),
+            posId: aggPosId.trim() || undefined,
+            partnerClientId: aggPartnerClientId.trim() || undefined,
             environment: "production",
           },
           testMode: false,
@@ -630,6 +647,9 @@ export default function IntegrationConfigModal({
                   <strong>{provider === "swiggy" ? "Swiggy" : "Zomato"}</strong>. Once your partner account manager enables
                   POS Relay, enter your credentials below to establish live ingestion.
                 </p>
+                <div className="pt-1 text-[11px] text-amber-800 font-medium">
+                  <strong>Two-Scope Architecture:</strong> Platform-level partner credentials are configured here. Individual outlet store IDs (Swiggy Store ID / Zomato res_id) are assigned per physical restaurant branch under <em>Outlet Mapping</em>.
+                </div>
               </div>
 
               <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200 space-y-1.5">
@@ -656,39 +676,97 @@ export default function IntegrationConfigModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-700">Merchant / Partner ID</label>
-                  <input
-                    type="text"
-                    placeholder={provider === "swiggy" ? "SWG-MERCHANT-8492" : "ZOM-RES-19284012"}
-                    value={aggMerchantId}
-                    onChange={(e) => setAggMerchantId(e.target.value)}
-                    className="w-full text-xs px-3 py-2 rounded-lg border border-gray-300"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-700">Partner API Key / Token</label>
-                  <input
-                    type="password"
-                    placeholder="Enter partner token provided by support"
-                    value={aggApiKey}
-                    onChange={(e) => setAggApiKey(e.target.value)}
-                    className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-700">Webhook Signing Secret</label>
-                <input
-                  type="password"
-                  placeholder="Cryptographic HMAC secret"
-                  value={aggWebhookSecret}
-                  onChange={(e) => setAggWebhookSecret(e.target.value)}
-                  className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
-                />
-              </div>
+              {provider === "swiggy" ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-700">Partner Client ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. swiggy_client_id_live_xxxx"
+                        value={aggPartnerClientId}
+                        onChange={(e) => setAggPartnerClientId(e.target.value)}
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-300"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-700">Merchant / Entity ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. SWG-MERCHANT-8492"
+                        value={aggMerchantId}
+                        onChange={(e) => setAggMerchantId(e.target.value)}
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-300"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700">Partner Token / API Secret</label>
+                    <input
+                      type="password"
+                      placeholder="Enter live Swiggy partner API secret"
+                      value={aggApiKey}
+                      onChange={(e) => setAggApiKey(e.target.value)}
+                      className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700">Webhook Signing Secret</label>
+                    <input
+                      type="password"
+                      placeholder="HMAC-SHA256 signature secret"
+                      value={aggWebhookSecret}
+                      onChange={(e) => setAggWebhookSecret(e.target.value)}
+                      className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-700">Zomato POS ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. POS-RESTRO-001"
+                        value={aggPosId}
+                        onChange={(e) => setAggPosId(e.target.value)}
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-300"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-700">Merchant / Entity ID</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. ZOM-MERCHANT-19284"
+                        value={aggMerchantId}
+                        onChange={(e) => setAggMerchantId(e.target.value)}
+                        className="w-full text-xs px-3 py-2 rounded-lg border border-gray-300"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700">API Key / Authentication Token</label>
+                    <input
+                      type="password"
+                      placeholder="Enter live Zomato API key or bearer token"
+                      value={aggApiKey}
+                      onChange={(e) => setAggApiKey(e.target.value)}
+                      className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700">Webhook Secret / Bearer Token</label>
+                    <input
+                      type="password"
+                      placeholder="HMAC secret or static bearer token"
+                      value={aggWebhookSecret}
+                      onChange={(e) => setAggWebhookSecret(e.target.value)}
+                      className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-gray-300"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="flex items-center gap-3 pt-2">
                 <button
@@ -705,7 +783,7 @@ export default function IntegrationConfigModal({
                   href="/app/integrations/online"
                   className="px-4 py-2.5 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-xs font-bold text-gray-700 transition flex items-center gap-1.5"
                 >
-                  Outlet Mapping &amp; Menu Sync Console →
+                  Outlet Mapping Console →
                 </a>
               </div>
             </div>

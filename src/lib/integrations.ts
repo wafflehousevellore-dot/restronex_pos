@@ -332,40 +332,68 @@ export function statusLabel(s: IntegrationStatus | string): {
         badgeClass: "bg-[#E8F5EE] text-[#16845B] border-[#16845B]/30",
         description: "Official integration active and verified. Live synchronization running.",
       };
-    case "PENDING_APPROVAL":
+    case "SETUP_IN_PROGRESS":
       return {
-        text: "Pending Partner Approval",
-        color: "#B45309",
-        badgeClass: "bg-amber-50 text-amber-800 border-amber-300",
-        description: "Your connection request has been recorded. Partner approval required.",
+        text: "Setup In Progress",
+        color: "#2563EB",
+        badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+        description: "Integration onboarding underway. Complete pending configuration steps.",
       };
     case "PROVIDER_APPROVAL_REQUIRED":
       return {
-        text: "Provider Approval Required",
+        text: "Partner Approval Required",
         color: "#D97706",
         badgeClass: "bg-amber-50 text-amber-800 border-amber-300",
         description: "Official partner merchant agreement and API approval required from aggregator.",
       };
-    case "REQUESTED":
+    case "CREDENTIALS_PENDING":
       return {
-        text: "Request Submitted",
-        color: "#1D4ED8",
-        badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
-        description: "Merchant connection request initiated. Awaiting provider portal confirmation.",
-      };
-    case "AUTHENTICATION_PENDING":
-      return {
-        text: "OTP Verification Required",
+        text: "Credentials Pending",
         color: "#D97706",
-        badgeClass: "bg-amber-50 text-amber-900 border-amber-300",
-        description: "Enter the OTP sent to your registered mobile number to complete direct integration.",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
+        description: "Awaiting official provider API authentication details and secrets.",
+      };
+    case "CREDENTIALS_CONFIGURED":
+      return {
+        text: "Credentials Configured",
+        color: "#2563EB",
+        badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+        description: "API authentication secured in AES-256 vault. Complete outlet mappings.",
       };
     case "OUTLET_MAPPING_PENDING":
       return {
-        text: "Outlet Mapping Needed",
+        text: "Outlet Mapping Pending",
         color: "#7C3AED",
         badgeClass: "bg-purple-50 text-purple-800 border-purple-200",
-        description: "Account authorized. Please select and assign which outlet corresponds to this store.",
+        description: "Assign external store/restaurant IDs to RestroNex physical outlets.",
+      };
+    case "WEBHOOK_CONFIGURATION_PENDING":
+      return {
+        text: "Webhook Config Pending",
+        color: "#D97706",
+        badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
+        description: "Register webhook URL and secret in provider developer portal.",
+      };
+    case "VERIFICATION_FAILED":
+      return {
+        text: "Verification Failed",
+        color: "#DC2626",
+        badgeClass: "bg-red-50 text-red-700 border-red-200",
+        description: "Cryptographic signature or provider identity check failed.",
+      };
+    case "DISABLED":
+      return {
+        text: "Disabled",
+        color: "#718078",
+        badgeClass: "bg-gray-100 text-gray-700 border-gray-200",
+        description: "Integration temporarily disabled by restaurant administrator.",
+      };
+    case "NOT_CONNECTED":
+      return {
+        text: "Not Connected",
+        color: "#718078",
+        badgeClass: "bg-[#F8FAF9] text-[#718078] border-[#E5EBE7]",
+        description: "No connection established. Click connect to link your restaurant.",
       };
     case "CONFIGURED":
       return {

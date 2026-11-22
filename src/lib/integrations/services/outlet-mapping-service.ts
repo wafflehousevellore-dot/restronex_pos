@@ -93,6 +93,21 @@ export class AggregatorOutletMappingService {
       },
     });
 
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        action: "MAP_AGGREGATOR_OUTLET",
+        entity: "AggregatorOutletMapping",
+        entityId: mapping.id,
+        metadataJson: JSON.stringify({
+          outletId,
+          provider,
+          providerStoreId,
+          providerStoreName,
+        }),
+      },
+    }).catch(() => null);
+
     return mapping;
   }
 
@@ -168,8 +183,22 @@ export class AggregatorOutletMappingService {
    * Remove outlet mapping
    */
   public static async unmapOutlet(tenantId: string, outletId: string, provider: AggregatorProvider) {
-    return prisma.aggregatorOutletMapping.deleteMany({
+    const res = await prisma.aggregatorOutletMapping.deleteMany({
       where: { tenantId, outletId, provider },
     });
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        action: "UNMAP_AGGREGATOR_OUTLET",
+        entity: "AggregatorOutletMapping",
+        metadataJson: JSON.stringify({
+          outletId,
+          provider,
+        }),
+      },
+    }).catch(() => null);
+
+    return res;
   }
 }

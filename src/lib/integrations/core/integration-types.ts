@@ -2,10 +2,17 @@ export type AggregatorProvider = "SWIGGY" | "ZOMATO";
 
 export type ConnectionStatus =
   | "NOT_CONNECTED"
-  | "PENDING_APPROVAL"
+  | "SETUP_IN_PROGRESS"
   | "PROVIDER_APPROVAL_REQUIRED"
-  | "CONFIG_REQUIRED"
+  | "CREDENTIALS_PENDING"
+  | "CREDENTIALS_CONFIGURED"
+  | "OUTLET_MAPPING_PENDING"
+  | "WEBHOOK_CONFIGURATION_PENDING"
+  | "VERIFICATION_FAILED"
   | "CONNECTED"
+  | "DISABLED"
+  | "PENDING_APPROVAL"
+  | "CONFIG_REQUIRED"
   | "SYNC_WARNING"
   | "DISCONNECTED";
 
@@ -70,6 +77,8 @@ export interface AggregatorCredentials {
   merchantId?: string;
   partnerToken?: string;
   webhookSecret?: string;
+  posId?: string;
+  partnerClientId?: string;
   environment?: "sandbox" | "production";
 }
 

@@ -114,7 +114,7 @@ export class SwiggyApiClient {
     status: string,
     prepTimeMinutes = 15,
     cancelReason?: string
-  ) {
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
     if (!this.credentials.apiKey) {
       return { success: false, error: "Swiggy partner credentials not configured." };
     }
@@ -132,6 +132,10 @@ export class SwiggyApiClient {
       }),
     });
 
-    return { success: response.ok };
+    return {
+      success: response.ok,
+      message: response.ok ? "Status updated on Swiggy" : undefined,
+      error: response.ok ? undefined : response.statusText,
+    };
   }
 }

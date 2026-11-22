@@ -30,6 +30,11 @@ import {
   AlertCircle,
   HelpCircle,
   ChevronDown,
+  ChevronRight,
+  Copy,
+  ExternalLink,
+  MessageSquare,
+  Send,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import Link from "next/link";
@@ -129,6 +134,10 @@ export type ReceiptData = {
   customerName?: string;
   customerPhone?: string;
   paymentMethod: string;
+  paymentStatus?: string;
+  payments?: Array<{ method: string; amountPaise: number; status: string; reference?: string | null }>;
+  paidPaise?: number;
+  balanceDuePaise?: number;
   items: {
     name: string;
     quantity: number;
@@ -142,7 +151,10 @@ export type ReceiptData = {
   totalPaise: number;
   orderId?: string;
   invoicePdfUrl?: string | null;
+  publicToken?: string | null;
+  digitalInvoiceUrl?: string | null;
   whatsappStatus?: string;
+  smsStatus?: string;
   printJobId?: string | null;
   printStatus?: string;
   paperWidth?: "58mm" | "80mm";
@@ -236,15 +248,23 @@ export default function POSClient({
   const [lastOrder, setLastOrder] = useState<{ orderNumber: string; total: number } | null>(null);
   const [activeReceipt, setActiveReceipt] = useState<ReceiptData | null>(null);
   const [showReceipt, setShowReceipt] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [retryingMessage, setRetryingMessage] = useState<"WHATSAPP" | "SMS" | null>(null);
   const [recentOrders, setRecentOrders] = useState<RecentPOSOrder[]>([]);
   const [msg, setMsg] = useState<{ type: "success" | "error" | "info"; text: string } | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [showMobileCartDrawer, setShowMobileCartDrawer] = useState(false);
 
   // Bluetooth printing
   const [bleConnected, setBleConnected] = useState(false);
   const [connectingBle, setConnectingBle] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const totalCartCount = useMemo(
+    () => cart.reduce((sum, item) => sum + item.quantity, 0),
+    [cart]
+  );
 
   // Categories list with counts
   const categories = useMemo(() => {
@@ -730,6 +750,32 @@ export default function POSClient({
       const outletObj = outlets.find((o) => o.id === selectedOutlet);
       const tableObj = tables.find((t) => t.id === selectedTable);
 
+      const receiptPayments = splitResult
+        ? [
+            splitResult.cashPaise > 0
+              ? { method: "CASH", amountPaise: splitResult.cashPaise, status: "COMPLETED" }
+              : null,
+            splitResult.upiPaise > 0
+              ? { method: "UPI", amountPaise: splitResult.upiPaise, status: "COMPLETED" }
+              : null,
+            splitResult.cardPaise > 0
+              ? { method: "CARD", amountPaise: splitResult.cardPaise, status: "COMPLETED" }
+              : null,
+          ].filter(Boolean) as Array<{
+            method: string;
+            amountPaise: number;
+            status: string;
+            reference?: string | null;
+          }>
+        : [
+            {
+              method: finalMethod,
+              amountPaise: grandTotalPaise,
+              status: "COMPLETED",
+              reference: finalMethod === "CASH" ? "Cash at Counter" : undefined,
+            },
+          ];
+
       const receipt: ReceiptData = {
         orderNumber,
         invoiceNumber,
@@ -740,6 +786,10 @@ export default function POSClient({
         customerName: customerName.trim() || undefined,
         customerPhone: normalizedSubmitPhone,
         paymentMethod: finalMethod,
+        paymentStatus: "PAID",
+        payments: receiptPayments,
+        paidPaise: grandTotalPaise,
+        balanceDuePaise: 0,
         items: cart.map((c) => ({
           name: c.name,
           quantity: c.quantity,
@@ -753,6 +803,10 @@ export default function POSClient({
         totalPaise: grandTotalPaise,
         orderId: data.orderId,
         invoicePdfUrl: data.invoicePdfUrl,
+        publicToken: data.publicToken,
+        digitalInvoiceUrl: data.digitalInvoiceUrl,
+        whatsappStatus: data.whatsapp?.status,
+        smsStatus: data.sms?.status,
         paperWidth: (data.printJob?.paperWidth as "58mm" | "80mm") || "58mm",
         printJobId: data.printJob?.jobId,
         printStatus: data.printJob?.status,
@@ -798,6 +852,7 @@ export default function POSClient({
 
       // Reset cart
       setCart([]);
+      setShowMobileCartDrawer(false);
       setSelectedTable("");
       setCustomerName("");
       setCustomerPhone("");
@@ -859,6 +914,77 @@ export default function POSClient({
       setTimeout(() => {
         window.print();
       }, 100);
+    }
+  };
+
+  const handleCopyInvoiceLink = () => {
+    const url =
+      activeReceipt?.digitalInvoiceUrl ||
+      (activeReceipt?.publicToken
+        ? `${window.location.origin}/invoice/${activeReceipt.publicToken}`
+        : "");
+    if (!url) {
+      setMsg({ type: "error", text: "Digital invoice link is not yet ready." });
+      return;
+    }
+    navigator.clipboard.writeText(url);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const handleRetryMessage = async (channel: "WHATSAPP" | "SMS") => {
+    if (!activeReceipt?.orderId) return;
+    setRetryingMessage(channel);
+    try {
+      const res = await apiFetch("/api/messages/retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: activeReceipt.orderId, channel }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setActiveReceipt((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            whatsappStatus:
+              channel === "WHATSAPP"
+                ? data.whatsapp?.status || "SENT"
+                : prev.whatsappStatus,
+            smsStatus:
+              channel === "SMS"
+                ? data.sms?.status || "SENT"
+                : prev.smsStatus,
+          };
+        });
+        setMsg({ type: "success", text: `${channel} message resent successfully!` });
+      } else {
+        setMsg({ type: "error", text: data.error || `Failed to retry ${channel}` });
+      }
+    } catch (err: any) {
+      setMsg({ type: "error", text: err.message || `Failed to retry ${channel}` });
+    } finally {
+      setRetryingMessage(null);
+    }
+  };
+
+  const handleShareInvoice = async () => {
+    const url =
+      activeReceipt?.digitalInvoiceUrl ||
+      (activeReceipt?.publicToken
+        ? `${window.location.origin}/invoice/${activeReceipt.publicToken}`
+        : "");
+    if (!url) return;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Bill ${activeReceipt?.invoiceNumber} - ${activeReceipt?.outletName}`,
+          text: `Thank you for visiting ${activeReceipt?.outletName}! View your invoice:`,
+          url,
+        });
+      } catch {}
+    } else {
+      handleCopyInvoiceLink();
     }
   };
 
@@ -1069,15 +1195,48 @@ export default function POSClient({
           />
         </div>
 
-        {/* PANEL 2: Product Cards Grid */}
-        <div className="h-full">
-          <POSProductGrid
-            items={filteredProducts}
-            onSelectItem={handleSelectItem}
-            searchQuery={productSearchQuery}
-            onSearchChange={setProductSearchQuery}
-            searchInputRef={searchInputRef}
-          />
+        {/* PANEL 2: Product Cards Grid & Mobile Categories */}
+        <div className="h-full flex flex-col gap-2 min-h-0">
+          {/* Mobile Categories Horizontal Scroller (<md) */}
+          <div className="flex md:hidden items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none shrink-0">
+            <button
+              type="button"
+              onClick={() => setSelectedCategory("All")}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition shrink-0 select-none",
+                selectedCategory === "All"
+                  ? "bg-[#16845B] text-white shadow-2xs"
+                  : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
+              )}
+            >
+              All ({items.length})
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onClick={() => setSelectedCategory(c.id)}
+                className={cn(
+                  "px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition shrink-0 select-none",
+                  selectedCategory === c.id
+                    ? "bg-[#16845B] text-white shadow-2xs"
+                    : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
+                )}
+              >
+                {c.name} ({c.count})
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 min-h-0">
+            <POSProductGrid
+              items={filteredProducts}
+              onSelectItem={handleSelectItem}
+              searchQuery={productSearchQuery}
+              onSearchChange={setProductSearchQuery}
+              searchInputRef={searchInputRef}
+            />
+          </div>
         </div>
 
         {/* PANEL 3: Current Order (Cart & Checkout) */}
@@ -1360,6 +1519,279 @@ export default function POSClient({
         </div>
       </div>
 
+      {/* Mobile Floating Cart Summary Pill (Phones & Tablets) */}
+      {cart.length > 0 && !showMobileCartDrawer && (
+        <div className="fixed bottom-20 left-3 right-3 z-40 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setShowMobileCartDrawer(true)}
+            className="w-full bg-[#16845B] hover:bg-[#116B49] text-white rounded-2xl p-3 shadow-xl flex items-center justify-between font-bold text-xs active:scale-[0.99] transition duration-150 border border-emerald-400/30 backdrop-blur-md cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-xl bg-white/20 flex items-center justify-center text-xs font-black">
+                {totalCartCount}
+              </div>
+              <div className="text-left">
+                <span className="block text-[10px] font-normal text-emerald-100">
+                  {totalCartCount} {totalCartCount === 1 ? "item" : "items"} in cart
+                </span>
+                <span className="text-sm font-black tracking-tight">{formatINR(grandTotalPaise)}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 bg-white text-[#16845B] px-3.5 py-1.5 rounded-xl font-bold shadow-xs">
+              <span>View Cart & Pay</span>
+              <ChevronRight className="h-4 w-4" />
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Mobile Slide-Up Cart Checkout Drawer */}
+      {showMobileCartDrawer && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs lg:hidden animate-in fade-in duration-200">
+          <div className="bg-white rounded-t-3xl max-h-[92vh] flex flex-col shadow-2xl border-t border-[#E5EBE7] animate-in slide-in-from-bottom duration-200 overflow-hidden">
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-[#E5EBE7] flex items-center justify-between shrink-0 bg-[#F8FAF9]">
+              <div className="flex items-center gap-2">
+                <h3 className="font-black text-sm text-[#172B25]">Current Order</h3>
+                <span className="rounded-full bg-[#E8F5EE] text-[#16845B] text-xs font-bold px-2 py-0.5">
+                  {totalCartCount} {totalCartCount === 1 ? "item" : "items"}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMobileCartDrawer(false)}
+                className="p-1.5 rounded-full text-[#718078] hover:text-[#172B25] hover:bg-white transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Scrollable Order Details & Checkout */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {/* Order Type Tabs */}
+              <div className="grid grid-cols-3 gap-1 bg-[#F8FAF9] p-1 rounded-2xl border border-[#E5EBE7]">
+                {(["DINE_IN", "TAKEAWAY", "DELIVERY"] as const).map((ot) => (
+                  <button
+                    key={ot}
+                    type="button"
+                    onClick={() => setOrderType(ot)}
+                    className={cn(
+                      "py-1.5 text-xs font-bold rounded-xl transition text-center select-none",
+                      orderType === ot
+                        ? "bg-[#16845B] text-white shadow-2xs"
+                        : "text-[#718078] hover:text-[#172B25]"
+                    )}
+                  >
+                    {ot.replace("_", " ")}
+                  </button>
+                ))}
+              </div>
+
+              {/* Table / Customer Phone */}
+              <div className="grid grid-cols-2 gap-2">
+                {orderType === "DINE_IN" ? (
+                  <div>
+                    <select
+                      value={selectedTable}
+                      onChange={(e) => setSelectedTable(e.target.value)}
+                      className="w-full h-9 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-2.5 text-xs font-bold text-[#172B25] focus:outline-none focus:border-[#16845B]"
+                    >
+                      <option value="">Select Table...</option>
+                      {tables.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          Table {t.number} ({t.area})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <div className="text-xs font-bold text-[#718078] flex items-center px-1">
+                    {orderType === "TAKEAWAY" ? "Counter Pickup" : "Direct Delivery"}
+                  </div>
+                )}
+
+                <div>
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="Customer Mobile..."
+                    className="w-full h-9 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] px-2.5 text-xs text-[#172B25] placeholder-[#A0ACA5] focus:outline-none focus:border-[#16845B]"
+                  />
+                </div>
+              </div>
+
+              {/* Cart Items List */}
+              <div className="space-y-2.5">
+                {cart.length === 0 ? (
+                  <div className="text-center py-6 text-xs text-[#718078]">
+                    No items in cart
+                  </div>
+                ) : (
+                  cart.map((item) => (
+                    <div
+                      key={item.cartItemId}
+                      className="rounded-2xl border border-[#E5EBE7] bg-[#F8FAF9]/80 p-3 space-y-1.5"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-bold text-xs text-[#172B25] flex items-center gap-1.5">
+                            <span
+                              className={cn(
+                                "h-2 w-2 rounded-full shrink-0",
+                                item.isVeg ? "bg-emerald-600" : "bg-red-600"
+                              )}
+                            />
+                            <span className="truncate">{item.name}</span>
+                          </div>
+                          {item.selectedAddons && item.selectedAddons.length > 0 && (
+                            <div className="flex flex-wrap gap-1 pt-1">
+                              {item.selectedAddons.map((addon, aIdx) => (
+                                <span
+                                  key={aIdx}
+                                  className="text-[10px] font-semibold bg-white border border-[#E5EBE7] px-1.5 py-0.2 rounded-md text-[#718078]"
+                                >
+                                  +{addon.name} ({formatINR(addon.pricePaise)})
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {item.notes && (
+                            <div className="text-[10px] text-amber-700 font-medium italic pt-0.5">
+                              Note: {item.notes}
+                            </div>
+                          )}
+                        </div>
+                        <span className="font-bold text-xs text-[#172B25] shrink-0">
+                          {formatINR(item.totalPaise)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowMobileCartDrawer(false);
+                            handleEditCartLine(item);
+                          }}
+                          className="font-bold text-xs text-[#16845B] hover:underline"
+                        >
+                          Edit
+                        </button>
+
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex items-center bg-white border border-[#E5EBE7] rounded-lg p-0.5 shadow-2xs">
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item.cartItemId, -1)}
+                              className="h-6 w-6 rounded flex items-center justify-center text-[#718078]"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </button>
+                            <span className="font-bold text-xs w-6 text-center">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item.cartItemId, 1)}
+                              className="h-6 w-6 rounded flex items-center justify-center text-[#718078]"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeCartItem(item.cartItemId)}
+                            className="p-1 rounded-lg text-[#718078] hover:text-red-600"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Bill Summary */}
+              <div className="rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] p-3 space-y-1.5 text-xs text-[#718078]">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="font-bold text-[#172B25]">{formatINR(subtotalPaise)}</span>
+                </div>
+                {totalDiscountPaise > 0 && (
+                  <div className="flex justify-between text-emerald-700 font-semibold">
+                    <span>Discount</span>
+                    <span>-{formatINR(totalDiscountPaise)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-[11px]">
+                  <span>Taxes (CGST 2.5% + SGST 2.5%)</span>
+                  <span>{formatINR(taxPaise)}</span>
+                </div>
+                <div className="pt-2 border-t border-[#E5EBE7] flex items-center justify-between">
+                  <span className="font-bold text-[#172B25] text-sm">Net Payable</span>
+                  <span className="text-xl font-black text-[#16845B]">{formatINR(grandTotalPaise)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Action Checkout Buttons at Drawer Bottom */}
+            <div className="p-4 border-t border-[#E5EBE7] bg-white space-y-2 shrink-0">
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  disabled={posting || cart.length === 0}
+                  onClick={() => handleCheckout("CASH")}
+                  className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 text-xs shadow-xs transition flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                >
+                  <Banknote className="h-4 w-4" />
+                  <span>Pay Cash</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={posting || cart.length === 0}
+                  onClick={() => handleCheckout("UPI")}
+                  className="rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white font-bold py-3 text-xs shadow-xs transition flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                >
+                  <QrCode className="h-4 w-4" />
+                  <span>Pay UPI QR</span>
+                </button>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  disabled={posting || cart.length === 0}
+                  onClick={() => {
+                    setShowMobileCartDrawer(false);
+                    setShowSplitModal(true);
+                  }}
+                  className="flex-1 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] font-bold py-2 text-xs transition cursor-pointer"
+                >
+                  Split Bill
+                </button>
+                <button
+                  type="button"
+                  disabled={posting || cart.length === 0}
+                  onClick={() => handleCheckout("CARD")}
+                  className="flex-1 rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] font-bold py-2 text-xs transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <CreditCard className="h-3.5 w-3.5" />
+                  <span>Card</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleHoldCurrentOrder}
+                  className="rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#718078] hover:text-[#172B25] px-3 py-2 text-xs font-bold transition cursor-pointer"
+                >
+                  Hold
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Product Customisation Modal */}
       <POSCustomiseModal
         open={Boolean(customiseItem)}
@@ -1443,25 +1875,130 @@ export default function POSClient({
               </div>
               <div className="flex justify-between text-[#718078]">
                 <span>Payment Method:</span>
-                <span className="font-bold text-[#172B25]">{activeReceipt.paymentMethod}</span>
+                <span className="font-bold text-[#172B25]">
+                  {activeReceipt.payments && activeReceipt.payments.length > 1
+                    ? activeReceipt.payments
+                        .map((p) => `${p.method.toUpperCase()} ${formatINR(p.amountPaise)}`)
+                        .join(" + ")
+                    : activeReceipt.paymentMethod.toUpperCase()}
+                </span>
               </div>
             </div>
 
-            <div className="space-y-2 pt-2">
+            {/* Customer Message Delivery Channel Status */}
+            <div className="bg-[#F8FAF9] p-3 rounded-2xl border border-[#E5EBE7] space-y-2 text-xs">
+              <div className="text-[10px] font-bold text-[#718078] uppercase tracking-wider">
+                Customer Invoice Messaging
+              </div>
+
+              {/* WhatsApp Status */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-medium text-[#172B25]">
+                  <MessageSquare className="h-3.5 w-3.5 text-[#16845B]" />
+                  <span>WhatsApp:</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      activeReceipt.whatsappStatus === "SENT" || activeReceipt.whatsappStatus === "DELIVERED"
+                        ? "bg-[#E8F5EE] text-[#16845B]"
+                        : activeReceipt.whatsappStatus === "FAILED"
+                        ? "bg-red-50 text-red-600"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {activeReceipt.whatsappStatus || "QUEUED"}
+                  </span>
+                  {activeReceipt.whatsappStatus === "FAILED" && (
+                    <button
+                      type="button"
+                      onClick={() => handleRetryMessage("WHATSAPP")}
+                      disabled={retryingMessage === "WHATSAPP"}
+                      className="text-[10px] font-bold text-[#16845B] hover:underline cursor-pointer"
+                    >
+                      {retryingMessage === "WHATSAPP" ? "Retrying..." : "Retry"}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* SMS Status */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-medium text-[#172B25]">
+                  <Send className="h-3.5 w-3.5 text-blue-600" />
+                  <span>SMS:</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      activeReceipt.smsStatus === "SENT" || activeReceipt.smsStatus === "DELIVERED"
+                        ? "bg-blue-50 text-blue-600"
+                        : activeReceipt.smsStatus === "FAILED"
+                        ? "bg-red-50 text-red-600"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {activeReceipt.smsStatus || "QUEUED"}
+                  </span>
+                  {activeReceipt.smsStatus === "FAILED" && (
+                    <button
+                      type="button"
+                      onClick={() => handleRetryMessage("SMS")}
+                      disabled={retryingMessage === "SMS"}
+                      className="text-[10px] font-bold text-[#16845B] hover:underline cursor-pointer"
+                    >
+                      {retryingMessage === "SMS" ? "Retrying..." : "Retry"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-1">
               <button
                 type="button"
                 onClick={handleManualPrintBill}
                 disabled={isPrinting}
-                className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-60"
+                className="w-full rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white py-2.5 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs disabled:opacity-60 cursor-pointer"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>{isPrinting ? "Sending to Printer..." : "Print Bill (Thermal / Browser)"}</span>
               </button>
 
+              <div className="grid grid-cols-2 gap-2">
+                {activeReceipt.publicToken && (
+                  <Link
+                    href={`/invoice/${activeReceipt.publicToken}`}
+                    target="_blank"
+                    className="rounded-xl border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-[#172B25] py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 text-center"
+                  >
+                    <ExternalLink className="h-3 w-3 text-[#718078]" />
+                    <span>View Digital</span>
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={handleCopyInvoiceLink}
+                  className="rounded-xl border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-[#172B25] py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Copy className="h-3 w-3 text-[#718078]" />
+                  <span>{copiedLink ? "Copied!" : "Copy Link"}</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleShareInvoice}
+                className="w-full rounded-xl border border-[#E5EBE7] bg-white hover:bg-[#F8FAF9] text-[#172B25] py-2 text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Share2 className="h-3 w-3 text-[#718078]" />
+                <span>Share Digital Invoice</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setShowReceipt(false)}
-                className="w-full rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] py-2 text-xs font-bold transition"
+                className="w-full rounded-xl border border-[#E5EBE7] bg-[#F8FAF9] hover:bg-white text-[#172B25] py-2 text-xs font-bold transition cursor-pointer"
               >
                 Start New Order
               </button>
@@ -1566,14 +2103,35 @@ export default function POSClient({
             </div>
           </div>
 
-          {/* Payment & Footer */}
-          <div className="pt-2 text-center text-[10px] space-y-1">
-            <div className="font-semibold">
-              Paid via: {activeReceipt.paymentMethod}
-            </div>
-            {activeReceipt.invoicePdfUrl && (
+          {/* Payment Aware Section */}
+          <div className="pt-2 text-center text-[10px] space-y-0.5">
+            {activeReceipt.payments && activeReceipt.payments.length > 1 ? (
+              <>
+                <div className="font-semibold">
+                  PAYMENT: {activeReceipt.payments.map((p) => `${p.method.toUpperCase()} ${formatINR(p.amountPaise)}`).join(" + ")}
+                </div>
+                <div className="font-bold">STATUS: PAID</div>
+              </>
+            ) : activeReceipt.paidPaise === 0 || activeReceipt.paymentStatus === "UNPAID" ? (
+              <>
+                <div className="font-semibold">PAYMENT: UNPAID</div>
+                <div className="font-bold">BALANCE DUE: {formatINR(activeReceipt.balanceDuePaise ?? activeReceipt.totalPaise)}</div>
+              </>
+            ) : activeReceipt.balanceDuePaise && activeReceipt.balanceDuePaise > 0 ? (
+              <>
+                <div className="font-semibold">PAID: {formatINR(activeReceipt.paidPaise ?? 0)}</div>
+                <div className="font-bold">BALANCE DUE: {formatINR(activeReceipt.balanceDuePaise)}</div>
+              </>
+            ) : (
+              <>
+                <div className="font-semibold">PAYMENT: {activeReceipt.paymentMethod.toUpperCase()}</div>
+                <div className="font-bold">STATUS: PAID</div>
+              </>
+            )}
+
+            {activeReceipt.digitalInvoiceUrl && (
               <div className="my-1 flex justify-center">
-                <QRCodeSVG value={activeReceipt.invoicePdfUrl} size={72} />
+                <QRCodeSVG value={activeReceipt.digitalInvoiceUrl} size={72} />
               </div>
             )}
             <div className="font-medium text-[9px] mt-1">Thank you for dining with us!</div>

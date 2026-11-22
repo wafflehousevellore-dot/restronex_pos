@@ -7,6 +7,7 @@
     "build": "prisma generate && next build --webpack",
     "start": "next start",
     "lint": "eslint",
+    "test:e2e": "e2e run",
     "test": "tsx scripts/test-all-pipelines.ts",
     "test:security": "tsx scripts/test-tenant-isolation-rls.ts",
     "supabase:migrate": "supabase db push",
@@ -43,6 +44,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@e2e-dev/web": "^0.16.1",
     "@prisma/client": "^7.10.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/turbopack": "^4",
@@ -54,6 +56,7 @@
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "e2e": "^0.24.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
     "prisma": "^7.10.1",

@@ -15,6 +15,13 @@ export interface IIntegrationProvider {
     secret?: string
   ): boolean;
 
+  formatWebhookAck(
+    eventType: string,
+    orderId?: string,
+    status?: "SUCCESS" | "FAILURE",
+    error?: string
+  ): { status: number; body: Record<string, any> };
+
   parseOrderPayload(rawBody: string): NormalizedOrderPayload;
 
   parseStatusUpdatePayload(rawBody: string): {

@@ -108,6 +108,9 @@ model Tenant {
   aggregatorOrderReferences AggregatorOrderReference[]
   aggregatorSyncJobs AggregatorSyncJob[]
   aggregatorExceptionQueues AggregatorExceptionQueue[]
+  bulkSales BulkSale[]
+  stockTransfers StockTransfer[]
+  customerMessages CustomerMessageLog[]
 }
 
 model Membership {
@@ -163,6 +166,11 @@ model Outlet {
   productAddonGroups ProductAddonGroup[]
   aggregatorOutletMappings AggregatorOutletMapping[]
   aggregatorOrderReferences AggregatorOrderReference[]
+  bulkSales BulkSale[]
+  inventoryItems InventoryItem[]
+  purchaseOrders PurchaseOrder[]
+  transfersFrom StockTransfer[] @relation("TransferFromOutlet")
+  transfersTo StockTransfer[] @relation("TransferToOutlet")
   @@unique([tenantId, slug])
   @@index([tenantId])
 }
@@ -507,6 +515,7 @@ model Order {
   whatsAppLogs WhatsAppDeliveryLog[]
   whatsAppQueue WhatsAppMessageQueue[]
   aggregatorReference AggregatorOrderReference?
+  customerMessages CustomerMessageLog[]
   @@unique([tenantId, orderNumber])
   @@unique([tenantId, idempotencyKey])
   @@index([tenantId, outletId])
@@ -612,17 +621,45 @@ model CashierShift {
 }
 
 model InventoryItem {
-  id          String @id @default(cuid())
-  tenantId    String
-  name        String
-  unit        String
-  currentStock Float @default(0)
-  lowStockThreshold Float @default(5)
-  costPerUnitPaise Int @default(0)
-  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id                String             @id @default(cuid())
+  tenantId          String
+  name              String
+  unit              String
+  sku               String?
+  barcode           String?
+  category          String?
+  description       String?
+  imageUrl          String?
+  baseUnit          String?
+  purchaseUnit      String?
+  sellingUnit       String?
+  conversionRatio   Float              @default(1)
+  openingStock      Float              @default(0)
+  currentStock      Float              @default(0)
+  lowStockThreshold Float              @default(5)
+  reorderLevel      Float?
+  costPerUnitPaise  Int                @default(0)
+  purchasePricePaise Int               @default(0)
+  averageCostPaise  Int                @default(0)
+  sellingPricePaise Int?
+  taxRateBps        Int                @default(0)
+  supplierId        String?
+  outletId          String?
+  expiryDate        DateTime?
+  batchNumber       String?
+  isActive          Boolean            @default(true)
+  tenant            Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  supplier          Supplier?          @relation(fields: [supplierId], references: [id])
+  outlet            Outlet?            @relation(fields: [outletId], references: [id])
   recipeIngredients RecipeIngredient[]
-  supplierPrices SupplierPrice[]
+  supplierPrices    SupplierPrice[]
+  bulkSaleItems     BulkSaleItem[]
+  purchaseOrderItems PurchaseOrderItem[]
+  stockTransferItems StockTransferItem[]
   @@index([tenantId])
+  @@index([tenantId, outletId])
+  @@index([tenantId, barcode])
+  @@index([tenantId, sku])
 }
 
 model Recipe {
@@ -644,45 +681,173 @@ model RecipeIngredient {
 }
 
 model Supplier {
-  id        String @id @default(cuid())
-  tenantId  String
-  name      String
-  phone     String?
-  email     String?
-  address   String?
-  tenant    Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id             String          @id @default(cuid())
+  tenantId       String
+  name           String
+  phone          String?
+  email          String?
+  address        String?
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   purchaseOrders PurchaseOrder[]
   supplierPrices SupplierPrice[]
+  inventoryItems InventoryItem[]
   @@index([tenantId])
 }
 
 model PurchaseOrder {
-  id          String @id @default(cuid())
-  tenantId    String
-  supplierId  String
-  poNumber    String
-  status      String @default("DRAFT")
-  totalPaise  Int @default(0)
-  createdAt   DateTime @default(now())
-  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  supplier    Supplier @relation(fields: [supplierId], references: [id])
+  id                    String              @id @default(cuid())
+  tenantId              String
+  supplierId            String
+  outletId              String?
+  poNumber              String
+  supplierInvoiceNumber String?
+  invoiceDate           DateTime?
+  status                String              @default("DRAFT") // DRAFT, SUBMITTED, PARTIALLY_RECEIVED, RECEIVED, CANCELLED
+  totalPaise            Int                 @default(0)
+  taxPaise              Int                 @default(0)
+  discountPaise         Int                 @default(0)
+  freightPaise          Int                 @default(0)
+  paymentStatus         String              @default("UNPAID") // UNPAID, PARTIAL, PAID
+  paymentMethod         String?
+  attachmentUrl         String?
+  notes                 String?
+  receivedAt            DateTime?
+  receivedById          String?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @default(now()) @updatedAt
+  tenant                Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  supplier              Supplier            @relation(fields: [supplierId], references: [id])
+  outlet                Outlet?             @relation(fields: [outletId], references: [id])
+  items                 PurchaseOrderItem[]
   @@unique([tenantId, poNumber])
+  @@index([tenantId, supplierId])
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(cuid())
+  purchaseOrderId String
+  inventoryItemId String
+  productName     String
+  quantity        Float
+  unit            String
+  unitCostPaise   Int
+  taxPaise        Int           @default(0)
+  discountPaise   Int           @default(0)
+  totalPaise      Int
+  receivedQty     Float         @default(0)
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  @@index([purchaseOrderId])
+  @@index([inventoryItemId])
 }
 
 model StockMovement {
-  id              String @id @default(cuid())
+  id              String         @id @default(cuid())
   tenantId        String
   outletId        String?
   inventoryItemId String
-  type            String
+  type            String         // OPENING_STOCK, PURCHASE, SALE_CONSUMPTION, RECIPE_CONSUMPTION, BULK_SALE, WASTE, DAMAGE, EXPIRY, AUDIT_ADJUSTMENT, TRANSFER_OUT, TRANSFER_IN, BULK_SALE_REFUND
   quantity        Float
+  previousStock   Float?
+  newStock        Float?
+  unit            String?
+  costPaise       Int?
+  userId          String?
   reference       String?
-  createdAt       DateTime @default(now())
-  tenant          Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  outlet          Outlet? @relation(fields: [outletId], references: [id])
+  createdAt       DateTime       @default(now())
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet          Outlet?        @relation(fields: [outletId], references: [id])
   @@index([tenantId])
   @@index([tenantId, createdAt])
   @@index([outletId, createdAt])
+  @@index([inventoryItemId])
+}
+
+model BulkSale {
+  id              String         @id @default(cuid())
+  tenantId        String
+  outletId        String
+  invoiceNumber   String
+  saleDate        DateTime       @default(now())
+  customerName    String?
+  customerPhone   String?
+  customerGstin   String?
+  customerAddress String?
+  status          String         @default("CONFIRMED") // DRAFT, CONFIRMED, CANCELLED, REFUNDED
+  subtotalPaise   Int            @default(0)
+  discountPaise   Int            @default(0)
+  taxPaise        Int            @default(0)
+  totalPaise      Int            @default(0)
+  paymentMethod   String         @default("CASH") // CASH, UPI, CARD, CREDIT, BANK_TRANSFER
+  paymentStatus   String         @default("PAID") // PAID, PENDING, PARTIAL
+  notes           String?
+  terms           String?
+  createdById     String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  outlet          Outlet         @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  items           BulkSaleItem[]
+  @@unique([tenantId, invoiceNumber])
+  @@index([tenantId, outletId])
+  @@index([tenantId, saleDate])
+}
+
+model BulkSaleItem {
+  id                   String        @id @default(cuid())
+  bulkSaleId           String
+  inventoryItemId      String
+  productName          String
+  sku                  String?
+  quantity             Float
+  sellingUnit          String
+  baseQuantityDeducted Float
+  unitPricePaise       Int
+  discountPaise        Int           @default(0)
+  taxRateBps           Int           @default(0)
+  taxPaise             Int           @default(0)
+  totalPaise           Int
+  bulkSale             BulkSale      @relation(fields: [bulkSaleId], references: [id], onDelete: Cascade)
+  inventoryItem        InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  @@index([bulkSaleId])
+  @@index([inventoryItemId])
+}
+
+model StockTransfer {
+  id             String              @id @default(cuid())
+  tenantId       String
+  transferNumber String
+  fromOutletId   String
+  toOutletId     String
+  status         String              @default("PENDING") // PENDING, APPROVED, DISPATCHED, RECEIVED, REJECTED, CANCELLED
+  notes          String?
+  createdById    String?
+  approvedById   String?
+  receivedById   String?
+  dispatchedAt   DateTime?
+  receivedAt     DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  tenant         Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fromOutlet     Outlet              @relation("TransferFromOutlet", fields: [fromOutletId], references: [id])
+  toOutlet       Outlet              @relation("TransferToOutlet", fields: [toOutletId], references: [id])
+  items          StockTransferItem[]
+  @@unique([tenantId, transferNumber])
+  @@index([tenantId, fromOutletId])
+  @@index([tenantId, toOutletId])
+}
+
+model StockTransferItem {
+  id              String        @id @default(cuid())
+  transferId      String
+  inventoryItemId String
+  quantity        Float
+  unit            String
+  receivedQty     Float?
+  transfer        StockTransfer @relation(fields: [transferId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  @@index([transferId])
+  @@index([inventoryItemId])
 }
 
 model Customer {
@@ -1149,11 +1314,47 @@ model InvoiceRecord {
   customerPhone  String?
   customerName   String?
   status         String   @default("FINALIZED") // DRAFT, FINALIZED, VOIDED
+  publicToken    String?
+  tokenExpiresAt DateTime?
+  tokenRevoked   Boolean  @default(false)
+  viewCount      Int      @default(0)
+  lastViewedAt   DateTime?
   createdAt      DateTime @default(now())
   order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customerMessages CustomerMessageLog[]
   @@unique([tenantId, invoiceNumber])
   @@index([tenantId, outletId])
+  @@index([publicToken])
+}
+
+model CustomerMessageLog {
+  id                String    @id @default(cuid())
+  tenantId          String
+  outletId          String?
+  orderId           String
+  invoiceId         String?
+  recipientPhone    String
+  channel           String    // WHATSAPP | SMS
+  provider          String    // META | FAST2SMS | MSG91 | TWILIO | MOCK
+  status            String    @default("QUEUED") // PENDING | QUEUED | SENT | DELIVERED | FAILED | NOT_CONFIGURED
+  providerMessageId String?
+  errorMessage      String?
+  messageBody       String?
+  retryCount        Int       @default(0)
+  sentAt            DateTime?
+  deliveredAt       DateTime?
+  metadataJson      String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  order             Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoice           InvoiceRecord? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, channel, status])
+  @@index([orderId, channel])
+  @@index([recipientPhone])
+  @@index([invoiceId])
 }
 
 model FeatureUsage {

@@ -82,7 +82,12 @@ export const ModelName = {
   RecipeIngredient: 'RecipeIngredient',
   Supplier: 'Supplier',
   PurchaseOrder: 'PurchaseOrder',
+  PurchaseOrderItem: 'PurchaseOrderItem',
   StockMovement: 'StockMovement',
+  BulkSale: 'BulkSale',
+  BulkSaleItem: 'BulkSaleItem',
+  StockTransfer: 'StockTransfer',
+  StockTransferItem: 'StockTransferItem',
   Customer: 'Customer',
   LoyaltyTxn: 'LoyaltyTxn',
   SubscriptionPlan: 'SubscriptionPlan',
@@ -110,6 +115,7 @@ export const ModelName = {
   CustomerConsent: 'CustomerConsent',
   WhatsAppDeliveryLog: 'WhatsAppDeliveryLog',
   InvoiceRecord: 'InvoiceRecord',
+  CustomerMessageLog: 'CustomerMessageLog',
   FeatureUsage: 'FeatureUsage',
   WhatsAppMessageQueue: 'WhatsAppMessageQueue',
   MarketplaceService: 'MarketplaceService',
@@ -625,9 +631,29 @@ export const InventoryItemScalarFieldEnum = {
   tenantId: 'tenantId',
   name: 'name',
   unit: 'unit',
+  sku: 'sku',
+  barcode: 'barcode',
+  category: 'category',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  baseUnit: 'baseUnit',
+  purchaseUnit: 'purchaseUnit',
+  sellingUnit: 'sellingUnit',
+  conversionRatio: 'conversionRatio',
+  openingStock: 'openingStock',
   currentStock: 'currentStock',
   lowStockThreshold: 'lowStockThreshold',
-  costPerUnitPaise: 'costPerUnitPaise'
+  reorderLevel: 'reorderLevel',
+  costPerUnitPaise: 'costPerUnitPaise',
+  purchasePricePaise: 'purchasePricePaise',
+  averageCostPaise: 'averageCostPaise',
+  sellingPricePaise: 'sellingPricePaise',
+  taxRateBps: 'taxRateBps',
+  supplierId: 'supplierId',
+  outletId: 'outletId',
+  expiryDate: 'expiryDate',
+  batchNumber: 'batchNumber',
+  isActive: 'isActive'
 } as const
 
 export type InventoryItemScalarFieldEnum = (typeof InventoryItemScalarFieldEnum)[keyof typeof InventoryItemScalarFieldEnum]
@@ -668,13 +694,43 @@ export const PurchaseOrderScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   supplierId: 'supplierId',
+  outletId: 'outletId',
   poNumber: 'poNumber',
+  supplierInvoiceNumber: 'supplierInvoiceNumber',
+  invoiceDate: 'invoiceDate',
   status: 'status',
   totalPaise: 'totalPaise',
-  createdAt: 'createdAt'
+  taxPaise: 'taxPaise',
+  discountPaise: 'discountPaise',
+  freightPaise: 'freightPaise',
+  paymentStatus: 'paymentStatus',
+  paymentMethod: 'paymentMethod',
+  attachmentUrl: 'attachmentUrl',
+  notes: 'notes',
+  receivedAt: 'receivedAt',
+  receivedById: 'receivedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PurchaseOrderScalarFieldEnum = (typeof PurchaseOrderScalarFieldEnum)[keyof typeof PurchaseOrderScalarFieldEnum]
+
+
+export const PurchaseOrderItemScalarFieldEnum = {
+  id: 'id',
+  purchaseOrderId: 'purchaseOrderId',
+  inventoryItemId: 'inventoryItemId',
+  productName: 'productName',
+  quantity: 'quantity',
+  unit: 'unit',
+  unitCostPaise: 'unitCostPaise',
+  taxPaise: 'taxPaise',
+  discountPaise: 'discountPaise',
+  totalPaise: 'totalPaise',
+  receivedQty: 'receivedQty'
+} as const
+
+export type PurchaseOrderItemScalarFieldEnum = (typeof PurchaseOrderItemScalarFieldEnum)[keyof typeof PurchaseOrderItemScalarFieldEnum]
 
 
 export const StockMovementScalarFieldEnum = {
@@ -684,11 +740,94 @@ export const StockMovementScalarFieldEnum = {
   inventoryItemId: 'inventoryItemId',
   type: 'type',
   quantity: 'quantity',
+  previousStock: 'previousStock',
+  newStock: 'newStock',
+  unit: 'unit',
+  costPaise: 'costPaise',
+  userId: 'userId',
   reference: 'reference',
   createdAt: 'createdAt'
 } as const
 
 export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
+export const BulkSaleScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  invoiceNumber: 'invoiceNumber',
+  saleDate: 'saleDate',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  customerGstin: 'customerGstin',
+  customerAddress: 'customerAddress',
+  status: 'status',
+  subtotalPaise: 'subtotalPaise',
+  discountPaise: 'discountPaise',
+  taxPaise: 'taxPaise',
+  totalPaise: 'totalPaise',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  notes: 'notes',
+  terms: 'terms',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BulkSaleScalarFieldEnum = (typeof BulkSaleScalarFieldEnum)[keyof typeof BulkSaleScalarFieldEnum]
+
+
+export const BulkSaleItemScalarFieldEnum = {
+  id: 'id',
+  bulkSaleId: 'bulkSaleId',
+  inventoryItemId: 'inventoryItemId',
+  productName: 'productName',
+  sku: 'sku',
+  quantity: 'quantity',
+  sellingUnit: 'sellingUnit',
+  baseQuantityDeducted: 'baseQuantityDeducted',
+  unitPricePaise: 'unitPricePaise',
+  discountPaise: 'discountPaise',
+  taxRateBps: 'taxRateBps',
+  taxPaise: 'taxPaise',
+  totalPaise: 'totalPaise'
+} as const
+
+export type BulkSaleItemScalarFieldEnum = (typeof BulkSaleItemScalarFieldEnum)[keyof typeof BulkSaleItemScalarFieldEnum]
+
+
+export const StockTransferScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  transferNumber: 'transferNumber',
+  fromOutletId: 'fromOutletId',
+  toOutletId: 'toOutletId',
+  status: 'status',
+  notes: 'notes',
+  createdById: 'createdById',
+  approvedById: 'approvedById',
+  receivedById: 'receivedById',
+  dispatchedAt: 'dispatchedAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StockTransferScalarFieldEnum = (typeof StockTransferScalarFieldEnum)[keyof typeof StockTransferScalarFieldEnum]
+
+
+export const StockTransferItemScalarFieldEnum = {
+  id: 'id',
+  transferId: 'transferId',
+  inventoryItemId: 'inventoryItemId',
+  quantity: 'quantity',
+  unit: 'unit',
+  receivedQty: 'receivedQty'
+} as const
+
+export type StockTransferItemScalarFieldEnum = (typeof StockTransferItemScalarFieldEnum)[keyof typeof StockTransferItemScalarFieldEnum]
 
 
 export const CustomerScalarFieldEnum = {
@@ -1137,10 +1276,39 @@ export const InvoiceRecordScalarFieldEnum = {
   customerPhone: 'customerPhone',
   customerName: 'customerName',
   status: 'status',
+  publicToken: 'publicToken',
+  tokenExpiresAt: 'tokenExpiresAt',
+  tokenRevoked: 'tokenRevoked',
+  viewCount: 'viewCount',
+  lastViewedAt: 'lastViewedAt',
   createdAt: 'createdAt'
 } as const
 
 export type InvoiceRecordScalarFieldEnum = (typeof InvoiceRecordScalarFieldEnum)[keyof typeof InvoiceRecordScalarFieldEnum]
+
+
+export const CustomerMessageLogScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  outletId: 'outletId',
+  orderId: 'orderId',
+  invoiceId: 'invoiceId',
+  recipientPhone: 'recipientPhone',
+  channel: 'channel',
+  provider: 'provider',
+  status: 'status',
+  providerMessageId: 'providerMessageId',
+  errorMessage: 'errorMessage',
+  messageBody: 'messageBody',
+  retryCount: 'retryCount',
+  sentAt: 'sentAt',
+  deliveredAt: 'deliveredAt',
+  metadataJson: 'metadataJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomerMessageLogScalarFieldEnum = (typeof CustomerMessageLogScalarFieldEnum)[keyof typeof CustomerMessageLogScalarFieldEnum]
 
 
 export const FeatureUsageScalarFieldEnum = {

@@ -28,80 +28,170 @@ export type AggregatePurchaseOrder = {
 
 export type PurchaseOrderAvgAggregateOutputType = {
   totalPaise: number | null
+  taxPaise: number | null
+  discountPaise: number | null
+  freightPaise: number | null
 }
 
 export type PurchaseOrderSumAggregateOutputType = {
   totalPaise: number | null
+  taxPaise: number | null
+  discountPaise: number | null
+  freightPaise: number | null
 }
 
 export type PurchaseOrderMinAggregateOutputType = {
   id: string | null
   tenantId: string | null
   supplierId: string | null
+  outletId: string | null
   poNumber: string | null
+  supplierInvoiceNumber: string | null
+  invoiceDate: Date | null
   status: string | null
   totalPaise: number | null
+  taxPaise: number | null
+  discountPaise: number | null
+  freightPaise: number | null
+  paymentStatus: string | null
+  paymentMethod: string | null
+  attachmentUrl: string | null
+  notes: string | null
+  receivedAt: Date | null
+  receivedById: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PurchaseOrderMaxAggregateOutputType = {
   id: string | null
   tenantId: string | null
   supplierId: string | null
+  outletId: string | null
   poNumber: string | null
+  supplierInvoiceNumber: string | null
+  invoiceDate: Date | null
   status: string | null
   totalPaise: number | null
+  taxPaise: number | null
+  discountPaise: number | null
+  freightPaise: number | null
+  paymentStatus: string | null
+  paymentMethod: string | null
+  attachmentUrl: string | null
+  notes: string | null
+  receivedAt: Date | null
+  receivedById: string | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PurchaseOrderCountAggregateOutputType = {
   id: number
   tenantId: number
   supplierId: number
+  outletId: number
   poNumber: number
+  supplierInvoiceNumber: number
+  invoiceDate: number
   status: number
   totalPaise: number
+  taxPaise: number
+  discountPaise: number
+  freightPaise: number
+  paymentStatus: number
+  paymentMethod: number
+  attachmentUrl: number
+  notes: number
+  receivedAt: number
+  receivedById: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type PurchaseOrderAvgAggregateInputType = {
   totalPaise?: true
+  taxPaise?: true
+  discountPaise?: true
+  freightPaise?: true
 }
 
 export type PurchaseOrderSumAggregateInputType = {
   totalPaise?: true
+  taxPaise?: true
+  discountPaise?: true
+  freightPaise?: true
 }
 
 export type PurchaseOrderMinAggregateInputType = {
   id?: true
   tenantId?: true
   supplierId?: true
+  outletId?: true
   poNumber?: true
+  supplierInvoiceNumber?: true
+  invoiceDate?: true
   status?: true
   totalPaise?: true
+  taxPaise?: true
+  discountPaise?: true
+  freightPaise?: true
+  paymentStatus?: true
+  paymentMethod?: true
+  attachmentUrl?: true
+  notes?: true
+  receivedAt?: true
+  receivedById?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PurchaseOrderMaxAggregateInputType = {
   id?: true
   tenantId?: true
   supplierId?: true
+  outletId?: true
   poNumber?: true
+  supplierInvoiceNumber?: true
+  invoiceDate?: true
   status?: true
   totalPaise?: true
+  taxPaise?: true
+  discountPaise?: true
+  freightPaise?: true
+  paymentStatus?: true
+  paymentMethod?: true
+  attachmentUrl?: true
+  notes?: true
+  receivedAt?: true
+  receivedById?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PurchaseOrderCountAggregateInputType = {
   id?: true
   tenantId?: true
   supplierId?: true
+  outletId?: true
   poNumber?: true
+  supplierInvoiceNumber?: true
+  invoiceDate?: true
   status?: true
   totalPaise?: true
+  taxPaise?: true
+  discountPaise?: true
+  freightPaise?: true
+  paymentStatus?: true
+  paymentMethod?: true
+  attachmentUrl?: true
+  notes?: true
+  receivedAt?: true
+  receivedById?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -195,10 +285,23 @@ export type PurchaseOrderGroupByOutputType = {
   id: string
   tenantId: string
   supplierId: string
+  outletId: string | null
   poNumber: string
+  supplierInvoiceNumber: string | null
+  invoiceDate: Date | null
   status: string
   totalPaise: number
+  taxPaise: number
+  discountPaise: number
+  freightPaise: number
+  paymentStatus: string
+  paymentMethod: string | null
+  attachmentUrl: string | null
+  notes: string | null
+  receivedAt: Date | null
+  receivedById: string | null
   createdAt: Date
+  updatedAt: Date
   _count: PurchaseOrderCountAggregateOutputType | null
   _avg: PurchaseOrderAvgAggregateOutputType | null
   _sum: PurchaseOrderSumAggregateOutputType | null
@@ -228,24 +331,54 @@ export type PurchaseOrderWhereInput = {
   id?: Prisma.StringFilter<"PurchaseOrder"> | string
   tenantId?: Prisma.StringFilter<"PurchaseOrder"> | string
   supplierId?: Prisma.StringFilter<"PurchaseOrder"> | string
+  outletId?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   poNumber?: Prisma.StringFilter<"PurchaseOrder"> | string
+  supplierInvoiceNumber?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  invoiceDate?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
   status?: Prisma.StringFilter<"PurchaseOrder"> | string
   totalPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  taxPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  discountPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  freightPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  paymentStatus?: Prisma.StringFilter<"PurchaseOrder"> | string
+  paymentMethod?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  attachmentUrl?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  receivedAt?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
+  receivedById?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
+  outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
+  items?: Prisma.PurchaseOrderItemListRelationFilter
 }
 
 export type PurchaseOrderOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
   poNumber?: Prisma.SortOrder
+  supplierInvoiceNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
   supplier?: Prisma.SupplierOrderByWithRelationInput
+  outlet?: Prisma.OutletOrderByWithRelationInput
+  items?: Prisma.PurchaseOrderItemOrderByRelationAggregateInput
 }
 
 export type PurchaseOrderWhereUniqueInput = Prisma.AtLeast<{
@@ -256,22 +389,50 @@ export type PurchaseOrderWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PurchaseOrderWhereInput | Prisma.PurchaseOrderWhereInput[]
   tenantId?: Prisma.StringFilter<"PurchaseOrder"> | string
   supplierId?: Prisma.StringFilter<"PurchaseOrder"> | string
+  outletId?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   poNumber?: Prisma.StringFilter<"PurchaseOrder"> | string
+  supplierInvoiceNumber?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  invoiceDate?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
   status?: Prisma.StringFilter<"PurchaseOrder"> | string
   totalPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  taxPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  discountPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  freightPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  paymentStatus?: Prisma.StringFilter<"PurchaseOrder"> | string
+  paymentMethod?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  attachmentUrl?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  receivedAt?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
+  receivedById?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
   supplier?: Prisma.XOR<Prisma.SupplierScalarRelationFilter, Prisma.SupplierWhereInput>
+  outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
+  items?: Prisma.PurchaseOrderItemListRelationFilter
 }, "id" | "tenantId_poNumber">
 
 export type PurchaseOrderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
   poNumber?: Prisma.SortOrder
+  supplierInvoiceNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceDate?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  receivedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PurchaseOrderCountOrderByAggregateInput
   _avg?: Prisma.PurchaseOrderAvgOrderByAggregateInput
   _max?: Prisma.PurchaseOrderMaxOrderByAggregateInput
@@ -286,78 +447,185 @@ export type PurchaseOrderScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
   tenantId?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
   supplierId?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
+  outletId?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
   poNumber?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
+  supplierInvoiceNumber?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
+  invoiceDate?: Prisma.DateTimeNullableWithAggregatesFilter<"PurchaseOrder"> | Date | string | null
   status?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
   totalPaise?: Prisma.IntWithAggregatesFilter<"PurchaseOrder"> | number
+  taxPaise?: Prisma.IntWithAggregatesFilter<"PurchaseOrder"> | number
+  discountPaise?: Prisma.IntWithAggregatesFilter<"PurchaseOrder"> | number
+  freightPaise?: Prisma.IntWithAggregatesFilter<"PurchaseOrder"> | number
+  paymentStatus?: Prisma.StringWithAggregatesFilter<"PurchaseOrder"> | string
+  paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
+  attachmentUrl?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
+  receivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PurchaseOrder"> | Date | string | null
+  receivedById?: Prisma.StringNullableWithAggregatesFilter<"PurchaseOrder"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PurchaseOrder"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PurchaseOrder"> | Date | string
 }
 
 export type PurchaseOrderCreateInput = {
   id?: string
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutPurchaseOrdersInput
   supplier: Prisma.SupplierCreateNestedOneWithoutPurchaseOrdersInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutPurchaseOrdersInput
+  items?: Prisma.PurchaseOrderItemCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderUncheckedCreateInput = {
   id?: string
   tenantId: string
   supplierId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
   supplier?: Prisma.SupplierUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutPurchaseOrdersNestedInput
+  items?: Prisma.PurchaseOrderItemUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderCreateManyInput = {
   id?: string
   tenantId: string
   supplierId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PurchaseOrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PurchaseOrderUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PurchaseOrderListRelationFilter = {
@@ -379,38 +647,88 @@ export type PurchaseOrderCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   poNumber?: Prisma.SortOrder
+  supplierInvoiceNumber?: Prisma.SortOrder
+  invoiceDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  receivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PurchaseOrderAvgOrderByAggregateInput = {
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
 }
 
 export type PurchaseOrderMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   poNumber?: Prisma.SortOrder
+  supplierInvoiceNumber?: Prisma.SortOrder
+  invoiceDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  receivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PurchaseOrderMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   tenantId?: Prisma.SortOrder
   supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
   poNumber?: Prisma.SortOrder
+  supplierInvoiceNumber?: Prisma.SortOrder
+  invoiceDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+  paymentStatus?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
+  receivedAt?: Prisma.SortOrder
+  receivedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PurchaseOrderSumOrderByAggregateInput = {
   totalPaise?: Prisma.SortOrder
+  taxPaise?: Prisma.SortOrder
+  discountPaise?: Prisma.SortOrder
+  freightPaise?: Prisma.SortOrder
+}
+
+export type PurchaseOrderScalarRelationFilter = {
+  is?: Prisma.PurchaseOrderWhereInput
+  isNot?: Prisma.PurchaseOrderWhereInput
 }
 
 export type PurchaseOrderCreateNestedManyWithoutTenantInput = {
@@ -452,6 +770,48 @@ export type PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput = {
   connect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
   update?: Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput | Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutTenantInput[]
   updateMany?: Prisma.PurchaseOrderUpdateManyWithWhereWithoutTenantInput | Prisma.PurchaseOrderUpdateManyWithWhereWithoutTenantInput[]
+  deleteMany?: Prisma.PurchaseOrderScalarWhereInput | Prisma.PurchaseOrderScalarWhereInput[]
+}
+
+export type PurchaseOrderCreateNestedManyWithoutOutletInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput> | Prisma.PurchaseOrderCreateWithoutOutletInput[] | Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput | Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput[]
+  createMany?: Prisma.PurchaseOrderCreateManyOutletInputEnvelope
+  connect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+}
+
+export type PurchaseOrderUncheckedCreateNestedManyWithoutOutletInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput> | Prisma.PurchaseOrderCreateWithoutOutletInput[] | Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput | Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput[]
+  createMany?: Prisma.PurchaseOrderCreateManyOutletInputEnvelope
+  connect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+}
+
+export type PurchaseOrderUpdateManyWithoutOutletNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput> | Prisma.PurchaseOrderCreateWithoutOutletInput[] | Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput | Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput[]
+  upsert?: Prisma.PurchaseOrderUpsertWithWhereUniqueWithoutOutletInput | Prisma.PurchaseOrderUpsertWithWhereUniqueWithoutOutletInput[]
+  createMany?: Prisma.PurchaseOrderCreateManyOutletInputEnvelope
+  set?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  disconnect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  delete?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  connect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  update?: Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutOutletInput | Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutOutletInput[]
+  updateMany?: Prisma.PurchaseOrderUpdateManyWithWhereWithoutOutletInput | Prisma.PurchaseOrderUpdateManyWithWhereWithoutOutletInput[]
+  deleteMany?: Prisma.PurchaseOrderScalarWhereInput | Prisma.PurchaseOrderScalarWhereInput[]
+}
+
+export type PurchaseOrderUncheckedUpdateManyWithoutOutletNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput> | Prisma.PurchaseOrderCreateWithoutOutletInput[] | Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput | Prisma.PurchaseOrderCreateOrConnectWithoutOutletInput[]
+  upsert?: Prisma.PurchaseOrderUpsertWithWhereUniqueWithoutOutletInput | Prisma.PurchaseOrderUpsertWithWhereUniqueWithoutOutletInput[]
+  createMany?: Prisma.PurchaseOrderCreateManyOutletInputEnvelope
+  set?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  disconnect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  delete?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  connect?: Prisma.PurchaseOrderWhereUniqueInput | Prisma.PurchaseOrderWhereUniqueInput[]
+  update?: Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutOutletInput | Prisma.PurchaseOrderUpdateWithWhereUniqueWithoutOutletInput[]
+  updateMany?: Prisma.PurchaseOrderUpdateManyWithWhereWithoutOutletInput | Prisma.PurchaseOrderUpdateManyWithWhereWithoutOutletInput[]
   deleteMany?: Prisma.PurchaseOrderScalarWhereInput | Prisma.PurchaseOrderScalarWhereInput[]
 }
 
@@ -497,22 +857,64 @@ export type PurchaseOrderUncheckedUpdateManyWithoutSupplierNestedInput = {
   deleteMany?: Prisma.PurchaseOrderScalarWhereInput | Prisma.PurchaseOrderScalarWhereInput[]
 }
 
+export type PurchaseOrderCreateNestedOneWithoutItemsInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutItemsInput, Prisma.PurchaseOrderUncheckedCreateWithoutItemsInput>
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutItemsInput
+  connect?: Prisma.PurchaseOrderWhereUniqueInput
+}
+
+export type PurchaseOrderUpdateOneRequiredWithoutItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutItemsInput, Prisma.PurchaseOrderUncheckedCreateWithoutItemsInput>
+  connectOrCreate?: Prisma.PurchaseOrderCreateOrConnectWithoutItemsInput
+  upsert?: Prisma.PurchaseOrderUpsertWithoutItemsInput
+  connect?: Prisma.PurchaseOrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PurchaseOrderUpdateToOneWithWhereWithoutItemsInput, Prisma.PurchaseOrderUpdateWithoutItemsInput>, Prisma.PurchaseOrderUncheckedUpdateWithoutItemsInput>
+}
+
 export type PurchaseOrderCreateWithoutTenantInput = {
   id?: string
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   supplier: Prisma.SupplierCreateNestedOneWithoutPurchaseOrdersInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutPurchaseOrdersInput
+  items?: Prisma.PurchaseOrderItemCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderUncheckedCreateWithoutTenantInput = {
   id?: string
   supplierId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderCreateOrConnectWithoutTenantInput = {
@@ -548,28 +950,141 @@ export type PurchaseOrderScalarWhereInput = {
   id?: Prisma.StringFilter<"PurchaseOrder"> | string
   tenantId?: Prisma.StringFilter<"PurchaseOrder"> | string
   supplierId?: Prisma.StringFilter<"PurchaseOrder"> | string
+  outletId?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   poNumber?: Prisma.StringFilter<"PurchaseOrder"> | string
+  supplierInvoiceNumber?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  invoiceDate?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
   status?: Prisma.StringFilter<"PurchaseOrder"> | string
   totalPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  taxPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  discountPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  freightPaise?: Prisma.IntFilter<"PurchaseOrder"> | number
+  paymentStatus?: Prisma.StringFilter<"PurchaseOrder"> | string
+  paymentMethod?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  attachmentUrl?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  notes?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
+  receivedAt?: Prisma.DateTimeNullableFilter<"PurchaseOrder"> | Date | string | null
+  receivedById?: Prisma.StringNullableFilter<"PurchaseOrder"> | string | null
   createdAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PurchaseOrder"> | Date | string
+}
+
+export type PurchaseOrderCreateWithoutOutletInput = {
+  id?: string
+  poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
+  status?: string
+  totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchaseOrdersInput
+  supplier: Prisma.SupplierCreateNestedOneWithoutPurchaseOrdersInput
+  items?: Prisma.PurchaseOrderItemCreateNestedManyWithoutPurchaseOrderInput
+}
+
+export type PurchaseOrderUncheckedCreateWithoutOutletInput = {
+  id?: string
+  tenantId: string
+  supplierId: string
+  poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
+  status?: string
+  totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutPurchaseOrderInput
+}
+
+export type PurchaseOrderCreateOrConnectWithoutOutletInput = {
+  where: Prisma.PurchaseOrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput>
+}
+
+export type PurchaseOrderCreateManyOutletInputEnvelope = {
+  data: Prisma.PurchaseOrderCreateManyOutletInput | Prisma.PurchaseOrderCreateManyOutletInput[]
+  skipDuplicates?: boolean
+}
+
+export type PurchaseOrderUpsertWithWhereUniqueWithoutOutletInput = {
+  where: Prisma.PurchaseOrderWhereUniqueInput
+  update: Prisma.XOR<Prisma.PurchaseOrderUpdateWithoutOutletInput, Prisma.PurchaseOrderUncheckedUpdateWithoutOutletInput>
+  create: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutOutletInput, Prisma.PurchaseOrderUncheckedCreateWithoutOutletInput>
+}
+
+export type PurchaseOrderUpdateWithWhereUniqueWithoutOutletInput = {
+  where: Prisma.PurchaseOrderWhereUniqueInput
+  data: Prisma.XOR<Prisma.PurchaseOrderUpdateWithoutOutletInput, Prisma.PurchaseOrderUncheckedUpdateWithoutOutletInput>
+}
+
+export type PurchaseOrderUpdateManyWithWhereWithoutOutletInput = {
+  where: Prisma.PurchaseOrderScalarWhereInput
+  data: Prisma.XOR<Prisma.PurchaseOrderUpdateManyMutationInput, Prisma.PurchaseOrderUncheckedUpdateManyWithoutOutletInput>
 }
 
 export type PurchaseOrderCreateWithoutSupplierInput = {
   id?: string
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   tenant: Prisma.TenantCreateNestedOneWithoutPurchaseOrdersInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutPurchaseOrdersInput
+  items?: Prisma.PurchaseOrderItemCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderUncheckedCreateWithoutSupplierInput = {
   id?: string
   tenantId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutPurchaseOrderInput
 }
 
 export type PurchaseOrderCreateOrConnectWithoutSupplierInput = {
@@ -598,138 +1113,535 @@ export type PurchaseOrderUpdateManyWithWhereWithoutSupplierInput = {
   data: Prisma.XOR<Prisma.PurchaseOrderUpdateManyMutationInput, Prisma.PurchaseOrderUncheckedUpdateManyWithoutSupplierInput>
 }
 
+export type PurchaseOrderCreateWithoutItemsInput = {
+  id?: string
+  poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
+  status?: string
+  totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tenant: Prisma.TenantCreateNestedOneWithoutPurchaseOrdersInput
+  supplier: Prisma.SupplierCreateNestedOneWithoutPurchaseOrdersInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutPurchaseOrdersInput
+}
+
+export type PurchaseOrderUncheckedCreateWithoutItemsInput = {
+  id?: string
+  tenantId: string
+  supplierId: string
+  outletId?: string | null
+  poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
+  status?: string
+  totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PurchaseOrderCreateOrConnectWithoutItemsInput = {
+  where: Prisma.PurchaseOrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutItemsInput, Prisma.PurchaseOrderUncheckedCreateWithoutItemsInput>
+}
+
+export type PurchaseOrderUpsertWithoutItemsInput = {
+  update: Prisma.XOR<Prisma.PurchaseOrderUpdateWithoutItemsInput, Prisma.PurchaseOrderUncheckedUpdateWithoutItemsInput>
+  create: Prisma.XOR<Prisma.PurchaseOrderCreateWithoutItemsInput, Prisma.PurchaseOrderUncheckedCreateWithoutItemsInput>
+  where?: Prisma.PurchaseOrderWhereInput
+}
+
+export type PurchaseOrderUpdateToOneWithWhereWithoutItemsInput = {
+  where?: Prisma.PurchaseOrderWhereInput
+  data: Prisma.XOR<Prisma.PurchaseOrderUpdateWithoutItemsInput, Prisma.PurchaseOrderUncheckedUpdateWithoutItemsInput>
+}
+
+export type PurchaseOrderUpdateWithoutItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutPurchaseOrdersNestedInput
+}
+
+export type PurchaseOrderUncheckedUpdateWithoutItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type PurchaseOrderCreateManyTenantInput = {
   id?: string
   supplierId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PurchaseOrderUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   supplier?: Prisma.SupplierUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutPurchaseOrdersNestedInput
+  items?: Prisma.PurchaseOrderItemUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PurchaseOrderCreateManyOutletInput = {
+  id?: string
+  tenantId: string
+  supplierId: string
+  poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
+  status?: string
+  totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PurchaseOrderUpdateWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  supplier?: Prisma.SupplierUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  items?: Prisma.PurchaseOrderItemUpdateManyWithoutPurchaseOrderNestedInput
+}
+
+export type PurchaseOrderUncheckedUpdateWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
+}
+
+export type PurchaseOrderUncheckedUpdateManyWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierId?: Prisma.StringFieldUpdateOperationsInput | string
+  poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PurchaseOrderCreateManySupplierInput = {
   id?: string
   tenantId: string
+  outletId?: string | null
   poNumber: string
+  supplierInvoiceNumber?: string | null
+  invoiceDate?: Date | string | null
   status?: string
   totalPaise?: number
+  taxPaise?: number
+  discountPaise?: number
+  freightPaise?: number
+  paymentStatus?: string
+  paymentMethod?: string | null
+  attachmentUrl?: string | null
+  notes?: string | null
+  receivedAt?: Date | string | null
+  receivedById?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PurchaseOrderUpdateWithoutSupplierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tenant?: Prisma.TenantUpdateOneRequiredWithoutPurchaseOrdersNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutPurchaseOrdersNestedInput
+  items?: Prisma.PurchaseOrderItemUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderUncheckedUpdateWithoutSupplierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  items?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutPurchaseOrderNestedInput
 }
 
 export type PurchaseOrderUncheckedUpdateManyWithoutSupplierInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   poNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  supplierInvoiceNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   totalPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  taxPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  discountPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  freightPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  paymentStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type PurchaseOrderCountOutputType
+ */
+
+export type PurchaseOrderCountOutputType = {
+  items: number
+}
+
+export type PurchaseOrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  items?: boolean | PurchaseOrderCountOutputTypeCountItemsArgs
+}
+
+/**
+ * PurchaseOrderCountOutputType without action
+ */
+export type PurchaseOrderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrderCountOutputType
+   */
+  select?: Prisma.PurchaseOrderCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PurchaseOrderCountOutputType without action
+ */
+export type PurchaseOrderCountOutputTypeCountItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderItemWhereInput
+}
 
 
 export type PurchaseOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   supplierId?: boolean
+  outletId?: boolean
   poNumber?: boolean
+  supplierInvoiceNumber?: boolean
+  invoiceDate?: boolean
   status?: boolean
   totalPaise?: boolean
+  taxPaise?: boolean
+  discountPaise?: boolean
+  freightPaise?: boolean
+  paymentStatus?: boolean
+  paymentMethod?: boolean
+  attachmentUrl?: boolean
+  notes?: boolean
+  receivedAt?: boolean
+  receivedById?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
+  items?: boolean | Prisma.PurchaseOrder$itemsArgs<ExtArgs>
+  _count?: boolean | Prisma.PurchaseOrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseOrder"]>
 
 export type PurchaseOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   supplierId?: boolean
+  outletId?: boolean
   poNumber?: boolean
+  supplierInvoiceNumber?: boolean
+  invoiceDate?: boolean
   status?: boolean
   totalPaise?: boolean
+  taxPaise?: boolean
+  discountPaise?: boolean
+  freightPaise?: boolean
+  paymentStatus?: boolean
+  paymentMethod?: boolean
+  attachmentUrl?: boolean
+  notes?: boolean
+  receivedAt?: boolean
+  receivedById?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseOrder"]>
 
 export type PurchaseOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   supplierId?: boolean
+  outletId?: boolean
   poNumber?: boolean
+  supplierInvoiceNumber?: boolean
+  invoiceDate?: boolean
   status?: boolean
   totalPaise?: boolean
+  taxPaise?: boolean
+  discountPaise?: boolean
+  freightPaise?: boolean
+  paymentStatus?: boolean
+  paymentMethod?: boolean
+  attachmentUrl?: boolean
+  notes?: boolean
+  receivedAt?: boolean
+  receivedById?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
 }, ExtArgs["result"]["purchaseOrder"]>
 
 export type PurchaseOrderSelectScalar = {
   id?: boolean
   tenantId?: boolean
   supplierId?: boolean
+  outletId?: boolean
   poNumber?: boolean
+  supplierInvoiceNumber?: boolean
+  invoiceDate?: boolean
   status?: boolean
   totalPaise?: boolean
+  taxPaise?: boolean
+  discountPaise?: boolean
+  freightPaise?: boolean
+  paymentStatus?: boolean
+  paymentMethod?: boolean
+  attachmentUrl?: boolean
+  notes?: boolean
+  receivedAt?: boolean
+  receivedById?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PurchaseOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "supplierId" | "poNumber" | "status" | "totalPaise" | "createdAt", ExtArgs["result"]["purchaseOrder"]>
+export type PurchaseOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "supplierId" | "outletId" | "poNumber" | "supplierInvoiceNumber" | "invoiceDate" | "status" | "totalPaise" | "taxPaise" | "discountPaise" | "freightPaise" | "paymentStatus" | "paymentMethod" | "attachmentUrl" | "notes" | "receivedAt" | "receivedById" | "createdAt" | "updatedAt", ExtArgs["result"]["purchaseOrder"]>
 export type PurchaseOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
+  items?: boolean | Prisma.PurchaseOrder$itemsArgs<ExtArgs>
+  _count?: boolean | Prisma.PurchaseOrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PurchaseOrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
 }
 export type PurchaseOrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
   supplier?: boolean | Prisma.SupplierDefaultArgs<ExtArgs>
+  outlet?: boolean | Prisma.PurchaseOrder$outletArgs<ExtArgs>
 }
 
 export type $PurchaseOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -737,15 +1649,30 @@ export type $PurchaseOrderPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
     supplier: Prisma.$SupplierPayload<ExtArgs>
+    outlet: Prisma.$OutletPayload<ExtArgs> | null
+    items: Prisma.$PurchaseOrderItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     supplierId: string
+    outletId: string | null
     poNumber: string
+    supplierInvoiceNumber: string | null
+    invoiceDate: Date | null
     status: string
     totalPaise: number
+    taxPaise: number
+    discountPaise: number
+    freightPaise: number
+    paymentStatus: string
+    paymentMethod: string | null
+    attachmentUrl: string | null
+    notes: string | null
+    receivedAt: Date | null
+    receivedById: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["purchaseOrder"]>
   composites: {}
 }
@@ -1142,6 +2069,8 @@ export interface Prisma__PurchaseOrderClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   supplier<T extends Prisma.SupplierDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupplierDefaultArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  outlet<T extends Prisma.PurchaseOrder$outletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchaseOrder$outletArgs<ExtArgs>>): Prisma.Prisma__OutletClient<runtime.Types.Result.GetResult<Prisma.$OutletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  items<T extends Prisma.PurchaseOrder$itemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PurchaseOrder$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1174,10 +2103,23 @@ export interface PurchaseOrderFieldRefs {
   readonly id: Prisma.FieldRef<"PurchaseOrder", 'String'>
   readonly tenantId: Prisma.FieldRef<"PurchaseOrder", 'String'>
   readonly supplierId: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly outletId: Prisma.FieldRef<"PurchaseOrder", 'String'>
   readonly poNumber: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly supplierInvoiceNumber: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly invoiceDate: Prisma.FieldRef<"PurchaseOrder", 'DateTime'>
   readonly status: Prisma.FieldRef<"PurchaseOrder", 'String'>
   readonly totalPaise: Prisma.FieldRef<"PurchaseOrder", 'Int'>
+  readonly taxPaise: Prisma.FieldRef<"PurchaseOrder", 'Int'>
+  readonly discountPaise: Prisma.FieldRef<"PurchaseOrder", 'Int'>
+  readonly freightPaise: Prisma.FieldRef<"PurchaseOrder", 'Int'>
+  readonly paymentStatus: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly attachmentUrl: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly notes: Prisma.FieldRef<"PurchaseOrder", 'String'>
+  readonly receivedAt: Prisma.FieldRef<"PurchaseOrder", 'DateTime'>
+  readonly receivedById: Prisma.FieldRef<"PurchaseOrder", 'String'>
   readonly createdAt: Prisma.FieldRef<"PurchaseOrder", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"PurchaseOrder", 'DateTime'>
 }
     
 
@@ -1576,6 +2518,49 @@ export type PurchaseOrderDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many PurchaseOrders to delete.
    */
   limit?: number
+}
+
+/**
+ * PurchaseOrder.outlet
+ */
+export type PurchaseOrder$outletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Outlet
+   */
+  select?: Prisma.OutletSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Outlet
+   */
+  omit?: Prisma.OutletOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutletInclude<ExtArgs> | null
+  where?: Prisma.OutletWhereInput
+}
+
+/**
+ * PurchaseOrder.items
+ */
+export type PurchaseOrder$itemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrderItem
+   */
+  select?: Prisma.PurchaseOrderItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrderItem
+   */
+  omit?: Prisma.PurchaseOrderItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderItemInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderItemWhereInput
+  orderBy?: Prisma.PurchaseOrderItemOrderByWithRelationInput | Prisma.PurchaseOrderItemOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderItemScalarFieldEnum | Prisma.PurchaseOrderItemScalarFieldEnum[]
 }
 
 /**

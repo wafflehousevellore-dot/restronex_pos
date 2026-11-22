@@ -32,6 +32,7 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 .agents/
+.e2e/
 
 # Internal audit reports
 PETPOOJA_BRANDING_REMOVAL_REPORT.md

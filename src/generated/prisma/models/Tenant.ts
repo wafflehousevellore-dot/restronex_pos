@@ -383,6 +383,9 @@ export type TenantWhereInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobListRelationFilter
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueListRelationFilter
+  bulkSales?: Prisma.BulkSaleListRelationFilter
+  stockTransfers?: Prisma.StockTransferListRelationFilter
+  customerMessages?: Prisma.CustomerMessageLogListRelationFilter
 }
 
 export type TenantOrderByWithRelationInput = {
@@ -453,6 +456,9 @@ export type TenantOrderByWithRelationInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceOrderByRelationAggregateInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobOrderByRelationAggregateInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueOrderByRelationAggregateInput
+  bulkSales?: Prisma.BulkSaleOrderByRelationAggregateInput
+  stockTransfers?: Prisma.StockTransferOrderByRelationAggregateInput
+  customerMessages?: Prisma.CustomerMessageLogOrderByRelationAggregateInput
 }
 
 export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -526,6 +532,9 @@ export type TenantWhereUniqueInput = Prisma.AtLeast<{
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceListRelationFilter
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobListRelationFilter
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueListRelationFilter
+  bulkSales?: Prisma.BulkSaleListRelationFilter
+  stockTransfers?: Prisma.StockTransferListRelationFilter
+  customerMessages?: Prisma.CustomerMessageLogListRelationFilter
 }, "id" | "clerkOrgId" | "slug">
 
 export type TenantOrderByWithAggregationInput = {
@@ -650,6 +659,9 @@ export type TenantCreateInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateInput = {
@@ -720,6 +732,9 @@ export type TenantUncheckedCreateInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUpdateInput = {
@@ -790,6 +805,9 @@ export type TenantUpdateInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateInput = {
@@ -860,6 +878,9 @@ export type TenantUncheckedUpdateInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateManyInput = {
@@ -1270,6 +1291,34 @@ export type TenantUpdateOneRequiredWithoutStockMovementsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutStockMovementsInput, Prisma.TenantUpdateWithoutStockMovementsInput>, Prisma.TenantUncheckedUpdateWithoutStockMovementsInput>
 }
 
+export type TenantCreateNestedOneWithoutBulkSalesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutBulkSalesInput, Prisma.TenantUncheckedCreateWithoutBulkSalesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutBulkSalesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutBulkSalesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutBulkSalesInput, Prisma.TenantUncheckedCreateWithoutBulkSalesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutBulkSalesInput
+  upsert?: Prisma.TenantUpsertWithoutBulkSalesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutBulkSalesInput, Prisma.TenantUpdateWithoutBulkSalesInput>, Prisma.TenantUncheckedUpdateWithoutBulkSalesInput>
+}
+
+export type TenantCreateNestedOneWithoutStockTransfersInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutStockTransfersInput, Prisma.TenantUncheckedCreateWithoutStockTransfersInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutStockTransfersInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutStockTransfersNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutStockTransfersInput, Prisma.TenantUncheckedCreateWithoutStockTransfersInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutStockTransfersInput
+  upsert?: Prisma.TenantUpsertWithoutStockTransfersInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutStockTransfersInput, Prisma.TenantUpdateWithoutStockTransfersInput>, Prisma.TenantUncheckedUpdateWithoutStockTransfersInput>
+}
+
 export type TenantCreateNestedOneWithoutCustomersInput = {
   create?: Prisma.XOR<Prisma.TenantCreateWithoutCustomersInput, Prisma.TenantUncheckedCreateWithoutCustomersInput>
   connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCustomersInput
@@ -1538,6 +1587,20 @@ export type TenantUpdateOneRequiredWithoutInvoicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutInvoicesInput, Prisma.TenantUpdateWithoutInvoicesInput>, Prisma.TenantUncheckedUpdateWithoutInvoicesInput>
 }
 
+export type TenantCreateNestedOneWithoutCustomerMessagesInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutCustomerMessagesInput, Prisma.TenantUncheckedCreateWithoutCustomerMessagesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCustomerMessagesInput
+  connect?: Prisma.TenantWhereUniqueInput
+}
+
+export type TenantUpdateOneRequiredWithoutCustomerMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.TenantCreateWithoutCustomerMessagesInput, Prisma.TenantUncheckedCreateWithoutCustomerMessagesInput>
+  connectOrCreate?: Prisma.TenantCreateOrConnectWithoutCustomerMessagesInput
+  upsert?: Prisma.TenantUpsertWithoutCustomerMessagesInput
+  connect?: Prisma.TenantWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TenantUpdateToOneWithWhereWithoutCustomerMessagesInput, Prisma.TenantUpdateWithoutCustomerMessagesInput>, Prisma.TenantUncheckedUpdateWithoutCustomerMessagesInput>
+}
+
 export type TenantCreateNestedOneWithoutFeatureUsagesInput = {
   create?: Prisma.XOR<Prisma.TenantCreateWithoutFeatureUsagesInput, Prisma.TenantUncheckedCreateWithoutFeatureUsagesInput>
   connectOrCreate?: Prisma.TenantCreateOrConnectWithoutFeatureUsagesInput
@@ -1745,6 +1808,9 @@ export type TenantCreateWithoutMembershipsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMembershipsInput = {
@@ -1814,6 +1880,9 @@ export type TenantUncheckedCreateWithoutMembershipsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMembershipsInput = {
@@ -1899,6 +1968,9 @@ export type TenantUpdateWithoutMembershipsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMembershipsInput = {
@@ -1968,6 +2040,9 @@ export type TenantUncheckedUpdateWithoutMembershipsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOutletsInput = {
@@ -2037,6 +2112,9 @@ export type TenantCreateWithoutOutletsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOutletsInput = {
@@ -2106,6 +2184,9 @@ export type TenantUncheckedCreateWithoutOutletsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOutletsInput = {
@@ -2191,6 +2272,9 @@ export type TenantUpdateWithoutOutletsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOutletsInput = {
@@ -2260,6 +2344,9 @@ export type TenantUncheckedUpdateWithoutOutletsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStaffInvitationsInput = {
@@ -2329,6 +2416,9 @@ export type TenantCreateWithoutStaffInvitationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStaffInvitationsInput = {
@@ -2398,6 +2488,9 @@ export type TenantUncheckedCreateWithoutStaffInvitationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStaffInvitationsInput = {
@@ -2483,6 +2576,9 @@ export type TenantUpdateWithoutStaffInvitationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStaffInvitationsInput = {
@@ -2552,6 +2648,9 @@ export type TenantUncheckedUpdateWithoutStaffInvitationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSettingsInput = {
@@ -2621,6 +2720,9 @@ export type TenantCreateWithoutSettingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSettingsInput = {
@@ -2690,6 +2792,9 @@ export type TenantUncheckedCreateWithoutSettingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSettingsInput = {
@@ -2775,6 +2880,9 @@ export type TenantUpdateWithoutSettingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSettingsInput = {
@@ -2844,6 +2952,9 @@ export type TenantUncheckedUpdateWithoutSettingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOutletWhatsAppConfigsInput = {
@@ -2913,6 +3024,9 @@ export type TenantCreateWithoutOutletWhatsAppConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput = {
@@ -2982,6 +3096,9 @@ export type TenantUncheckedCreateWithoutOutletWhatsAppConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOutletWhatsAppConfigsInput = {
@@ -3067,6 +3184,9 @@ export type TenantUpdateWithoutOutletWhatsAppConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput = {
@@ -3136,6 +3256,9 @@ export type TenantUncheckedUpdateWithoutOutletWhatsAppConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTaxConfigsInput = {
@@ -3205,6 +3328,9 @@ export type TenantCreateWithoutTaxConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTaxConfigsInput = {
@@ -3274,6 +3400,9 @@ export type TenantUncheckedCreateWithoutTaxConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTaxConfigsInput = {
@@ -3359,6 +3488,9 @@ export type TenantUpdateWithoutTaxConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTaxConfigsInput = {
@@ -3428,6 +3560,9 @@ export type TenantUncheckedUpdateWithoutTaxConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCategoriesInput = {
@@ -3497,6 +3632,9 @@ export type TenantCreateWithoutCategoriesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCategoriesInput = {
@@ -3566,6 +3704,9 @@ export type TenantUncheckedCreateWithoutCategoriesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCategoriesInput = {
@@ -3651,6 +3792,9 @@ export type TenantUpdateWithoutCategoriesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCategoriesInput = {
@@ -3720,6 +3864,9 @@ export type TenantUncheckedUpdateWithoutCategoriesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutMenuItemsInput = {
@@ -3789,6 +3936,9 @@ export type TenantCreateWithoutMenuItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutMenuItemsInput = {
@@ -3858,6 +4008,9 @@ export type TenantUncheckedCreateWithoutMenuItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutMenuItemsInput = {
@@ -3943,6 +4096,9 @@ export type TenantUpdateWithoutMenuItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutMenuItemsInput = {
@@ -4012,6 +4168,9 @@ export type TenantUncheckedUpdateWithoutMenuItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAddonGroupsInput = {
@@ -4081,6 +4240,9 @@ export type TenantCreateWithoutAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAddonGroupsInput = {
@@ -4150,6 +4312,9 @@ export type TenantUncheckedCreateWithoutAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAddonGroupsInput = {
@@ -4235,6 +4400,9 @@ export type TenantUpdateWithoutAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAddonGroupsInput = {
@@ -4304,6 +4472,9 @@ export type TenantUncheckedUpdateWithoutAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAddonOptionsInput = {
@@ -4373,6 +4544,9 @@ export type TenantCreateWithoutAddonOptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAddonOptionsInput = {
@@ -4442,6 +4616,9 @@ export type TenantUncheckedCreateWithoutAddonOptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAddonOptionsInput = {
@@ -4527,6 +4704,9 @@ export type TenantUpdateWithoutAddonOptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAddonOptionsInput = {
@@ -4596,6 +4776,9 @@ export type TenantUncheckedUpdateWithoutAddonOptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutProductAddonGroupsInput = {
@@ -4665,6 +4848,9 @@ export type TenantCreateWithoutProductAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutProductAddonGroupsInput = {
@@ -4734,6 +4920,9 @@ export type TenantUncheckedCreateWithoutProductAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutProductAddonGroupsInput = {
@@ -4819,6 +5008,9 @@ export type TenantUpdateWithoutProductAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutProductAddonGroupsInput = {
@@ -4888,6 +5080,9 @@ export type TenantUncheckedUpdateWithoutProductAddonGroupsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTablesInput = {
@@ -4957,6 +5152,9 @@ export type TenantCreateWithoutTablesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTablesInput = {
@@ -5026,6 +5224,9 @@ export type TenantUncheckedCreateWithoutTablesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTablesInput = {
@@ -5111,6 +5312,9 @@ export type TenantUpdateWithoutTablesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTablesInput = {
@@ -5180,6 +5384,9 @@ export type TenantUncheckedUpdateWithoutTablesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutOrdersInput = {
@@ -5249,6 +5456,9 @@ export type TenantCreateWithoutOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutOrdersInput = {
@@ -5318,6 +5528,9 @@ export type TenantUncheckedCreateWithoutOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutOrdersInput = {
@@ -5403,6 +5616,9 @@ export type TenantUpdateWithoutOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutOrdersInput = {
@@ -5472,6 +5688,9 @@ export type TenantUncheckedUpdateWithoutOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentRefundsInput = {
@@ -5541,6 +5760,9 @@ export type TenantCreateWithoutPaymentRefundsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentRefundsInput = {
@@ -5610,6 +5832,9 @@ export type TenantUncheckedCreateWithoutPaymentRefundsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentRefundsInput = {
@@ -5695,6 +5920,9 @@ export type TenantUpdateWithoutPaymentRefundsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentRefundsInput = {
@@ -5764,6 +5992,9 @@ export type TenantUncheckedUpdateWithoutPaymentRefundsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInventoryItemsInput = {
@@ -5833,6 +6064,9 @@ export type TenantCreateWithoutInventoryItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInventoryItemsInput = {
@@ -5902,6 +6136,9 @@ export type TenantUncheckedCreateWithoutInventoryItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInventoryItemsInput = {
@@ -5987,6 +6224,9 @@ export type TenantUpdateWithoutInventoryItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInventoryItemsInput = {
@@ -6056,6 +6296,9 @@ export type TenantUncheckedUpdateWithoutInventoryItemsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSuppliersInput = {
@@ -6125,6 +6368,9 @@ export type TenantCreateWithoutSuppliersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSuppliersInput = {
@@ -6194,6 +6440,9 @@ export type TenantUncheckedCreateWithoutSuppliersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSuppliersInput = {
@@ -6279,6 +6528,9 @@ export type TenantUpdateWithoutSuppliersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSuppliersInput = {
@@ -6348,6 +6600,9 @@ export type TenantUncheckedUpdateWithoutSuppliersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPurchaseOrdersInput = {
@@ -6417,6 +6672,9 @@ export type TenantCreateWithoutPurchaseOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
@@ -6486,6 +6744,9 @@ export type TenantUncheckedCreateWithoutPurchaseOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPurchaseOrdersInput = {
@@ -6571,6 +6832,9 @@ export type TenantUpdateWithoutPurchaseOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
@@ -6640,6 +6904,9 @@ export type TenantUncheckedUpdateWithoutPurchaseOrdersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutStockMovementsInput = {
@@ -6709,6 +6976,9 @@ export type TenantCreateWithoutStockMovementsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutStockMovementsInput = {
@@ -6778,6 +7048,9 @@ export type TenantUncheckedCreateWithoutStockMovementsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutStockMovementsInput = {
@@ -6863,6 +7136,9 @@ export type TenantUpdateWithoutStockMovementsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutStockMovementsInput = {
@@ -6932,6 +7208,617 @@ export type TenantUncheckedUpdateWithoutStockMovementsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutBulkSalesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutBulkSalesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionUncheckedCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutBulkSalesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutBulkSalesInput, Prisma.TenantUncheckedCreateWithoutBulkSalesInput>
+}
+
+export type TenantUpsertWithoutBulkSalesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutBulkSalesInput, Prisma.TenantUncheckedUpdateWithoutBulkSalesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutBulkSalesInput, Prisma.TenantUncheckedCreateWithoutBulkSalesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutBulkSalesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutBulkSalesInput, Prisma.TenantUncheckedUpdateWithoutBulkSalesInput>
+}
+
+export type TenantUpdateWithoutBulkSalesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutBulkSalesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUncheckedUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutStockTransfersInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutStockTransfersInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionUncheckedCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutStockTransfersInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutStockTransfersInput, Prisma.TenantUncheckedCreateWithoutStockTransfersInput>
+}
+
+export type TenantUpsertWithoutStockTransfersInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutStockTransfersInput, Prisma.TenantUncheckedUpdateWithoutStockTransfersInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutStockTransfersInput, Prisma.TenantUncheckedCreateWithoutStockTransfersInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutStockTransfersInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutStockTransfersInput, Prisma.TenantUncheckedUpdateWithoutStockTransfersInput>
+}
+
+export type TenantUpdateWithoutStockTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutStockTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUncheckedUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCustomersInput = {
@@ -7001,6 +7888,9 @@ export type TenantCreateWithoutCustomersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomersInput = {
@@ -7070,6 +7960,9 @@ export type TenantUncheckedCreateWithoutCustomersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomersInput = {
@@ -7155,6 +8048,9 @@ export type TenantUpdateWithoutCustomersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomersInput = {
@@ -7224,6 +8120,9 @@ export type TenantUncheckedUpdateWithoutCustomersInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSubscriptionsInput = {
@@ -7293,6 +8192,9 @@ export type TenantCreateWithoutSubscriptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSubscriptionsInput = {
@@ -7362,6 +8264,9 @@ export type TenantUncheckedCreateWithoutSubscriptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSubscriptionsInput = {
@@ -7447,6 +8352,9 @@ export type TenantUpdateWithoutSubscriptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSubscriptionsInput = {
@@ -7516,6 +8424,9 @@ export type TenantUncheckedUpdateWithoutSubscriptionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSubscriptionNotificationsInput = {
@@ -7585,6 +8496,9 @@ export type TenantCreateWithoutSubscriptionNotificationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSubscriptionNotificationsInput = {
@@ -7654,6 +8568,9 @@ export type TenantUncheckedCreateWithoutSubscriptionNotificationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSubscriptionNotificationsInput = {
@@ -7739,6 +8656,9 @@ export type TenantUpdateWithoutSubscriptionNotificationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSubscriptionNotificationsInput = {
@@ -7808,6 +8728,9 @@ export type TenantUncheckedUpdateWithoutSubscriptionNotificationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentGatewayConfigInput = {
@@ -7877,6 +8800,9 @@ export type TenantCreateWithoutPaymentGatewayConfigInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentGatewayConfigInput = {
@@ -7946,6 +8872,9 @@ export type TenantUncheckedCreateWithoutPaymentGatewayConfigInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentGatewayConfigInput = {
@@ -8031,6 +8960,9 @@ export type TenantUpdateWithoutPaymentGatewayConfigInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentGatewayConfigInput = {
@@ -8100,6 +9032,9 @@ export type TenantUncheckedUpdateWithoutPaymentGatewayConfigInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPaymentAttemptsInput = {
@@ -8169,6 +9104,9 @@ export type TenantCreateWithoutPaymentAttemptsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPaymentAttemptsInput = {
@@ -8238,6 +9176,9 @@ export type TenantUncheckedCreateWithoutPaymentAttemptsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPaymentAttemptsInput = {
@@ -8323,6 +9264,9 @@ export type TenantUpdateWithoutPaymentAttemptsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPaymentAttemptsInput = {
@@ -8392,6 +9336,9 @@ export type TenantUncheckedUpdateWithoutPaymentAttemptsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutIntegrationConfigsInput = {
@@ -8461,6 +9408,9 @@ export type TenantCreateWithoutIntegrationConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutIntegrationConfigsInput = {
@@ -8530,6 +9480,9 @@ export type TenantUncheckedCreateWithoutIntegrationConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutIntegrationConfigsInput = {
@@ -8615,6 +9568,9 @@ export type TenantUpdateWithoutIntegrationConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutIntegrationConfigsInput = {
@@ -8684,6 +9640,9 @@ export type TenantUncheckedUpdateWithoutIntegrationConfigsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutTokensInput = {
@@ -8753,6 +9712,9 @@ export type TenantCreateWithoutTokensInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutTokensInput = {
@@ -8822,6 +9784,9 @@ export type TenantUncheckedCreateWithoutTokensInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutTokensInput = {
@@ -8907,6 +9872,9 @@ export type TenantUpdateWithoutTokensInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutTokensInput = {
@@ -8976,6 +9944,9 @@ export type TenantUncheckedUpdateWithoutTokensInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutReservationsInput = {
@@ -9045,6 +10016,9 @@ export type TenantCreateWithoutReservationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutReservationsInput = {
@@ -9114,6 +10088,9 @@ export type TenantUncheckedCreateWithoutReservationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutReservationsInput = {
@@ -9199,6 +10176,9 @@ export type TenantUpdateWithoutReservationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutReservationsInput = {
@@ -9268,6 +10248,9 @@ export type TenantUncheckedUpdateWithoutReservationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutFeedbacksInput = {
@@ -9337,6 +10320,9 @@ export type TenantCreateWithoutFeedbacksInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutFeedbacksInput = {
@@ -9406,6 +10392,9 @@ export type TenantUncheckedCreateWithoutFeedbacksInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutFeedbacksInput = {
@@ -9491,6 +10480,9 @@ export type TenantUpdateWithoutFeedbacksInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutFeedbacksInput = {
@@ -9560,6 +10552,9 @@ export type TenantUncheckedUpdateWithoutFeedbacksInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutExpensesInput = {
@@ -9629,6 +10624,9 @@ export type TenantCreateWithoutExpensesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutExpensesInput = {
@@ -9698,6 +10696,9 @@ export type TenantUncheckedCreateWithoutExpensesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutExpensesInput = {
@@ -9783,6 +10784,9 @@ export type TenantUpdateWithoutExpensesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutExpensesInput = {
@@ -9852,6 +10856,9 @@ export type TenantUncheckedUpdateWithoutExpensesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutSupplierPricesInput = {
@@ -9921,6 +10928,9 @@ export type TenantCreateWithoutSupplierPricesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutSupplierPricesInput = {
@@ -9990,6 +11000,9 @@ export type TenantUncheckedCreateWithoutSupplierPricesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutSupplierPricesInput = {
@@ -10075,6 +11088,9 @@ export type TenantUpdateWithoutSupplierPricesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutSupplierPricesInput = {
@@ -10144,6 +11160,9 @@ export type TenantUncheckedUpdateWithoutSupplierPricesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutDayEndsInput = {
@@ -10213,6 +11232,9 @@ export type TenantCreateWithoutDayEndsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutDayEndsInput = {
@@ -10282,6 +11304,9 @@ export type TenantUncheckedCreateWithoutDayEndsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutDayEndsInput = {
@@ -10367,6 +11392,9 @@ export type TenantUpdateWithoutDayEndsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutDayEndsInput = {
@@ -10436,6 +11464,9 @@ export type TenantUncheckedUpdateWithoutDayEndsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAuditLogsInput = {
@@ -10505,6 +11536,9 @@ export type TenantCreateWithoutAuditLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAuditLogsInput = {
@@ -10574,6 +11608,9 @@ export type TenantUncheckedCreateWithoutAuditLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAuditLogsInput = {
@@ -10659,6 +11696,9 @@ export type TenantUpdateWithoutAuditLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAuditLogsInput = {
@@ -10728,6 +11768,9 @@ export type TenantUncheckedUpdateWithoutAuditLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutQrSessionsInput = {
@@ -10797,6 +11840,9 @@ export type TenantCreateWithoutQrSessionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutQrSessionsInput = {
@@ -10866,6 +11912,9 @@ export type TenantUncheckedCreateWithoutQrSessionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutQrSessionsInput = {
@@ -10951,6 +12000,9 @@ export type TenantUpdateWithoutQrSessionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutQrSessionsInput = {
@@ -11020,6 +12072,9 @@ export type TenantUncheckedUpdateWithoutQrSessionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPrinterDevicesInput = {
@@ -11089,6 +12144,9 @@ export type TenantCreateWithoutPrinterDevicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPrinterDevicesInput = {
@@ -11158,6 +12216,9 @@ export type TenantUncheckedCreateWithoutPrinterDevicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPrinterDevicesInput = {
@@ -11243,6 +12304,9 @@ export type TenantUpdateWithoutPrinterDevicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPrinterDevicesInput = {
@@ -11312,6 +12376,9 @@ export type TenantUncheckedUpdateWithoutPrinterDevicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutPrintJobsInput = {
@@ -11381,6 +12448,9 @@ export type TenantCreateWithoutPrintJobsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutPrintJobsInput = {
@@ -11450,6 +12520,9 @@ export type TenantUncheckedCreateWithoutPrintJobsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutPrintJobsInput = {
@@ -11535,6 +12608,9 @@ export type TenantUpdateWithoutPrintJobsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutPrintJobsInput = {
@@ -11604,6 +12680,9 @@ export type TenantUncheckedUpdateWithoutPrintJobsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutCustomerConsentsInput = {
@@ -11673,6 +12752,9 @@ export type TenantCreateWithoutCustomerConsentsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutCustomerConsentsInput = {
@@ -11742,6 +12824,9 @@ export type TenantUncheckedCreateWithoutCustomerConsentsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutCustomerConsentsInput = {
@@ -11827,6 +12912,9 @@ export type TenantUpdateWithoutCustomerConsentsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutCustomerConsentsInput = {
@@ -11896,6 +12984,9 @@ export type TenantUncheckedUpdateWithoutCustomerConsentsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutWhatsAppLogsInput = {
@@ -11965,6 +13056,9 @@ export type TenantCreateWithoutWhatsAppLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutWhatsAppLogsInput = {
@@ -12034,6 +13128,9 @@ export type TenantUncheckedCreateWithoutWhatsAppLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutWhatsAppLogsInput = {
@@ -12119,6 +13216,9 @@ export type TenantUpdateWithoutWhatsAppLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutWhatsAppLogsInput = {
@@ -12188,6 +13288,9 @@ export type TenantUncheckedUpdateWithoutWhatsAppLogsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutInvoicesInput = {
@@ -12257,6 +13360,9 @@ export type TenantCreateWithoutInvoicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutInvoicesInput = {
@@ -12326,6 +13432,9 @@ export type TenantUncheckedCreateWithoutInvoicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutInvoicesInput = {
@@ -12411,6 +13520,9 @@ export type TenantUpdateWithoutInvoicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutInvoicesInput = {
@@ -12480,6 +13592,313 @@ export type TenantUncheckedUpdateWithoutInvoicesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantCreateWithoutCustomerMessagesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+}
+
+export type TenantUncheckedCreateWithoutCustomerMessagesInput = {
+  id?: string
+  clerkOrgId?: string | null
+  name: string
+  slug: string
+  businessType: string
+  email: string
+  phone: string
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  pincode?: string | null
+  country?: string
+  timeZone?: string
+  currency?: string
+  status?: string
+  logoUrl?: string | null
+  onboardingStep?: number
+  onboardingComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutTenantInput
+  outlets?: Prisma.OutletUncheckedCreateNestedManyWithoutTenantInput
+  settings?: Prisma.RestaurantSettingUncheckedCreateNestedOneWithoutTenantInput
+  taxConfigs?: Prisma.TaxConfigUncheckedCreateNestedManyWithoutTenantInput
+  categories?: Prisma.MenuCategoryUncheckedCreateNestedManyWithoutTenantInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutTenantInput
+  tables?: Prisma.TableUncheckedCreateNestedManyWithoutTenantInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutTenantInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutTenantInput
+  suppliers?: Prisma.SupplierUncheckedCreateNestedManyWithoutTenantInput
+  inventoryItems?: Prisma.InventoryItemUncheckedCreateNestedManyWithoutTenantInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutTenantInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedCreateNestedManyWithoutTenantInput
+  subscriptions?: Prisma.SubscriptionUncheckedCreateNestedManyWithoutTenantInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedCreateNestedManyWithoutTenantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutTenantInput
+  tokens?: Prisma.TokenUncheckedCreateNestedManyWithoutTenantInput
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutTenantInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutTenantInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTenantInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutTenantInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedCreateNestedManyWithoutTenantInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedCreateNestedManyWithoutTenantInput
+  printJobs?: Prisma.PrintJobUncheckedCreateNestedManyWithoutTenantInput
+  customerConsents?: Prisma.CustomerConsentUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedCreateNestedManyWithoutTenantInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedCreateNestedManyWithoutTenantInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedCreateNestedManyWithoutTenantInput
+  invoices?: Prisma.InvoiceRecordUncheckedCreateNestedManyWithoutTenantInput
+  featureUsages?: Prisma.FeatureUsageUncheckedCreateNestedManyWithoutTenantInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedCreateNestedManyWithoutTenantInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedCreateNestedOneWithoutTenantInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedCreateNestedManyWithoutTenantInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedCreateNestedManyWithoutTenantInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedCreateNestedManyWithoutTenantInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedCreateNestedManyWithoutTenantInput
+  addonGroups?: Prisma.AddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  addonOptions?: Prisma.AddonOptionUncheckedCreateNestedManyWithoutTenantInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedCreateNestedManyWithoutTenantInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+}
+
+export type TenantCreateOrConnectWithoutCustomerMessagesInput = {
+  where: Prisma.TenantWhereUniqueInput
+  create: Prisma.XOR<Prisma.TenantCreateWithoutCustomerMessagesInput, Prisma.TenantUncheckedCreateWithoutCustomerMessagesInput>
+}
+
+export type TenantUpsertWithoutCustomerMessagesInput = {
+  update: Prisma.XOR<Prisma.TenantUpdateWithoutCustomerMessagesInput, Prisma.TenantUncheckedUpdateWithoutCustomerMessagesInput>
+  create: Prisma.XOR<Prisma.TenantCreateWithoutCustomerMessagesInput, Prisma.TenantUncheckedCreateWithoutCustomerMessagesInput>
+  where?: Prisma.TenantWhereInput
+}
+
+export type TenantUpdateToOneWithWhereWithoutCustomerMessagesInput = {
+  where?: Prisma.TenantWhereInput
+  data: Prisma.XOR<Prisma.TenantUpdateWithoutCustomerMessagesInput, Prisma.TenantUncheckedUpdateWithoutCustomerMessagesInput>
+}
+
+export type TenantUpdateWithoutCustomerMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+}
+
+export type TenantUncheckedUpdateWithoutCustomerMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clerkOrgId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  businessType?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  timeZone?: Prisma.StringFieldUpdateOperationsInput | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  onboardingStep?: Prisma.IntFieldUpdateOperationsInput | number
+  onboardingComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutTenantNestedInput
+  outlets?: Prisma.OutletUncheckedUpdateManyWithoutTenantNestedInput
+  settings?: Prisma.RestaurantSettingUncheckedUpdateOneWithoutTenantNestedInput
+  taxConfigs?: Prisma.TaxConfigUncheckedUpdateManyWithoutTenantNestedInput
+  categories?: Prisma.MenuCategoryUncheckedUpdateManyWithoutTenantNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutTenantNestedInput
+  tables?: Prisma.TableUncheckedUpdateManyWithoutTenantNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutTenantNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutTenantNestedInput
+  suppliers?: Prisma.SupplierUncheckedUpdateManyWithoutTenantNestedInput
+  inventoryItems?: Prisma.InventoryItemUncheckedUpdateManyWithoutTenantNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutTenantNestedInput
+  purchaseOrders?: Prisma.PurchaseOrderUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptions?: Prisma.SubscriptionUncheckedUpdateManyWithoutTenantNestedInput
+  integrationConfigs?: Prisma.IntegrationConfigUncheckedUpdateManyWithoutTenantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutTenantNestedInput
+  tokens?: Prisma.TokenUncheckedUpdateManyWithoutTenantNestedInput
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutTenantNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutTenantNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTenantNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutTenantNestedInput
+  dayEnds?: Prisma.DayEndSummaryUncheckedUpdateManyWithoutTenantNestedInput
+  printerDevices?: Prisma.PrinterDeviceUncheckedUpdateManyWithoutTenantNestedInput
+  printJobs?: Prisma.PrintJobUncheckedUpdateManyWithoutTenantNestedInput
+  customerConsents?: Prisma.CustomerConsentUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppLogs?: Prisma.WhatsAppDeliveryLogUncheckedUpdateManyWithoutTenantNestedInput
+  whatsAppQueue?: Prisma.WhatsAppMessageQueueUncheckedUpdateManyWithoutTenantNestedInput
+  outletWhatsAppConfigs?: Prisma.OutletWhatsAppConfigUncheckedUpdateManyWithoutTenantNestedInput
+  invoices?: Prisma.InvoiceRecordUncheckedUpdateManyWithoutTenantNestedInput
+  featureUsages?: Prisma.FeatureUsageUncheckedUpdateManyWithoutTenantNestedInput
+  qrSessions?: Prisma.QrOrderingSessionUncheckedUpdateManyWithoutTenantNestedInput
+  paymentGatewayConfig?: Prisma.TenantPaymentGatewayConfigUncheckedUpdateOneWithoutTenantNestedInput
+  paymentAttempts?: Prisma.PaymentAttemptUncheckedUpdateManyWithoutTenantNestedInput
+  paymentRefunds?: Prisma.PaymentRefundUncheckedUpdateManyWithoutTenantNestedInput
+  subscriptionNotifications?: Prisma.SubscriptionNotificationUncheckedUpdateManyWithoutTenantNestedInput
+  staffInvitations?: Prisma.StaffInvitationUncheckedUpdateManyWithoutTenantNestedInput
+  addonGroups?: Prisma.AddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  addonOptions?: Prisma.AddonOptionUncheckedUpdateManyWithoutTenantNestedInput
+  productAddonGroups?: Prisma.ProductAddonGroupUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivations?: Prisma.OrganizationServiceActivationUncheckedUpdateManyWithoutTenantNestedInput
+  serviceActivationEvents?: Prisma.ServiceActivationEventUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorConnections?: Prisma.AggregatorConnectionUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOutletMappings?: Prisma.AggregatorOutletMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
+  aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutFeatureUsagesInput = {
@@ -12549,6 +13968,9 @@ export type TenantCreateWithoutFeatureUsagesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutFeatureUsagesInput = {
@@ -12618,6 +14040,9 @@ export type TenantUncheckedCreateWithoutFeatureUsagesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutFeatureUsagesInput = {
@@ -12703,6 +14128,9 @@ export type TenantUpdateWithoutFeatureUsagesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutFeatureUsagesInput = {
@@ -12772,6 +14200,9 @@ export type TenantUncheckedUpdateWithoutFeatureUsagesInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutWhatsAppQueueInput = {
@@ -12841,6 +14272,9 @@ export type TenantCreateWithoutWhatsAppQueueInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutWhatsAppQueueInput = {
@@ -12910,6 +14344,9 @@ export type TenantUncheckedCreateWithoutWhatsAppQueueInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutWhatsAppQueueInput = {
@@ -12995,6 +14432,9 @@ export type TenantUpdateWithoutWhatsAppQueueInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutWhatsAppQueueInput = {
@@ -13064,6 +14504,9 @@ export type TenantUncheckedUpdateWithoutWhatsAppQueueInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServiceActivationsInput = {
@@ -13133,6 +14576,9 @@ export type TenantCreateWithoutServiceActivationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServiceActivationsInput = {
@@ -13202,6 +14648,9 @@ export type TenantUncheckedCreateWithoutServiceActivationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServiceActivationsInput = {
@@ -13287,6 +14736,9 @@ export type TenantUpdateWithoutServiceActivationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServiceActivationsInput = {
@@ -13356,6 +14808,9 @@ export type TenantUncheckedUpdateWithoutServiceActivationsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutServiceActivationEventsInput = {
@@ -13425,6 +14880,9 @@ export type TenantCreateWithoutServiceActivationEventsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutServiceActivationEventsInput = {
@@ -13494,6 +14952,9 @@ export type TenantUncheckedCreateWithoutServiceActivationEventsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutServiceActivationEventsInput = {
@@ -13579,6 +15040,9 @@ export type TenantUpdateWithoutServiceActivationEventsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutServiceActivationEventsInput = {
@@ -13648,6 +15112,9 @@ export type TenantUncheckedUpdateWithoutServiceActivationEventsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorConnectionsInput = {
@@ -13717,6 +15184,9 @@ export type TenantCreateWithoutAggregatorConnectionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorConnectionsInput = {
@@ -13786,6 +15256,9 @@ export type TenantUncheckedCreateWithoutAggregatorConnectionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorConnectionsInput = {
@@ -13871,6 +15344,9 @@ export type TenantUpdateWithoutAggregatorConnectionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorConnectionsInput = {
@@ -13940,6 +15416,9 @@ export type TenantUncheckedUpdateWithoutAggregatorConnectionsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorOutletMappingsInput = {
@@ -14009,6 +15488,9 @@ export type TenantCreateWithoutAggregatorOutletMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorOutletMappingsInput = {
@@ -14078,6 +15560,9 @@ export type TenantUncheckedCreateWithoutAggregatorOutletMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorOutletMappingsInput = {
@@ -14163,6 +15648,9 @@ export type TenantUpdateWithoutAggregatorOutletMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorOutletMappingsInput = {
@@ -14232,6 +15720,9 @@ export type TenantUncheckedUpdateWithoutAggregatorOutletMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorMenuMappingsInput = {
@@ -14301,6 +15792,9 @@ export type TenantCreateWithoutAggregatorMenuMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorMenuMappingsInput = {
@@ -14370,6 +15864,9 @@ export type TenantUncheckedCreateWithoutAggregatorMenuMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorMenuMappingsInput = {
@@ -14455,6 +15952,9 @@ export type TenantUpdateWithoutAggregatorMenuMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorMenuMappingsInput = {
@@ -14524,6 +16024,9 @@ export type TenantUncheckedUpdateWithoutAggregatorMenuMappingsInput = {
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorOrderReferencesInput = {
@@ -14593,6 +16096,9 @@ export type TenantCreateWithoutAggregatorOrderReferencesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorOrderReferencesInput = {
@@ -14662,6 +16168,9 @@ export type TenantUncheckedCreateWithoutAggregatorOrderReferencesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorOrderReferencesInput = {
@@ -14747,6 +16256,9 @@ export type TenantUpdateWithoutAggregatorOrderReferencesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorOrderReferencesInput = {
@@ -14816,6 +16328,9 @@ export type TenantUncheckedUpdateWithoutAggregatorOrderReferencesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorSyncJobsInput = {
@@ -14885,6 +16400,9 @@ export type TenantCreateWithoutAggregatorSyncJobsInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorSyncJobsInput = {
@@ -14954,6 +16472,9 @@ export type TenantUncheckedCreateWithoutAggregatorSyncJobsInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorSyncJobsInput = {
@@ -15039,6 +16560,9 @@ export type TenantUpdateWithoutAggregatorSyncJobsInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorSyncJobsInput = {
@@ -15108,6 +16632,9 @@ export type TenantUncheckedUpdateWithoutAggregatorSyncJobsInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorExceptionQueues?: Prisma.AggregatorExceptionQueueUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantCreateWithoutAggregatorExceptionQueuesInput = {
@@ -15177,6 +16704,9 @@ export type TenantCreateWithoutAggregatorExceptionQueuesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingCreateNestedManyWithoutTenantInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogCreateNestedManyWithoutTenantInput
 }
 
 export type TenantUncheckedCreateWithoutAggregatorExceptionQueuesInput = {
@@ -15246,6 +16776,9 @@ export type TenantUncheckedCreateWithoutAggregatorExceptionQueuesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedCreateNestedManyWithoutTenantInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedCreateNestedManyWithoutTenantInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedCreateNestedManyWithoutTenantInput
+  bulkSales?: Prisma.BulkSaleUncheckedCreateNestedManyWithoutTenantInput
+  stockTransfers?: Prisma.StockTransferUncheckedCreateNestedManyWithoutTenantInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedCreateNestedManyWithoutTenantInput
 }
 
 export type TenantCreateOrConnectWithoutAggregatorExceptionQueuesInput = {
@@ -15331,6 +16864,9 @@ export type TenantUpdateWithoutAggregatorExceptionQueuesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUpdateManyWithoutTenantNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUpdateManyWithoutTenantNestedInput
 }
 
 export type TenantUncheckedUpdateWithoutAggregatorExceptionQueuesInput = {
@@ -15400,6 +16936,9 @@ export type TenantUncheckedUpdateWithoutAggregatorExceptionQueuesInput = {
   aggregatorMenuMappings?: Prisma.AggregatorMenuMappingUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorOrderReferences?: Prisma.AggregatorOrderReferenceUncheckedUpdateManyWithoutTenantNestedInput
   aggregatorSyncJobs?: Prisma.AggregatorSyncJobUncheckedUpdateManyWithoutTenantNestedInput
+  bulkSales?: Prisma.BulkSaleUncheckedUpdateManyWithoutTenantNestedInput
+  stockTransfers?: Prisma.StockTransferUncheckedUpdateManyWithoutTenantNestedInput
+  customerMessages?: Prisma.CustomerMessageLogUncheckedUpdateManyWithoutTenantNestedInput
 }
 
 
@@ -15453,6 +16992,9 @@ export type TenantCountOutputType = {
   aggregatorOrderReferences: number
   aggregatorSyncJobs: number
   aggregatorExceptionQueues: number
+  bulkSales: number
+  stockTransfers: number
+  customerMessages: number
 }
 
 export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -15501,6 +17043,9 @@ export type TenantCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   aggregatorOrderReferences?: boolean | TenantCountOutputTypeCountAggregatorOrderReferencesArgs
   aggregatorSyncJobs?: boolean | TenantCountOutputTypeCountAggregatorSyncJobsArgs
   aggregatorExceptionQueues?: boolean | TenantCountOutputTypeCountAggregatorExceptionQueuesArgs
+  bulkSales?: boolean | TenantCountOutputTypeCountBulkSalesArgs
+  stockTransfers?: boolean | TenantCountOutputTypeCountStockTransfersArgs
+  customerMessages?: boolean | TenantCountOutputTypeCountCustomerMessagesArgs
 }
 
 /**
@@ -15828,6 +17373,27 @@ export type TenantCountOutputTypeCountAggregatorExceptionQueuesArgs<ExtArgs exte
   where?: Prisma.AggregatorExceptionQueueWhereInput
 }
 
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountBulkSalesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BulkSaleWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountStockTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockTransferWhereInput
+}
+
+/**
+ * TenantCountOutputType without action
+ */
+export type TenantCountOutputTypeCountCustomerMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CustomerMessageLogWhereInput
+}
+
 
 export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -15897,6 +17463,9 @@ export type TenantSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   aggregatorOrderReferences?: boolean | Prisma.Tenant$aggregatorOrderReferencesArgs<ExtArgs>
   aggregatorSyncJobs?: boolean | Prisma.Tenant$aggregatorSyncJobsArgs<ExtArgs>
   aggregatorExceptionQueues?: boolean | Prisma.Tenant$aggregatorExceptionQueuesArgs<ExtArgs>
+  bulkSales?: boolean | Prisma.Tenant$bulkSalesArgs<ExtArgs>
+  stockTransfers?: boolean | Prisma.Tenant$stockTransfersArgs<ExtArgs>
+  customerMessages?: boolean | Prisma.Tenant$customerMessagesArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tenant"]>
 
@@ -16018,6 +17587,9 @@ export type TenantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   aggregatorOrderReferences?: boolean | Prisma.Tenant$aggregatorOrderReferencesArgs<ExtArgs>
   aggregatorSyncJobs?: boolean | Prisma.Tenant$aggregatorSyncJobsArgs<ExtArgs>
   aggregatorExceptionQueues?: boolean | Prisma.Tenant$aggregatorExceptionQueuesArgs<ExtArgs>
+  bulkSales?: boolean | Prisma.Tenant$bulkSalesArgs<ExtArgs>
+  stockTransfers?: boolean | Prisma.Tenant$stockTransfersArgs<ExtArgs>
+  customerMessages?: boolean | Prisma.Tenant$customerMessagesArgs<ExtArgs>
   _count?: boolean | Prisma.TenantCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TenantIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -16073,6 +17645,9 @@ export type $TenantPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     aggregatorOrderReferences: Prisma.$AggregatorOrderReferencePayload<ExtArgs>[]
     aggregatorSyncJobs: Prisma.$AggregatorSyncJobPayload<ExtArgs>[]
     aggregatorExceptionQueues: Prisma.$AggregatorExceptionQueuePayload<ExtArgs>[]
+    bulkSales: Prisma.$BulkSalePayload<ExtArgs>[]
+    stockTransfers: Prisma.$StockTransferPayload<ExtArgs>[]
+    customerMessages: Prisma.$CustomerMessageLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -16536,6 +18111,9 @@ export interface Prisma__TenantClient<T, Null = never, ExtArgs extends runtime.T
   aggregatorOrderReferences<T extends Prisma.Tenant$aggregatorOrderReferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$aggregatorOrderReferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorOrderReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aggregatorSyncJobs<T extends Prisma.Tenant$aggregatorSyncJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$aggregatorSyncJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorSyncJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aggregatorExceptionQueues<T extends Prisma.Tenant$aggregatorExceptionQueuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$aggregatorExceptionQueuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AggregatorExceptionQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bulkSales<T extends Prisma.Tenant$bulkSalesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$bulkSalesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulkSalePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockTransfers<T extends Prisma.Tenant$stockTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$stockTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  customerMessages<T extends Prisma.Tenant$customerMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tenant$customerMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerMessageLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18093,6 +19671,78 @@ export type Tenant$aggregatorExceptionQueuesArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.AggregatorExceptionQueueScalarFieldEnum | Prisma.AggregatorExceptionQueueScalarFieldEnum[]
+}
+
+/**
+ * Tenant.bulkSales
+ */
+export type Tenant$bulkSalesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BulkSale
+   */
+  select?: Prisma.BulkSaleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BulkSale
+   */
+  omit?: Prisma.BulkSaleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BulkSaleInclude<ExtArgs> | null
+  where?: Prisma.BulkSaleWhereInput
+  orderBy?: Prisma.BulkSaleOrderByWithRelationInput | Prisma.BulkSaleOrderByWithRelationInput[]
+  cursor?: Prisma.BulkSaleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BulkSaleScalarFieldEnum | Prisma.BulkSaleScalarFieldEnum[]
+}
+
+/**
+ * Tenant.stockTransfers
+ */
+export type Tenant$stockTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockTransfer
+   */
+  select?: Prisma.StockTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockTransfer
+   */
+  omit?: Prisma.StockTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockTransferInclude<ExtArgs> | null
+  where?: Prisma.StockTransferWhereInput
+  orderBy?: Prisma.StockTransferOrderByWithRelationInput | Prisma.StockTransferOrderByWithRelationInput[]
+  cursor?: Prisma.StockTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockTransferScalarFieldEnum | Prisma.StockTransferScalarFieldEnum[]
+}
+
+/**
+ * Tenant.customerMessages
+ */
+export type Tenant$customerMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CustomerMessageLog
+   */
+  select?: Prisma.CustomerMessageLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CustomerMessageLog
+   */
+  omit?: Prisma.CustomerMessageLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerMessageLogInclude<ExtArgs> | null
+  where?: Prisma.CustomerMessageLogWhereInput
+  orderBy?: Prisma.CustomerMessageLogOrderByWithRelationInput | Prisma.CustomerMessageLogOrderByWithRelationInput[]
+  cursor?: Prisma.CustomerMessageLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CustomerMessageLogScalarFieldEnum | Prisma.CustomerMessageLogScalarFieldEnum[]
 }
 
 /**

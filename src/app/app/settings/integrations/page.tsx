@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import WhatsAppSettingsPanel from "@/components/app/WhatsAppSettingsPanel";
+import SmsSettingsPanel from "@/components/app/messaging/SmsSettingsPanel";
+import MessageDeliveryLogsPanel from "@/components/app/messaging/MessageDeliveryLogsPanel";
 import PrinterSettingsPanel from "@/components/app/PrinterSettingsPanel";
 import IntegrationsClient from "@/app/app/integrations/IntegrationsClient";
-import { MessageSquare, Printer, Bike } from "lucide-react";
+import { MessageSquare, Printer, Bike, Send, ListOrdered } from "lucide-react";
 
 export default function WhatsAppAndPrintingSettingsPage() {
-  const [tab, setTab] = useState<"aggregators" | "whatsapp" | "printing">("aggregators");
+  const [tab, setTab] = useState<"aggregators" | "whatsapp" | "sms" | "logs" | "printing">("aggregators");
   const [outlets, setOutlets] = useState<any[]>([]);
   const [selectedOutletId, setSelectedOutletId] = useState<string>("");
 
@@ -26,10 +28,10 @@ export default function WhatsAppAndPrintingSettingsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black tracking-tight text-[#172B25]">
-            Integrations Hub
+            Integrations &amp; Customer Invoicing Hub
           </h1>
           <p className="text-sm text-[#718078]">
-            Manage QR dine-in ordering, official Meta WhatsApp billing, and automatic thermal receipt printers.
+            Manage delivery channels, official WhatsApp billing, transactional SMS gateways, delivery tracking, and thermal receipt printers.
           </p>
         </div>
 
@@ -70,7 +72,29 @@ export default function WhatsAppAndPrintingSettingsPage() {
               : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
           }`}
         >
-          <MessageSquare className="h-3.5 w-3.5" /> WhatsApp Business Invoicing
+          <MessageSquare className="h-3.5 w-3.5" /> WhatsApp Invoicing
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("sms")}
+          className={`rounded-full px-5 py-2 text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
+            tab === "sms"
+              ? "bg-[#16845B] text-white shadow-xs"
+              : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
+          }`}
+        >
+          <Send className="h-3.5 w-3.5" /> SMS Gateway
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("logs")}
+          className={`rounded-full px-5 py-2 text-xs font-bold flex items-center gap-2 transition cursor-pointer ${
+            tab === "logs"
+              ? "bg-[#16845B] text-white shadow-xs"
+              : "bg-white border border-[#E5EBE7] text-[#718078] hover:text-[#172B25]"
+          }`}
+        >
+          <ListOrdered className="h-3.5 w-3.5" /> Delivery Logs &amp; Audit
         </button>
         <button
           type="button"
@@ -89,6 +113,10 @@ export default function WhatsAppAndPrintingSettingsPage() {
         <IntegrationsClient />
       ) : tab === "whatsapp" ? (
         <WhatsAppSettingsPanel selectedOutletId={selectedOutletId || undefined} />
+      ) : tab === "sms" ? (
+        <SmsSettingsPanel />
+      ) : tab === "logs" ? (
+        <MessageDeliveryLogsPanel outletId={selectedOutletId || undefined} />
       ) : (
         <PrinterSettingsPanel selectedOutletId={selectedOutletId || undefined} />
       )}

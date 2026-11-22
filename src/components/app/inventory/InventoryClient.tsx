@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { 
   Boxes, 
@@ -8,7 +9,8 @@ import {
   Plus, 
   Check, 
   X, 
-  SlidersHorizontal 
+  SlidersHorizontal,
+  ArrowRightLeft
 } from "lucide-react";
 import { InventoryMetricsCards } from "./InventoryMetricsCards";
 import { InventoryTabsNav, InventoryTabType } from "./InventoryTabsNav";
@@ -19,10 +21,24 @@ import { PurchaseOrderManager } from "./PurchaseOrderManager";
 import { SupplierManager } from "./SupplierManager";
 import { StockAdjustmentModal } from "./StockAdjustmentModal";
 import { StockTransferModal } from "./StockTransferModal";
+import { BulkSalesManager } from "./BulkSalesManager";
 import { InventoryReportsView } from "./InventoryReportsView";
 
 export function InventoryClient() {
-  const [activeTab, setActiveTab] = useState<InventoryTabType>("STOCK");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<InventoryTabType>(() => {
+    if (tabParam && ["STOCK", "BULK_SALES", "PURCHASES", "RECIPES", "TRANSFERS", "SUPPLIERS", "REPORTS"].includes(tabParam)) {
+      return tabParam as InventoryTabType;
+    }
+    return "STOCK";
+  });
+
+  useEffect(() => {
+    if (tabParam && ["STOCK", "BULK_SALES", "PURCHASES", "RECIPES", "TRANSFERS", "SUPPLIERS", "REPORTS"].includes(tabParam)) {
+      setActiveTab(tabParam as InventoryTabType);
+    }
+  }, [tabParam]);
   const [items, setItems] = useState<any[]>([]);
   const [movements, setMovements] = useState<any[]>([]);
   const [metrics, setMetrics] = useState({
@@ -112,10 +128,24 @@ export function InventoryClient() {
           body: JSON.stringify({
             itemId: payload.id,
             name: payload.name,
-            unit: payload.unit,
+            sku: payload.sku,
+            barcode: payload.barcode,
+            category: payload.category,
+            unit: payload.unit || payload.baseUnit,
+            baseUnit: payload.baseUnit || payload.unit,
+            purchaseUnit: payload.purchaseUnit,
+            sellingUnit: payload.sellingUnit,
+            conversionRatio: payload.conversionRatio,
             currentStock: payload.currentStock,
             lowStockThreshold: payload.lowStockThreshold,
-            costPerUnitPaise: payload.costPerUnitPaise,
+            reorderLevel: payload.reorderLevel,
+            costPerUnitPaise: payload.costPerUnitPaise || payload.purchasePricePaise,
+            purchasePricePaise: payload.purchasePricePaise || payload.costPerUnitPaise,
+            sellingPricePaise: payload.sellingPricePaise,
+            taxRateBps: payload.taxRateBps,
+            supplierId: payload.supplierId,
+            expiryDate: payload.expiryDate,
+            batchNumber: payload.batchNumber,
           }),
         });
         const j = await res.json();
@@ -330,6 +360,13 @@ export function InventoryClient() {
         />
       )}
 
+      {activeTab === "BULK_SALES" && (
+        <BulkSalesManager
+          outlets={outlets}
+          selectedOutlet={selectedOutlet}
+        />
+      )}
+
       {activeTab === "RECIPES" && (
         <RecipeManager inventoryItems={items} />
       )}
@@ -340,6 +377,28 @@ export function InventoryClient() {
           inventoryItems={items}
           onStockUpdated={loadData}
         />
+      )}
+
+      {activeTab === "TRANSFERS" && (
+        <div className="bg-white rounded-3xl border border-[#E5EBE7] p-8 text-center space-y-4">
+          <div className="h-14 w-14 rounded-2xl bg-[#E8F5EE] text-[#16845B] mx-auto flex items-center justify-center">
+            <ArrowRightLeft className="h-7 w-7" />
+          </div>
+          <div>
+            <h2 className="text-lg font-black text-[#172B25]">Multi-Outlet Stock Transfers</h2>
+            <p className="text-xs text-[#718078] max-w-md mx-auto mt-1">
+              Transfer raw ingredients or packaged goods between your central warehouse and branch kitchens with real-time audit ledger tracking.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowTransferModal(true)}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#16845B] hover:bg-[#116B49] text-white px-5 py-2.5 text-xs font-bold transition shadow-xs cursor-pointer"
+          >
+            <ArrowRightLeft className="h-4 w-4" />
+            <span>Initiate New Stock Transfer</span>
+          </button>
+        </div>
       )}
 
       {activeTab === "SUPPLIERS" && (

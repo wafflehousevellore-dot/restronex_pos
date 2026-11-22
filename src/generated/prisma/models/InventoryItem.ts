@@ -27,15 +27,29 @@ export type AggregateInventoryItem = {
 }
 
 export type InventoryItemAvgAggregateOutputType = {
+  conversionRatio: number | null
+  openingStock: number | null
   currentStock: number | null
   lowStockThreshold: number | null
+  reorderLevel: number | null
   costPerUnitPaise: number | null
+  purchasePricePaise: number | null
+  averageCostPaise: number | null
+  sellingPricePaise: number | null
+  taxRateBps: number | null
 }
 
 export type InventoryItemSumAggregateOutputType = {
+  conversionRatio: number | null
+  openingStock: number | null
   currentStock: number | null
   lowStockThreshold: number | null
+  reorderLevel: number | null
   costPerUnitPaise: number | null
+  purchasePricePaise: number | null
+  averageCostPaise: number | null
+  sellingPricePaise: number | null
+  taxRateBps: number | null
 }
 
 export type InventoryItemMinAggregateOutputType = {
@@ -43,9 +57,29 @@ export type InventoryItemMinAggregateOutputType = {
   tenantId: string | null
   name: string | null
   unit: string | null
+  sku: string | null
+  barcode: string | null
+  category: string | null
+  description: string | null
+  imageUrl: string | null
+  baseUnit: string | null
+  purchaseUnit: string | null
+  sellingUnit: string | null
+  conversionRatio: number | null
+  openingStock: number | null
   currentStock: number | null
   lowStockThreshold: number | null
+  reorderLevel: number | null
   costPerUnitPaise: number | null
+  purchasePricePaise: number | null
+  averageCostPaise: number | null
+  sellingPricePaise: number | null
+  taxRateBps: number | null
+  supplierId: string | null
+  outletId: string | null
+  expiryDate: Date | null
+  batchNumber: string | null
+  isActive: boolean | null
 }
 
 export type InventoryItemMaxAggregateOutputType = {
@@ -53,9 +87,29 @@ export type InventoryItemMaxAggregateOutputType = {
   tenantId: string | null
   name: string | null
   unit: string | null
+  sku: string | null
+  barcode: string | null
+  category: string | null
+  description: string | null
+  imageUrl: string | null
+  baseUnit: string | null
+  purchaseUnit: string | null
+  sellingUnit: string | null
+  conversionRatio: number | null
+  openingStock: number | null
   currentStock: number | null
   lowStockThreshold: number | null
+  reorderLevel: number | null
   costPerUnitPaise: number | null
+  purchasePricePaise: number | null
+  averageCostPaise: number | null
+  sellingPricePaise: number | null
+  taxRateBps: number | null
+  supplierId: string | null
+  outletId: string | null
+  expiryDate: Date | null
+  batchNumber: string | null
+  isActive: boolean | null
 }
 
 export type InventoryItemCountAggregateOutputType = {
@@ -63,23 +117,57 @@ export type InventoryItemCountAggregateOutputType = {
   tenantId: number
   name: number
   unit: number
+  sku: number
+  barcode: number
+  category: number
+  description: number
+  imageUrl: number
+  baseUnit: number
+  purchaseUnit: number
+  sellingUnit: number
+  conversionRatio: number
+  openingStock: number
   currentStock: number
   lowStockThreshold: number
+  reorderLevel: number
   costPerUnitPaise: number
+  purchasePricePaise: number
+  averageCostPaise: number
+  sellingPricePaise: number
+  taxRateBps: number
+  supplierId: number
+  outletId: number
+  expiryDate: number
+  batchNumber: number
+  isActive: number
   _all: number
 }
 
 
 export type InventoryItemAvgAggregateInputType = {
+  conversionRatio?: true
+  openingStock?: true
   currentStock?: true
   lowStockThreshold?: true
+  reorderLevel?: true
   costPerUnitPaise?: true
+  purchasePricePaise?: true
+  averageCostPaise?: true
+  sellingPricePaise?: true
+  taxRateBps?: true
 }
 
 export type InventoryItemSumAggregateInputType = {
+  conversionRatio?: true
+  openingStock?: true
   currentStock?: true
   lowStockThreshold?: true
+  reorderLevel?: true
   costPerUnitPaise?: true
+  purchasePricePaise?: true
+  averageCostPaise?: true
+  sellingPricePaise?: true
+  taxRateBps?: true
 }
 
 export type InventoryItemMinAggregateInputType = {
@@ -87,9 +175,29 @@ export type InventoryItemMinAggregateInputType = {
   tenantId?: true
   name?: true
   unit?: true
+  sku?: true
+  barcode?: true
+  category?: true
+  description?: true
+  imageUrl?: true
+  baseUnit?: true
+  purchaseUnit?: true
+  sellingUnit?: true
+  conversionRatio?: true
+  openingStock?: true
   currentStock?: true
   lowStockThreshold?: true
+  reorderLevel?: true
   costPerUnitPaise?: true
+  purchasePricePaise?: true
+  averageCostPaise?: true
+  sellingPricePaise?: true
+  taxRateBps?: true
+  supplierId?: true
+  outletId?: true
+  expiryDate?: true
+  batchNumber?: true
+  isActive?: true
 }
 
 export type InventoryItemMaxAggregateInputType = {
@@ -97,9 +205,29 @@ export type InventoryItemMaxAggregateInputType = {
   tenantId?: true
   name?: true
   unit?: true
+  sku?: true
+  barcode?: true
+  category?: true
+  description?: true
+  imageUrl?: true
+  baseUnit?: true
+  purchaseUnit?: true
+  sellingUnit?: true
+  conversionRatio?: true
+  openingStock?: true
   currentStock?: true
   lowStockThreshold?: true
+  reorderLevel?: true
   costPerUnitPaise?: true
+  purchasePricePaise?: true
+  averageCostPaise?: true
+  sellingPricePaise?: true
+  taxRateBps?: true
+  supplierId?: true
+  outletId?: true
+  expiryDate?: true
+  batchNumber?: true
+  isActive?: true
 }
 
 export type InventoryItemCountAggregateInputType = {
@@ -107,9 +235,29 @@ export type InventoryItemCountAggregateInputType = {
   tenantId?: true
   name?: true
   unit?: true
+  sku?: true
+  barcode?: true
+  category?: true
+  description?: true
+  imageUrl?: true
+  baseUnit?: true
+  purchaseUnit?: true
+  sellingUnit?: true
+  conversionRatio?: true
+  openingStock?: true
   currentStock?: true
   lowStockThreshold?: true
+  reorderLevel?: true
   costPerUnitPaise?: true
+  purchasePricePaise?: true
+  averageCostPaise?: true
+  sellingPricePaise?: true
+  taxRateBps?: true
+  supplierId?: true
+  outletId?: true
+  expiryDate?: true
+  batchNumber?: true
+  isActive?: true
   _all?: true
 }
 
@@ -204,9 +352,29 @@ export type InventoryItemGroupByOutputType = {
   tenantId: string
   name: string
   unit: string
+  sku: string | null
+  barcode: string | null
+  category: string | null
+  description: string | null
+  imageUrl: string | null
+  baseUnit: string | null
+  purchaseUnit: string | null
+  sellingUnit: string | null
+  conversionRatio: number
+  openingStock: number
   currentStock: number
   lowStockThreshold: number
+  reorderLevel: number | null
   costPerUnitPaise: number
+  purchasePricePaise: number
+  averageCostPaise: number
+  sellingPricePaise: number | null
+  taxRateBps: number
+  supplierId: string | null
+  outletId: string | null
+  expiryDate: Date | null
+  batchNumber: string | null
+  isActive: boolean
   _count: InventoryItemCountAggregateOutputType | null
   _avg: InventoryItemAvgAggregateOutputType | null
   _sum: InventoryItemSumAggregateOutputType | null
@@ -237,12 +405,37 @@ export type InventoryItemWhereInput = {
   tenantId?: Prisma.StringFilter<"InventoryItem"> | string
   name?: Prisma.StringFilter<"InventoryItem"> | string
   unit?: Prisma.StringFilter<"InventoryItem"> | string
+  sku?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  barcode?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  category?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  description?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  baseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  purchaseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  sellingUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  conversionRatio?: Prisma.FloatFilter<"InventoryItem"> | number
+  openingStock?: Prisma.FloatFilter<"InventoryItem"> | number
   currentStock?: Prisma.FloatFilter<"InventoryItem"> | number
   lowStockThreshold?: Prisma.FloatFilter<"InventoryItem"> | number
+  reorderLevel?: Prisma.FloatNullableFilter<"InventoryItem"> | number | null
   costPerUnitPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  purchasePricePaise?: Prisma.IntFilter<"InventoryItem"> | number
+  averageCostPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  sellingPricePaise?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
+  taxRateBps?: Prisma.IntFilter<"InventoryItem"> | number
+  supplierId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  outletId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  expiryDate?: Prisma.DateTimeNullableFilter<"InventoryItem"> | Date | string | null
+  batchNumber?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  isActive?: Prisma.BoolFilter<"InventoryItem"> | boolean
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
+  outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
   recipeIngredients?: Prisma.RecipeIngredientListRelationFilter
   supplierPrices?: Prisma.SupplierPriceListRelationFilter
+  bulkSaleItems?: Prisma.BulkSaleItemListRelationFilter
+  purchaseOrderItems?: Prisma.PurchaseOrderItemListRelationFilter
+  stockTransferItems?: Prisma.StockTransferItemListRelationFilter
 }
 
 export type InventoryItemOrderByWithRelationInput = {
@@ -250,12 +443,37 @@ export type InventoryItemOrderByWithRelationInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  sku?: Prisma.SortOrderInput | Prisma.SortOrder
+  barcode?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchaseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellingUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  batchNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   tenant?: Prisma.TenantOrderByWithRelationInput
+  supplier?: Prisma.SupplierOrderByWithRelationInput
+  outlet?: Prisma.OutletOrderByWithRelationInput
   recipeIngredients?: Prisma.RecipeIngredientOrderByRelationAggregateInput
   supplierPrices?: Prisma.SupplierPriceOrderByRelationAggregateInput
+  bulkSaleItems?: Prisma.BulkSaleItemOrderByRelationAggregateInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemOrderByRelationAggregateInput
+  stockTransferItems?: Prisma.StockTransferItemOrderByRelationAggregateInput
 }
 
 export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
@@ -266,12 +484,37 @@ export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
   tenantId?: Prisma.StringFilter<"InventoryItem"> | string
   name?: Prisma.StringFilter<"InventoryItem"> | string
   unit?: Prisma.StringFilter<"InventoryItem"> | string
+  sku?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  barcode?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  category?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  description?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  baseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  purchaseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  sellingUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  conversionRatio?: Prisma.FloatFilter<"InventoryItem"> | number
+  openingStock?: Prisma.FloatFilter<"InventoryItem"> | number
   currentStock?: Prisma.FloatFilter<"InventoryItem"> | number
   lowStockThreshold?: Prisma.FloatFilter<"InventoryItem"> | number
+  reorderLevel?: Prisma.FloatNullableFilter<"InventoryItem"> | number | null
   costPerUnitPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  purchasePricePaise?: Prisma.IntFilter<"InventoryItem"> | number
+  averageCostPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  sellingPricePaise?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
+  taxRateBps?: Prisma.IntFilter<"InventoryItem"> | number
+  supplierId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  outletId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  expiryDate?: Prisma.DateTimeNullableFilter<"InventoryItem"> | Date | string | null
+  batchNumber?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  isActive?: Prisma.BoolFilter<"InventoryItem"> | boolean
   tenant?: Prisma.XOR<Prisma.TenantScalarRelationFilter, Prisma.TenantWhereInput>
+  supplier?: Prisma.XOR<Prisma.SupplierNullableScalarRelationFilter, Prisma.SupplierWhereInput> | null
+  outlet?: Prisma.XOR<Prisma.OutletNullableScalarRelationFilter, Prisma.OutletWhereInput> | null
   recipeIngredients?: Prisma.RecipeIngredientListRelationFilter
   supplierPrices?: Prisma.SupplierPriceListRelationFilter
+  bulkSaleItems?: Prisma.BulkSaleItemListRelationFilter
+  purchaseOrderItems?: Prisma.PurchaseOrderItemListRelationFilter
+  stockTransferItems?: Prisma.StockTransferItemListRelationFilter
 }, "id">
 
 export type InventoryItemOrderByWithAggregationInput = {
@@ -279,9 +522,29 @@ export type InventoryItemOrderByWithAggregationInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  sku?: Prisma.SortOrderInput | Prisma.SortOrder
+  barcode?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  purchaseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  sellingUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrderInput | Prisma.SortOrder
+  outletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  expiryDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  batchNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.InventoryItemCountOrderByAggregateInput
   _avg?: Prisma.InventoryItemAvgOrderByAggregateInput
   _max?: Prisma.InventoryItemMaxOrderByAggregateInput
@@ -297,21 +560,64 @@ export type InventoryItemScalarWhereWithAggregatesInput = {
   tenantId?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
   name?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
   unit?: Prisma.StringWithAggregatesFilter<"InventoryItem"> | string
+  sku?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  barcode?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  category?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  baseUnit?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  purchaseUnit?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  sellingUnit?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  conversionRatio?: Prisma.FloatWithAggregatesFilter<"InventoryItem"> | number
+  openingStock?: Prisma.FloatWithAggregatesFilter<"InventoryItem"> | number
   currentStock?: Prisma.FloatWithAggregatesFilter<"InventoryItem"> | number
   lowStockThreshold?: Prisma.FloatWithAggregatesFilter<"InventoryItem"> | number
+  reorderLevel?: Prisma.FloatNullableWithAggregatesFilter<"InventoryItem"> | number | null
   costPerUnitPaise?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
+  purchasePricePaise?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
+  averageCostPaise?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
+  sellingPricePaise?: Prisma.IntNullableWithAggregatesFilter<"InventoryItem"> | number | null
+  taxRateBps?: Prisma.IntWithAggregatesFilter<"InventoryItem"> | number
+  supplierId?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  outletId?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  expiryDate?: Prisma.DateTimeNullableWithAggregatesFilter<"InventoryItem"> | Date | string | null
+  batchNumber?: Prisma.StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"InventoryItem"> | boolean
 }
 
 export type InventoryItemCreateInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
   recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemUncheckedCreateInput = {
@@ -319,23 +625,69 @@ export type InventoryItemUncheckedCreateInput = {
   tenantId: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
   recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemUncheckedUpdateInput = {
@@ -343,11 +695,34 @@ export type InventoryItemUncheckedUpdateInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemCreateManyInput = {
@@ -355,18 +730,56 @@ export type InventoryItemCreateManyInput = {
   tenantId: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
 }
 
 export type InventoryItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InventoryItemUncheckedUpdateManyInput = {
@@ -374,9 +787,29 @@ export type InventoryItemUncheckedUpdateManyInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type InventoryItemListRelationFilter = {
@@ -394,15 +827,42 @@ export type InventoryItemCountOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  sku?: Prisma.SortOrder
+  barcode?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  baseUnit?: Prisma.SortOrder
+  purchaseUnit?: Prisma.SortOrder
+  sellingUnit?: Prisma.SortOrder
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
+  expiryDate?: Prisma.SortOrder
+  batchNumber?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type InventoryItemAvgOrderByAggregateInput = {
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
 }
 
 export type InventoryItemMaxOrderByAggregateInput = {
@@ -410,9 +870,29 @@ export type InventoryItemMaxOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  sku?: Prisma.SortOrder
+  barcode?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  baseUnit?: Prisma.SortOrder
+  purchaseUnit?: Prisma.SortOrder
+  sellingUnit?: Prisma.SortOrder
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
+  expiryDate?: Prisma.SortOrder
+  batchNumber?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type InventoryItemMinOrderByAggregateInput = {
@@ -420,15 +900,42 @@ export type InventoryItemMinOrderByAggregateInput = {
   tenantId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   unit?: Prisma.SortOrder
+  sku?: Prisma.SortOrder
+  barcode?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
+  baseUnit?: Prisma.SortOrder
+  purchaseUnit?: Prisma.SortOrder
+  sellingUnit?: Prisma.SortOrder
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
+  supplierId?: Prisma.SortOrder
+  outletId?: Prisma.SortOrder
+  expiryDate?: Prisma.SortOrder
+  batchNumber?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type InventoryItemSumOrderByAggregateInput = {
+  conversionRatio?: Prisma.SortOrder
+  openingStock?: Prisma.SortOrder
   currentStock?: Prisma.SortOrder
   lowStockThreshold?: Prisma.SortOrder
+  reorderLevel?: Prisma.SortOrder
   costPerUnitPaise?: Prisma.SortOrder
+  purchasePricePaise?: Prisma.SortOrder
+  averageCostPaise?: Prisma.SortOrder
+  sellingPricePaise?: Prisma.SortOrder
+  taxRateBps?: Prisma.SortOrder
 }
 
 export type InventoryItemScalarRelationFilter = {
@@ -478,8 +985,58 @@ export type InventoryItemUncheckedUpdateManyWithoutTenantNestedInput = {
   deleteMany?: Prisma.InventoryItemScalarWhereInput | Prisma.InventoryItemScalarWhereInput[]
 }
 
+export type InventoryItemCreateNestedManyWithoutOutletInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput> | Prisma.InventoryItemCreateWithoutOutletInput[] | Prisma.InventoryItemUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutOutletInput | Prisma.InventoryItemCreateOrConnectWithoutOutletInput[]
+  createMany?: Prisma.InventoryItemCreateManyOutletInputEnvelope
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+}
+
+export type InventoryItemUncheckedCreateNestedManyWithoutOutletInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput> | Prisma.InventoryItemCreateWithoutOutletInput[] | Prisma.InventoryItemUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutOutletInput | Prisma.InventoryItemCreateOrConnectWithoutOutletInput[]
+  createMany?: Prisma.InventoryItemCreateManyOutletInputEnvelope
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+}
+
+export type InventoryItemUpdateManyWithoutOutletNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput> | Prisma.InventoryItemCreateWithoutOutletInput[] | Prisma.InventoryItemUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutOutletInput | Prisma.InventoryItemCreateOrConnectWithoutOutletInput[]
+  upsert?: Prisma.InventoryItemUpsertWithWhereUniqueWithoutOutletInput | Prisma.InventoryItemUpsertWithWhereUniqueWithoutOutletInput[]
+  createMany?: Prisma.InventoryItemCreateManyOutletInputEnvelope
+  set?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  disconnect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  delete?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  update?: Prisma.InventoryItemUpdateWithWhereUniqueWithoutOutletInput | Prisma.InventoryItemUpdateWithWhereUniqueWithoutOutletInput[]
+  updateMany?: Prisma.InventoryItemUpdateManyWithWhereWithoutOutletInput | Prisma.InventoryItemUpdateManyWithWhereWithoutOutletInput[]
+  deleteMany?: Prisma.InventoryItemScalarWhereInput | Prisma.InventoryItemScalarWhereInput[]
+}
+
+export type InventoryItemUncheckedUpdateManyWithoutOutletNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput> | Prisma.InventoryItemCreateWithoutOutletInput[] | Prisma.InventoryItemUncheckedCreateWithoutOutletInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutOutletInput | Prisma.InventoryItemCreateOrConnectWithoutOutletInput[]
+  upsert?: Prisma.InventoryItemUpsertWithWhereUniqueWithoutOutletInput | Prisma.InventoryItemUpsertWithWhereUniqueWithoutOutletInput[]
+  createMany?: Prisma.InventoryItemCreateManyOutletInputEnvelope
+  set?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  disconnect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  delete?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  update?: Prisma.InventoryItemUpdateWithWhereUniqueWithoutOutletInput | Prisma.InventoryItemUpdateWithWhereUniqueWithoutOutletInput[]
+  updateMany?: Prisma.InventoryItemUpdateManyWithWhereWithoutOutletInput | Prisma.InventoryItemUpdateManyWithWhereWithoutOutletInput[]
+  deleteMany?: Prisma.InventoryItemScalarWhereInput | Prisma.InventoryItemScalarWhereInput[]
+}
+
 export type FloatFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -500,6 +1057,90 @@ export type InventoryItemUpdateOneRequiredWithoutRecipeIngredientsNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.InventoryItemUpdateToOneWithWhereWithoutRecipeIngredientsInput, Prisma.InventoryItemUpdateWithoutRecipeIngredientsInput>, Prisma.InventoryItemUncheckedUpdateWithoutRecipeIngredientsInput>
 }
 
+export type InventoryItemCreateNestedManyWithoutSupplierInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput> | Prisma.InventoryItemCreateWithoutSupplierInput[] | Prisma.InventoryItemUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutSupplierInput | Prisma.InventoryItemCreateOrConnectWithoutSupplierInput[]
+  createMany?: Prisma.InventoryItemCreateManySupplierInputEnvelope
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+}
+
+export type InventoryItemUncheckedCreateNestedManyWithoutSupplierInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput> | Prisma.InventoryItemCreateWithoutSupplierInput[] | Prisma.InventoryItemUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutSupplierInput | Prisma.InventoryItemCreateOrConnectWithoutSupplierInput[]
+  createMany?: Prisma.InventoryItemCreateManySupplierInputEnvelope
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+}
+
+export type InventoryItemUpdateManyWithoutSupplierNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput> | Prisma.InventoryItemCreateWithoutSupplierInput[] | Prisma.InventoryItemUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutSupplierInput | Prisma.InventoryItemCreateOrConnectWithoutSupplierInput[]
+  upsert?: Prisma.InventoryItemUpsertWithWhereUniqueWithoutSupplierInput | Prisma.InventoryItemUpsertWithWhereUniqueWithoutSupplierInput[]
+  createMany?: Prisma.InventoryItemCreateManySupplierInputEnvelope
+  set?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  disconnect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  delete?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  update?: Prisma.InventoryItemUpdateWithWhereUniqueWithoutSupplierInput | Prisma.InventoryItemUpdateWithWhereUniqueWithoutSupplierInput[]
+  updateMany?: Prisma.InventoryItemUpdateManyWithWhereWithoutSupplierInput | Prisma.InventoryItemUpdateManyWithWhereWithoutSupplierInput[]
+  deleteMany?: Prisma.InventoryItemScalarWhereInput | Prisma.InventoryItemScalarWhereInput[]
+}
+
+export type InventoryItemUncheckedUpdateManyWithoutSupplierNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput> | Prisma.InventoryItemCreateWithoutSupplierInput[] | Prisma.InventoryItemUncheckedCreateWithoutSupplierInput[]
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutSupplierInput | Prisma.InventoryItemCreateOrConnectWithoutSupplierInput[]
+  upsert?: Prisma.InventoryItemUpsertWithWhereUniqueWithoutSupplierInput | Prisma.InventoryItemUpsertWithWhereUniqueWithoutSupplierInput[]
+  createMany?: Prisma.InventoryItemCreateManySupplierInputEnvelope
+  set?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  disconnect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  delete?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  connect?: Prisma.InventoryItemWhereUniqueInput | Prisma.InventoryItemWhereUniqueInput[]
+  update?: Prisma.InventoryItemUpdateWithWhereUniqueWithoutSupplierInput | Prisma.InventoryItemUpdateWithWhereUniqueWithoutSupplierInput[]
+  updateMany?: Prisma.InventoryItemUpdateManyWithWhereWithoutSupplierInput | Prisma.InventoryItemUpdateManyWithWhereWithoutSupplierInput[]
+  deleteMany?: Prisma.InventoryItemScalarWhereInput | Prisma.InventoryItemScalarWhereInput[]
+}
+
+export type InventoryItemCreateNestedOneWithoutPurchaseOrderItemsInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedCreateWithoutPurchaseOrderItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutPurchaseOrderItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+}
+
+export type InventoryItemUpdateOneRequiredWithoutPurchaseOrderItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedCreateWithoutPurchaseOrderItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutPurchaseOrderItemsInput
+  upsert?: Prisma.InventoryItemUpsertWithoutPurchaseOrderItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InventoryItemUpdateToOneWithWhereWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUpdateWithoutPurchaseOrderItemsInput>, Prisma.InventoryItemUncheckedUpdateWithoutPurchaseOrderItemsInput>
+}
+
+export type InventoryItemCreateNestedOneWithoutBulkSaleItemsInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedCreateWithoutBulkSaleItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutBulkSaleItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+}
+
+export type InventoryItemUpdateOneRequiredWithoutBulkSaleItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedCreateWithoutBulkSaleItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutBulkSaleItemsInput
+  upsert?: Prisma.InventoryItemUpsertWithoutBulkSaleItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InventoryItemUpdateToOneWithWhereWithoutBulkSaleItemsInput, Prisma.InventoryItemUpdateWithoutBulkSaleItemsInput>, Prisma.InventoryItemUncheckedUpdateWithoutBulkSaleItemsInput>
+}
+
+export type InventoryItemCreateNestedOneWithoutStockTransferItemsInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedCreateWithoutStockTransferItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutStockTransferItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+}
+
+export type InventoryItemUpdateOneRequiredWithoutStockTransferItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedCreateWithoutStockTransferItemsInput>
+  connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutStockTransferItemsInput
+  upsert?: Prisma.InventoryItemUpsertWithoutStockTransferItemsInput
+  connect?: Prisma.InventoryItemWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InventoryItemUpdateToOneWithWhereWithoutStockTransferItemsInput, Prisma.InventoryItemUpdateWithoutStockTransferItemsInput>, Prisma.InventoryItemUncheckedUpdateWithoutStockTransferItemsInput>
+}
+
 export type InventoryItemCreateNestedOneWithoutSupplierPricesInput = {
   create?: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierPricesInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierPricesInput>
   connectOrCreate?: Prisma.InventoryItemCreateOrConnectWithoutSupplierPricesInput
@@ -518,22 +1159,68 @@ export type InventoryItemCreateWithoutTenantInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
   recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemUncheckedCreateWithoutTenantInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemCreateOrConnectWithoutTenantInput = {
@@ -570,20 +1257,157 @@ export type InventoryItemScalarWhereInput = {
   tenantId?: Prisma.StringFilter<"InventoryItem"> | string
   name?: Prisma.StringFilter<"InventoryItem"> | string
   unit?: Prisma.StringFilter<"InventoryItem"> | string
+  sku?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  barcode?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  category?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  description?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  imageUrl?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  baseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  purchaseUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  sellingUnit?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  conversionRatio?: Prisma.FloatFilter<"InventoryItem"> | number
+  openingStock?: Prisma.FloatFilter<"InventoryItem"> | number
   currentStock?: Prisma.FloatFilter<"InventoryItem"> | number
   lowStockThreshold?: Prisma.FloatFilter<"InventoryItem"> | number
+  reorderLevel?: Prisma.FloatNullableFilter<"InventoryItem"> | number | null
   costPerUnitPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  purchasePricePaise?: Prisma.IntFilter<"InventoryItem"> | number
+  averageCostPaise?: Prisma.IntFilter<"InventoryItem"> | number
+  sellingPricePaise?: Prisma.IntNullableFilter<"InventoryItem"> | number | null
+  taxRateBps?: Prisma.IntFilter<"InventoryItem"> | number
+  supplierId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  outletId?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  expiryDate?: Prisma.DateTimeNullableFilter<"InventoryItem"> | Date | string | null
+  batchNumber?: Prisma.StringNullableFilter<"InventoryItem"> | string | null
+  isActive?: Prisma.BoolFilter<"InventoryItem"> | boolean
+}
+
+export type InventoryItemCreateWithoutOutletInput = {
+  id?: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemUncheckedCreateWithoutOutletInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemCreateOrConnectWithoutOutletInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput>
+}
+
+export type InventoryItemCreateManyOutletInputEnvelope = {
+  data: Prisma.InventoryItemCreateManyOutletInput | Prisma.InventoryItemCreateManyOutletInput[]
+  skipDuplicates?: boolean
+}
+
+export type InventoryItemUpsertWithWhereUniqueWithoutOutletInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.InventoryItemUpdateWithoutOutletInput, Prisma.InventoryItemUncheckedUpdateWithoutOutletInput>
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutOutletInput, Prisma.InventoryItemUncheckedCreateWithoutOutletInput>
+}
+
+export type InventoryItemUpdateWithWhereUniqueWithoutOutletInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateWithoutOutletInput, Prisma.InventoryItemUncheckedUpdateWithoutOutletInput>
+}
+
+export type InventoryItemUpdateManyWithWhereWithoutOutletInput = {
+  where: Prisma.InventoryItemScalarWhereInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateManyMutationInput, Prisma.InventoryItemUncheckedUpdateManyWithoutOutletInput>
 }
 
 export type InventoryItemCreateWithoutRecipeIngredientsInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
   supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemUncheckedCreateWithoutRecipeIngredientsInput = {
@@ -591,10 +1415,33 @@ export type InventoryItemUncheckedCreateWithoutRecipeIngredientsInput = {
   tenantId: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemCreateOrConnectWithoutRecipeIngredientsInput = {
@@ -617,11 +1464,34 @@ export type InventoryItemUpdateWithoutRecipeIngredientsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemUncheckedUpdateWithoutRecipeIngredientsInput = {
@@ -629,21 +1499,617 @@ export type InventoryItemUncheckedUpdateWithoutRecipeIngredientsInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemCreateWithoutSupplierInput = {
+  id?: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
+  recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemUncheckedCreateWithoutSupplierInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemCreateOrConnectWithoutSupplierInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput>
+}
+
+export type InventoryItemCreateManySupplierInputEnvelope = {
+  data: Prisma.InventoryItemCreateManySupplierInput | Prisma.InventoryItemCreateManySupplierInput[]
+  skipDuplicates?: boolean
+}
+
+export type InventoryItemUpsertWithWhereUniqueWithoutSupplierInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.InventoryItemUpdateWithoutSupplierInput, Prisma.InventoryItemUncheckedUpdateWithoutSupplierInput>
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutSupplierInput, Prisma.InventoryItemUncheckedCreateWithoutSupplierInput>
+}
+
+export type InventoryItemUpdateWithWhereUniqueWithoutSupplierInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateWithoutSupplierInput, Prisma.InventoryItemUncheckedUpdateWithoutSupplierInput>
+}
+
+export type InventoryItemUpdateManyWithWhereWithoutSupplierInput = {
+  where: Prisma.InventoryItemScalarWhereInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateManyMutationInput, Prisma.InventoryItemUncheckedUpdateManyWithoutSupplierInput>
+}
+
+export type InventoryItemCreateWithoutPurchaseOrderItemsInput = {
+  id?: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
+  recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemUncheckedCreateWithoutPurchaseOrderItemsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemCreateOrConnectWithoutPurchaseOrderItemsInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedCreateWithoutPurchaseOrderItemsInput>
+}
+
+export type InventoryItemUpsertWithoutPurchaseOrderItemsInput = {
+  update: Prisma.XOR<Prisma.InventoryItemUpdateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutPurchaseOrderItemsInput>
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedCreateWithoutPurchaseOrderItemsInput>
+  where?: Prisma.InventoryItemWhereInput
+}
+
+export type InventoryItemUpdateToOneWithWhereWithoutPurchaseOrderItemsInput = {
+  where?: Prisma.InventoryItemWhereInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateWithoutPurchaseOrderItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutPurchaseOrderItemsInput>
+}
+
+export type InventoryItemUpdateWithoutPurchaseOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
+  recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateWithoutPurchaseOrderItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemCreateWithoutBulkSaleItemsInput = {
+  id?: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
+  recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemUncheckedCreateWithoutBulkSaleItemsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemCreateOrConnectWithoutBulkSaleItemsInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedCreateWithoutBulkSaleItemsInput>
+}
+
+export type InventoryItemUpsertWithoutBulkSaleItemsInput = {
+  update: Prisma.XOR<Prisma.InventoryItemUpdateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutBulkSaleItemsInput>
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedCreateWithoutBulkSaleItemsInput>
+  where?: Prisma.InventoryItemWhereInput
+}
+
+export type InventoryItemUpdateToOneWithWhereWithoutBulkSaleItemsInput = {
+  where?: Prisma.InventoryItemWhereInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateWithoutBulkSaleItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutBulkSaleItemsInput>
+}
+
+export type InventoryItemUpdateWithoutBulkSaleItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
+  recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateWithoutBulkSaleItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemCreateWithoutStockTransferItemsInput = {
+  id?: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
+  recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemUncheckedCreateWithoutStockTransferItemsInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+}
+
+export type InventoryItemCreateOrConnectWithoutStockTransferItemsInput = {
+  where: Prisma.InventoryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedCreateWithoutStockTransferItemsInput>
+}
+
+export type InventoryItemUpsertWithoutStockTransferItemsInput = {
+  update: Prisma.XOR<Prisma.InventoryItemUpdateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutStockTransferItemsInput>
+  create: Prisma.XOR<Prisma.InventoryItemCreateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedCreateWithoutStockTransferItemsInput>
+  where?: Prisma.InventoryItemWhereInput
+}
+
+export type InventoryItemUpdateToOneWithWhereWithoutStockTransferItemsInput = {
+  where?: Prisma.InventoryItemWhereInput
+  data: Prisma.XOR<Prisma.InventoryItemUpdateWithoutStockTransferItemsInput, Prisma.InventoryItemUncheckedUpdateWithoutStockTransferItemsInput>
+}
+
+export type InventoryItemUpdateWithoutStockTransferItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
+  recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateWithoutStockTransferItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemCreateWithoutSupplierPricesInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   tenant: Prisma.TenantCreateNestedOneWithoutInventoryItemsInput
+  supplier?: Prisma.SupplierCreateNestedOneWithoutInventoryItemsInput
+  outlet?: Prisma.OutletCreateNestedOneWithoutInventoryItemsInput
   recipeIngredients?: Prisma.RecipeIngredientCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemUncheckedCreateWithoutSupplierPricesInput = {
@@ -651,10 +2117,33 @@ export type InventoryItemUncheckedCreateWithoutSupplierPricesInput = {
   tenantId: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedCreateNestedManyWithoutInventoryItemInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedCreateNestedManyWithoutInventoryItemInput
 }
 
 export type InventoryItemCreateOrConnectWithoutSupplierPricesInput = {
@@ -677,11 +2166,34 @@ export type InventoryItemUpdateWithoutSupplierPricesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
   recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemUncheckedUpdateWithoutSupplierPricesInput = {
@@ -689,50 +2201,411 @@ export type InventoryItemUncheckedUpdateWithoutSupplierPricesInput = {
   tenantId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemCreateManyTenantInput = {
   id?: string
   name: string
   unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
   currentStock?: number
   lowStockThreshold?: number
+  reorderLevel?: number | null
   costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
 }
 
 export type InventoryItemUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
   recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
   supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemUncheckedUpdateWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
   supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
 }
 
 export type InventoryItemUncheckedUpdateManyWithoutTenantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
   currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
   lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type InventoryItemCreateManyOutletInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  supplierId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+}
+
+export type InventoryItemUpdateWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  supplier?: Prisma.SupplierUpdateOneWithoutInventoryItemsNestedInput
+  recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateManyWithoutOutletInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  supplierId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+}
+
+export type InventoryItemCreateManySupplierInput = {
+  id?: string
+  tenantId: string
+  name: string
+  unit: string
+  sku?: string | null
+  barcode?: string | null
+  category?: string | null
+  description?: string | null
+  imageUrl?: string | null
+  baseUnit?: string | null
+  purchaseUnit?: string | null
+  sellingUnit?: string | null
+  conversionRatio?: number
+  openingStock?: number
+  currentStock?: number
+  lowStockThreshold?: number
+  reorderLevel?: number | null
+  costPerUnitPaise?: number
+  purchasePricePaise?: number
+  averageCostPaise?: number
+  sellingPricePaise?: number | null
+  taxRateBps?: number
+  outletId?: string | null
+  expiryDate?: Date | string | null
+  batchNumber?: string | null
+  isActive?: boolean
+}
+
+export type InventoryItemUpdateWithoutSupplierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tenant?: Prisma.TenantUpdateOneRequiredWithoutInventoryItemsNestedInput
+  outlet?: Prisma.OutletUpdateOneWithoutInventoryItemsNestedInput
+  recipeIngredients?: Prisma.RecipeIngredientUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateWithoutSupplierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  recipeIngredients?: Prisma.RecipeIngredientUncheckedUpdateManyWithoutInventoryItemNestedInput
+  supplierPrices?: Prisma.SupplierPriceUncheckedUpdateManyWithoutInventoryItemNestedInput
+  bulkSaleItems?: Prisma.BulkSaleItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  purchaseOrderItems?: Prisma.PurchaseOrderItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  stockTransferItems?: Prisma.StockTransferItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+}
+
+export type InventoryItemUncheckedUpdateManyWithoutSupplierInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  tenantId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  unit?: Prisma.StringFieldUpdateOperationsInput | string
+  sku?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  barcode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  baseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  purchaseUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellingUnit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conversionRatio?: Prisma.FloatFieldUpdateOperationsInput | number
+  openingStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  currentStock?: Prisma.FloatFieldUpdateOperationsInput | number
+  lowStockThreshold?: Prisma.FloatFieldUpdateOperationsInput | number
+  reorderLevel?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  costPerUnitPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  purchasePricePaise?: Prisma.IntFieldUpdateOperationsInput | number
+  averageCostPaise?: Prisma.IntFieldUpdateOperationsInput | number
+  sellingPricePaise?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  taxRateBps?: Prisma.IntFieldUpdateOperationsInput | number
+  outletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiryDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  batchNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -743,11 +2616,17 @@ export type InventoryItemUncheckedUpdateManyWithoutTenantInput = {
 export type InventoryItemCountOutputType = {
   recipeIngredients: number
   supplierPrices: number
+  bulkSaleItems: number
+  purchaseOrderItems: number
+  stockTransferItems: number
 }
 
 export type InventoryItemCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   recipeIngredients?: boolean | InventoryItemCountOutputTypeCountRecipeIngredientsArgs
   supplierPrices?: boolean | InventoryItemCountOutputTypeCountSupplierPricesArgs
+  bulkSaleItems?: boolean | InventoryItemCountOutputTypeCountBulkSaleItemsArgs
+  purchaseOrderItems?: boolean | InventoryItemCountOutputTypeCountPurchaseOrderItemsArgs
+  stockTransferItems?: boolean | InventoryItemCountOutputTypeCountStockTransferItemsArgs
 }
 
 /**
@@ -774,18 +2653,64 @@ export type InventoryItemCountOutputTypeCountSupplierPricesArgs<ExtArgs extends 
   where?: Prisma.SupplierPriceWhereInput
 }
 
+/**
+ * InventoryItemCountOutputType without action
+ */
+export type InventoryItemCountOutputTypeCountBulkSaleItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BulkSaleItemWhereInput
+}
+
+/**
+ * InventoryItemCountOutputType without action
+ */
+export type InventoryItemCountOutputTypeCountPurchaseOrderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseOrderItemWhereInput
+}
+
+/**
+ * InventoryItemCountOutputType without action
+ */
+export type InventoryItemCountOutputTypeCountStockTransferItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockTransferItemWhereInput
+}
+
 
 export type InventoryItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   tenantId?: boolean
   name?: boolean
   unit?: boolean
+  sku?: boolean
+  barcode?: boolean
+  category?: boolean
+  description?: boolean
+  imageUrl?: boolean
+  baseUnit?: boolean
+  purchaseUnit?: boolean
+  sellingUnit?: boolean
+  conversionRatio?: boolean
+  openingStock?: boolean
   currentStock?: boolean
   lowStockThreshold?: boolean
+  reorderLevel?: boolean
   costPerUnitPaise?: boolean
+  purchasePricePaise?: boolean
+  averageCostPaise?: boolean
+  sellingPricePaise?: boolean
+  taxRateBps?: boolean
+  supplierId?: boolean
+  outletId?: boolean
+  expiryDate?: boolean
+  batchNumber?: boolean
+  isActive?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
   recipeIngredients?: boolean | Prisma.InventoryItem$recipeIngredientsArgs<ExtArgs>
   supplierPrices?: boolean | Prisma.InventoryItem$supplierPricesArgs<ExtArgs>
+  bulkSaleItems?: boolean | Prisma.InventoryItem$bulkSaleItemsArgs<ExtArgs>
+  purchaseOrderItems?: boolean | Prisma.InventoryItem$purchaseOrderItemsArgs<ExtArgs>
+  stockTransferItems?: boolean | Prisma.InventoryItem$stockTransferItemsArgs<ExtArgs>
   _count?: boolean | Prisma.InventoryItemCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["inventoryItem"]>
 
@@ -794,10 +2719,32 @@ export type InventoryItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   tenantId?: boolean
   name?: boolean
   unit?: boolean
+  sku?: boolean
+  barcode?: boolean
+  category?: boolean
+  description?: boolean
+  imageUrl?: boolean
+  baseUnit?: boolean
+  purchaseUnit?: boolean
+  sellingUnit?: boolean
+  conversionRatio?: boolean
+  openingStock?: boolean
   currentStock?: boolean
   lowStockThreshold?: boolean
+  reorderLevel?: boolean
   costPerUnitPaise?: boolean
+  purchasePricePaise?: boolean
+  averageCostPaise?: boolean
+  sellingPricePaise?: boolean
+  taxRateBps?: boolean
+  supplierId?: boolean
+  outletId?: boolean
+  expiryDate?: boolean
+  batchNumber?: boolean
+  isActive?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
 }, ExtArgs["result"]["inventoryItem"]>
 
 export type InventoryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -805,10 +2752,32 @@ export type InventoryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   tenantId?: boolean
   name?: boolean
   unit?: boolean
+  sku?: boolean
+  barcode?: boolean
+  category?: boolean
+  description?: boolean
+  imageUrl?: boolean
+  baseUnit?: boolean
+  purchaseUnit?: boolean
+  sellingUnit?: boolean
+  conversionRatio?: boolean
+  openingStock?: boolean
   currentStock?: boolean
   lowStockThreshold?: boolean
+  reorderLevel?: boolean
   costPerUnitPaise?: boolean
+  purchasePricePaise?: boolean
+  averageCostPaise?: boolean
+  sellingPricePaise?: boolean
+  taxRateBps?: boolean
+  supplierId?: boolean
+  outletId?: boolean
+  expiryDate?: boolean
+  batchNumber?: boolean
+  isActive?: boolean
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
 }, ExtArgs["result"]["inventoryItem"]>
 
 export type InventoryItemSelectScalar = {
@@ -816,40 +2785,94 @@ export type InventoryItemSelectScalar = {
   tenantId?: boolean
   name?: boolean
   unit?: boolean
+  sku?: boolean
+  barcode?: boolean
+  category?: boolean
+  description?: boolean
+  imageUrl?: boolean
+  baseUnit?: boolean
+  purchaseUnit?: boolean
+  sellingUnit?: boolean
+  conversionRatio?: boolean
+  openingStock?: boolean
   currentStock?: boolean
   lowStockThreshold?: boolean
+  reorderLevel?: boolean
   costPerUnitPaise?: boolean
+  purchasePricePaise?: boolean
+  averageCostPaise?: boolean
+  sellingPricePaise?: boolean
+  taxRateBps?: boolean
+  supplierId?: boolean
+  outletId?: boolean
+  expiryDate?: boolean
+  batchNumber?: boolean
+  isActive?: boolean
 }
 
-export type InventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "unit" | "currentStock" | "lowStockThreshold" | "costPerUnitPaise", ExtArgs["result"]["inventoryItem"]>
+export type InventoryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tenantId" | "name" | "unit" | "sku" | "barcode" | "category" | "description" | "imageUrl" | "baseUnit" | "purchaseUnit" | "sellingUnit" | "conversionRatio" | "openingStock" | "currentStock" | "lowStockThreshold" | "reorderLevel" | "costPerUnitPaise" | "purchasePricePaise" | "averageCostPaise" | "sellingPricePaise" | "taxRateBps" | "supplierId" | "outletId" | "expiryDate" | "batchNumber" | "isActive", ExtArgs["result"]["inventoryItem"]>
 export type InventoryItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
   recipeIngredients?: boolean | Prisma.InventoryItem$recipeIngredientsArgs<ExtArgs>
   supplierPrices?: boolean | Prisma.InventoryItem$supplierPricesArgs<ExtArgs>
+  bulkSaleItems?: boolean | Prisma.InventoryItem$bulkSaleItemsArgs<ExtArgs>
+  purchaseOrderItems?: boolean | Prisma.InventoryItem$purchaseOrderItemsArgs<ExtArgs>
+  stockTransferItems?: boolean | Prisma.InventoryItem$stockTransferItemsArgs<ExtArgs>
   _count?: boolean | Prisma.InventoryItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InventoryItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
 }
 export type InventoryItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tenant?: boolean | Prisma.TenantDefaultArgs<ExtArgs>
+  supplier?: boolean | Prisma.InventoryItem$supplierArgs<ExtArgs>
+  outlet?: boolean | Prisma.InventoryItem$outletArgs<ExtArgs>
 }
 
 export type $InventoryItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "InventoryItem"
   objects: {
     tenant: Prisma.$TenantPayload<ExtArgs>
+    supplier: Prisma.$SupplierPayload<ExtArgs> | null
+    outlet: Prisma.$OutletPayload<ExtArgs> | null
     recipeIngredients: Prisma.$RecipeIngredientPayload<ExtArgs>[]
     supplierPrices: Prisma.$SupplierPricePayload<ExtArgs>[]
+    bulkSaleItems: Prisma.$BulkSaleItemPayload<ExtArgs>[]
+    purchaseOrderItems: Prisma.$PurchaseOrderItemPayload<ExtArgs>[]
+    stockTransferItems: Prisma.$StockTransferItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tenantId: string
     name: string
     unit: string
+    sku: string | null
+    barcode: string | null
+    category: string | null
+    description: string | null
+    imageUrl: string | null
+    baseUnit: string | null
+    purchaseUnit: string | null
+    sellingUnit: string | null
+    conversionRatio: number
+    openingStock: number
     currentStock: number
     lowStockThreshold: number
+    reorderLevel: number | null
     costPerUnitPaise: number
+    purchasePricePaise: number
+    averageCostPaise: number
+    sellingPricePaise: number | null
+    taxRateBps: number
+    supplierId: string | null
+    outletId: string | null
+    expiryDate: Date | null
+    batchNumber: string | null
+    isActive: boolean
   }, ExtArgs["result"]["inventoryItem"]>
   composites: {}
 }
@@ -1245,8 +3268,13 @@ readonly fields: InventoryItemFieldRefs;
 export interface Prisma__InventoryItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tenant<T extends Prisma.TenantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TenantDefaultArgs<ExtArgs>>): Prisma.Prisma__TenantClient<runtime.Types.Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  supplier<T extends Prisma.InventoryItem$supplierArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$supplierArgs<ExtArgs>>): Prisma.Prisma__SupplierClient<runtime.Types.Result.GetResult<Prisma.$SupplierPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  outlet<T extends Prisma.InventoryItem$outletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$outletArgs<ExtArgs>>): Prisma.Prisma__OutletClient<runtime.Types.Result.GetResult<Prisma.$OutletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   recipeIngredients<T extends Prisma.InventoryItem$recipeIngredientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$recipeIngredientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecipeIngredientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supplierPrices<T extends Prisma.InventoryItem$supplierPricesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$supplierPricesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupplierPricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bulkSaleItems<T extends Prisma.InventoryItem$bulkSaleItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$bulkSaleItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulkSaleItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseOrderItems<T extends Prisma.InventoryItem$purchaseOrderItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$purchaseOrderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockTransferItems<T extends Prisma.InventoryItem$stockTransferItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InventoryItem$stockTransferItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockTransferItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1280,9 +3308,29 @@ export interface InventoryItemFieldRefs {
   readonly tenantId: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly name: Prisma.FieldRef<"InventoryItem", 'String'>
   readonly unit: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly sku: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly barcode: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly category: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly description: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly imageUrl: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly baseUnit: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly purchaseUnit: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly sellingUnit: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly conversionRatio: Prisma.FieldRef<"InventoryItem", 'Float'>
+  readonly openingStock: Prisma.FieldRef<"InventoryItem", 'Float'>
   readonly currentStock: Prisma.FieldRef<"InventoryItem", 'Float'>
   readonly lowStockThreshold: Prisma.FieldRef<"InventoryItem", 'Float'>
+  readonly reorderLevel: Prisma.FieldRef<"InventoryItem", 'Float'>
   readonly costPerUnitPaise: Prisma.FieldRef<"InventoryItem", 'Int'>
+  readonly purchasePricePaise: Prisma.FieldRef<"InventoryItem", 'Int'>
+  readonly averageCostPaise: Prisma.FieldRef<"InventoryItem", 'Int'>
+  readonly sellingPricePaise: Prisma.FieldRef<"InventoryItem", 'Int'>
+  readonly taxRateBps: Prisma.FieldRef<"InventoryItem", 'Int'>
+  readonly supplierId: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly outletId: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly expiryDate: Prisma.FieldRef<"InventoryItem", 'DateTime'>
+  readonly batchNumber: Prisma.FieldRef<"InventoryItem", 'String'>
+  readonly isActive: Prisma.FieldRef<"InventoryItem", 'Boolean'>
 }
     
 
@@ -1684,6 +3732,44 @@ export type InventoryItemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * InventoryItem.supplier
+ */
+export type InventoryItem$supplierArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Supplier
+   */
+  select?: Prisma.SupplierSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Supplier
+   */
+  omit?: Prisma.SupplierOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupplierInclude<ExtArgs> | null
+  where?: Prisma.SupplierWhereInput
+}
+
+/**
+ * InventoryItem.outlet
+ */
+export type InventoryItem$outletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Outlet
+   */
+  select?: Prisma.OutletSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Outlet
+   */
+  omit?: Prisma.OutletOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OutletInclude<ExtArgs> | null
+  where?: Prisma.OutletWhereInput
+}
+
+/**
  * InventoryItem.recipeIngredients
  */
 export type InventoryItem$recipeIngredientsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1729,6 +3815,78 @@ export type InventoryItem$supplierPricesArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.SupplierPriceScalarFieldEnum | Prisma.SupplierPriceScalarFieldEnum[]
+}
+
+/**
+ * InventoryItem.bulkSaleItems
+ */
+export type InventoryItem$bulkSaleItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BulkSaleItem
+   */
+  select?: Prisma.BulkSaleItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BulkSaleItem
+   */
+  omit?: Prisma.BulkSaleItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BulkSaleItemInclude<ExtArgs> | null
+  where?: Prisma.BulkSaleItemWhereInput
+  orderBy?: Prisma.BulkSaleItemOrderByWithRelationInput | Prisma.BulkSaleItemOrderByWithRelationInput[]
+  cursor?: Prisma.BulkSaleItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BulkSaleItemScalarFieldEnum | Prisma.BulkSaleItemScalarFieldEnum[]
+}
+
+/**
+ * InventoryItem.purchaseOrderItems
+ */
+export type InventoryItem$purchaseOrderItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseOrderItem
+   */
+  select?: Prisma.PurchaseOrderItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseOrderItem
+   */
+  omit?: Prisma.PurchaseOrderItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseOrderItemInclude<ExtArgs> | null
+  where?: Prisma.PurchaseOrderItemWhereInput
+  orderBy?: Prisma.PurchaseOrderItemOrderByWithRelationInput | Prisma.PurchaseOrderItemOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseOrderItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseOrderItemScalarFieldEnum | Prisma.PurchaseOrderItemScalarFieldEnum[]
+}
+
+/**
+ * InventoryItem.stockTransferItems
+ */
+export type InventoryItem$stockTransferItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockTransferItem
+   */
+  select?: Prisma.StockTransferItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockTransferItem
+   */
+  omit?: Prisma.StockTransferItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockTransferItemInclude<ExtArgs> | null
+  where?: Prisma.StockTransferItemWhereInput
+  orderBy?: Prisma.StockTransferItemOrderByWithRelationInput | Prisma.StockTransferItemOrderByWithRelationInput[]
+  cursor?: Prisma.StockTransferItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockTransferItemScalarFieldEnum | Prisma.StockTransferItemScalarFieldEnum[]
 }
 
 /**

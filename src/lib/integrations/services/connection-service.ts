@@ -85,6 +85,8 @@ export class AggregatorConnectionService {
       };
     }
 
+    const creds = this.decryptCredentials(conn.credentialsEncrypted);
+
     return {
       id: conn.id,
       provider: conn.provider as AggregatorProvider,
@@ -96,6 +98,11 @@ export class AggregatorConnectionService {
       priceHikeValue: conn.priceHikeValue,
       lastSyncAt: conn.lastSyncAt,
       hasCredentials: !!conn.credentialsEncrypted,
+      maskedApiKey: creds.apiKey ? "••••••••" + creds.apiKey.slice(-4) : undefined,
+      maskedWebhookSecret: creds.webhookSecret ? "••••••••" + creds.webhookSecret.slice(-4) : undefined,
+      merchantId: creds.merchantId || undefined,
+      posId: creds.posId || creds.merchantId || undefined,
+      partnerClientId: creds.partnerClientId || undefined,
     };
   }
 
@@ -122,7 +129,7 @@ export class AggregatorConnectionService {
       defaultPrepMinutes = 15,
       pricingStrategy = "MASTER_EQUAL",
       priceHikeValue = 0,
-      status = "CONNECTED",
+      status = credentials ? "CREDENTIALS_CONFIGURED" : "PROVIDER_APPROVAL_REQUIRED",
     } = params;
 
     let encryptedCreds: string | undefined = undefined;
@@ -159,6 +166,21 @@ export class AggregatorConnectionService {
       },
     });
 
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        action: "UPDATE_AGGREGATOR_CONNECTION",
+        entity: "AggregatorConnection",
+        entityId: updated.id,
+        metadataJson: JSON.stringify({
+          provider,
+          status: updated.status,
+          pricingStrategy: updated.pricingStrategy,
+          hasCredentials: !!updated.credentialsEncrypted,
+        }),
+      },
+    }).catch(() => null);
+
     return updated;
   }
 
@@ -179,6 +201,17 @@ export class AggregatorConnectionService {
       where: { tenantId, provider },
       data: { isOnline: false },
     });
+
+    await prisma.auditLog.create({
+      data: {
+        tenantId,
+        action: "DISCONNECT_AGGREGATOR",
+        entity: "AggregatorConnection",
+        metadataJson: JSON.stringify({
+          provider,
+        }),
+      },
+    }).catch(() => null);
 
     return { success: true };
   }

@@ -86,6 +86,13 @@ export interface ThermalReceiptItem {
   notes?: string | null;
 }
 
+export interface ReceiptPaymentEntry {
+  method: string;
+  amountPaise: number;
+  status: string;
+  reference?: string | null;
+}
+
 export interface ThermalReceiptInput {
   restaurantName: string;
   logoUrl?: string | null;
@@ -111,8 +118,11 @@ export interface ThermalReceiptInput {
   otherTaxesPaise: number;
   totalPaise: number;
   paymentMethod: string;
-  paymentStatus: "PAID" | "UNPAID" | "REFUNDED";
+  paymentStatus: "PAID" | "UNPAID" | "REFUNDED" | "PARTIALLY_PAID" | string;
   transactionId?: string | null;
+  payments?: ReceiptPaymentEntry[];
+  paidPaise?: number;
+  balanceDuePaise?: number;
   qrData?: string | null;
   footerText?: string | null;
 }
@@ -183,6 +193,95 @@ export function buildEscPosQrRasterCentered(text: string, is58mm = true): Buffer
     console.error("[ESC/POS] Failed to build QR raster:", err);
     return Buffer.alloc(0);
   }
+}
+
+export function formatReceiptPaymentSection(
+  input: ThermalReceiptInput,
+  cols: number
+): string[] {
+  const lines: string[] = [];
+  const fmt = (paise: number) => `Rs.${(paise / 100).toFixed(2)}`;
+
+  // 1. Calculate actual recorded completed payments
+  const recordedPayments = input.payments || [];
+  const completedPayments = recordedPayments.filter(
+    (p) => p.status === "COMPLETED" || p.status === "PAID" || p.status === "CAPTURED"
+  );
+
+  let paidPaise = 0;
+  if (completedPayments.length > 0) {
+    paidPaise = completedPayments.reduce((sum, p) => sum + p.amountPaise, 0);
+  } else if (input.paidPaise !== undefined) {
+    paidPaise = input.paidPaise;
+  } else if (input.paymentStatus === "PAID") {
+    paidPaise = input.totalPaise;
+  }
+
+  const balanceDuePaise =
+    input.balanceDuePaise !== undefined
+      ? input.balanceDuePaise
+      : Math.max(0, input.totalPaise - paidPaise);
+
+  // Collect genuine transaction references only when actually available
+  const txnRefs: string[] = [];
+  if (input.transactionId && input.transactionId.trim()) {
+    txnRefs.push(input.transactionId.trim());
+  }
+  for (const p of completedPayments) {
+    if (p.reference && p.reference.trim() && !txnRefs.includes(p.reference.trim())) {
+      const lower = p.reference.toLowerCase();
+      if (!lower.includes("counter") && !lower.includes("recorded") && !lower.includes("staff")) {
+        txnRefs.push(p.reference.trim());
+      }
+    }
+  }
+
+  // 2. Apply payment display rules:
+  // Case A: Unpaid
+  if (paidPaise === 0 || (input.paymentStatus === "UNPAID" && paidPaise === 0)) {
+    lines.push(twoColLine("PAYMENT:", "UNPAID", cols));
+    lines.push(twoColLine("BALANCE DUE:", fmt(input.totalPaise), cols));
+  }
+  // Case B: Partially Paid
+  else if (balanceDuePaise > 0) {
+    lines.push(twoColLine("PAID:", fmt(paidPaise), cols));
+    lines.push(twoColLine("BALANCE DUE:", fmt(balanceDuePaise), cols));
+  }
+  // Case C: Fully Paid
+  else {
+    // Check if Split Payment (multiple completed payments)
+    if (completedPayments.length > 1) {
+      const splitText = completedPayments
+        .map((p) => `${p.method.toUpperCase()} ${fmt(p.amountPaise)}`)
+        .join(" + ");
+
+      if (`PAYMENT: ${splitText}`.length <= cols) {
+        lines.push(`PAYMENT: ${splitText}`);
+      } else {
+        lines.push(twoColLine("PAYMENT:", "SPLIT", cols));
+        for (const p of completedPayments) {
+          lines.push(twoColLine(`  ${p.method.toUpperCase()}`, fmt(p.amountPaise), cols));
+        }
+      }
+      lines.push(twoColLine("STATUS:", "PAID", cols));
+    } else {
+      // Single payment method (UPI, CASH, CARD, etc.)
+      const singleMethod =
+        completedPayments.length === 1
+          ? completedPayments[0].method.toUpperCase()
+          : (input.paymentMethod || "CASH").toUpperCase();
+
+      lines.push(twoColLine("PAYMENT:", singleMethod, cols));
+      lines.push(twoColLine("STATUS:", "PAID", cols));
+    }
+  }
+
+  // Display transaction reference only when actually available
+  for (const ref of txnRefs) {
+    lines.push(twoColLine("Txn Ref:", ref, cols));
+  }
+
+  return lines;
 }
 
 export function formatThermalReceipt(
@@ -268,10 +367,9 @@ export function formatThermalReceipt(
   lines.push(eq);
   lines.push(twoColLine("TOTAL AMOUNT", formatReceiptMoney(input.totalPaise), cols));
   lines.push(eq);
-  lines.push(twoColLine(`Pay: ${input.paymentMethod}`, input.paymentStatus, cols));
-  if (input.transactionId) {
-    lines.push(twoColLine("Txn ID", input.transactionId, cols));
-  }
+
+  // Payment section based on recorded payments
+  lines.push(...formatReceiptPaymentSection(input, cols));
 
   // Pre-QR text lines
   const preQrLines = [...lines];
@@ -505,7 +603,7 @@ export async function queueAndDispatchBillPrintJob(
         },
         invoice: true,
         table: true,
-        payments: { orderBy: { createdAt: "desc" }, take: 1 },
+        payments: { orderBy: { createdAt: "asc" } },
       },
     });
 
@@ -658,9 +756,15 @@ export async function queueAndDispatchBillPrintJob(
       sgstPaise: order.taxPaise - Math.floor(order.taxPaise / 2),
       otherTaxesPaise: order.serviceChargePaise || 0,
       totalPaise: order.totalPaise,
+      payments: (order.payments || []).map((p: any) => ({
+        method: p.method,
+        amountPaise: p.amountPaise,
+        status: p.status,
+        reference: p.reference,
+      })),
       paymentMethod: payment?.method || (isPaid ? "UPI" : "UNPAID"),
       paymentStatus: isPaid ? "PAID" : "UNPAID",
-      transactionId: payment?.reference || order.orderNumber,
+      transactionId: payment?.reference || null,
       qrData,
       footerText: setting?.receiptFooter || "Thank you for choosing us!",
     };

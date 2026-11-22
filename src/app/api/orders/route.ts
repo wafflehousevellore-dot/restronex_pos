@@ -5,6 +5,8 @@ import { orderCreateSchema } from "@/lib/validators";
 import { calcOrderTotals } from "@/lib/money";
 import { validateAndPriceCartItems } from "@/lib/addon-pricing";
 import { normalizeWhatsAppPhone, queueAndSendWhatsAppInvoice } from "@/lib/whatsapp-invoice";
+import { generateUnguessableToken } from "@/lib/messaging/invoice-token-service";
+import { dispatchCustomerInvoiceMessages } from "@/lib/messaging/customer-messaging-service";
 import { generateAndPersistInvoicePdf, buildSignedInvoicePdfUrl } from "@/lib/invoice-storage";
 import { queueAndDispatchBillPrintJob } from "@/lib/thermal-printer";
 import { appCache } from "@/lib/cache";
@@ -208,6 +210,8 @@ export async function POST(req: NextRequest) {
 
   const isOnlineGateway = d.paymentMethod === "RAZORPAY_ONLINE";
   const initialStatus = isOnlineGateway ? "PLACED" : "BILLED";
+  const publicToken = generateUnguessableToken();
+  const tokenExpiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000); // 90 days retention
 
   let order;
   try {
@@ -315,7 +319,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 5. Create Official Invoice Record
+    // 5. Create Official Invoice Record with cryptographically unguessable public token
     await tx.invoiceRecord.create({
       data: {
         tenantId,
@@ -329,6 +333,8 @@ export async function POST(req: NextRequest) {
         customerName: d.customerName?.trim() || undefined,
         customerPhone: d.customerPhone?.trim() || undefined,
         status: "FINALIZED",
+        publicToken,
+        tokenExpiresAt,
       },
     });
 
@@ -572,15 +578,29 @@ export async function POST(req: NextRequest) {
     console.warn("[Orders] Non-fatal background PDF persistence notice:", pdfErr);
   });
 
-  // Durable non-blocking queueing of WhatsApp invoice
-  let whatsappResult: any = { queued: false, status: "NOT_CONFIGURED", reason: "No customer mobile number entered" };
+  // Unified Customer Invoicing: WhatsApp & SMS dual dispatch
+  let messagingResult: any = {
+    publicToken: publicToken,
+    invoiceUrl: `${origin}/invoice/${publicToken}`,
+    whatsapp: { status: "SKIPPED", provider: "META", error: "No customer mobile number entered" },
+    sms: { status: "SKIPPED", provider: "SMS", error: "No customer mobile number entered" },
+  };
+
   if (order.customerPhone) {
-    whatsappResult = await queueAndSendWhatsAppInvoice(order.id, {
+    messagingResult = await dispatchCustomerInvoiceMessages({
+      orderId: order.id,
+      tenantId: order.tenantId,
+      outletId: order.outletId,
       baseUrl: origin,
-      skipImmediateDispatch: true,
-    }).catch((waErr) => {
-      console.warn("[Orders] Non-fatal background WhatsApp queue notice:", waErr);
-      return { queued: false, status: "FAILED", reason: "WhatsApp queue notice" };
+    }).catch((msgErr) => {
+      console.warn("[Orders] Non-fatal background messaging notice:", msgErr);
+      return {
+        ok: false,
+        publicToken,
+        invoiceUrl: `${origin}/invoice/${publicToken}`,
+        whatsapp: { status: "FAILED", provider: "META", error: msgErr.message },
+        sms: { status: "FAILED", provider: "SMS", error: msgErr.message },
+      };
     });
   }
 
@@ -615,8 +635,11 @@ export async function POST(req: NextRequest) {
     orderNumber: order.orderNumber,
     invoiceNumber,
     invoicePdfUrl,
+    publicToken: messagingResult.publicToken || publicToken,
+    digitalInvoiceUrl: messagingResult.invoiceUrl || `${origin}/invoice/${publicToken}`,
     totals,
-    whatsapp: whatsappResult,
+    whatsapp: messagingResult.whatsapp,
+    sms: messagingResult.sms,
     printJob: printResult,
   });
 }

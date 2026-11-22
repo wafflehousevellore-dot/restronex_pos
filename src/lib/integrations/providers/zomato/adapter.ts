@@ -42,7 +42,40 @@ export class ZomatoIntegrationProvider implements IIntegrationProvider {
     }
 
     const computed = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
-    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(computed));
+    const sigBuf = Buffer.from(signature);
+    const compBuf = Buffer.from(computed);
+    if (sigBuf.length !== compBuf.length) {
+      return false;
+    }
+    return crypto.timingSafeEqual(sigBuf, compBuf);
+  }
+
+  public formatWebhookAck(
+    eventType: string,
+    orderId?: string,
+    status: "SUCCESS" | "FAILURE" = "SUCCESS",
+    error?: string
+  ): { status: number; body: Record<string, any> } {
+    if (status === "SUCCESS") {
+      return {
+        status: 200,
+        body: {
+          status: "success",
+          message: "Order processed successfully",
+          order_id: orderId,
+          timestamp: new Date().toISOString(),
+        },
+      };
+    }
+    return {
+      status: 400,
+      body: {
+        status: "failure",
+        message: error || "Webhook processing failed",
+        order_id: orderId,
+        timestamp: new Date().toISOString(),
+      },
+    };
   }
 
   public parseOrderPayload(rawBody: string): NormalizedOrderPayload {
