@@ -31,6 +31,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .DS_Store
+.agents/
 
 # Internal audit reports
 PETPOOJA_BRANDING_REMOVAL_REPORT.md

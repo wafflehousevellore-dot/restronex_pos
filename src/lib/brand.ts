@@ -41,6 +41,7 @@ export const brand = {
 
 export const navLinks = [
   { label: "POS", href: "/poss" },
+  { label: "GST Invoice", href: "/invoice" },
   {
     label: "Features", href: "/features", children: [
       { label: "POS & Billing", href: "/features/pos" },
@@ -68,6 +69,7 @@ export const navLinks = [
       { label: "Bakeries & Confectionery", href: "/solutions/bakeries" },
       { label: "Pizzerias & Italian", href: "/solutions/pizzerias" },
       { label: "Dessert & Ice Cream", href: "/solutions/dessert-shops" },
+      { label: "Bars & Breweries", href: "/solutions/bars-breweries" },
       { label: "Food Courts & Malls", href: "/solutions/food-courts" },
       { label: "Cloud & Ghost Kitchens", href: "/solutions/cloud-kitchens" },
       { label: "Restaurant Chains", href: "/solutions/chains" },

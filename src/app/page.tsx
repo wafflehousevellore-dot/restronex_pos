@@ -4,6 +4,12 @@ import Navbar from "@/components/marketing/Navbar";
 import Footer from "@/components/marketing/Footer";
 import POSInteractivePreview from "@/components/marketing/POSInteractivePreview";
 import SoftwareShowcaseSection from "@/components/marketing/SoftwareShowcaseSection";
+import ProductEcosystemSlider from "@/components/marketing/ProductEcosystemSlider";
+import TrustMetricsSection from "@/components/marketing/TrustMetricsSection";
+import WhyRestroNexSection from "@/components/marketing/WhyRestroNexSection";
+import MarketplaceAddonsSection from "@/components/marketing/MarketplaceAddonsSection";
+import OutletTypesSection from "@/components/marketing/OutletTypesSection";
+import IndustryRatingsSection from "@/components/marketing/IndustryRatingsSection";
 import Link from "next/link";
 import {
   Check,
@@ -121,25 +127,13 @@ export default function HomePage() {
     },
   ];
 
-  const solutions = [
-    { name: "Fine-Dining & Bistros", desc: "Multi-course service, table reservation timelines, course firing, and split billing.", href: "/solutions/fine-dine" },
-    { name: "Cafes & Roasteries", desc: "High-speed counter checkout, milk/bean inventory tracking, and loyalty rewards.", href: "/solutions/cafes" },
-    { name: "Quick Service (QSR)", desc: "Lightning fast 3-click token billing, combo meals, and customer-facing order screens.", href: "/solutions/qsr" },
-    { name: "Bakeries & Confectionery", desc: "Batch production tracking, expiry dates, custom celebration cake pre-orders.", href: "/solutions/bakeries" },
-    { name: "Pizzerias & Italian", desc: "Crust, topping & size modifiers, combo pricing, and rapid delivery dispatch.", href: "/solutions/pizzerias" },
-    { name: "Dessert & Ice Cream Parlors", desc: "Weight-based pricing, flavor modifiers, and rapid contactless payment queues.", href: "/solutions/dessert-shops" },
-    { name: "Food Courts & Hubs", desc: "Prepaid cards, multi-brand tenant management, and centralized food court cashiers.", href: "/solutions/food-courts" },
-    { name: "Cloud & Ghost Kitchens", desc: "Multi-brand virtual menus from a single kitchen, packaging stock control.", href: "/solutions/cloud-kitchens" },
-    { name: "Restaurant Chains", desc: "Central recipe management, cross-outlet transfers, and consolidated chain reports.", href: "/solutions/chains" },
-  ];
-
   return (
     <>
       <Navbar />
 
       <main className="flex-1 bg-[#F8FAF9] text-[#172B25]">
         {/* ========================================================= */}
-        {/* SECTION 1 & 2: HERO & STRONG POSITIONING                  */}
+        {/* SECTION 1: HERO & STRONG POSITIONING                      */}
         {/* ========================================================= */}
         <section className="relative overflow-hidden bg-gradient-to-b from-[#E8F5EE]/70 via-[#F8FAF9] to-white border-b border-[#E5EBE7]">
           <div className="absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full bg-[#16845B]/5 blur-[120px] pointer-events-none" />
@@ -168,13 +162,13 @@ export default function HomePage() {
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <Link href="/get-started">
-                    <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs flex items-center gap-2">
+                    <button className="rounded-full bg-[#16845B] px-8 py-3.5 text-sm font-bold text-white hover:bg-[#116B49] transition shadow-xs flex items-center gap-2 cursor-pointer">
                       <span>Start Now from ₹{starterPlan.priceMonthly}/mo</span>
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
                   <Link href="/pricing">
-                    <button className="rounded-full border border-[#E5EBE7] bg-white px-7 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-2xs transition">
+                    <button className="rounded-full border border-[#E5EBE7] bg-white px-7 py-3.5 text-sm font-semibold text-[#172B25] hover:bg-[#F8FAF9] shadow-2xs transition cursor-pointer">
                       Compare Plans
                     </button>
                   </Link>
@@ -200,118 +194,44 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* ========================================================= */}
-              {/* SECTION 3: REALISTIC RESTAURANT POS INTERACTIVE PREVIEW   */}
-              {/* ========================================================= */}
+              {/* Realistic Restaurant POS Preview */}
               <POSInteractivePreview />
             </div>
           </div>
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 4: INTERACTIVE PRODUCT OVERVIEW                   */}
+        {/* SECTION 2: TRUST METRICS & HIGH-VOLUME PROOF             */}
         {/* ========================================================= */}
-        <section className="py-16 bg-white border-b border-[#E5EBE7]">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto">
-              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">CORE CAPABILITIES</span>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
-                Engineered for Peak Restaurant Rush Hours
-              </h2>
-              <p className="mt-2 text-sm text-[#718078]">
-                Every component is designed to eliminate billing delays, prevent kitchen miscommunication, and safeguard your margins.
-              </p>
-            </div>
-
-            <div className="mt-12 grid md:grid-cols-3 gap-6">
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <Store className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Lightning Counter & Dine-in Billing</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Complete orders in 3 taps. Supports modifier add-ons, split bills, customer discount codes, and integrated paise-level GST tax math.
-                </p>
-                <Link href="/features/pos" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore POS Billing <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <ChefHat className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Smart Kitchen Display & KOT Routing</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Route food and beverage tickets to dedicated kitchen stations. Monitor preparation timers, ticket completion, and reduce food waste.
-                </p>
-                <Link href="/features/kitchen-display" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore KDS System <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <Truck className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Recipe-Level BOM Inventory Control</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Link raw ingredients to menu dishes. Stock auto-depletes when dishes are prepared. Track purchase orders and wastage accurately.
-                </p>
-                <Link href="/features/inventory" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore Inventory <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <Printer className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Thermal Printer Hardware Support</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Native ESC/POS support across Bluetooth SPP (mobile POS), Network LAN (kitchen stations port 9100), and USB counters in 80mm & 58mm.
-                </p>
-                <Link href="/features/printers" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore Thermal Printers <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <MessageSquare className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Meta WhatsApp Cloud Bill Delivery</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Auto-deliver itemized PDF tax receipts directly to customer mobile numbers upon bill settlement. Eliminate thermal paper costs.
-                </p>
-                <Link href="/features/whatsapp-invoices" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore WhatsApp Bills <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-
-              <div className="p-6 rounded-3xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:shadow-xs transition space-y-3">
-                <div className="h-10 w-10 rounded-2xl bg-[#E8F5EE] text-[#16845B] grid place-items-center">
-                  <Layers className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold text-[#172B25]">Multi-Outlet Chain Architecture</h3>
-                <p className="text-xs leading-relaxed text-[#718078]">
-                  Centrally control menus, outlet pricing, staff roles, and cross-branch stock transfers. Aggregated owner analytics at your fingertips.
-                </p>
-                <Link href="/features/multi-outlet" className="inline-flex items-center gap-1 text-xs font-bold text-[#16845B]">
-                  Explore Multi-Outlet <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+        <TrustMetricsSection />
 
         {/* ========================================================= */}
-        {/* SOFTWARE VISUAL GALLERY                                   */}
+        {/* SECTION 3: PRODUCT ECOSYSTEM INTERACTIVE SLIDER           */}
+        {/* ========================================================= */}
+        <ProductEcosystemSlider />
+
+        {/* ========================================================= */}
+        {/* SECTION 4: WHY CHOOSE US (4 CORE PILLARS)                 */}
+        {/* ========================================================= */}
+        <WhyRestroNexSection />
+
+        {/* ========================================================= */}
+        {/* SECTION 5: APP MARKETPLACE & SPECIALIZED ADD-ONS          */}
+        {/* ========================================================= */}
+        <MarketplaceAddonsSection />
+
+        {/* ========================================================= */}
+        {/* SECTION 6: OUTLET TYPES & FORMATS (ALL 10 FOOD TYPES)     */}
+        {/* ========================================================= */}
+        <OutletTypesSection />
+
+        {/* ========================================================= */}
+        {/* SECTION 7: SOFTWARE VISUAL GALLERY                        */}
         {/* ========================================================= */}
         <SoftwareShowcaseSection />
 
         {/* ========================================================= */}
-        {/* SECTION 5: RESTAURANT OPERATIONS WORKFLOW                 */}
+        {/* SECTION 8: RESTAURANT OPERATIONS WORKFLOW (5 STEPS)       */}
         {/* ========================================================= */}
         <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -346,7 +266,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 6 & 7: TABLE MANAGEMENT & QR ORDERING DEMO        */}
+        {/* SECTION 9: TABLE MANAGEMENT & QR ORDERING DEMO            */}
         {/* ========================================================= */}
         <section className="py-16 bg-white border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -380,12 +300,12 @@ export default function HomePage() {
 
                 <div className="mt-8 flex gap-3">
                   <Link href="/features/table-management">
-                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs">
+                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs cursor-pointer">
                       Explore Tables →
                     </button>
                   </Link>
                   <Link href="/features/qr-ordering">
-                    <button className="rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9]">
+                    <button className="rounded-full border border-[#E5EBE7] bg-white px-5 py-2.5 text-xs font-bold text-[#172B25] hover:bg-[#F8FAF9] cursor-pointer">
                       QR Ordering Flow
                     </button>
                   </Link>
@@ -423,7 +343,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 8: KOT & KITCHEN DISPLAY SYSTEM                   */}
+        {/* SECTION 10: KOT & KITCHEN DISPLAY SYSTEM                  */}
         {/* ========================================================= */}
         <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -495,7 +415,7 @@ export default function HomePage() {
                 </div>
                 <div className="mt-8">
                   <Link href="/features/kitchen-display">
-                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs">
+                    <button className="rounded-full bg-[#16845B] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#116B49] transition shadow-xs cursor-pointer">
                       Learn More About KDS →
                     </button>
                   </Link>
@@ -506,7 +426,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 9: INVENTORY & PURCHASE MANAGEMENT                */}
+        {/* SECTION 11: INVENTORY & PURCHASE MANAGEMENT               */}
         {/* ========================================================= */}
         <section className="py-16 bg-white border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -555,7 +475,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 12 & 13: HARDWARE & WHATSAPP DELIVERY             */}
+        {/* SECTION 12: HARDWARE & WHATSAPP DELIVERY                  */}
         {/* ========================================================= */}
         <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -626,42 +546,12 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 14: RESTAURANT SOLUTIONS                          */}
+        {/* SECTION 13: INDUSTRY RATINGS & CLIENT TESTIMONIALS        */}
         {/* ========================================================= */}
-        <section className="py-16 bg-white border-b border-[#E5EBE7]">
-          <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-2xl mx-auto">
-              <span className="text-xs font-bold tracking-widest text-[#16845B] uppercase">FITS EVERY FORMAT</span>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-black text-[#172B25]">
-                Tailored for Every Type of Dining Establishment
-              </h2>
-              <p className="mt-2 text-sm text-[#718078]">
-                From single counter coffee bars to 50-branch fine dining franchises, RestroNex adapts to your service model.
-              </p>
-            </div>
-
-            <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {solutions.map((sol) => (
-                <Link
-                  key={sol.name}
-                  href={sol.href}
-                  className="p-5 rounded-2xl bg-[#F8FAF9] border border-[#E5EBE7] hover:border-[#16845B] hover:bg-white hover:shadow-2xs transition group"
-                >
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-bold text-[#172B25] group-hover:text-[#16845B] transition">
-                      {sol.name}
-                    </h4>
-                    <ArrowRight className="h-4 w-4 text-[#718078] group-hover:text-[#16845B] group-hover:translate-x-0.5 transition" />
-                  </div>
-                  <p className="text-xs text-[#718078] mt-2 leading-relaxed">{sol.desc}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <IndustryRatingsSection />
 
         {/* ========================================================= */}
-        {/* SECTION 16: PRICING (₹99 / ₹199 / ₹299)                   */}
+        {/* SECTION 14: PRICING (₹99 / ₹199 / ₹299)                   */}
         {/* ========================================================= */}
         <section className="py-16 bg-[#F8FAF9] border-b border-[#E5EBE7]" id="pricing">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -716,7 +606,7 @@ export default function HomePage() {
                   <div className="mt-6 pt-4 border-t border-[#E5EBE7]">
                     <Link href={`/checkout?plan=${plan.slug}`}>
                       <button
-                        className={`w-full py-3 rounded-full text-xs font-bold transition shadow-2xs ${
+                        className={`w-full py-3 rounded-full text-xs font-bold transition shadow-2xs cursor-pointer ${
                           plan.highlighted
                             ? "bg-[#16845B] hover:bg-[#116B49] text-white"
                             : "border border-[#E5EBE7] bg-[#F8FAF9] text-[#172B25] hover:bg-[#E8F5EE] hover:text-[#16845B]"
@@ -772,7 +662,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 17: FREQUENTLY ASKED QUESTIONS                    */}
+        {/* SECTION 15: FREQUENTLY ASKED QUESTIONS                    */}
         {/* ========================================================= */}
         <section className="py-16 bg-white border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
@@ -801,7 +691,7 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================= */}
-        {/* SECTION 18: SECURITY & COMPLIANCE                         */}
+        {/* SECTION 16: SECURITY & COMPLIANCE                         */}
         {/* ========================================================= */}
         <section className="py-12 bg-[#F8FAF9] border-b border-[#E5EBE7]">
           <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">

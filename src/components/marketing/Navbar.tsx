@@ -12,6 +12,7 @@ export default function Navbar() {
 
   const mobileLinks = [
     { label: "POS", href: "/poss" },
+    { label: "GST Invoice", href: "/invoice" },
     { label: "Features", href: "/features" },
     { label: "Solutions", href: "/solutions" },
     { label: "Pricing", href: "/pricing" },

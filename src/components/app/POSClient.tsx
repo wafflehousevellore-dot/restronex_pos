@@ -818,6 +818,7 @@ export default function POSClient({
     if (!activeReceipt) return;
     setIsPrinting(true);
 
+    let printedDirectly = false;
     try {
       if (activeReceipt.orderId) {
         const res = await fetch("/api/print-jobs", {
@@ -831,7 +832,7 @@ export default function POSClient({
         });
         const data = await res.json();
         if (data.requiresClientDispatch) {
-          await dispatchClientPrintJob({
+          const clientRes = await dispatchClientPrintJob({
             jobId: data.jobId,
             printerType: data.printerType,
             connectionString: data.connectionString,
@@ -841,6 +842,9 @@ export default function POSClient({
             textLines: data.textLines,
             qrData: data.qrData || activeReceipt.invoicePdfUrl,
           });
+          if (clientRes.status === "PRINTED") {
+            printedDirectly = true;
+          }
           setMsg({ type: "success", text: `Bill dispatched to ${data.printerName || "Thermal Printer"}` });
         }
       }
@@ -850,10 +854,12 @@ export default function POSClient({
       setIsPrinting(false);
     }
 
-    // Always invoke window.print() so browser/OS thermal printer prints the #thermal-receipt-printable
-    setTimeout(() => {
-      window.print();
-    }, 50);
+    // If not printed directly via raw hardware (USB/BLE/Bridge), invoke browser print dialog for thermal printer
+    if (!printedDirectly) {
+      setTimeout(() => {
+        window.print();
+      }, 100);
+    }
   };
 
   const handleReprintBill = async (o: RecentPOSOrder) => {

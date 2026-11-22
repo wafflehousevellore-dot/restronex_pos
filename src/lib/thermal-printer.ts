@@ -525,7 +525,8 @@ export async function queueAndDispatchBillPrintJob(
     const setting = order.tenant.settings;
     const printer = await selectOutletBillingPrinter(order.tenantId, order.outletId);
 
-    if (setting && !setting.autoPrintBill) {
+    // If auto-print disabled in settings
+    if (setting && setting.autoPrintBill === false) {
       await prisma.order
         .update({ where: { id: order.id }, data: { printStatus: "NOT_CONFIGURED" } })
         .catch(() => {});
@@ -541,24 +542,11 @@ export async function queueAndDispatchBillPrintJob(
       };
     }
 
-    if (!printer || !printer.autoPrintEnabled) {
-      await prisma.order
-        .update({ where: { id: order.id }, data: { printStatus: "NOT_CONFIGURED" } })
-        .catch(() => {});
-      return {
-        jobId: null,
-        status: "NOT_CONFIGURED",
-        paperWidth: "80mm",
-        printerId: printer?.id || null,
-        printerName: printer?.name || null,
-        printerType: printer?.type || null,
-        requiresClientDispatch: false,
-        error: !printer ? "No billing printer configured for this outlet" : "Auto-print paused on selected printer",
-      };
-    }
-
+    // Default to OS / Browser / Counter printer if no dedicated hardware device configured
+    const effectivePrinterType = printer?.type || "OS_PRINT_SERVICE";
+    const effectivePrinterName = printer?.name || "Counter Thermal Printer (Browser / OS)";
     const paperWidth: "58mm" | "80mm" =
-      options?.forcePaperWidth || (printer.paperWidth === "58mm" ? "58mm" : "80mm");
+      options?.forcePaperWidth || (printer?.paperWidth === "58mm" ? "58mm" : "80mm");
 
     const idempotencyKey = `bill_print_${order.id}`;
     const existingJob = await prisma.printJob.findUnique({
@@ -682,7 +670,7 @@ export async function queueAndDispatchBillPrintJob(
       invoiceNumber,
       orderNumber: order.orderNumber,
       paperWidth,
-      printerType: printer.type,
+      printerType: effectivePrinterType,
       qrData,
       textLines: formatted.textLines,
       escPosBase64: formatted.escPosBase64,
@@ -694,7 +682,7 @@ export async function queueAndDispatchBillPrintJob(
         data: {
           tenantId: order.tenantId,
           outletId: order.outletId,
-          printerId: printer.id,
+          printerId: printer?.id || null,
           orderId: order.id,
           idempotencyKey,
           jobType: "BILL",
@@ -716,9 +704,9 @@ export async function queueAndDispatchBillPrintJob(
             status: raceJob.status as PrintStatus,
             paperWidth,
             printerId: raceJob.printerId,
-            printerName: printer.name,
-            printerType: printer.type,
-            requiresClientDispatch: raceJob.status === "QUEUED",
+            printerName: effectivePrinterName,
+            printerType: effectivePrinterType,
+            requiresClientDispatch: raceJob.status === "QUEUED" || !raceJob.printerId,
             escPosBase64: formatted.escPosBase64,
             textLines: formatted.textLines,
             qrData,
@@ -734,9 +722,9 @@ export async function queueAndDispatchBillPrintJob(
       jobId: job.id,
       status: dispatched.status,
       paperWidth,
-      printerId: printer.id,
-      printerName: printer.name,
-      printerType: printer.type,
+      printerId: printer?.id || null,
+      printerName: effectivePrinterName,
+      printerType: effectivePrinterType,
       requiresClientDispatch: dispatched.requiresClientDispatch,
       escPosBase64: formatted.escPosBase64,
       textLines: formatted.textLines,
@@ -778,16 +766,17 @@ export async function dispatchPrintJob(
 
   const printer = job.printer;
   if (!printer) {
+    // If no dedicated printer hardware is bound in database, route via counter/browser OS_PRINT_SERVICE
     await prisma.printJob.update({
       where: { id: job.id },
-      data: { status: "NOT_CONFIGURED", lastError: "Printer no longer exists" },
+      data: { status: "PRINT_REQUESTED", attempts: { increment: 1 }, dispatchedAt: new Date() },
     });
     if (job.orderId) {
       await prisma.order
-        .update({ where: { id: job.orderId }, data: { printStatus: "NOT_CONFIGURED" } })
+        .update({ where: { id: job.orderId }, data: { printStatus: "PRINT_REQUESTED" } })
         .catch(() => {});
     }
-    return { status: "NOT_CONFIGURED", requiresClientDispatch: false, error: "No printer attached" };
+    return { status: "PRINT_REQUESTED", requiresClientDispatch: true };
   }
 
   await prisma.printJob.update({

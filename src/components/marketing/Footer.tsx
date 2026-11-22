@@ -32,6 +32,7 @@ export default function Footer() {
             <div className="text-sm font-bold text-[#172B25]">Product</div>
             <ul className="mt-3 space-y-2 text-sm text-[#718078]">
               <li><Link href="/poss" className="hover:text-[#16845B] transition-colors">POS Overview</Link></li>
+              <li><Link href="/invoice" className="hover:text-[#16845B] transition-colors">GST Invoicing</Link></li>
               <li><Link href="/features" className="hover:text-[#16845B] transition-colors">Features</Link></li>
               <li><Link href="/integrations" className="hover:text-[#16845B] transition-colors">Integrations</Link></li>
               <li><Link href="/pricing" className="hover:text-[#16845B] transition-colors">Pricing</Link></li>
